@@ -1,0 +1,240 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>HyCPA — src/main/java/burp/IIntruderPayloadProcessor.java</title><style>
+:root {
+  --bg: #0d1117; --surface: #161b22; --surface2: #21262d;
+  --border: #30363d; --text: #e6edf3; --text2: #8b949e;
+  --accent: #58a6ff; --green: #3fb950; --orange: #d29922;
+  --red: #f85149; --purple: #bc8cff; --cyan: #39d2c0;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { background: var(--bg); color: var(--text); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif; font-size: 14px; line-height: 1.5; }
+
+/* ── Sticky page header (Page C) ── */
+.page-header { background: var(--surface); border-bottom: 1px solid var(--border); padding: 16px 32px; position: sticky; top: 0; z-index: 100; display: flex; flex-wrap: wrap; align-items: center; gap: 12px; }
+.back-btn { color: var(--text2); font-size: 13px; text-decoration: none; padding: 6px 14px; border: 1px solid var(--border); border-radius: 6px; background: var(--surface2); white-space: nowrap; }
+.back-btn:hover { color: var(--accent); border-color: var(--accent); }
+.src-label { color: var(--text2); font-size: 12px; }
+.src-name-h { color: var(--text); font-weight: 700; font-size: 14px; }
+.header-email-wrap { display: flex; flex-direction: column; gap: 3px; }
+.header-email-wrap label { font-size: 11px; color: var(--text2); }
+.header-email-input { background: var(--surface2); border: 1px solid var(--border); border-radius: 6px; padding: 7px 12px; color: var(--text); font-size: 13px; width: 240px; font-family: inherit; }
+.header-email-input:focus { outline: none; border-color: var(--accent); }
+.header-email-input.invalid { border-color: var(--red); }
+.export-btn { padding: 7px 14px; border-radius: 6px; border: 1px solid var(--border); background: var(--surface2); color: var(--text); cursor: pointer; font-size: 12px; }
+.export-btn:hover { border-color: var(--accent); color: var(--accent); }
+
+/* ── Main container ── */
+.container { max-width: 900px; margin: 0 auto; padding: 24px 32px; }
+
+/* ── Progress bar ── */
+.progress-bar { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 12px 20px; margin-bottom: 20px; display: flex; align-items: center; gap: 16px; }
+.progress-bar .bar-track { flex: 1; height: 8px; background: var(--surface2); border-radius: 4px; overflow: hidden; }
+.progress-bar .bar-fill { height: 100%; background: var(--green); border-radius: 4px; transition: width 0.3s; }
+.progress-bar .bar-label { font-size: 13px; color: var(--text2); white-space: nowrap; }
+
+/* ── Cards ── */
+.card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; margin-bottom: 16px; overflow: hidden; transition: border-color 0.2s; }
+.card:hover { border-color: var(--accent); }
+.card-header { display: flex; justify-content: space-between; align-items: center; padding: 16px 20px; border-bottom: 1px solid var(--border); cursor: pointer; }
+.card-header .source-target { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; flex: 1; }
+.class-badge { background: var(--surface2); border: 1px solid var(--border); border-radius: 6px; padding: 4px 10px; font-family: 'SFMono-Regular', Consolas, monospace; font-size: 12px; max-width: 300px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.class-badge.source { border-color: var(--orange); color: var(--orange); }
+.class-badge.target { border-color: var(--green); color: var(--green); }
+.arrow-icon { color: var(--text2); font-size: 18px; flex-shrink: 0; }
+.metrics-mini { display: flex; gap: 16px; flex-shrink: 0; }
+.metric-pill { display: flex; flex-direction: column; align-items: center; }
+.metric-pill .val { font-weight: 700; font-size: 14px; }
+.metric-pill .lbl { font-size: 10px; color: var(--text2); text-transform: uppercase; }
+.metric-pill.score .val { color: var(--red); }
+.metric-pill.cochange .val { color: var(--cyan); }
+.metric-pill.dist .val { color: var(--purple); }
+.metric-pill.rank-m .val { color: var(--text2); }
+.card-body { padding: 20px; display: none; border-top: 1px solid var(--border); }
+.card.open .card-body { display: block; }
+
+/* ── Path diagram ── */
+.path-diagram { display: flex; align-items: flex-start; gap: 0; overflow-x: auto; padding: 16px 0; }
+.path-node { display: flex; flex-direction: column; align-items: center; min-width: 80px; flex-shrink: 0; }
+.path-node .node-circle { width: 44px; height: 44px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 13px; border: 2px solid var(--border); background: var(--surface2); }
+.path-node.first .node-circle { border-color: var(--orange); background: rgba(210,153,34,0.15); color: var(--orange); }
+.path-node.last .node-circle { border-color: var(--green); background: rgba(63,185,80,0.15); color: var(--green); }
+.path-node .node-label { font-size: 10px; color: var(--text2); text-align: center; margin-top: 4px; max-width: 100px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.path-node .node-health { font-size: 10px; font-weight: 600; text-align: center; margin-top: 2px; }
+.path-edge { display: flex; flex-direction: column; align-items: center; min-width: 100px; flex-shrink: 0; padding-top: 10px; }
+.path-edge .edge-arrow { display: flex; align-items: center; color: var(--text2); font-size: 12px; white-space: nowrap; }
+.path-edge .edge-arrow .line { width: 40px; height: 2px; background: var(--border); }
+.path-edge .edge-arrow .tip { margin-left: -2px; }
+.path-edge .edge-tags { display: flex; flex-direction: column; align-items: center; gap: 3px; margin-top: 4px; }
+.edge-tag { font-size: 9px; padding: 1px 6px; border-radius: 4px; white-space: nowrap; }
+.edge-tag.cochange { background: rgba(57,210,192,0.15); color: var(--cyan); border: 1px solid rgba(57,210,192,0.3); }
+.edge-tag.coupling { background: rgba(188,140,255,0.15); color: var(--purple); border: 1px solid rgba(188,140,255,0.3); }
+.edge-tag.none { background: var(--surface2); color: var(--text2); border: 1px solid var(--border); }
+
+/* ── Coupling section ── */
+.coupling-section { margin-top: 16px; }
+.coupling-section h4 { font-size: 12px; color: var(--text2); margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.5px; }
+.coupling-chip { display: inline-block; font-size: 11px; padding: 3px 10px; border-radius: 12px; margin: 2px 4px 2px 0; background: rgba(188,140,255,0.12); color: var(--purple); border: 1px solid rgba(188,140,255,0.25); font-family: monospace; }
+.none-text { color: var(--text2); font-style: italic; font-size: 12px; }
+.toggle-icon { transition: transform 0.2s; color: var(--text2); font-size: 18px; margin-left: 12px; }
+.card.open .toggle-icon { transform: rotate(180deg); }
+
+/* ── Validation section ── */
+.validation-section { margin-top: 20px; padding-top: 16px; border-top: 1px dashed var(--border); }
+.validation-section h4 { font-size: 12px; color: var(--text2); margin-bottom: 10px; text-transform: uppercase; letter-spacing: 0.5px; }
+.vote-buttons { display: flex; gap: 8px; margin-bottom: 10px; }
+.vote-btn { padding: 8px 18px; border-radius: 8px; border: 2px solid var(--border); background: var(--surface2); color: var(--text); cursor: pointer; font-size: 13px; font-weight: 600; transition: all 0.2s; display: flex; align-items: center; gap: 6px; }
+.vote-btn:hover { border-color: var(--accent); }
+.vote-btn.correct.selected { border-color: var(--green); background: rgba(63,185,80,0.15); color: var(--green); }
+.vote-btn.incorrect.selected { border-color: var(--red); background: rgba(248,81,73,0.15); color: var(--red); }
+.vote-btn.unsure.selected { border-color: var(--orange); background: rgba(210,153,34,0.15); color: var(--orange); }
+.validation-comment { width: 100%; background: var(--surface2); border: 1px solid var(--border); border-radius: 6px; color: var(--text); padding: 8px 12px; font-size: 13px; font-family: inherit; resize: vertical; min-height: 50px; margin-bottom: 10px; }
+.validation-comment::placeholder { color: var(--text2); }
+.submit-row { display: flex; align-items: center; gap: 12px; }
+.submit-btn { padding: 8px 24px; border-radius: 8px; border: none; background: var(--accent); color: #fff; cursor: pointer; font-size: 13px; font-weight: 600; transition: opacity 0.2s; }
+.submit-btn:hover { opacity: 0.85; }
+.submit-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+.submit-status { font-size: 12px; color: var(--green); }
+.submit-status.error { color: var(--red); }
+.already-sent { display: flex; align-items: center; gap: 8px; padding: 10px 16px; border-radius: 8px; background: rgba(63,185,80,0.1); border: 1px solid rgba(63,185,80,0.25); color: var(--green); font-size: 13px; }
+
+/* ── Tooltips ── */
+[data-tooltip] { position: relative; cursor: default; }
+[data-tooltip]::after { content: attr(data-tooltip); position: absolute; bottom: calc(100% + 7px); left: 50%; transform: translateX(-50%); background: #2d333b; color: var(--text); border: 1px solid var(--border); border-radius: 6px; padding: 7px 10px; font-size: 11px; line-height: 1.45; white-space: normal; width: max-content; max-width: 220px; text-align: center; pointer-events: none; opacity: 0; transition: opacity 0.15s; z-index: 999; text-transform: none; font-weight: 400; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif; }
+[data-tooltip]:hover::after { opacity: 1; }
+
+@media (max-width: 768px) {
+  .metrics-mini { gap: 8px; }
+  .class-badge { max-width: 150px; font-size: 11px; }
+  .container { padding: 16px; }
+  .page-header { padding: 12px 16px; }
+}
+
+/* ── HyCPA tabs ── */
+.tabs { display: flex; gap: 4px; border-bottom: 1px solid var(--border); margin-bottom: 16px; }
+.tab-btn { background: transparent; border: none; color: var(--text2); padding: 10px 18px; font-size: 13px; font-weight: 600; cursor: pointer; border-bottom: 2px solid transparent; }
+.tab-btn:hover { color: var(--text); }
+.tab-btn.active { color: var(--accent); border-bottom-color: var(--accent); }
+.tab-pane { display: none; }
+.tab-pane.active { display: block; }
+.metric-pill.prob .val { color: var(--red); }
+.metric-pill.hop .val  { color: var(--purple); }
+.metric-pill.health .val { color: var(--cyan); }
+
+/* ── Filter bar ── */
+.filter-bar { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 14px; align-items: center; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 10px 14px; }
+.filter-bar label { font-size: 11px; color: var(--text2); display: flex; flex-direction: column; gap: 2px; }
+.filter-bar input[type=number], .filter-bar input[type=text] { background: var(--surface2); border: 1px solid var(--border); color: var(--text); border-radius: 4px; padding: 4px 8px; font-size: 12px; width: 110px; }
+
+/* ── Params badge ── */
+.params-line { color: var(--text2); font-size: 12px; }
+.params-line code { background: var(--surface2); padding: 1px 6px; border-radius: 4px; color: var(--accent); font-size: 11px; }
+
+/* ── Tooltip fix: allow tooltips inside cards to escape the card border ── */
+.card { overflow: visible !important; }
+.card-header, .metrics-mini, .metric-pill { overflow: visible; }
+</style></head><body><div class="page-header"><a class="back-btn" href="repo_0x727_BypassPro.html">← Back</a><span class="src-label">Class:</span><span class="src-name-h">src/main/java/burp/IIntruderPayloadProcessor.java</span><span class="src-label" style="margin-left:12px">Code Smell Score: 0.058 · Communities: C0</span><div class="header-email-wrap" style="margin-left:auto"><label>Email (required to submit)</label><input type="email" id="userEmail" class="header-email-input" placeholder="your@email.com" oninput="saveEmail(this.value)" /></div><a class="export-btn" href="help.html">❓ Help</a><a class="export-btn" href="repo_0x727_BypassPro.html">📁 Repo</a></div><div class="container"><div class="tabs"><button class="tab-btn active" data-tab="det" onclick="switchTab('det')">Deterministic (0)</button><button class="tab-btn" data-tab="mc" onclick="switchTab('mc')">Monte Carlo (0)</button></div><div class="filter-bar"><label>Min probability<input type="number" id="fMinProb" min="0" max="1" step="0.05" value="0" oninput="applyFilters()"></label><label>Max distance<input type="number" id="fMaxHop" min="1" step="1" placeholder="any" oninput="applyFilters()"></label><label style="flex:1">Search target label<input type="text" id="fSearch" placeholder="substring…" oninput="applyFilters()" style="width:100%"></label></div><div class="tab-pane active" data-tab="det"><p class="none-text">No deterministic targets above θ.</p></div><div class="tab-pane" data-tab="mc"><p class="none-text">No Monte-Carlo targets above mc_threshold.</p></div></div><script>const REPO = '0x727_BypassPro';
+const SOURCE_SAFE = 'src_main_java_burp_IIntruderPayloadProcessor_java';
+const STORAGE_PREFIX = 'ocpa_vote_' + REPO + '__' + SOURCE_SAFE + '__';
+const FORMSUBMIT_URL = 'https://formsubmit.co/ajax/change.vein@gmail.com';
+document.addEventListener('DOMContentLoaded', () => {
+  const email = localStorage.getItem('email_' + REPO) || '';
+  if (email) document.getElementById('userEmail').value = email;
+  document.querySelectorAll('.validation-comment').forEach(ta => {
+    const id = ta.id.replace('comment_', '');
+    const saved = localStorage.getItem(STORAGE_PREFIX + id + '__comment');
+    if (saved) ta.value = saved;
+  });
+  document.querySelectorAll('.card').forEach(card => {
+    const vBtn = card.querySelector('.vote-btn');
+    if (!vBtn) return;
+    const idMatch = vBtn.getAttribute('onclick').match(/selectVote\('([^']+)'/);
+    if (!idMatch) return;
+    const id = idMatch[1];
+    const stored = localStorage.getItem(STORAGE_PREFIX + id);
+    if (stored) {
+      try {
+        const o = JSON.parse(stored);
+        const btn = card.querySelector('.vote-btn.' + o.Vote);
+        if (btn) { btn.classList.add('selected'); document.getElementById('vote_' + id).value = o.Vote; }
+        const st = document.getElementById('status_' + id);
+        if (st) { st.textContent = '✓ Submitted'; }
+      } catch (e) {}
+    }
+  });
+  switchTab('det');
+});
+function saveEmail(v) {
+  localStorage.setItem('email_' + REPO, v);
+  document.getElementById('userEmail').classList.remove('invalid');
+}
+function saveComment(id, value) {
+  localStorage.setItem(STORAGE_PREFIX + id + '__comment', value);
+}
+function selectVote(id, vote, btn) {
+  btn.parentElement.querySelectorAll('.vote-btn').forEach(b => b.classList.remove('selected'));
+  btn.classList.add('selected');
+  document.getElementById('vote_' + id).value = vote;
+  document.getElementById('submitBtn_' + id).disabled = false;
+}
+function switchTab(name) {
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.toggle('active', b.dataset.tab === name));
+  document.querySelectorAll('.tab-pane').forEach(p => p.classList.toggle('active', p.dataset.tab === name));
+}
+function applyFilters() {
+  const minP = parseFloat(document.getElementById('fMinProb').value) || 0;
+  const maxH = parseFloat(document.getElementById('fMaxHop').value);
+  const q = document.getElementById('fSearch').value.toLowerCase();
+  document.querySelectorAll('.tab-pane .card').forEach(card => {
+    const p = parseFloat(card.dataset.prob);
+    const h = parseFloat(card.dataset.hop);
+    const t = (card.dataset.target || '').toLowerCase();
+    let show = true;
+    if (p < minP) show = false;
+    if (!isNaN(maxH) && h > maxH) show = false;
+    if (q && !t.includes(q)) show = false;
+    card.style.display = show ? '' : 'none';
+  });
+}
+async function submitVote(id) {
+  const vote = document.getElementById('vote_' + id).value;
+  if (!vote) return;
+  const email = document.getElementById('userEmail').value.trim();
+  if (!email || !email.includes('@')) {
+    document.getElementById('userEmail').classList.add('invalid');
+    document.getElementById('userEmail').focus();
+    alert('Please enter a valid email in the header before submitting.');
+    return;
+  }
+  const comment = document.getElementById('comment_' + id).value;
+  const kind    = document.getElementById('meta_kind_' + id).value;
+  const source  = document.getElementById('meta_source_' + id).value;
+  const target  = document.getElementById('meta_target_' + id).value;
+  const rank    = document.getElementById('meta_rank_' + id).value;
+  const prob    = document.getElementById('meta_prob_' + id).value;
+  const hop     = document.getElementById('meta_hop_' + id).value;
+  const statusEl  = document.getElementById('status_'    + id);
+  const submitBtn = document.getElementById('submitBtn_' + id);
+  submitBtn.disabled = true;
+  statusEl.textContent = 'Submitting…';
+  statusEl.className = 'submit-status';
+  const payload = {
+    _subject: '[HyCPA Validation] ' + REPO + ' — ' + source + ' → ' + target + ': ' + vote.toUpperCase(),
+    Email: email, Repository: REPO,
+    Source_Class: source, Affected_Class: target,
+    Type: kind, Rank: rank, Prob: prob, Hop: hop,
+    Vote: vote, Comment: comment, Timestamp: new Date().toISOString()
+  };
+  localStorage.setItem(STORAGE_PREFIX + id, JSON.stringify(payload));
+  try {
+    const resp = await fetch(FORMSUBMIT_URL, {
+      method: 'POST', headers: {'Content-Type':'application/json','Accept':'application/json'},
+      body: JSON.stringify(payload)
+    });
+    if (resp.ok) { statusEl.textContent = '✓ Submitted'; }
+    else { statusEl.textContent = '⚠ Saved locally (server error)'; statusEl.classList.add('error'); }
+  } catch (e) {
+    statusEl.textContent = '⚠ Saved locally (offline)';
+    statusEl.classList.add('error');
+  }
+  submitBtn.disabled = false;
+}
+</script></body></html>

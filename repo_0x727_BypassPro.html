@@ -1,11 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>OCPA — 0x727/BypassPro</title>
-<style>
-
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>HyCPA — 0x727/BypassPro</title><style>
 :root {
   --bg: #0d1117; --surface: #161b22; --surface2: #21262d;
   --border: #30363d; --text: #e6edf3; --text2: #8b949e;
@@ -81,1065 +74,1366 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, Bl
   .container { padding: 16px; }
   .src-meta { display: none; }
 }
-
-</style>
-</head>
-<body>
-
-<!-- ── Sticky Header ── -->
-<div class="page-header">
-  <div class="header-title">
-    <a class="back" href="index.html">← Back to repository list</a>
-    <h1>📊 0x727/BypassPro</h1>
-    <div class="algo">Link Communities &nbsp;·&nbsp; 41 source classes analysed</div>
-  </div>
-  <div class="header-email">
-    <label>Email <span>*</span> (required)</label>
-    <input type="email" id="userEmail" placeholder="your@email.com"
-      oninput="saveEmail(this.value)" />
-  </div>
-  <div class="header-actions">
-    <button class="btn" onclick="toggleCommunities()">🔗 Show Communities</button>
-    <button class="btn btn-primary" onclick="submitAll()">✅ Submit All</button>
-  </div>
-</div>
-
-<!-- ── Communities panel ── -->
-<div class="communities-panel" id="commPanel">
-  <h3>Communities in this repository</h3>
-  <div class="comm-grid" id="commGrid"></div>
-</div>
-
-<!-- ── Main content ── -->
-<div class="container">
-
-  <!-- Summary bar -->
-  <div class="summary-bar">
-    <div class="summary-card"><div class="val">41</div><div class="lbl">Source Classes</div></div>
-    <div class="summary-card"><div class="val">1601</div><div class="lbl">Total Affected</div></div>
-    <div class="summary-card"><div class="val">91.88</div><div class="lbl">Max Impact Score</div></div>
-    <div class="summary-card"><div class="val">2784.1</div><div class="lbl">Cumulative Score</div></div>
-  </div>
-
-  <!-- Source class accordion -->
-  <div class="src-block" id="src_0">
+</style></head><body><div class="page-header"><div class="header-title"><a class="back" href="index.html">← Back to repository list</a><h1>📊 0x727/BypassPro</h1></div><div class="header-email"><label>Email <span>*</span> (required)</label><input type="email" id="userEmail" placeholder="your@email.com" oninput="saveEmail(this.value)" /></div><div class="header-actions"><a class="btn" href="help.html">❓ How to read this site</a><button class="btn" onclick="toggleCommunities()">🔗 Show Communities</button><button class="btn btn-primary" onclick="submitAll()">✅ Submit All</button></div></div><div class="communities-panel" id="commPanel"><h3>Communities in this repository</h3><div class="comm-grid" id="commGrid"></div></div><div class="container"><div class="summary-bar"><div class="summary-card"><div class="val">56</div><div class="lbl">Classes Analysed</div></div><div class="summary-card"><div class="val">452</div><div class="lbl">Deterministic Targets</div></div><div class="summary-card"><div class="val">512</div><div class="lbl">Monte-Carlo Targets</div></div><div class="summary-card"><div class="val">0.558</div><div class="lbl">Max Class Code Smell Score</div></div></div>  <div class="src-block" id="src_0">
     <button class="src-header" onclick="toggleBlock(0)">
-      <span class="src-name">burp.IIntruderPayloadProcessor</span>
+      <span class="src-name">src/main/java/burp/BurpExtender.java</span>
       <span class="src-meta">
-        <span class="badge">Score 91.8775</span>
-        <span class="badge">Affected 40</span>
-        <span class="badge">Communities 17</span>
-        <span class="badge">Waves 3</span>
+        <span class="badge">Det 46</span>
+        <span class="badge">MC 47</span>
+        <span class="badge">Code Smell 0.115</span>
+        <span class="badge">C0</span>
       </span>
       <span class="chevron" id="chev_0">▶</span>
     </button>
     <div class="src-body" id="body_0" style="display:none">
       <div class="analysis-row">
-        <label>Analysis of <strong>burp.IIntruderPayloadProcessor</strong></label>
+        <label>Analysis of <strong>src/main/java/burp/BurpExtender.java</strong></label>
         <textarea class="analysis-field" id="analysis_0" rows="3"
           placeholder="Enter your analysis for this class…"
-          oninput="saveAnalysis('burp.IIntruderPayloadProcessor', this.value)"></textarea>
+          oninput="saveAnalysis('src/main/java/burp/BurpExtender.java', this.value)"></textarea>
       </div>
-      <div class="progress-note" id="prog_burp_IIntruderPayloadProcessor"></div>
-      <a class="detail-link" href="repo_0x727_BypassPro__burp_IIntruderPayloadProcessor.html">
-        📋 View 40 affected classes →
+      <div class="progress-note" id="prog_src_main_java_burp_BurpExtender_java"></div>
+      <a class="detail-link" href="repo_0x727_BypassPro__src_main_java_burp_BurpExtender.java.html">
+        📋 View 46 deterministic / 47 MC targets →
       </a>
     </div>
   </div>
   <div class="src-block" id="src_1">
     <button class="src-header" onclick="toggleBlock(1)">
-      <span class="src-name">burp.BurpExtender</span>
+      <span class="src-name">src/test/java/Main/BypassReasonTest.java</span>
       <span class="src-meta">
-        <span class="badge">Score 90.4148</span>
-        <span class="badge">Affected 40</span>
-        <span class="badge">Communities 17</span>
-        <span class="badge">Waves 3</span>
+        <span class="badge">Det 46</span>
+        <span class="badge">MC 47</span>
+        <span class="badge">Code Smell 0.077</span>
+        <span class="badge">C0</span>
       </span>
       <span class="chevron" id="chev_1">▶</span>
     </button>
     <div class="src-body" id="body_1" style="display:none">
       <div class="analysis-row">
-        <label>Analysis of <strong>burp.BurpExtender</strong></label>
+        <label>Analysis of <strong>src/test/java/Main/BypassReasonTest.java</strong></label>
         <textarea class="analysis-field" id="analysis_1" rows="3"
           placeholder="Enter your analysis for this class…"
-          oninput="saveAnalysis('burp.BurpExtender', this.value)"></textarea>
+          oninput="saveAnalysis('src/test/java/Main/BypassReasonTest.java', this.value)"></textarea>
       </div>
-      <div class="progress-note" id="prog_burp_BurpExtender"></div>
-      <a class="detail-link" href="repo_0x727_BypassPro__burp_BurpExtender.html">
-        📋 View 40 affected classes →
+      <div class="progress-note" id="prog_src_test_java_Main_BypassReasonTest_java"></div>
+      <a class="detail-link" href="repo_0x727_BypassPro__src_test_java_Main_BypassReasonTest.java.html">
+        📋 View 46 deterministic / 47 MC targets →
       </a>
     </div>
   </div>
   <div class="src-block" id="src_2">
     <button class="src-header" onclick="toggleBlock(2)">
-      <span class="src-name">Main.BaseRequest</span>
+      <span class="src-name">src/main/java/Main/BypassMain.java</span>
       <span class="src-meta">
-        <span class="badge">Score 86.9590</span>
-        <span class="badge">Affected 40</span>
-        <span class="badge">Communities 17</span>
-        <span class="badge">Waves 4</span>
+        <span class="badge">Det 45</span>
+        <span class="badge">MC 47</span>
+        <span class="badge">Code Smell 0.558</span>
+        <span class="badge">C0</span>
       </span>
       <span class="chevron" id="chev_2">▶</span>
     </button>
     <div class="src-body" id="body_2" style="display:none">
       <div class="analysis-row">
-        <label>Analysis of <strong>Main.BaseRequest</strong></label>
+        <label>Analysis of <strong>src/main/java/Main/BypassMain.java</strong></label>
         <textarea class="analysis-field" id="analysis_2" rows="3"
           placeholder="Enter your analysis for this class…"
-          oninput="saveAnalysis('Main.BaseRequest', this.value)"></textarea>
+          oninput="saveAnalysis('src/main/java/Main/BypassMain.java', this.value)"></textarea>
       </div>
-      <div class="progress-note" id="prog_Main_BaseRequest"></div>
-      <a class="detail-link" href="repo_0x727_BypassPro__Main_BaseRequest.html">
-        📋 View 40 affected classes →
+      <div class="progress-note" id="prog_src_main_java_Main_BypassMain_java"></div>
+      <a class="detail-link" href="repo_0x727_BypassPro__src_main_java_Main_BypassMain.java.html">
+        📋 View 45 deterministic / 47 MC targets →
       </a>
     </div>
   </div>
   <div class="src-block" id="src_3">
     <button class="src-header" onclick="toggleBlock(3)">
-      <span class="src-name">Main.Utils</span>
+      <span class="src-name">src/main/java/Main/MainPanel.java</span>
       <span class="src-meta">
-        <span class="badge">Score 84.2275</span>
-        <span class="badge">Affected 40</span>
-        <span class="badge">Communities 17</span>
-        <span class="badge">Waves 3</span>
+        <span class="badge">Det 45</span>
+        <span class="badge">MC 47</span>
+        <span class="badge">Code Smell 0.423</span>
+        <span class="badge">C0</span>
       </span>
       <span class="chevron" id="chev_3">▶</span>
     </button>
     <div class="src-body" id="body_3" style="display:none">
       <div class="analysis-row">
-        <label>Analysis of <strong>Main.Utils</strong></label>
+        <label>Analysis of <strong>src/main/java/Main/MainPanel.java</strong></label>
         <textarea class="analysis-field" id="analysis_3" rows="3"
           placeholder="Enter your analysis for this class…"
-          oninput="saveAnalysis('Main.Utils', this.value)"></textarea>
+          oninput="saveAnalysis('src/main/java/Main/MainPanel.java', this.value)"></textarea>
       </div>
-      <div class="progress-note" id="prog_Main_Utils"></div>
-      <a class="detail-link" href="repo_0x727_BypassPro__Main_Utils.html">
-        📋 View 40 affected classes →
+      <div class="progress-note" id="prog_src_main_java_Main_MainPanel_java"></div>
+      <a class="detail-link" href="repo_0x727_BypassPro__src_main_java_Main_MainPanel.java.html">
+        📋 View 45 deterministic / 47 MC targets →
       </a>
     </div>
   </div>
   <div class="src-block" id="src_4">
     <button class="src-header" onclick="toggleBlock(4)">
-      <span class="src-name">burp.ITempFile</span>
+      <span class="src-name">src/main/java/Main/Utils.java</span>
       <span class="src-meta">
-        <span class="badge">Score 83.0022</span>
-        <span class="badge">Affected 40</span>
-        <span class="badge">Communities 17</span>
-        <span class="badge">Waves 3</span>
+        <span class="badge">Det 45</span>
+        <span class="badge">MC 47</span>
+        <span class="badge">Code Smell 0.481</span>
+        <span class="badge">C0</span>
       </span>
       <span class="chevron" id="chev_4">▶</span>
     </button>
     <div class="src-body" id="body_4" style="display:none">
       <div class="analysis-row">
-        <label>Analysis of <strong>burp.ITempFile</strong></label>
+        <label>Analysis of <strong>src/main/java/Main/Utils.java</strong></label>
         <textarea class="analysis-field" id="analysis_4" rows="3"
           placeholder="Enter your analysis for this class…"
-          oninput="saveAnalysis('burp.ITempFile', this.value)"></textarea>
+          oninput="saveAnalysis('src/main/java/Main/Utils.java', this.value)"></textarea>
       </div>
-      <div class="progress-note" id="prog_burp_ITempFile"></div>
-      <a class="detail-link" href="repo_0x727_BypassPro__burp_ITempFile.html">
-        📋 View 40 affected classes →
+      <div class="progress-note" id="prog_src_main_java_Main_Utils_java"></div>
+      <a class="detail-link" href="repo_0x727_BypassPro__src_main_java_Main_Utils.java.html">
+        📋 View 45 deterministic / 47 MC targets →
       </a>
     </div>
   </div>
   <div class="src-block" id="src_5">
     <button class="src-header" onclick="toggleBlock(5)">
-      <span class="src-name">burp.ITextEditor</span>
+      <span class="src-name">src/main/java/Main/ManualWafPanel.java</span>
       <span class="src-meta">
-        <span class="badge">Score 83.0022</span>
-        <span class="badge">Affected 40</span>
-        <span class="badge">Communities 17</span>
-        <span class="badge">Waves 3</span>
+        <span class="badge">Det 45</span>
+        <span class="badge">MC 47</span>
+        <span class="badge">Code Smell 0.019</span>
+        <span class="badge">C0</span>
       </span>
       <span class="chevron" id="chev_5">▶</span>
     </button>
     <div class="src-body" id="body_5" style="display:none">
       <div class="analysis-row">
-        <label>Analysis of <strong>burp.ITextEditor</strong></label>
+        <label>Analysis of <strong>src/main/java/Main/ManualWafPanel.java</strong></label>
         <textarea class="analysis-field" id="analysis_5" rows="3"
           placeholder="Enter your analysis for this class…"
-          oninput="saveAnalysis('burp.ITextEditor', this.value)"></textarea>
+          oninput="saveAnalysis('src/main/java/Main/ManualWafPanel.java', this.value)"></textarea>
       </div>
-      <div class="progress-note" id="prog_burp_ITextEditor"></div>
-      <a class="detail-link" href="repo_0x727_BypassPro__burp_ITextEditor.html">
-        📋 View 40 affected classes →
+      <div class="progress-note" id="prog_src_main_java_Main_ManualWafPanel_java"></div>
+      <a class="detail-link" href="repo_0x727_BypassPro__src_main_java_Main_ManualWafPanel.java.html">
+        📋 View 45 deterministic / 47 MC targets →
       </a>
     </div>
   </div>
   <div class="src-block" id="src_6">
     <button class="src-header" onclick="toggleBlock(6)">
-      <span class="src-name">burp.IScannerListener</span>
+      <span class="src-name">src/main/java/Main/ConfigPanel.java</span>
       <span class="src-meta">
-        <span class="badge">Score 77.2337</span>
-        <span class="badge">Affected 40</span>
-        <span class="badge">Communities 17</span>
-        <span class="badge">Waves 3</span>
+        <span class="badge">Det 45</span>
+        <span class="badge">MC 47</span>
+        <span class="badge">Code Smell 0.500</span>
+        <span class="badge">C0</span>
       </span>
       <span class="chevron" id="chev_6">▶</span>
     </button>
     <div class="src-body" id="body_6" style="display:none">
       <div class="analysis-row">
-        <label>Analysis of <strong>burp.IScannerListener</strong></label>
+        <label>Analysis of <strong>src/main/java/Main/ConfigPanel.java</strong></label>
         <textarea class="analysis-field" id="analysis_6" rows="3"
           placeholder="Enter your analysis for this class…"
-          oninput="saveAnalysis('burp.IScannerListener', this.value)"></textarea>
+          oninput="saveAnalysis('src/main/java/Main/ConfigPanel.java', this.value)"></textarea>
       </div>
-      <div class="progress-note" id="prog_burp_IScannerListener"></div>
-      <a class="detail-link" href="repo_0x727_BypassPro__burp_IScannerListener.html">
-        📋 View 40 affected classes →
+      <div class="progress-note" id="prog_src_main_java_Main_ConfigPanel_java"></div>
+      <a class="detail-link" href="repo_0x727_BypassPro__src_main_java_Main_ConfigPanel.java.html">
+        📋 View 45 deterministic / 47 MC targets →
       </a>
     </div>
   </div>
   <div class="src-block" id="src_7">
     <button class="src-header" onclick="toggleBlock(7)">
-      <span class="src-name">burp.IHttpListener</span>
+      <span class="src-name">src/main/java/Main/BypassTable.java</span>
       <span class="src-meta">
-        <span class="badge">Score 76.6155</span>
-        <span class="badge">Affected 40</span>
-        <span class="badge">Communities 17</span>
-        <span class="badge">Waves 3</span>
+        <span class="badge">Det 30</span>
+        <span class="badge">MC 29</span>
+        <span class="badge">Code Smell 0.173</span>
+        <span class="badge">C0</span>
       </span>
       <span class="chevron" id="chev_7">▶</span>
     </button>
     <div class="src-body" id="body_7" style="display:none">
       <div class="analysis-row">
-        <label>Analysis of <strong>burp.IHttpListener</strong></label>
+        <label>Analysis of <strong>src/main/java/Main/BypassTable.java</strong></label>
         <textarea class="analysis-field" id="analysis_7" rows="3"
           placeholder="Enter your analysis for this class…"
-          oninput="saveAnalysis('burp.IHttpListener', this.value)"></textarea>
+          oninput="saveAnalysis('src/main/java/Main/BypassTable.java', this.value)"></textarea>
       </div>
-      <div class="progress-note" id="prog_burp_IHttpListener"></div>
-      <a class="detail-link" href="repo_0x727_BypassPro__burp_IHttpListener.html">
-        📋 View 40 affected classes →
+      <div class="progress-note" id="prog_src_main_java_Main_BypassTable_java"></div>
+      <a class="detail-link" href="repo_0x727_BypassPro__src_main_java_Main_BypassTable.java.html">
+        📋 View 30 deterministic / 29 MC targets →
       </a>
     </div>
   </div>
   <div class="src-block" id="src_8">
     <button class="src-header" onclick="toggleBlock(8)">
-      <span class="src-name">Main.MainPanel</span>
+      <span class="src-name">src/main/java/burp/IBurpExtender.java</span>
       <span class="src-meta">
-        <span class="badge">Score 75.7313</span>
-        <span class="badge">Affected 40</span>
-        <span class="badge">Communities 17</span>
-        <span class="badge">Waves 3</span>
+        <span class="badge">Det 28</span>
+        <span class="badge">MC 28</span>
+        <span class="badge">Code Smell 0.019</span>
+        <span class="badge">C0</span>
       </span>
       <span class="chevron" id="chev_8">▶</span>
     </button>
     <div class="src-body" id="body_8" style="display:none">
       <div class="analysis-row">
-        <label>Analysis of <strong>Main.MainPanel</strong></label>
+        <label>Analysis of <strong>src/main/java/burp/IBurpExtender.java</strong></label>
         <textarea class="analysis-field" id="analysis_8" rows="3"
           placeholder="Enter your analysis for this class…"
-          oninput="saveAnalysis('Main.MainPanel', this.value)"></textarea>
+          oninput="saveAnalysis('src/main/java/burp/IBurpExtender.java', this.value)"></textarea>
       </div>
-      <div class="progress-note" id="prog_Main_MainPanel"></div>
-      <a class="detail-link" href="repo_0x727_BypassPro__Main_MainPanel.html">
-        📋 View 40 affected classes →
+      <div class="progress-note" id="prog_src_main_java_burp_IBurpExtender_java"></div>
+      <a class="detail-link" href="repo_0x727_BypassPro__src_main_java_burp_IBurpExtender.java.html">
+        📋 View 28 deterministic / 28 MC targets →
       </a>
     </div>
   </div>
   <div class="src-block" id="src_9">
     <button class="src-header" onclick="toggleBlock(9)">
-      <span class="src-name">burp.IBurpExtender</span>
+      <span class="src-name">src/main/java/burp/IBurpExtenderCallbacks.java</span>
       <span class="src-meta">
-        <span class="badge">Score 75.2402</span>
-        <span class="badge">Affected 40</span>
-        <span class="badge">Communities 17</span>
-        <span class="badge">Waves 3</span>
+        <span class="badge">Det 27</span>
+        <span class="badge">MC 27</span>
+        <span class="badge">Code Smell 0.269</span>
+        <span class="badge">C0</span>
       </span>
       <span class="chevron" id="chev_9">▶</span>
     </button>
     <div class="src-body" id="body_9" style="display:none">
       <div class="analysis-row">
-        <label>Analysis of <strong>burp.IBurpExtender</strong></label>
+        <label>Analysis of <strong>src/main/java/burp/IBurpExtenderCallbacks.java</strong></label>
         <textarea class="analysis-field" id="analysis_9" rows="3"
           placeholder="Enter your analysis for this class…"
-          oninput="saveAnalysis('burp.IBurpExtender', this.value)"></textarea>
+          oninput="saveAnalysis('src/main/java/burp/IBurpExtenderCallbacks.java', this.value)"></textarea>
       </div>
-      <div class="progress-note" id="prog_burp_IBurpExtender"></div>
-      <a class="detail-link" href="repo_0x727_BypassPro__burp_IBurpExtender.html">
-        📋 View 40 affected classes →
+      <div class="progress-note" id="prog_src_main_java_burp_IBurpExtenderCallbacks_java"></div>
+      <a class="detail-link" href="repo_0x727_BypassPro__src_main_java_burp_IBurpExtenderCallbacks.java.html">
+        📋 View 27 deterministic / 27 MC targets →
       </a>
     </div>
   </div>
   <div class="src-block" id="src_10">
     <button class="src-header" onclick="toggleBlock(10)">
-      <span class="src-name">burp.IIntruderPayloadGeneratorFactory</span>
+      <span class="src-name">src/main/java/Main/ConfigLoader.java</span>
       <span class="src-meta">
-        <span class="badge">Score 73.3986</span>
-        <span class="badge">Affected 40</span>
-        <span class="badge">Communities 17</span>
-        <span class="badge">Waves 3</span>
+        <span class="badge">Det 0</span>
+        <span class="badge">MC 45</span>
+        <span class="badge">Code Smell 0.538</span>
+        <span class="badge">C0</span>
       </span>
       <span class="chevron" id="chev_10">▶</span>
     </button>
     <div class="src-body" id="body_10" style="display:none">
       <div class="analysis-row">
-        <label>Analysis of <strong>burp.IIntruderPayloadGeneratorFactory</strong></label>
+        <label>Analysis of <strong>src/main/java/Main/ConfigLoader.java</strong></label>
         <textarea class="analysis-field" id="analysis_10" rows="3"
           placeholder="Enter your analysis for this class…"
-          oninput="saveAnalysis('burp.IIntruderPayloadGeneratorFactory', this.value)"></textarea>
+          oninput="saveAnalysis('src/main/java/Main/ConfigLoader.java', this.value)"></textarea>
       </div>
-      <div class="progress-note" id="prog_burp_IIntruderPayloadGeneratorFactory"></div>
-      <a class="detail-link" href="repo_0x727_BypassPro__burp_IIntruderPayloadGeneratorFactory.html">
-        📋 View 40 affected classes →
+      <div class="progress-note" id="prog_src_main_java_Main_ConfigLoader_java"></div>
+      <a class="detail-link" href="repo_0x727_BypassPro__src_main_java_Main_ConfigLoader.java.html">
+        📋 View 0 deterministic / 45 MC targets →
       </a>
     </div>
   </div>
   <div class="src-block" id="src_11">
     <button class="src-header" onclick="toggleBlock(11)">
-      <span class="src-name">Main.BypassTableModel</span>
+      <span class="src-name">src/test/java/Main/ghostbits/AutoGhostBitsGeneratorTest.java</span>
       <span class="src-meta">
-        <span class="badge">Score 73.0948</span>
-        <span class="badge">Affected 40</span>
-        <span class="badge">Communities 17</span>
-        <span class="badge">Waves 4</span>
+        <span class="badge">Det 5</span>
+        <span class="badge">MC 5</span>
+        <span class="badge">Code Smell 0.269</span>
+        <span class="badge">C0</span>
       </span>
       <span class="chevron" id="chev_11">▶</span>
     </button>
     <div class="src-body" id="body_11" style="display:none">
       <div class="analysis-row">
-        <label>Analysis of <strong>Main.BypassTableModel</strong></label>
+        <label>Analysis of <strong>src/test/java/Main/ghostbits/AutoGhostBitsGeneratorTest.java</strong></label>
         <textarea class="analysis-field" id="analysis_11" rows="3"
           placeholder="Enter your analysis for this class…"
-          oninput="saveAnalysis('Main.BypassTableModel', this.value)"></textarea>
+          oninput="saveAnalysis('src/test/java/Main/ghostbits/AutoGhostBitsGeneratorTest.java', this.value)"></textarea>
       </div>
-      <div class="progress-note" id="prog_Main_BypassTableModel"></div>
-      <a class="detail-link" href="repo_0x727_BypassPro__Main_BypassTableModel.html">
-        📋 View 40 affected classes →
+      <div class="progress-note" id="prog_src_test_java_Main_ghostbits_AutoGhostBitsGeneratorTest_java"></div>
+      <a class="detail-link" href="repo_0x727_BypassPro__src_test_java_Main_ghostbits_AutoGhostBitsGeneratorTest.java.html">
+        📋 View 5 deterministic / 5 MC targets →
       </a>
     </div>
   </div>
   <div class="src-block" id="src_12">
     <button class="src-header" onclick="toggleBlock(12)">
-      <span class="src-name">burp.IContextMenuFactory</span>
+      <span class="src-name">src/main/java/Main/ghostbits/AutoGhostBitsGenerator.java</span>
       <span class="src-meta">
-        <span class="badge">Score 72.5603</span>
-        <span class="badge">Affected 40</span>
-        <span class="badge">Communities 17</span>
-        <span class="badge">Waves 3</span>
+        <span class="badge">Det 4</span>
+        <span class="badge">MC 4</span>
+        <span class="badge">Code Smell 0.500</span>
+        <span class="badge">C0</span>
       </span>
       <span class="chevron" id="chev_12">▶</span>
     </button>
     <div class="src-body" id="body_12" style="display:none">
       <div class="analysis-row">
-        <label>Analysis of <strong>burp.IContextMenuFactory</strong></label>
+        <label>Analysis of <strong>src/main/java/Main/ghostbits/AutoGhostBitsGenerator.java</strong></label>
         <textarea class="analysis-field" id="analysis_12" rows="3"
           placeholder="Enter your analysis for this class…"
-          oninput="saveAnalysis('burp.IContextMenuFactory', this.value)"></textarea>
+          oninput="saveAnalysis('src/main/java/Main/ghostbits/AutoGhostBitsGenerator.java', this.value)"></textarea>
       </div>
-      <div class="progress-note" id="prog_burp_IContextMenuFactory"></div>
-      <a class="detail-link" href="repo_0x727_BypassPro__burp_IContextMenuFactory.html">
-        📋 View 40 affected classes →
+      <div class="progress-note" id="prog_src_main_java_Main_ghostbits_AutoGhostBitsGenerator_java"></div>
+      <a class="detail-link" href="repo_0x727_BypassPro__src_main_java_Main_ghostbits_AutoGhostBitsGenerator.java.html">
+        📋 View 4 deterministic / 4 MC targets →
       </a>
     </div>
   </div>
   <div class="src-block" id="src_13">
     <button class="src-header" onclick="toggleBlock(13)">
-      <span class="src-name">burp.IProxyListener</span>
+      <span class="src-name">src/main/java/burp/IExtensionHelpers.java</span>
       <span class="src-meta">
-        <span class="badge">Score 72.5588</span>
-        <span class="badge">Affected 40</span>
-        <span class="badge">Communities 17</span>
-        <span class="badge">Waves 3</span>
+        <span class="badge">Det 4</span>
+        <span class="badge">MC 4</span>
+        <span class="badge">Code Smell 0.173</span>
+        <span class="badge">C0</span>
       </span>
       <span class="chevron" id="chev_13">▶</span>
     </button>
     <div class="src-body" id="body_13" style="display:none">
       <div class="analysis-row">
-        <label>Analysis of <strong>burp.IProxyListener</strong></label>
+        <label>Analysis of <strong>src/main/java/burp/IExtensionHelpers.java</strong></label>
         <textarea class="analysis-field" id="analysis_13" rows="3"
           placeholder="Enter your analysis for this class…"
-          oninput="saveAnalysis('burp.IProxyListener', this.value)"></textarea>
+          oninput="saveAnalysis('src/main/java/burp/IExtensionHelpers.java', this.value)"></textarea>
       </div>
-      <div class="progress-note" id="prog_burp_IProxyListener"></div>
-      <a class="detail-link" href="repo_0x727_BypassPro__burp_IProxyListener.html">
-        📋 View 40 affected classes →
+      <div class="progress-note" id="prog_src_main_java_burp_IExtensionHelpers_java"></div>
+      <a class="detail-link" href="repo_0x727_BypassPro__src_main_java_burp_IExtensionHelpers.java.html">
+        📋 View 4 deterministic / 4 MC targets →
       </a>
     </div>
   </div>
   <div class="src-block" id="src_14">
     <button class="src-header" onclick="toggleBlock(14)">
-      <span class="src-name">burp.IHttpRequestResponse</span>
+      <span class="src-name">src/main/java/burp/IScannerCheck.java</span>
       <span class="src-meta">
-        <span class="badge">Score 72.2944</span>
-        <span class="badge">Affected 40</span>
-        <span class="badge">Communities 17</span>
-        <span class="badge">Waves 3</span>
+        <span class="badge">Det 3</span>
+        <span class="badge">MC 3</span>
+        <span class="badge">Code Smell 0.077</span>
+        <span class="badge">C0</span>
       </span>
       <span class="chevron" id="chev_14">▶</span>
     </button>
     <div class="src-body" id="body_14" style="display:none">
       <div class="analysis-row">
-        <label>Analysis of <strong>burp.IHttpRequestResponse</strong></label>
+        <label>Analysis of <strong>src/main/java/burp/IScannerCheck.java</strong></label>
         <textarea class="analysis-field" id="analysis_14" rows="3"
           placeholder="Enter your analysis for this class…"
-          oninput="saveAnalysis('burp.IHttpRequestResponse', this.value)"></textarea>
+          oninput="saveAnalysis('src/main/java/burp/IScannerCheck.java', this.value)"></textarea>
       </div>
-      <div class="progress-note" id="prog_burp_IHttpRequestResponse"></div>
-      <a class="detail-link" href="repo_0x727_BypassPro__burp_IHttpRequestResponse.html">
-        📋 View 40 affected classes →
+      <div class="progress-note" id="prog_src_main_java_burp_IScannerCheck_java"></div>
+      <a class="detail-link" href="repo_0x727_BypassPro__src_main_java_burp_IScannerCheck.java.html">
+        📋 View 3 deterministic / 3 MC targets →
       </a>
     </div>
   </div>
   <div class="src-block" id="src_15">
     <button class="src-header" onclick="toggleBlock(15)">
-      <span class="src-name">burp.IScannerInsertionPointProvider</span>
+      <span class="src-name">src/main/java/burp/IContextMenuFactory.java</span>
       <span class="src-meta">
-        <span class="badge">Score 71.9976</span>
-        <span class="badge">Affected 40</span>
-        <span class="badge">Communities 17</span>
-        <span class="badge">Waves 3</span>
+        <span class="badge">Det 3</span>
+        <span class="badge">MC 3</span>
+        <span class="badge">Code Smell 0.019</span>
+        <span class="badge">C0</span>
       </span>
       <span class="chevron" id="chev_15">▶</span>
     </button>
     <div class="src-body" id="body_15" style="display:none">
       <div class="analysis-row">
-        <label>Analysis of <strong>burp.IScannerInsertionPointProvider</strong></label>
+        <label>Analysis of <strong>src/main/java/burp/IContextMenuFactory.java</strong></label>
         <textarea class="analysis-field" id="analysis_15" rows="3"
           placeholder="Enter your analysis for this class…"
-          oninput="saveAnalysis('burp.IScannerInsertionPointProvider', this.value)"></textarea>
+          oninput="saveAnalysis('src/main/java/burp/IContextMenuFactory.java', this.value)"></textarea>
       </div>
-      <div class="progress-note" id="prog_burp_IScannerInsertionPointProvider"></div>
-      <a class="detail-link" href="repo_0x727_BypassPro__burp_IScannerInsertionPointProvider.html">
-        📋 View 40 affected classes →
+      <div class="progress-note" id="prog_src_main_java_burp_IContextMenuFactory_java"></div>
+      <a class="detail-link" href="repo_0x727_BypassPro__src_main_java_burp_IContextMenuFactory.java.html">
+        📋 View 3 deterministic / 3 MC targets →
       </a>
     </div>
   </div>
   <div class="src-block" id="src_16">
     <button class="src-header" onclick="toggleBlock(16)">
-      <span class="src-name">burp.IMessageEditorTabFactory</span>
+      <span class="src-name">src/main/java/Main/BypassTableModel.java</span>
       <span class="src-meta">
-        <span class="badge">Score 71.3074</span>
-        <span class="badge">Affected 40</span>
-        <span class="badge">Communities 17</span>
-        <span class="badge">Waves 3</span>
+        <span class="badge">Det 2</span>
+        <span class="badge">MC 3</span>
+        <span class="badge">Code Smell 0.173</span>
+        <span class="badge">C0</span>
       </span>
       <span class="chevron" id="chev_16">▶</span>
     </button>
     <div class="src-body" id="body_16" style="display:none">
       <div class="analysis-row">
-        <label>Analysis of <strong>burp.IMessageEditorTabFactory</strong></label>
+        <label>Analysis of <strong>src/main/java/Main/BypassTableModel.java</strong></label>
         <textarea class="analysis-field" id="analysis_16" rows="3"
           placeholder="Enter your analysis for this class…"
-          oninput="saveAnalysis('burp.IMessageEditorTabFactory', this.value)"></textarea>
+          oninput="saveAnalysis('src/main/java/Main/BypassTableModel.java', this.value)"></textarea>
       </div>
-      <div class="progress-note" id="prog_burp_IMessageEditorTabFactory"></div>
-      <a class="detail-link" href="repo_0x727_BypassPro__burp_IMessageEditorTabFactory.html">
-        📋 View 40 affected classes →
+      <div class="progress-note" id="prog_src_main_java_Main_BypassTableModel_java"></div>
+      <a class="detail-link" href="repo_0x727_BypassPro__src_main_java_Main_BypassTableModel.java.html">
+        📋 View 2 deterministic / 3 MC targets →
       </a>
     </div>
   </div>
   <div class="src-block" id="src_17">
     <button class="src-header" onclick="toggleBlock(17)">
-      <span class="src-name">burp.ISessionHandlingAction</span>
+      <span class="src-name">src/test/java/Main/ghostbits/GhostBitsEngineTest.java</span>
       <span class="src-meta">
-        <span class="badge">Score 71.1865</span>
-        <span class="badge">Affected 40</span>
-        <span class="badge">Communities 17</span>
-        <span class="badge">Waves 3</span>
+        <span class="badge">Det 2</span>
+        <span class="badge">MC 2</span>
+        <span class="badge">Code Smell 0.288</span>
+        <span class="badge">C0</span>
       </span>
       <span class="chevron" id="chev_17">▶</span>
     </button>
     <div class="src-body" id="body_17" style="display:none">
       <div class="analysis-row">
-        <label>Analysis of <strong>burp.ISessionHandlingAction</strong></label>
+        <label>Analysis of <strong>src/test/java/Main/ghostbits/GhostBitsEngineTest.java</strong></label>
         <textarea class="analysis-field" id="analysis_17" rows="3"
           placeholder="Enter your analysis for this class…"
-          oninput="saveAnalysis('burp.ISessionHandlingAction', this.value)"></textarea>
+          oninput="saveAnalysis('src/test/java/Main/ghostbits/GhostBitsEngineTest.java', this.value)"></textarea>
       </div>
-      <div class="progress-note" id="prog_burp_ISessionHandlingAction"></div>
-      <a class="detail-link" href="repo_0x727_BypassPro__burp_ISessionHandlingAction.html">
-        📋 View 40 affected classes →
+      <div class="progress-note" id="prog_src_test_java_Main_ghostbits_GhostBitsEngineTest_java"></div>
+      <a class="detail-link" href="repo_0x727_BypassPro__src_test_java_Main_ghostbits_GhostBitsEngineTest.java.html">
+        📋 View 2 deterministic / 2 MC targets →
       </a>
     </div>
   </div>
   <div class="src-block" id="src_18">
     <button class="src-header" onclick="toggleBlock(18)">
-      <span class="src-name">burp.IResponseInfo</span>
+      <span class="src-name">src/main/java/Main/ghostbits/GhostBitsCodec.java</span>
       <span class="src-meta">
-        <span class="badge">Score 70.1113</span>
-        <span class="badge">Affected 40</span>
-        <span class="badge">Communities 17</span>
-        <span class="badge">Waves 4</span>
+        <span class="badge">Det 2</span>
+        <span class="badge">MC 2</span>
+        <span class="badge">Code Smell 0.019</span>
+        <span class="badge">C0</span>
       </span>
       <span class="chevron" id="chev_18">▶</span>
     </button>
     <div class="src-body" id="body_18" style="display:none">
       <div class="analysis-row">
-        <label>Analysis of <strong>burp.IResponseInfo</strong></label>
+        <label>Analysis of <strong>src/main/java/Main/ghostbits/GhostBitsCodec.java</strong></label>
         <textarea class="analysis-field" id="analysis_18" rows="3"
           placeholder="Enter your analysis for this class…"
-          oninput="saveAnalysis('burp.IResponseInfo', this.value)"></textarea>
+          oninput="saveAnalysis('src/main/java/Main/ghostbits/GhostBitsCodec.java', this.value)"></textarea>
       </div>
-      <div class="progress-note" id="prog_burp_IResponseInfo"></div>
-      <a class="detail-link" href="repo_0x727_BypassPro__burp_IResponseInfo.html">
-        📋 View 40 affected classes →
+      <div class="progress-note" id="prog_src_main_java_Main_ghostbits_GhostBitsCodec_java"></div>
+      <a class="detail-link" href="repo_0x727_BypassPro__src_main_java_Main_ghostbits_GhostBitsCodec.java.html">
+        📋 View 2 deterministic / 2 MC targets →
       </a>
     </div>
   </div>
   <div class="src-block" id="src_19">
     <button class="src-header" onclick="toggleBlock(19)">
-      <span class="src-name">burp.IScannerCheck</span>
+      <span class="src-name">src/main/java/burp/IProxyListener.java</span>
       <span class="src-meta">
-        <span class="badge">Score 70.0269</span>
-        <span class="badge">Affected 40</span>
-        <span class="badge">Communities 17</span>
-        <span class="badge">Waves 3</span>
+        <span class="badge">Det 2</span>
+        <span class="badge">MC 2</span>
+        <span class="badge">Code Smell 0.019</span>
+        <span class="badge">C0</span>
       </span>
       <span class="chevron" id="chev_19">▶</span>
     </button>
     <div class="src-body" id="body_19" style="display:none">
       <div class="analysis-row">
-        <label>Analysis of <strong>burp.IScannerCheck</strong></label>
+        <label>Analysis of <strong>src/main/java/burp/IProxyListener.java</strong></label>
         <textarea class="analysis-field" id="analysis_19" rows="3"
           placeholder="Enter your analysis for this class…"
-          oninput="saveAnalysis('burp.IScannerCheck', this.value)"></textarea>
+          oninput="saveAnalysis('src/main/java/burp/IProxyListener.java', this.value)"></textarea>
       </div>
-      <div class="progress-note" id="prog_burp_IScannerCheck"></div>
-      <a class="detail-link" href="repo_0x727_BypassPro__burp_IScannerCheck.html">
-        📋 View 40 affected classes →
+      <div class="progress-note" id="prog_src_main_java_burp_IProxyListener_java"></div>
+      <a class="detail-link" href="repo_0x727_BypassPro__src_main_java_burp_IProxyListener.java.html">
+        📋 View 2 deterministic / 2 MC targets →
       </a>
     </div>
   </div>
   <div class="src-block" id="src_20">
     <button class="src-header" onclick="toggleBlock(20)">
-      <span class="src-name">burp.IMenuItemHandler</span>
+      <span class="src-name">src/main/java/burp/IScannerInsertionPointProvider.java</span>
       <span class="src-meta">
-        <span class="badge">Score 69.9398</span>
-        <span class="badge">Affected 40</span>
-        <span class="badge">Communities 17</span>
-        <span class="badge">Waves 3</span>
+        <span class="badge">Det 2</span>
+        <span class="badge">MC 2</span>
+        <span class="badge">Code Smell 0.019</span>
+        <span class="badge">C0</span>
       </span>
       <span class="chevron" id="chev_20">▶</span>
     </button>
     <div class="src-body" id="body_20" style="display:none">
       <div class="analysis-row">
-        <label>Analysis of <strong>burp.IMenuItemHandler</strong></label>
+        <label>Analysis of <strong>src/main/java/burp/IScannerInsertionPointProvider.java</strong></label>
         <textarea class="analysis-field" id="analysis_20" rows="3"
           placeholder="Enter your analysis for this class…"
-          oninput="saveAnalysis('burp.IMenuItemHandler', this.value)"></textarea>
+          oninput="saveAnalysis('src/main/java/burp/IScannerInsertionPointProvider.java', this.value)"></textarea>
       </div>
-      <div class="progress-note" id="prog_burp_IMenuItemHandler"></div>
-      <a class="detail-link" href="repo_0x727_BypassPro__burp_IMenuItemHandler.html">
-        📋 View 40 affected classes →
+      <div class="progress-note" id="prog_src_main_java_burp_IScannerInsertionPointProvider_java"></div>
+      <a class="detail-link" href="repo_0x727_BypassPro__src_main_java_burp_IScannerInsertionPointProvider.java.html">
+        📋 View 2 deterministic / 2 MC targets →
       </a>
     </div>
   </div>
   <div class="src-block" id="src_21">
     <button class="src-header" onclick="toggleBlock(21)">
-      <span class="src-name">burp.IHttpRequestResponseWithMarkers</span>
+      <span class="src-name">src/main/java/burp/IScannerListener.java</span>
       <span class="src-meta">
-        <span class="badge">Score 69.4907</span>
-        <span class="badge">Affected 40</span>
-        <span class="badge">Communities 17</span>
-        <span class="badge">Waves 3</span>
+        <span class="badge">Det 2</span>
+        <span class="badge">MC 2</span>
+        <span class="badge">Code Smell 0.019</span>
+        <span class="badge">C0</span>
       </span>
       <span class="chevron" id="chev_21">▶</span>
     </button>
     <div class="src-body" id="body_21" style="display:none">
       <div class="analysis-row">
-        <label>Analysis of <strong>burp.IHttpRequestResponseWithMarkers</strong></label>
+        <label>Analysis of <strong>src/main/java/burp/IScannerListener.java</strong></label>
         <textarea class="analysis-field" id="analysis_21" rows="3"
           placeholder="Enter your analysis for this class…"
-          oninput="saveAnalysis('burp.IHttpRequestResponseWithMarkers', this.value)"></textarea>
+          oninput="saveAnalysis('src/main/java/burp/IScannerListener.java', this.value)"></textarea>
       </div>
-      <div class="progress-note" id="prog_burp_IHttpRequestResponseWithMarkers"></div>
-      <a class="detail-link" href="repo_0x727_BypassPro__burp_IHttpRequestResponseWithMarkers.html">
-        📋 View 40 affected classes →
+      <div class="progress-note" id="prog_src_main_java_burp_IScannerListener_java"></div>
+      <a class="detail-link" href="repo_0x727_BypassPro__src_main_java_burp_IScannerListener.java.html">
+        📋 View 2 deterministic / 2 MC targets →
       </a>
     </div>
   </div>
   <div class="src-block" id="src_22">
     <button class="src-header" onclick="toggleBlock(22)">
-      <span class="src-name">burp.IMessageEditor</span>
+      <span class="src-name">src/main/java/burp/IIntruderPayloadGeneratorFactory.java</span>
       <span class="src-meta">
-        <span class="badge">Score 68.8443</span>
-        <span class="badge">Affected 40</span>
-        <span class="badge">Communities 17</span>
-        <span class="badge">Waves 3</span>
+        <span class="badge">Det 2</span>
+        <span class="badge">MC 2</span>
+        <span class="badge">Code Smell 0.058</span>
+        <span class="badge">C0, C2</span>
       </span>
       <span class="chevron" id="chev_22">▶</span>
     </button>
     <div class="src-body" id="body_22" style="display:none">
       <div class="analysis-row">
-        <label>Analysis of <strong>burp.IMessageEditor</strong></label>
+        <label>Analysis of <strong>src/main/java/burp/IIntruderPayloadGeneratorFactory.java</strong></label>
         <textarea class="analysis-field" id="analysis_22" rows="3"
           placeholder="Enter your analysis for this class…"
-          oninput="saveAnalysis('burp.IMessageEditor', this.value)"></textarea>
+          oninput="saveAnalysis('src/main/java/burp/IIntruderPayloadGeneratorFactory.java', this.value)"></textarea>
       </div>
-      <div class="progress-note" id="prog_burp_IMessageEditor"></div>
-      <a class="detail-link" href="repo_0x727_BypassPro__burp_IMessageEditor.html">
-        📋 View 40 affected classes →
+      <div class="progress-note" id="prog_src_main_java_burp_IIntruderPayloadGeneratorFactory_java"></div>
+      <a class="detail-link" href="repo_0x727_BypassPro__src_main_java_burp_IIntruderPayloadGeneratorFactory.java.html">
+        📋 View 2 deterministic / 2 MC targets →
       </a>
     </div>
   </div>
   <div class="src-block" id="src_23">
     <button class="src-header" onclick="toggleBlock(23)">
-      <span class="src-name">burp.IScanQueueItem</span>
+      <span class="src-name">src/main/java/burp/IMessageEditorTabFactory.java</span>
       <span class="src-meta">
-        <span class="badge">Score 68.3724</span>
-        <span class="badge">Affected 40</span>
-        <span class="badge">Communities 17</span>
-        <span class="badge">Waves 3</span>
+        <span class="badge">Det 2</span>
+        <span class="badge">MC 2</span>
+        <span class="badge">Code Smell 0.019</span>
+        <span class="badge">C0</span>
       </span>
       <span class="chevron" id="chev_23">▶</span>
     </button>
     <div class="src-body" id="body_23" style="display:none">
       <div class="analysis-row">
-        <label>Analysis of <strong>burp.IScanQueueItem</strong></label>
+        <label>Analysis of <strong>src/main/java/burp/IMessageEditorTabFactory.java</strong></label>
         <textarea class="analysis-field" id="analysis_23" rows="3"
           placeholder="Enter your analysis for this class…"
-          oninput="saveAnalysis('burp.IScanQueueItem', this.value)"></textarea>
+          oninput="saveAnalysis('src/main/java/burp/IMessageEditorTabFactory.java', this.value)"></textarea>
       </div>
-      <div class="progress-note" id="prog_burp_IScanQueueItem"></div>
-      <a class="detail-link" href="repo_0x727_BypassPro__burp_IScanQueueItem.html">
-        📋 View 40 affected classes →
+      <div class="progress-note" id="prog_src_main_java_burp_IMessageEditorTabFactory_java"></div>
+      <a class="detail-link" href="repo_0x727_BypassPro__src_main_java_burp_IMessageEditorTabFactory.java.html">
+        📋 View 2 deterministic / 2 MC targets →
       </a>
     </div>
   </div>
   <div class="src-block" id="src_24">
     <button class="src-header" onclick="toggleBlock(24)">
-      <span class="src-name">Main.BypassTable</span>
+      <span class="src-name">src/main/java/burp/IContextMenuInvocation.java</span>
       <span class="src-meta">
-        <span class="badge">Score 67.4486</span>
-        <span class="badge">Affected 40</span>
-        <span class="badge">Communities 17</span>
-        <span class="badge">Waves 3</span>
+        <span class="badge">Det 2</span>
+        <span class="badge">MC 2</span>
+        <span class="badge">Code Smell 0.154</span>
+        <span class="badge">C0</span>
       </span>
       <span class="chevron" id="chev_24">▶</span>
     </button>
     <div class="src-body" id="body_24" style="display:none">
       <div class="analysis-row">
-        <label>Analysis of <strong>Main.BypassTable</strong></label>
+        <label>Analysis of <strong>src/main/java/burp/IContextMenuInvocation.java</strong></label>
         <textarea class="analysis-field" id="analysis_24" rows="3"
           placeholder="Enter your analysis for this class…"
-          oninput="saveAnalysis('Main.BypassTable', this.value)"></textarea>
+          oninput="saveAnalysis('src/main/java/burp/IContextMenuInvocation.java', this.value)"></textarea>
       </div>
-      <div class="progress-note" id="prog_Main_BypassTable"></div>
-      <a class="detail-link" href="repo_0x727_BypassPro__Main_BypassTable.html">
-        📋 View 40 affected classes →
+      <div class="progress-note" id="prog_src_main_java_burp_IContextMenuInvocation_java"></div>
+      <a class="detail-link" href="repo_0x727_BypassPro__src_main_java_burp_IContextMenuInvocation.java.html">
+        📋 View 2 deterministic / 2 MC targets →
       </a>
     </div>
   </div>
   <div class="src-block" id="src_25">
     <button class="src-header" onclick="toggleBlock(25)">
-      <span class="src-name">burp.IScanIssue</span>
+      <span class="src-name">src/main/java/burp/IScanQueueItem.java</span>
       <span class="src-meta">
-        <span class="badge">Score 67.0162</span>
-        <span class="badge">Affected 40</span>
-        <span class="badge">Communities 17</span>
-        <span class="badge">Waves 3</span>
+        <span class="badge">Det 2</span>
+        <span class="badge">MC 2</span>
+        <span class="badge">Code Smell 0.077</span>
+        <span class="badge">C0</span>
       </span>
       <span class="chevron" id="chev_25">▶</span>
     </button>
     <div class="src-body" id="body_25" style="display:none">
       <div class="analysis-row">
-        <label>Analysis of <strong>burp.IScanIssue</strong></label>
+        <label>Analysis of <strong>src/main/java/burp/IScanQueueItem.java</strong></label>
         <textarea class="analysis-field" id="analysis_25" rows="3"
           placeholder="Enter your analysis for this class…"
-          oninput="saveAnalysis('burp.IScanIssue', this.value)"></textarea>
+          oninput="saveAnalysis('src/main/java/burp/IScanQueueItem.java', this.value)"></textarea>
       </div>
-      <div class="progress-note" id="prog_burp_IScanIssue"></div>
-      <a class="detail-link" href="repo_0x727_BypassPro__burp_IScanIssue.html">
-        📋 View 40 affected classes →
+      <div class="progress-note" id="prog_src_main_java_burp_IScanQueueItem_java"></div>
+      <a class="detail-link" href="repo_0x727_BypassPro__src_main_java_burp_IScanQueueItem.java.html">
+        📋 View 2 deterministic / 2 MC targets →
       </a>
     </div>
   </div>
   <div class="src-block" id="src_26">
     <button class="src-header" onclick="toggleBlock(26)">
-      <span class="src-name">Main.DiffPage</span>
+      <span class="src-name">src/main/java/Main/Bypass.java</span>
       <span class="src-meta">
-        <span class="badge">Score 65.5668</span>
-        <span class="badge">Affected 40</span>
-        <span class="badge">Communities 17</span>
-        <span class="badge">Waves 4</span>
+        <span class="badge">Det 1</span>
+        <span class="badge">MC 2</span>
+        <span class="badge">Code Smell 0.115</span>
+        <span class="badge">C0</span>
       </span>
       <span class="chevron" id="chev_26">▶</span>
     </button>
     <div class="src-body" id="body_26" style="display:none">
       <div class="analysis-row">
-        <label>Analysis of <strong>Main.DiffPage</strong></label>
+        <label>Analysis of <strong>src/main/java/Main/Bypass.java</strong></label>
         <textarea class="analysis-field" id="analysis_26" rows="3"
           placeholder="Enter your analysis for this class…"
-          oninput="saveAnalysis('Main.DiffPage', this.value)"></textarea>
+          oninput="saveAnalysis('src/main/java/Main/Bypass.java', this.value)"></textarea>
       </div>
-      <div class="progress-note" id="prog_Main_DiffPage"></div>
-      <a class="detail-link" href="repo_0x727_BypassPro__Main_DiffPage.html">
-        📋 View 40 affected classes →
+      <div class="progress-note" id="prog_src_main_java_Main_Bypass_java"></div>
+      <a class="detail-link" href="repo_0x727_BypassPro__src_main_java_Main_Bypass.java.html">
+        📋 View 1 deterministic / 2 MC targets →
       </a>
     </div>
   </div>
   <div class="src-block" id="src_27">
     <button class="src-header" onclick="toggleBlock(27)">
-      <span class="src-name">burp.IMessageEditorController</span>
+      <span class="src-name">src/test/java/Main/ghostbits/RawSocketSenderTest.java</span>
       <span class="src-meta">
-        <span class="badge">Score 65.3652</span>
-        <span class="badge">Affected 40</span>
-        <span class="badge">Communities 17</span>
-        <span class="badge">Waves 3</span>
+        <span class="badge">Det 1</span>
+        <span class="badge">MC 1</span>
+        <span class="badge">Code Smell 0.212</span>
+        <span class="badge">C4</span>
       </span>
       <span class="chevron" id="chev_27">▶</span>
     </button>
     <div class="src-body" id="body_27" style="display:none">
       <div class="analysis-row">
-        <label>Analysis of <strong>burp.IMessageEditorController</strong></label>
+        <label>Analysis of <strong>src/test/java/Main/ghostbits/RawSocketSenderTest.java</strong></label>
         <textarea class="analysis-field" id="analysis_27" rows="3"
           placeholder="Enter your analysis for this class…"
-          oninput="saveAnalysis('burp.IMessageEditorController', this.value)"></textarea>
+          oninput="saveAnalysis('src/test/java/Main/ghostbits/RawSocketSenderTest.java', this.value)"></textarea>
       </div>
-      <div class="progress-note" id="prog_burp_IMessageEditorController"></div>
-      <a class="detail-link" href="repo_0x727_BypassPro__burp_IMessageEditorController.html">
-        📋 View 40 affected classes →
+      <div class="progress-note" id="prog_src_test_java_Main_ghostbits_RawSocketSenderTest_java"></div>
+      <a class="detail-link" href="repo_0x727_BypassPro__src_test_java_Main_ghostbits_RawSocketSenderTest.java.html">
+        📋 View 1 deterministic / 1 MC targets →
       </a>
     </div>
   </div>
   <div class="src-block" id="src_28">
     <button class="src-header" onclick="toggleBlock(28)">
-      <span class="src-name">burp.IHttpRequestResponsePersisted</span>
+      <span class="src-name">src/main/java/Main/ghostbits/GhostBitsEngine.java</span>
       <span class="src-meta">
-        <span class="badge">Score 64.8271</span>
-        <span class="badge">Affected 40</span>
-        <span class="badge">Communities 17</span>
-        <span class="badge">Waves 3</span>
+        <span class="badge">Det 1</span>
+        <span class="badge">MC 1</span>
+        <span class="badge">Code Smell 0.365</span>
+        <span class="badge">C0</span>
       </span>
       <span class="chevron" id="chev_28">▶</span>
     </button>
     <div class="src-body" id="body_28" style="display:none">
       <div class="analysis-row">
-        <label>Analysis of <strong>burp.IHttpRequestResponsePersisted</strong></label>
+        <label>Analysis of <strong>src/main/java/Main/ghostbits/GhostBitsEngine.java</strong></label>
         <textarea class="analysis-field" id="analysis_28" rows="3"
           placeholder="Enter your analysis for this class…"
-          oninput="saveAnalysis('burp.IHttpRequestResponsePersisted', this.value)"></textarea>
+          oninput="saveAnalysis('src/main/java/Main/ghostbits/GhostBitsEngine.java', this.value)"></textarea>
       </div>
-      <div class="progress-note" id="prog_burp_IHttpRequestResponsePersisted"></div>
-      <a class="detail-link" href="repo_0x727_BypassPro__burp_IHttpRequestResponsePersisted.html">
-        📋 View 40 affected classes →
+      <div class="progress-note" id="prog_src_main_java_Main_ghostbits_GhostBitsEngine_java"></div>
+      <a class="detail-link" href="repo_0x727_BypassPro__src_main_java_Main_ghostbits_GhostBitsEngine.java.html">
+        📋 View 1 deterministic / 1 MC targets →
       </a>
     </div>
   </div>
   <div class="src-block" id="src_29">
     <button class="src-header" onclick="toggleBlock(29)">
-      <span class="src-name">burp.IInterceptedProxyMessage</span>
+      <span class="src-name">src/test/java/Main/DiffPageTest.java</span>
       <span class="src-meta">
-        <span class="badge">Score 64.4468</span>
-        <span class="badge">Affected 40</span>
-        <span class="badge">Communities 17</span>
-        <span class="badge">Waves 4</span>
+        <span class="badge">Det 1</span>
+        <span class="badge">MC 1</span>
+        <span class="badge">Code Smell 0.077</span>
+        <span class="badge">C3</span>
       </span>
       <span class="chevron" id="chev_29">▶</span>
     </button>
     <div class="src-body" id="body_29" style="display:none">
       <div class="analysis-row">
-        <label>Analysis of <strong>burp.IInterceptedProxyMessage</strong></label>
+        <label>Analysis of <strong>src/test/java/Main/DiffPageTest.java</strong></label>
         <textarea class="analysis-field" id="analysis_29" rows="3"
           placeholder="Enter your analysis for this class…"
-          oninput="saveAnalysis('burp.IInterceptedProxyMessage', this.value)"></textarea>
+          oninput="saveAnalysis('src/test/java/Main/DiffPageTest.java', this.value)"></textarea>
       </div>
-      <div class="progress-note" id="prog_burp_IInterceptedProxyMessage"></div>
-      <a class="detail-link" href="repo_0x727_BypassPro__burp_IInterceptedProxyMessage.html">
-        📋 View 40 affected classes →
+      <div class="progress-note" id="prog_src_test_java_Main_DiffPageTest_java"></div>
+      <a class="detail-link" href="repo_0x727_BypassPro__src_test_java_Main_DiffPageTest.java.html">
+        📋 View 1 deterministic / 1 MC targets →
       </a>
     </div>
   </div>
   <div class="src-block" id="src_30">
     <button class="src-header" onclick="toggleBlock(30)">
-      <span class="src-name">burp.IRequestInfo</span>
+      <span class="src-name">src/main/java/burp/IHttpListener.java</span>
       <span class="src-meta">
-        <span class="badge">Score 63.6678</span>
-        <span class="badge">Affected 40</span>
-        <span class="badge">Communities 17</span>
-        <span class="badge">Waves 4</span>
+        <span class="badge">Det 1</span>
+        <span class="badge">MC 1</span>
+        <span class="badge">Code Smell 0.019</span>
+        <span class="badge">C0</span>
       </span>
       <span class="chevron" id="chev_30">▶</span>
     </button>
     <div class="src-body" id="body_30" style="display:none">
       <div class="analysis-row">
-        <label>Analysis of <strong>burp.IRequestInfo</strong></label>
+        <label>Analysis of <strong>src/main/java/burp/IHttpListener.java</strong></label>
         <textarea class="analysis-field" id="analysis_30" rows="3"
           placeholder="Enter your analysis for this class…"
-          oninput="saveAnalysis('burp.IRequestInfo', this.value)"></textarea>
+          oninput="saveAnalysis('src/main/java/burp/IHttpListener.java', this.value)"></textarea>
       </div>
-      <div class="progress-note" id="prog_burp_IRequestInfo"></div>
-      <a class="detail-link" href="repo_0x727_BypassPro__burp_IRequestInfo.html">
-        📋 View 40 affected classes →
+      <div class="progress-note" id="prog_src_main_java_burp_IHttpListener_java"></div>
+      <a class="detail-link" href="repo_0x727_BypassPro__src_main_java_burp_IHttpListener.java.html">
+        📋 View 1 deterministic / 1 MC targets →
       </a>
     </div>
   </div>
   <div class="src-block" id="src_31">
     <button class="src-header" onclick="toggleBlock(31)">
-      <span class="src-name">burp.IExtensionHelpers</span>
+      <span class="src-name">src/main/java/burp/IMenuItemHandler.java</span>
       <span class="src-meta">
-        <span class="badge">Score 63.0633</span>
-        <span class="badge">Affected 40</span>
-        <span class="badge">Communities 17</span>
-        <span class="badge">Waves 3</span>
+        <span class="badge">Det 1</span>
+        <span class="badge">MC 1</span>
+        <span class="badge">Code Smell 0.019</span>
+        <span class="badge">C0</span>
       </span>
       <span class="chevron" id="chev_31">▶</span>
     </button>
     <div class="src-body" id="body_31" style="display:none">
       <div class="analysis-row">
-        <label>Analysis of <strong>burp.IExtensionHelpers</strong></label>
+        <label>Analysis of <strong>src/main/java/burp/IMenuItemHandler.java</strong></label>
         <textarea class="analysis-field" id="analysis_31" rows="3"
           placeholder="Enter your analysis for this class…"
-          oninput="saveAnalysis('burp.IExtensionHelpers', this.value)"></textarea>
+          oninput="saveAnalysis('src/main/java/burp/IMenuItemHandler.java', this.value)"></textarea>
       </div>
-      <div class="progress-note" id="prog_burp_IExtensionHelpers"></div>
-      <a class="detail-link" href="repo_0x727_BypassPro__burp_IExtensionHelpers.html">
-        📋 View 40 affected classes →
+      <div class="progress-note" id="prog_src_main_java_burp_IMenuItemHandler_java"></div>
+      <a class="detail-link" href="repo_0x727_BypassPro__src_main_java_burp_IMenuItemHandler.java.html">
+        📋 View 1 deterministic / 1 MC targets →
       </a>
     </div>
   </div>
   <div class="src-block" id="src_32">
     <button class="src-header" onclick="toggleBlock(32)">
-      <span class="src-name">burp.IContextMenuInvocation</span>
+      <span class="src-name">src/main/java/burp/ISessionHandlingAction.java</span>
       <span class="src-meta">
-        <span class="badge">Score 62.8478</span>
-        <span class="badge">Affected 40</span>
-        <span class="badge">Communities 17</span>
-        <span class="badge">Waves 4</span>
+        <span class="badge">Det 1</span>
+        <span class="badge">MC 1</span>
+        <span class="badge">Code Smell 0.077</span>
+        <span class="badge">C0</span>
       </span>
       <span class="chevron" id="chev_32">▶</span>
     </button>
     <div class="src-body" id="body_32" style="display:none">
       <div class="analysis-row">
-        <label>Analysis of <strong>burp.IContextMenuInvocation</strong></label>
+        <label>Analysis of <strong>src/main/java/burp/ISessionHandlingAction.java</strong></label>
         <textarea class="analysis-field" id="analysis_32" rows="3"
           placeholder="Enter your analysis for this class…"
-          oninput="saveAnalysis('burp.IContextMenuInvocation', this.value)"></textarea>
+          oninput="saveAnalysis('src/main/java/burp/ISessionHandlingAction.java', this.value)"></textarea>
       </div>
-      <div class="progress-note" id="prog_burp_IContextMenuInvocation"></div>
-      <a class="detail-link" href="repo_0x727_BypassPro__burp_IContextMenuInvocation.html">
-        📋 View 40 affected classes →
+      <div class="progress-note" id="prog_src_main_java_burp_ISessionHandlingAction_java"></div>
+      <a class="detail-link" href="repo_0x727_BypassPro__src_main_java_burp_ISessionHandlingAction.java.html">
+        📋 View 1 deterministic / 1 MC targets →
       </a>
     </div>
   </div>
   <div class="src-block" id="src_33">
     <button class="src-header" onclick="toggleBlock(33)">
-      <span class="src-name">Main.BypassMain</span>
+      <span class="src-name">src/main/java/Main/I18nKeys.java</span>
       <span class="src-meta">
-        <span class="badge">Score 60.7127</span>
-        <span class="badge">Affected 40</span>
-        <span class="badge">Communities 17</span>
-        <span class="badge">Waves 3</span>
+        <span class="badge">Det 1</span>
+        <span class="badge">MC 1</span>
+        <span class="badge">Code Smell 0.173</span>
+        <span class="badge">C1</span>
       </span>
       <span class="chevron" id="chev_33">▶</span>
     </button>
     <div class="src-body" id="body_33" style="display:none">
       <div class="analysis-row">
-        <label>Analysis of <strong>Main.BypassMain</strong></label>
+        <label>Analysis of <strong>src/main/java/Main/I18nKeys.java</strong></label>
         <textarea class="analysis-field" id="analysis_33" rows="3"
           placeholder="Enter your analysis for this class…"
-          oninput="saveAnalysis('Main.BypassMain', this.value)"></textarea>
+          oninput="saveAnalysis('src/main/java/Main/I18nKeys.java', this.value)"></textarea>
       </div>
-      <div class="progress-note" id="prog_Main_BypassMain"></div>
-      <a class="detail-link" href="repo_0x727_BypassPro__Main_BypassMain.html">
-        📋 View 40 affected classes →
+      <div class="progress-note" id="prog_src_main_java_Main_I18nKeys_java"></div>
+      <a class="detail-link" href="repo_0x727_BypassPro__src_main_java_Main_I18nKeys.java.html">
+        📋 View 1 deterministic / 1 MC targets →
       </a>
     </div>
   </div>
   <div class="src-block" id="src_34">
     <button class="src-header" onclick="toggleBlock(34)">
-      <span class="src-name">Main.Bypass</span>
+      <span class="src-name">src/main/java/Main/I18n.java</span>
       <span class="src-meta">
-        <span class="badge">Score 60.3477</span>
-        <span class="badge">Affected 40</span>
-        <span class="badge">Communities 17</span>
-        <span class="badge">Waves 4</span>
+        <span class="badge">Det 1</span>
+        <span class="badge">MC 1</span>
+        <span class="badge">Code Smell 0.212</span>
+        <span class="badge">C0, C1</span>
       </span>
       <span class="chevron" id="chev_34">▶</span>
     </button>
     <div class="src-body" id="body_34" style="display:none">
       <div class="analysis-row">
-        <label>Analysis of <strong>Main.Bypass</strong></label>
+        <label>Analysis of <strong>src/main/java/Main/I18n.java</strong></label>
         <textarea class="analysis-field" id="analysis_34" rows="3"
           placeholder="Enter your analysis for this class…"
-          oninput="saveAnalysis('Main.Bypass', this.value)"></textarea>
+          oninput="saveAnalysis('src/main/java/Main/I18n.java', this.value)"></textarea>
       </div>
-      <div class="progress-note" id="prog_Main_Bypass"></div>
-      <a class="detail-link" href="repo_0x727_BypassPro__Main_Bypass.html">
-        📋 View 40 affected classes →
+      <div class="progress-note" id="prog_src_main_java_Main_I18n_java"></div>
+      <a class="detail-link" href="repo_0x727_BypassPro__src_main_java_Main_I18n.java.html">
+        📋 View 1 deterministic / 1 MC targets →
       </a>
     </div>
   </div>
   <div class="src-block" id="src_35">
     <button class="src-header" onclick="toggleBlock(35)">
-      <span class="src-name">burp.IIntruderAttack</span>
+      <span class="src-name">src/main/java/burp/IInterceptedProxyMessage.java</span>
       <span class="src-meta">
-        <span class="badge">Score 53.7701</span>
-        <span class="badge">Affected 40</span>
-        <span class="badge">Communities 17</span>
-        <span class="badge">Waves 4</span>
+        <span class="badge">Det 1</span>
+        <span class="badge">MC 1</span>
+        <span class="badge">Code Smell 0.135</span>
+        <span class="badge">C0</span>
       </span>
       <span class="chevron" id="chev_35">▶</span>
     </button>
     <div class="src-body" id="body_35" style="display:none">
       <div class="analysis-row">
-        <label>Analysis of <strong>burp.IIntruderAttack</strong></label>
+        <label>Analysis of <strong>src/main/java/burp/IInterceptedProxyMessage.java</strong></label>
         <textarea class="analysis-field" id="analysis_35" rows="3"
           placeholder="Enter your analysis for this class…"
-          oninput="saveAnalysis('burp.IIntruderAttack', this.value)"></textarea>
+          oninput="saveAnalysis('src/main/java/burp/IInterceptedProxyMessage.java', this.value)"></textarea>
       </div>
-      <div class="progress-note" id="prog_burp_IIntruderAttack"></div>
-      <a class="detail-link" href="repo_0x727_BypassPro__burp_IIntruderAttack.html">
-        📋 View 40 affected classes →
+      <div class="progress-note" id="prog_src_main_java_burp_IInterceptedProxyMessage_java"></div>
+      <a class="detail-link" href="repo_0x727_BypassPro__src_main_java_burp_IInterceptedProxyMessage.java.html">
+        📋 View 1 deterministic / 1 MC targets →
       </a>
     </div>
   </div>
   <div class="src-block" id="src_36">
     <button class="src-header" onclick="toggleBlock(36)">
-      <span class="src-name">burp.IIntruderPayloadGenerator</span>
+      <span class="src-name">src/main/java/burp/IScanIssue.java</span>
       <span class="src-meta">
-        <span class="badge">Score 53.4888</span>
-        <span class="badge">Affected 40</span>
-        <span class="badge">Communities 17</span>
-        <span class="badge">Waves 4</span>
+        <span class="badge">Det 1</span>
+        <span class="badge">MC 1</span>
+        <span class="badge">Code Smell 0.096</span>
+        <span class="badge">C0</span>
       </span>
       <span class="chevron" id="chev_36">▶</span>
     </button>
     <div class="src-body" id="body_36" style="display:none">
       <div class="analysis-row">
-        <label>Analysis of <strong>burp.IIntruderPayloadGenerator</strong></label>
+        <label>Analysis of <strong>src/main/java/burp/IScanIssue.java</strong></label>
         <textarea class="analysis-field" id="analysis_36" rows="3"
           placeholder="Enter your analysis for this class…"
-          oninput="saveAnalysis('burp.IIntruderPayloadGenerator', this.value)"></textarea>
+          oninput="saveAnalysis('src/main/java/burp/IScanIssue.java', this.value)"></textarea>
       </div>
-      <div class="progress-note" id="prog_burp_IIntruderPayloadGenerator"></div>
-      <a class="detail-link" href="repo_0x727_BypassPro__burp_IIntruderPayloadGenerator.html">
-        📋 View 40 affected classes →
+      <div class="progress-note" id="prog_src_main_java_burp_IScanIssue_java"></div>
+      <a class="detail-link" href="repo_0x727_BypassPro__src_main_java_burp_IScanIssue.java.html">
+        📋 View 1 deterministic / 1 MC targets →
       </a>
     </div>
   </div>
   <div class="src-block" id="src_37">
     <button class="src-header" onclick="toggleBlock(37)">
-      <span class="src-name">burp.IScannerInsertionPoint</span>
+      <span class="src-name">src/main/java/burp/IHttpRequestResponsePersisted.java</span>
       <span class="src-meta">
-        <span class="badge">Score 52.1043</span>
-        <span class="badge">Affected 40</span>
-        <span class="badge">Communities 17</span>
-        <span class="badge">Waves 4</span>
+        <span class="badge">Det 0</span>
+        <span class="badge">MC 1</span>
+        <span class="badge">Code Smell 0.019</span>
+        <span class="badge">C0</span>
       </span>
       <span class="chevron" id="chev_37">▶</span>
     </button>
     <div class="src-body" id="body_37" style="display:none">
       <div class="analysis-row">
-        <label>Analysis of <strong>burp.IScannerInsertionPoint</strong></label>
+        <label>Analysis of <strong>src/main/java/burp/IHttpRequestResponsePersisted.java</strong></label>
         <textarea class="analysis-field" id="analysis_37" rows="3"
           placeholder="Enter your analysis for this class…"
-          oninput="saveAnalysis('burp.IScannerInsertionPoint', this.value)"></textarea>
+          oninput="saveAnalysis('src/main/java/burp/IHttpRequestResponsePersisted.java', this.value)"></textarea>
       </div>
-      <div class="progress-note" id="prog_burp_IScannerInsertionPoint"></div>
-      <a class="detail-link" href="repo_0x727_BypassPro__burp_IScannerInsertionPoint.html">
-        📋 View 40 affected classes →
+      <div class="progress-note" id="prog_src_main_java_burp_IHttpRequestResponsePersisted_java"></div>
+      <a class="detail-link" href="repo_0x727_BypassPro__src_main_java_burp_IHttpRequestResponsePersisted.java.html">
+        📋 View 0 deterministic / 1 MC targets →
       </a>
     </div>
   </div>
   <div class="src-block" id="src_38">
     <button class="src-header" onclick="toggleBlock(38)">
-      <span class="src-name">burp.IMessageEditorTab</span>
+      <span class="src-name">src/main/java/burp/IHttpRequestResponseWithMarkers.java</span>
       <span class="src-meta">
-        <span class="badge">Score 51.9724</span>
-        <span class="badge">Affected 40</span>
-        <span class="badge">Communities 17</span>
-        <span class="badge">Waves 4</span>
+        <span class="badge">Det 0</span>
+        <span class="badge">MC 1</span>
+        <span class="badge">Code Smell 0.058</span>
+        <span class="badge">C0</span>
       </span>
       <span class="chevron" id="chev_38">▶</span>
     </button>
     <div class="src-body" id="body_38" style="display:none">
       <div class="analysis-row">
-        <label>Analysis of <strong>burp.IMessageEditorTab</strong></label>
+        <label>Analysis of <strong>src/main/java/burp/IHttpRequestResponseWithMarkers.java</strong></label>
         <textarea class="analysis-field" id="analysis_38" rows="3"
           placeholder="Enter your analysis for this class…"
-          oninput="saveAnalysis('burp.IMessageEditorTab', this.value)"></textarea>
+          oninput="saveAnalysis('src/main/java/burp/IHttpRequestResponseWithMarkers.java', this.value)"></textarea>
       </div>
-      <div class="progress-note" id="prog_burp_IMessageEditorTab"></div>
-      <a class="detail-link" href="repo_0x727_BypassPro__burp_IMessageEditorTab.html">
-        📋 View 40 affected classes →
+      <div class="progress-note" id="prog_src_main_java_burp_IHttpRequestResponseWithMarkers_java"></div>
+      <a class="detail-link" href="repo_0x727_BypassPro__src_main_java_burp_IHttpRequestResponseWithMarkers.java.html">
+        📋 View 0 deterministic / 1 MC targets →
       </a>
     </div>
   </div>
   <div class="src-block" id="src_39">
     <button class="src-header" onclick="toggleBlock(39)">
-      <span class="src-name">burp.IBurpExtenderCallbacks</span>
+      <span class="src-name">src/main/java/Main/BaseRequest.java</span>
       <span class="src-meta">
-        <span class="badge">Score 46.9654</span>
-        <span class="badge">Affected 40</span>
-        <span class="badge">Communities 17</span>
-        <span class="badge">Waves 2</span>
+        <span class="badge">Det 0</span>
+        <span class="badge">MC 0</span>
+        <span class="badge">Code Smell 0.058</span>
+        <span class="badge">C0</span>
       </span>
       <span class="chevron" id="chev_39">▶</span>
     </button>
     <div class="src-body" id="body_39" style="display:none">
       <div class="analysis-row">
-        <label>Analysis of <strong>burp.IBurpExtenderCallbacks</strong></label>
+        <label>Analysis of <strong>src/main/java/Main/BaseRequest.java</strong></label>
         <textarea class="analysis-field" id="analysis_39" rows="3"
           placeholder="Enter your analysis for this class…"
-          oninput="saveAnalysis('burp.IBurpExtenderCallbacks', this.value)"></textarea>
+          oninput="saveAnalysis('src/main/java/Main/BaseRequest.java', this.value)"></textarea>
       </div>
-      <div class="progress-note" id="prog_burp_IBurpExtenderCallbacks"></div>
-      <a class="detail-link" href="repo_0x727_BypassPro__burp_IBurpExtenderCallbacks.html">
-        📋 View 40 affected classes →
+      <div class="progress-note" id="prog_src_main_java_Main_BaseRequest_java"></div>
+      <a class="detail-link" href="repo_0x727_BypassPro__src_main_java_Main_BaseRequest.java.html">
+        📋 View 0 deterministic / 0 MC targets →
       </a>
     </div>
   </div>
   <div class="src-block" id="src_40">
     <button class="src-header" onclick="toggleBlock(40)">
-      <span class="src-name">Main.URLParamEncoder</span>
+      <span class="src-name">src/main/java/Main/DiffPage.java</span>
       <span class="src-meta">
-        <span class="badge">Score 1.0000</span>
-        <span class="badge">Affected 1</span>
-        <span class="badge">Communities 0</span>
-        <span class="badge">Waves 0</span>
+        <span class="badge">Det 0</span>
+        <span class="badge">MC 0</span>
+        <span class="badge">Code Smell 0.385</span>
+        <span class="badge">C0, C3</span>
       </span>
       <span class="chevron" id="chev_40">▶</span>
     </button>
     <div class="src-body" id="body_40" style="display:none">
       <div class="analysis-row">
-        <label>Analysis of <strong>Main.URLParamEncoder</strong></label>
+        <label>Analysis of <strong>src/main/java/Main/DiffPage.java</strong></label>
         <textarea class="analysis-field" id="analysis_40" rows="3"
           placeholder="Enter your analysis for this class…"
-          oninput="saveAnalysis('Main.URLParamEncoder', this.value)"></textarea>
+          oninput="saveAnalysis('src/main/java/Main/DiffPage.java', this.value)"></textarea>
       </div>
-      <div class="progress-note" id="prog_Main_URLParamEncoder"></div>
-      <a class="detail-link" href="repo_0x727_BypassPro__Main_URLParamEncoder.html">
-        📋 View 1 affected classes →
+      <div class="progress-note" id="prog_src_main_java_Main_DiffPage_java"></div>
+      <a class="detail-link" href="repo_0x727_BypassPro__src_main_java_Main_DiffPage.java.html">
+        📋 View 0 deterministic / 0 MC targets →
       </a>
     </div>
   </div>
-
-  <!-- General analysis -->
-  <div class="general-section">
-    <h2>📝 General Analysis</h2>
-    <textarea id="generalAnalysis"
-      placeholder="Enter your overall analysis and observations for this repository…"
-      oninput="localStorage.setItem('general_' + REPO, this.value)"></textarea>
-    <div class="submit-row">
-      <button class="btn" onclick="exportCSV()">📥 Export CSV</button>
-      <button class="btn btn-primary" onclick="submitAll()">✅ Submit All</button>
-      <span class="submit-status-msg" id="submitStatus" style="display:none"></span>
+  <div class="src-block" id="src_41">
+    <button class="src-header" onclick="toggleBlock(41)">
+      <span class="src-name">src/main/java/Main/ghostbits/GhostBitsAutoVariant.java</span>
+      <span class="src-meta">
+        <span class="badge">Det 0</span>
+        <span class="badge">MC 0</span>
+        <span class="badge">Code Smell 0.135</span>
+        <span class="badge">C0</span>
+      </span>
+      <span class="chevron" id="chev_41">▶</span>
+    </button>
+    <div class="src-body" id="body_41" style="display:none">
+      <div class="analysis-row">
+        <label>Analysis of <strong>src/main/java/Main/ghostbits/GhostBitsAutoVariant.java</strong></label>
+        <textarea class="analysis-field" id="analysis_41" rows="3"
+          placeholder="Enter your analysis for this class…"
+          oninput="saveAnalysis('src/main/java/Main/ghostbits/GhostBitsAutoVariant.java', this.value)"></textarea>
+      </div>
+      <div class="progress-note" id="prog_src_main_java_Main_ghostbits_GhostBitsAutoVariant_java"></div>
+      <a class="detail-link" href="repo_0x727_BypassPro__src_main_java_Main_ghostbits_GhostBitsAutoVariant.java.html">
+        📋 View 0 deterministic / 0 MC targets →
+      </a>
     </div>
   </div>
-
-</div>
-
-<script>
-const REPO       = '0x727_BypassPro';
-const COMMUNITIES = [{"id": 1, "total": 28, "affected": 28, "avg_score": 2.3734}, {"id": 2, "total": 14, "affected": 14, "avg_score": 2.4469}, {"id": 3, "total": 13, "affected": 13, "avg_score": 2.3645}, {"id": 4, "total": 8, "affected": 8, "avg_score": 2.6367}, {"id": 5, "total": 7, "affected": 7, "avg_score": 2.4657}, {"id": 6, "total": 5, "affected": 5, "avg_score": 2.3619}, {"id": 7, "total": 5, "affected": 5, "avg_score": 2.1761}, {"id": 8, "total": 4, "affected": 4, "avg_score": 2.2069}, {"id": 9, "total": 3, "affected": 3, "avg_score": 2.1115}, {"id": 10, "total": 2, "affected": 2, "avg_score": 2.2707}, {"id": 11, "total": 2, "affected": 2, "avg_score": 2.0782}, {"id": 12, "total": 2, "affected": 2, "avg_score": 2.334}, {"id": 13, "total": 2, "affected": 2, "avg_score": 2.0763}, {"id": 14, "total": 2, "affected": 2, "avg_score": 2.251}, {"id": 15, "total": 2, "affected": 2, "avg_score": 2.0782}, {"id": 16, "total": 2, "affected": 2, "avg_score": 2.0831}, {"id": 17, "total": 2, "affected": 2, "avg_score": 2.3449}];
-
-document.addEventListener("DOMContentLoaded", () => {
+  <div class="src-block" id="src_42">
+    <button class="src-header" onclick="toggleBlock(42)">
+      <span class="src-name">src/main/java/Main/ghostbits/GhostBitsRule.java</span>
+      <span class="src-meta">
+        <span class="badge">Det 0</span>
+        <span class="badge">MC 0</span>
+        <span class="badge">Code Smell 0.212</span>
+        <span class="badge">C0</span>
+      </span>
+      <span class="chevron" id="chev_42">▶</span>
+    </button>
+    <div class="src-body" id="body_42" style="display:none">
+      <div class="analysis-row">
+        <label>Analysis of <strong>src/main/java/Main/ghostbits/GhostBitsRule.java</strong></label>
+        <textarea class="analysis-field" id="analysis_42" rows="3"
+          placeholder="Enter your analysis for this class…"
+          oninput="saveAnalysis('src/main/java/Main/ghostbits/GhostBitsRule.java', this.value)"></textarea>
+      </div>
+      <div class="progress-note" id="prog_src_main_java_Main_ghostbits_GhostBitsRule_java"></div>
+      <a class="detail-link" href="repo_0x727_BypassPro__src_main_java_Main_ghostbits_GhostBitsRule.java.html">
+        📋 View 0 deterministic / 0 MC targets →
+      </a>
+    </div>
+  </div>
+  <div class="src-block" id="src_43">
+    <button class="src-header" onclick="toggleBlock(43)">
+      <span class="src-name">src/main/java/Main/ghostbits/RawSocketSender.java</span>
+      <span class="src-meta">
+        <span class="badge">Det 0</span>
+        <span class="badge">MC 0</span>
+        <span class="badge">Code Smell 0.423</span>
+        <span class="badge">C0, C4</span>
+      </span>
+      <span class="chevron" id="chev_43">▶</span>
+    </button>
+    <div class="src-body" id="body_43" style="display:none">
+      <div class="analysis-row">
+        <label>Analysis of <strong>src/main/java/Main/ghostbits/RawSocketSender.java</strong></label>
+        <textarea class="analysis-field" id="analysis_43" rows="3"
+          placeholder="Enter your analysis for this class…"
+          oninput="saveAnalysis('src/main/java/Main/ghostbits/RawSocketSender.java', this.value)"></textarea>
+      </div>
+      <div class="progress-note" id="prog_src_main_java_Main_ghostbits_RawSocketSender_java"></div>
+      <a class="detail-link" href="repo_0x727_BypassPro__src_main_java_Main_ghostbits_RawSocketSender.java.html">
+        📋 View 0 deterministic / 0 MC targets →
+      </a>
+    </div>
+  </div>
+  <div class="src-block" id="src_44">
+    <button class="src-header" onclick="toggleBlock(44)">
+      <span class="src-name">src/main/java/burp/IHttpRequestResponse.java</span>
+      <span class="src-meta">
+        <span class="badge">Det 0</span>
+        <span class="badge">MC 0</span>
+        <span class="badge">Code Smell 0.115</span>
+        <span class="badge">C0</span>
+      </span>
+      <span class="chevron" id="chev_44">▶</span>
+    </button>
+    <div class="src-body" id="body_44" style="display:none">
+      <div class="analysis-row">
+        <label>Analysis of <strong>src/main/java/burp/IHttpRequestResponse.java</strong></label>
+        <textarea class="analysis-field" id="analysis_44" rows="3"
+          placeholder="Enter your analysis for this class…"
+          oninput="saveAnalysis('src/main/java/burp/IHttpRequestResponse.java', this.value)"></textarea>
+      </div>
+      <div class="progress-note" id="prog_src_main_java_burp_IHttpRequestResponse_java"></div>
+      <a class="detail-link" href="repo_0x727_BypassPro__src_main_java_burp_IHttpRequestResponse.java.html">
+        📋 View 0 deterministic / 0 MC targets →
+      </a>
+    </div>
+  </div>
+  <div class="src-block" id="src_45">
+    <button class="src-header" onclick="toggleBlock(45)">
+      <span class="src-name">src/main/java/burp/IIntruderAttack.java</span>
+      <span class="src-meta">
+        <span class="badge">Det 0</span>
+        <span class="badge">MC 0</span>
+        <span class="badge">Code Smell 0.058</span>
+        <span class="badge">C2</span>
+      </span>
+      <span class="chevron" id="chev_45">▶</span>
+    </button>
+    <div class="src-body" id="body_45" style="display:none">
+      <div class="analysis-row">
+        <label>Analysis of <strong>src/main/java/burp/IIntruderAttack.java</strong></label>
+        <textarea class="analysis-field" id="analysis_45" rows="3"
+          placeholder="Enter your analysis for this class…"
+          oninput="saveAnalysis('src/main/java/burp/IIntruderAttack.java', this.value)"></textarea>
+      </div>
+      <div class="progress-note" id="prog_src_main_java_burp_IIntruderAttack_java"></div>
+      <a class="detail-link" href="repo_0x727_BypassPro__src_main_java_burp_IIntruderAttack.java.html">
+        📋 View 0 deterministic / 0 MC targets →
+      </a>
+    </div>
+  </div>
+  <div class="src-block" id="src_46">
+    <button class="src-header" onclick="toggleBlock(46)">
+      <span class="src-name">src/main/java/burp/IIntruderPayloadGenerator.java</span>
+      <span class="src-meta">
+        <span class="badge">Det 0</span>
+        <span class="badge">MC 0</span>
+        <span class="badge">Code Smell 0.058</span>
+        <span class="badge">C2</span>
+      </span>
+      <span class="chevron" id="chev_46">▶</span>
+    </button>
+    <div class="src-body" id="body_46" style="display:none">
+      <div class="analysis-row">
+        <label>Analysis of <strong>src/main/java/burp/IIntruderPayloadGenerator.java</strong></label>
+        <textarea class="analysis-field" id="analysis_46" rows="3"
+          placeholder="Enter your analysis for this class…"
+          oninput="saveAnalysis('src/main/java/burp/IIntruderPayloadGenerator.java', this.value)"></textarea>
+      </div>
+      <div class="progress-note" id="prog_src_main_java_burp_IIntruderPayloadGenerator_java"></div>
+      <a class="detail-link" href="repo_0x727_BypassPro__src_main_java_burp_IIntruderPayloadGenerator.java.html">
+        📋 View 0 deterministic / 0 MC targets →
+      </a>
+    </div>
+  </div>
+  <div class="src-block" id="src_47">
+    <button class="src-header" onclick="toggleBlock(47)">
+      <span class="src-name">src/main/java/burp/IIntruderPayloadProcessor.java</span>
+      <span class="src-meta">
+        <span class="badge">Det 0</span>
+        <span class="badge">MC 0</span>
+        <span class="badge">Code Smell 0.058</span>
+        <span class="badge">C0</span>
+      </span>
+      <span class="chevron" id="chev_47">▶</span>
+    </button>
+    <div class="src-body" id="body_47" style="display:none">
+      <div class="analysis-row">
+        <label>Analysis of <strong>src/main/java/burp/IIntruderPayloadProcessor.java</strong></label>
+        <textarea class="analysis-field" id="analysis_47" rows="3"
+          placeholder="Enter your analysis for this class…"
+          oninput="saveAnalysis('src/main/java/burp/IIntruderPayloadProcessor.java', this.value)"></textarea>
+      </div>
+      <div class="progress-note" id="prog_src_main_java_burp_IIntruderPayloadProcessor_java"></div>
+      <a class="detail-link" href="repo_0x727_BypassPro__src_main_java_burp_IIntruderPayloadProcessor.java.html">
+        📋 View 0 deterministic / 0 MC targets →
+      </a>
+    </div>
+  </div>
+  <div class="src-block" id="src_48">
+    <button class="src-header" onclick="toggleBlock(48)">
+      <span class="src-name">src/main/java/burp/IMessageEditor.java</span>
+      <span class="src-meta">
+        <span class="badge">Det 0</span>
+        <span class="badge">MC 0</span>
+        <span class="badge">Code Smell 0.077</span>
+        <span class="badge">C0</span>
+      </span>
+      <span class="chevron" id="chev_48">▶</span>
+    </button>
+    <div class="src-body" id="body_48" style="display:none">
+      <div class="analysis-row">
+        <label>Analysis of <strong>src/main/java/burp/IMessageEditor.java</strong></label>
+        <textarea class="analysis-field" id="analysis_48" rows="3"
+          placeholder="Enter your analysis for this class…"
+          oninput="saveAnalysis('src/main/java/burp/IMessageEditor.java', this.value)"></textarea>
+      </div>
+      <div class="progress-note" id="prog_src_main_java_burp_IMessageEditor_java"></div>
+      <a class="detail-link" href="repo_0x727_BypassPro__src_main_java_burp_IMessageEditor.java.html">
+        📋 View 0 deterministic / 0 MC targets →
+      </a>
+    </div>
+  </div>
+  <div class="src-block" id="src_49">
+    <button class="src-header" onclick="toggleBlock(49)">
+      <span class="src-name">src/main/java/burp/IMessageEditorController.java</span>
+      <span class="src-meta">
+        <span class="badge">Det 0</span>
+        <span class="badge">MC 0</span>
+        <span class="badge">Code Smell 0.058</span>
+        <span class="badge">C0</span>
+      </span>
+      <span class="chevron" id="chev_49">▶</span>
+    </button>
+    <div class="src-body" id="body_49" style="display:none">
+      <div class="analysis-row">
+        <label>Analysis of <strong>src/main/java/burp/IMessageEditorController.java</strong></label>
+        <textarea class="analysis-field" id="analysis_49" rows="3"
+          placeholder="Enter your analysis for this class…"
+          oninput="saveAnalysis('src/main/java/burp/IMessageEditorController.java', this.value)"></textarea>
+      </div>
+      <div class="progress-note" id="prog_src_main_java_burp_IMessageEditorController_java"></div>
+      <a class="detail-link" href="repo_0x727_BypassPro__src_main_java_burp_IMessageEditorController.java.html">
+        📋 View 0 deterministic / 0 MC targets →
+      </a>
+    </div>
+  </div>
+  <div class="src-block" id="src_50">
+    <button class="src-header" onclick="toggleBlock(50)">
+      <span class="src-name">src/main/java/burp/IMessageEditorTab.java</span>
+      <span class="src-meta">
+        <span class="badge">Det 0</span>
+        <span class="badge">MC 0</span>
+        <span class="badge">Code Smell 0.096</span>
+        <span class="badge">C0</span>
+      </span>
+      <span class="chevron" id="chev_50">▶</span>
+    </button>
+    <div class="src-body" id="body_50" style="display:none">
+      <div class="analysis-row">
+        <label>Analysis of <strong>src/main/java/burp/IMessageEditorTab.java</strong></label>
+        <textarea class="analysis-field" id="analysis_50" rows="3"
+          placeholder="Enter your analysis for this class…"
+          oninput="saveAnalysis('src/main/java/burp/IMessageEditorTab.java', this.value)"></textarea>
+      </div>
+      <div class="progress-note" id="prog_src_main_java_burp_IMessageEditorTab_java"></div>
+      <a class="detail-link" href="repo_0x727_BypassPro__src_main_java_burp_IMessageEditorTab.java.html">
+        📋 View 0 deterministic / 0 MC targets →
+      </a>
+    </div>
+  </div>
+  <div class="src-block" id="src_51">
+    <button class="src-header" onclick="toggleBlock(51)">
+      <span class="src-name">src/main/java/burp/IRequestInfo.java</span>
+      <span class="src-meta">
+        <span class="badge">Det 0</span>
+        <span class="badge">MC 0</span>
+        <span class="badge">Code Smell 0.135</span>
+        <span class="badge">C0</span>
+      </span>
+      <span class="chevron" id="chev_51">▶</span>
+    </button>
+    <div class="src-body" id="body_51" style="display:none">
+      <div class="analysis-row">
+        <label>Analysis of <strong>src/main/java/burp/IRequestInfo.java</strong></label>
+        <textarea class="analysis-field" id="analysis_51" rows="3"
+          placeholder="Enter your analysis for this class…"
+          oninput="saveAnalysis('src/main/java/burp/IRequestInfo.java', this.value)"></textarea>
+      </div>
+      <div class="progress-note" id="prog_src_main_java_burp_IRequestInfo_java"></div>
+      <a class="detail-link" href="repo_0x727_BypassPro__src_main_java_burp_IRequestInfo.java.html">
+        📋 View 0 deterministic / 0 MC targets →
+      </a>
+    </div>
+  </div>
+  <div class="src-block" id="src_52">
+    <button class="src-header" onclick="toggleBlock(52)">
+      <span class="src-name">src/main/java/burp/IResponseInfo.java</span>
+      <span class="src-meta">
+        <span class="badge">Det 0</span>
+        <span class="badge">MC 0</span>
+        <span class="badge">Code Smell 0.077</span>
+        <span class="badge">C0</span>
+      </span>
+      <span class="chevron" id="chev_52">▶</span>
+    </button>
+    <div class="src-body" id="body_52" style="display:none">
+      <div class="analysis-row">
+        <label>Analysis of <strong>src/main/java/burp/IResponseInfo.java</strong></label>
+        <textarea class="analysis-field" id="analysis_52" rows="3"
+          placeholder="Enter your analysis for this class…"
+          oninput="saveAnalysis('src/main/java/burp/IResponseInfo.java', this.value)"></textarea>
+      </div>
+      <div class="progress-note" id="prog_src_main_java_burp_IResponseInfo_java"></div>
+      <a class="detail-link" href="repo_0x727_BypassPro__src_main_java_burp_IResponseInfo.java.html">
+        📋 View 0 deterministic / 0 MC targets →
+      </a>
+    </div>
+  </div>
+  <div class="src-block" id="src_53">
+    <button class="src-header" onclick="toggleBlock(53)">
+      <span class="src-name">src/main/java/burp/IScannerInsertionPoint.java</span>
+      <span class="src-meta">
+        <span class="badge">Det 0</span>
+        <span class="badge">MC 0</span>
+        <span class="badge">Code Smell 0.135</span>
+        <span class="badge">C0</span>
+      </span>
+      <span class="chevron" id="chev_53">▶</span>
+    </button>
+    <div class="src-body" id="body_53" style="display:none">
+      <div class="analysis-row">
+        <label>Analysis of <strong>src/main/java/burp/IScannerInsertionPoint.java</strong></label>
+        <textarea class="analysis-field" id="analysis_53" rows="3"
+          placeholder="Enter your analysis for this class…"
+          oninput="saveAnalysis('src/main/java/burp/IScannerInsertionPoint.java', this.value)"></textarea>
+      </div>
+      <div class="progress-note" id="prog_src_main_java_burp_IScannerInsertionPoint_java"></div>
+      <a class="detail-link" href="repo_0x727_BypassPro__src_main_java_burp_IScannerInsertionPoint.java.html">
+        📋 View 0 deterministic / 0 MC targets →
+      </a>
+    </div>
+  </div>
+  <div class="src-block" id="src_54">
+    <button class="src-header" onclick="toggleBlock(54)">
+      <span class="src-name">src/main/java/burp/ITempFile.java</span>
+      <span class="src-meta">
+        <span class="badge">Det 0</span>
+        <span class="badge">MC 0</span>
+        <span class="badge">Code Smell 0.058</span>
+        <span class="badge">C0</span>
+      </span>
+      <span class="chevron" id="chev_54">▶</span>
+    </button>
+    <div class="src-body" id="body_54" style="display:none">
+      <div class="analysis-row">
+        <label>Analysis of <strong>src/main/java/burp/ITempFile.java</strong></label>
+        <textarea class="analysis-field" id="analysis_54" rows="3"
+          placeholder="Enter your analysis for this class…"
+          oninput="saveAnalysis('src/main/java/burp/ITempFile.java', this.value)"></textarea>
+      </div>
+      <div class="progress-note" id="prog_src_main_java_burp_ITempFile_java"></div>
+      <a class="detail-link" href="repo_0x727_BypassPro__src_main_java_burp_ITempFile.java.html">
+        📋 View 0 deterministic / 0 MC targets →
+      </a>
+    </div>
+  </div>
+  <div class="src-block" id="src_55">
+    <button class="src-header" onclick="toggleBlock(55)">
+      <span class="src-name">src/main/java/burp/ITextEditor.java</span>
+      <span class="src-meta">
+        <span class="badge">Det 0</span>
+        <span class="badge">MC 0</span>
+        <span class="badge">Code Smell 0.096</span>
+        <span class="badge">C0</span>
+      </span>
+      <span class="chevron" id="chev_55">▶</span>
+    </button>
+    <div class="src-body" id="body_55" style="display:none">
+      <div class="analysis-row">
+        <label>Analysis of <strong>src/main/java/burp/ITextEditor.java</strong></label>
+        <textarea class="analysis-field" id="analysis_55" rows="3"
+          placeholder="Enter your analysis for this class…"
+          oninput="saveAnalysis('src/main/java/burp/ITextEditor.java', this.value)"></textarea>
+      </div>
+      <div class="progress-note" id="prog_src_main_java_burp_ITextEditor_java"></div>
+      <a class="detail-link" href="repo_0x727_BypassPro__src_main_java_burp_ITextEditor.java.html">
+        📋 View 0 deterministic / 0 MC targets →
+      </a>
+    </div>
+  </div>
+<div class="general-section"><h2>📝 General Analysis</h2><textarea id="generalAnalysis" placeholder="Enter your overall analysis and observations for this repository…" oninput="localStorage.setItem('general_' + REPO, this.value)"></textarea><div class="submit-row"><button class="btn" onclick="exportCSV()">📥 Export CSV</button><button class="btn btn-primary" onclick="submitAll()">✅ Submit All</button><span class="submit-status-msg" id="submitStatus" style="display:none"></span></div></div></div><script>const REPO = '0x727_BypassPro';
+const COMMUNITIES = [{"id": 0, "total": 2, "touched": 2}, {"id": 1, "total": 2, "touched": 2}, {"id": 2, "total": 3, "touched": 3}, {"id": 3, "total": 2, "touched": 2}, {"id": 4, "total": 5, "touched": 5}, {"id": 5, "total": 3, "touched": 3}, {"id": 6, "total": 2, "touched": 2}, {"id": 7, "total": 3, "touched": 3}, {"id": 8, "total": 3, "touched": 3}, {"id": 9, "total": 4, "touched": 4}, {"id": 10, "total": 3, "touched": 3}, {"id": 11, "total": 3, "touched": 3}, {"id": 12, "total": 3, "touched": 3}, {"id": 13, "total": 2, "touched": 2}, {"id": 14, "total": 2, "touched": 2}, {"id": 15, "total": 2, "touched": 2}, {"id": 16, "total": 3, "touched": 3}, {"id": 17, "total": 2, "touched": 2}, {"id": 18, "total": 2, "touched": 2}, {"id": 19, "total": 4, "touched": 4}, {"id": 20, "total": 2, "touched": 2}, {"id": 21, "total": 2, "touched": 2}, {"id": 22, "total": 2, "touched": 2}, {"id": 23, "total": 4, "touched": 4}, {"id": 24, "total": 4, "touched": 4}, {"id": 25, "total": 2, "touched": 2}, {"id": 26, "total": 3, "touched": 3}, {"id": 27, "total": 2, "touched": 2}, {"id": 28, "total": 5, "touched": 5}, {"id": 29, "total": 2, "touched": 2}, {"id": 30, "total": 3, "touched": 3}, {"id": 31, "total": 4, "touched": 4}, {"id": 32, "total": 2, "touched": 2}, {"id": 33, "total": 2, "touched": 2}, {"id": 34, "total": 2, "touched": 2}, {"id": 35, "total": 7, "touched": 7}, {"id": 36, "total": 2, "touched": 2}, {"id": 37, "total": 2, "touched": 2}, {"id": 38, "total": 2, "touched": 2}, {"id": 39, "total": 2, "touched": 2}, {"id": 40, "total": 3, "touched": 3}, {"id": 41, "total": 12, "touched": 12}, {"id": 42, "total": 2, "touched": 2}, {"id": 43, "total": 2, "touched": 2}, {"id": 44, "total": 2, "touched": 2}, {"id": 45, "total": 2, "touched": 2}, {"id": 46, "total": 3, "touched": 3}, {"id": 47, "total": 2, "touched": 2}, {"id": 48, "total": 2, "touched": 2}, {"id": 49, "total": 2, "touched": 2}, {"id": 50, "total": 2, "touched": 2}, {"id": 51, "total": 2, "touched": 2}, {"id": 52, "total": 2, "touched": 2}, {"id": 53, "total": 3, "touched": 3}, {"id": 54, "total": 2, "touched": 2}, {"id": 55, "total": 2, "touched": 2}, {"id": 56, "total": 2, "touched": 2}, {"id": 57, "total": 2, "touched": 2}, {"id": 58, "total": 2, "touched": 2}, {"id": 59, "total": 2, "touched": 2}, {"id": 60, "total": 2, "touched": 2}, {"id": 61, "total": 3, "touched": 3}, {"id": 62, "total": 2, "touched": 2}, {"id": 63, "total": 3, "touched": 3}, {"id": 64, "total": 2, "touched": 2}, {"id": 65, "total": 2, "touched": 2}, {"id": 66, "total": 2, "touched": 2}];
+document.addEventListener('DOMContentLoaded', () => {
   const email = localStorage.getItem('email_' + REPO) || '';
   if (email) document.getElementById('userEmail').value = email;
   const gen = localStorage.getItem('general_' + REPO) || '';
   if (gen) document.getElementById('generalAnalysis').value = gen;
   document.querySelectorAll('.analysis-field').forEach(ta => {
     const srcName = ta.closest('.src-block').querySelector('.src-name').textContent;
-    const saved   = localStorage.getItem('cls_analysis_' + REPO + '__' + srcName);
+    const saved = localStorage.getItem('cls_analysis_' + REPO + '__' + srcName);
     if (saved) ta.value = saved;
   });
   document.querySelectorAll('.src-block').forEach(block => {
     const srcName = block.querySelector('.src-name').textContent;
     const safeKey = srcName.replace(/[^a-zA-Z0-9]/g, '_');
-    const prefix  = 'ocpa_vote_' + REPO + '__' + safeKey + '__';
+    const prefix = 'ocpa_vote_' + REPO + '__' + safeKey + '__';
     let count = 0;
     for (let i = 0; i < localStorage.length; i++) {
       const k = localStorage.key(i);
@@ -1152,26 +1446,22 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 });
-
 function saveEmail(v) {
   localStorage.setItem('email_' + REPO, v);
   document.getElementById('userEmail').classList.remove('invalid');
 }
-
 function saveAnalysis(srcKey, value) {
   localStorage.setItem('cls_analysis_' + REPO + '__' + srcKey, value);
 }
-
 function toggleBlock(idx) {
   const body = document.getElementById('body_' + idx);
   const chev = document.getElementById('chev_' + idx);
-  const hdr  = body.previousElementSibling;
-  const open = body.style.display === "block";
-  body.style.display = open ? "none" : "block";
-  chev.classList.toggle("open", !open);
-  hdr.classList.toggle("open", !open);
+  const hdr = body.previousElementSibling;
+  const open = body.style.display === 'block';
+  body.style.display = open ? 'none' : 'block';
+  chev.classList.toggle('open', !open);
+  hdr.classList.toggle('open', !open);
 }
-
 function toggleCommunities() {
   const panel = document.getElementById('commPanel');
   panel.classList.toggle('open');
@@ -1179,24 +1469,19 @@ function toggleCommunities() {
     renderCommunities();
   }
 }
-
 function renderCommunities() {
-  const map = {};
-  COMMUNITIES.forEach(c => {
-    if (!map[c.id]) map[c.id] = { id: c.id, affected: 0, total: c.total, scores: [] };
-    map[c.id].affected = Math.max(map[c.id].affected, c.affected);
-    map[c.id].scores.push(c.avg_score);
-  });
   const grid = document.getElementById('commGrid');
-  Object.values(map).sort((a,b) => a.id - b.id).forEach(c => {
-    const avg = c.scores.reduce((s,x) => s+x, 0) / c.scores.length;
-    const chip = document.createElement("div");
-    chip.className = "comm-chip";
-    chip.innerHTML = '<span class="cid">C' + c.id + '</span> <span class="cdata">' + c.affected + '/' + c.total + ' classes &nbsp;·&nbsp; avg ' + avg.toFixed(3) + '</span>';
+  if (!COMMUNITIES.length) {
+    grid.innerHTML = '<span style="color:var(--text2)">No community data available.</span>';
+    return;
+  }
+  COMMUNITIES.forEach(c => {
+    const chip = document.createElement('div');
+    chip.className = 'comm-chip';
+    chip.innerHTML = '<span class="cid">C' + c.id + '</span> <span class="cdata">' + c.touched + '/' + c.total + ' nodes touched</span>';
     grid.appendChild(chip);
   });
 }
-
 function submitAll() {
   const email = document.getElementById('userEmail').value.trim();
   if (!email || !email.includes('@')) {
@@ -1208,42 +1493,39 @@ function submitAll() {
   const general = document.getElementById('generalAnalysis').value;
   const ts = new Date().toISOString();
   localStorage.setItem('ocpa_vote_' + REPO + '__general', JSON.stringify({
-    Email: email, Repository: REPO, Type: "general",
+    Email: email, Repository: REPO, Type: 'general',
     Comment: general, Timestamp: ts
   }));
   document.querySelectorAll('.src-block').forEach((block, idx) => {
-    const srcName  = block.querySelector('.src-name').textContent;
+    const srcName = block.querySelector('.src-name').textContent;
     const analysis = document.getElementById('analysis_' + idx)?.value || '';
     if (analysis.trim()) {
       localStorage.setItem('ocpa_vote_' + REPO + '__cls__' + idx, JSON.stringify({
         Email: email, Repository: REPO, Source_Class: srcName,
-        Type: "class", Comment: analysis, Timestamp: ts
+        Type: 'class', Comment: analysis, Timestamp: ts
       }));
     }
   });
   const status = document.getElementById('submitStatus');
   status.textContent = '✓ Saved locally!';
-  status.style.display = "inline";
-  setTimeout(() => { status.style.display = "none"; }, 3000);
+  status.style.display = 'inline';
+  setTimeout(() => { status.style.display = 'none'; }, 3000);
 }
-
 function exportCSV() {
   const email = document.getElementById('userEmail').value.trim();
-  const rows  = [['Repository','Email','Source_Class','Analysis','Timestamp']];
+  const rows = [['Repository','Email','Source_Class','Analysis','Timestamp']];
   document.querySelectorAll('.src-block').forEach((block, idx) => {
-    const srcName  = block.querySelector('.src-name').textContent;
+    const srcName = block.querySelector('.src-name').textContent;
     const analysis = document.getElementById('analysis_' + idx)?.value || '';
     rows.push([REPO, email, srcName, analysis, new Date().toISOString()]);
   });
   const gen = document.getElementById('generalAnalysis').value;
   rows.push([REPO, email, 'GENERAL', gen, new Date().toISOString()]);
-  const csv  = rows.map(r => r.map(c => '"' + String(c).replace(/"/g, '""') + '"').join(',')).join('\n');
-  const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
-  const a    = document.createElement("a");
-  a.href     = URL.createObjectURL(blob);
+  const csv = rows.map(r => r.map(c => '"' + String(c).replace(/"/g, '""') + '"').join(',')).join('\n');
+  const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
   a.download = 'analysis_' + REPO + '.csv';
   a.click();
 }
-</script>
-</body>
-</html>
+</script></body></html>

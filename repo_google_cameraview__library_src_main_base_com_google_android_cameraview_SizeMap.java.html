@@ -1,0 +1,1592 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>HyCPA — library/src/main/base/com/google/android/cameraview/SizeMap.java</title><style>
+:root {
+  --bg: #0d1117; --surface: #161b22; --surface2: #21262d;
+  --border: #30363d; --text: #e6edf3; --text2: #8b949e;
+  --accent: #58a6ff; --green: #3fb950; --orange: #d29922;
+  --red: #f85149; --purple: #bc8cff; --cyan: #39d2c0;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { background: var(--bg); color: var(--text); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif; font-size: 14px; line-height: 1.5; }
+
+/* ── Sticky page header (Page C) ── */
+.page-header { background: var(--surface); border-bottom: 1px solid var(--border); padding: 16px 32px; position: sticky; top: 0; z-index: 100; display: flex; flex-wrap: wrap; align-items: center; gap: 12px; }
+.back-btn { color: var(--text2); font-size: 13px; text-decoration: none; padding: 6px 14px; border: 1px solid var(--border); border-radius: 6px; background: var(--surface2); white-space: nowrap; }
+.back-btn:hover { color: var(--accent); border-color: var(--accent); }
+.src-label { color: var(--text2); font-size: 12px; }
+.src-name-h { color: var(--text); font-weight: 700; font-size: 14px; }
+.header-email-wrap { display: flex; flex-direction: column; gap: 3px; }
+.header-email-wrap label { font-size: 11px; color: var(--text2); }
+.header-email-input { background: var(--surface2); border: 1px solid var(--border); border-radius: 6px; padding: 7px 12px; color: var(--text); font-size: 13px; width: 240px; font-family: inherit; }
+.header-email-input:focus { outline: none; border-color: var(--accent); }
+.header-email-input.invalid { border-color: var(--red); }
+.export-btn { padding: 7px 14px; border-radius: 6px; border: 1px solid var(--border); background: var(--surface2); color: var(--text); cursor: pointer; font-size: 12px; }
+.export-btn:hover { border-color: var(--accent); color: var(--accent); }
+
+/* ── Main container ── */
+.container { max-width: 900px; margin: 0 auto; padding: 24px 32px; }
+
+/* ── Progress bar ── */
+.progress-bar { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 12px 20px; margin-bottom: 20px; display: flex; align-items: center; gap: 16px; }
+.progress-bar .bar-track { flex: 1; height: 8px; background: var(--surface2); border-radius: 4px; overflow: hidden; }
+.progress-bar .bar-fill { height: 100%; background: var(--green); border-radius: 4px; transition: width 0.3s; }
+.progress-bar .bar-label { font-size: 13px; color: var(--text2); white-space: nowrap; }
+
+/* ── Cards ── */
+.card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; margin-bottom: 16px; overflow: hidden; transition: border-color 0.2s; }
+.card:hover { border-color: var(--accent); }
+.card-header { display: flex; justify-content: space-between; align-items: center; padding: 16px 20px; border-bottom: 1px solid var(--border); cursor: pointer; }
+.card-header .source-target { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; flex: 1; }
+.class-badge { background: var(--surface2); border: 1px solid var(--border); border-radius: 6px; padding: 4px 10px; font-family: 'SFMono-Regular', Consolas, monospace; font-size: 12px; max-width: 300px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.class-badge.source { border-color: var(--orange); color: var(--orange); }
+.class-badge.target { border-color: var(--green); color: var(--green); }
+.arrow-icon { color: var(--text2); font-size: 18px; flex-shrink: 0; }
+.metrics-mini { display: flex; gap: 16px; flex-shrink: 0; }
+.metric-pill { display: flex; flex-direction: column; align-items: center; }
+.metric-pill .val { font-weight: 700; font-size: 14px; }
+.metric-pill .lbl { font-size: 10px; color: var(--text2); text-transform: uppercase; }
+.metric-pill.score .val { color: var(--red); }
+.metric-pill.cochange .val { color: var(--cyan); }
+.metric-pill.dist .val { color: var(--purple); }
+.metric-pill.rank-m .val { color: var(--text2); }
+.card-body { padding: 20px; display: none; border-top: 1px solid var(--border); }
+.card.open .card-body { display: block; }
+
+/* ── Path diagram ── */
+.path-diagram { display: flex; align-items: flex-start; gap: 0; overflow-x: auto; padding: 16px 0; }
+.path-node { display: flex; flex-direction: column; align-items: center; min-width: 80px; flex-shrink: 0; }
+.path-node .node-circle { width: 44px; height: 44px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 13px; border: 2px solid var(--border); background: var(--surface2); }
+.path-node.first .node-circle { border-color: var(--orange); background: rgba(210,153,34,0.15); color: var(--orange); }
+.path-node.last .node-circle { border-color: var(--green); background: rgba(63,185,80,0.15); color: var(--green); }
+.path-node .node-label { font-size: 10px; color: var(--text2); text-align: center; margin-top: 4px; max-width: 100px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.path-node .node-health { font-size: 10px; font-weight: 600; text-align: center; margin-top: 2px; }
+.path-edge { display: flex; flex-direction: column; align-items: center; min-width: 100px; flex-shrink: 0; padding-top: 10px; }
+.path-edge .edge-arrow { display: flex; align-items: center; color: var(--text2); font-size: 12px; white-space: nowrap; }
+.path-edge .edge-arrow .line { width: 40px; height: 2px; background: var(--border); }
+.path-edge .edge-arrow .tip { margin-left: -2px; }
+.path-edge .edge-tags { display: flex; flex-direction: column; align-items: center; gap: 3px; margin-top: 4px; }
+.edge-tag { font-size: 9px; padding: 1px 6px; border-radius: 4px; white-space: nowrap; }
+.edge-tag.cochange { background: rgba(57,210,192,0.15); color: var(--cyan); border: 1px solid rgba(57,210,192,0.3); }
+.edge-tag.coupling { background: rgba(188,140,255,0.15); color: var(--purple); border: 1px solid rgba(188,140,255,0.3); }
+.edge-tag.none { background: var(--surface2); color: var(--text2); border: 1px solid var(--border); }
+
+/* ── Coupling section ── */
+.coupling-section { margin-top: 16px; }
+.coupling-section h4 { font-size: 12px; color: var(--text2); margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.5px; }
+.coupling-chip { display: inline-block; font-size: 11px; padding: 3px 10px; border-radius: 12px; margin: 2px 4px 2px 0; background: rgba(188,140,255,0.12); color: var(--purple); border: 1px solid rgba(188,140,255,0.25); font-family: monospace; }
+.none-text { color: var(--text2); font-style: italic; font-size: 12px; }
+.toggle-icon { transition: transform 0.2s; color: var(--text2); font-size: 18px; margin-left: 12px; }
+.card.open .toggle-icon { transform: rotate(180deg); }
+
+/* ── Validation section ── */
+.validation-section { margin-top: 20px; padding-top: 16px; border-top: 1px dashed var(--border); }
+.validation-section h4 { font-size: 12px; color: var(--text2); margin-bottom: 10px; text-transform: uppercase; letter-spacing: 0.5px; }
+.vote-buttons { display: flex; gap: 8px; margin-bottom: 10px; }
+.vote-btn { padding: 8px 18px; border-radius: 8px; border: 2px solid var(--border); background: var(--surface2); color: var(--text); cursor: pointer; font-size: 13px; font-weight: 600; transition: all 0.2s; display: flex; align-items: center; gap: 6px; }
+.vote-btn:hover { border-color: var(--accent); }
+.vote-btn.correct.selected { border-color: var(--green); background: rgba(63,185,80,0.15); color: var(--green); }
+.vote-btn.incorrect.selected { border-color: var(--red); background: rgba(248,81,73,0.15); color: var(--red); }
+.vote-btn.unsure.selected { border-color: var(--orange); background: rgba(210,153,34,0.15); color: var(--orange); }
+.validation-comment { width: 100%; background: var(--surface2); border: 1px solid var(--border); border-radius: 6px; color: var(--text); padding: 8px 12px; font-size: 13px; font-family: inherit; resize: vertical; min-height: 50px; margin-bottom: 10px; }
+.validation-comment::placeholder { color: var(--text2); }
+.submit-row { display: flex; align-items: center; gap: 12px; }
+.submit-btn { padding: 8px 24px; border-radius: 8px; border: none; background: var(--accent); color: #fff; cursor: pointer; font-size: 13px; font-weight: 600; transition: opacity 0.2s; }
+.submit-btn:hover { opacity: 0.85; }
+.submit-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+.submit-status { font-size: 12px; color: var(--green); }
+.submit-status.error { color: var(--red); }
+.already-sent { display: flex; align-items: center; gap: 8px; padding: 10px 16px; border-radius: 8px; background: rgba(63,185,80,0.1); border: 1px solid rgba(63,185,80,0.25); color: var(--green); font-size: 13px; }
+
+/* ── Tooltips ── */
+[data-tooltip] { position: relative; cursor: default; }
+[data-tooltip]::after { content: attr(data-tooltip); position: absolute; bottom: calc(100% + 7px); left: 50%; transform: translateX(-50%); background: #2d333b; color: var(--text); border: 1px solid var(--border); border-radius: 6px; padding: 7px 10px; font-size: 11px; line-height: 1.45; white-space: normal; width: max-content; max-width: 220px; text-align: center; pointer-events: none; opacity: 0; transition: opacity 0.15s; z-index: 999; text-transform: none; font-weight: 400; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif; }
+[data-tooltip]:hover::after { opacity: 1; }
+
+@media (max-width: 768px) {
+  .metrics-mini { gap: 8px; }
+  .class-badge { max-width: 150px; font-size: 11px; }
+  .container { padding: 16px; }
+  .page-header { padding: 12px 16px; }
+}
+
+/* ── HyCPA tabs ── */
+.tabs { display: flex; gap: 4px; border-bottom: 1px solid var(--border); margin-bottom: 16px; }
+.tab-btn { background: transparent; border: none; color: var(--text2); padding: 10px 18px; font-size: 13px; font-weight: 600; cursor: pointer; border-bottom: 2px solid transparent; }
+.tab-btn:hover { color: var(--text); }
+.tab-btn.active { color: var(--accent); border-bottom-color: var(--accent); }
+.tab-pane { display: none; }
+.tab-pane.active { display: block; }
+.metric-pill.prob .val { color: var(--red); }
+.metric-pill.hop .val  { color: var(--purple); }
+.metric-pill.health .val { color: var(--cyan); }
+
+/* ── Filter bar ── */
+.filter-bar { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 14px; align-items: center; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 10px 14px; }
+.filter-bar label { font-size: 11px; color: var(--text2); display: flex; flex-direction: column; gap: 2px; }
+.filter-bar input[type=number], .filter-bar input[type=text] { background: var(--surface2); border: 1px solid var(--border); color: var(--text); border-radius: 4px; padding: 4px 8px; font-size: 12px; width: 110px; }
+
+/* ── Params badge ── */
+.params-line { color: var(--text2); font-size: 12px; }
+.params-line code { background: var(--surface2); padding: 1px 6px; border-radius: 4px; color: var(--accent); font-size: 11px; }
+
+/* ── Tooltip fix: allow tooltips inside cards to escape the card border ── */
+.card { overflow: visible !important; }
+.card-header, .metrics-mini, .metric-pill { overflow: visible; }
+</style></head><body><div class="page-header"><a class="back-btn" href="repo_google_cameraview.html">← Back</a><span class="src-label">Class:</span><span class="src-name-h">library/src/main/base/com/google/android/cameraview/SizeMap.java</span><span class="src-label" style="margin-left:12px">Code Smell Score: 0.077 · Communities: C1, C5, C9, C10, C11, C14</span><div class="header-email-wrap" style="margin-left:auto"><label>Email (required to submit)</label><input type="email" id="userEmail" class="header-email-input" placeholder="your@email.com" oninput="saveEmail(this.value)" /></div><a class="export-btn" href="help.html">❓ Help</a><a class="export-btn" href="repo_google_cameraview.html">📁 Repo</a></div><div class="container"><div class="tabs"><button class="tab-btn active" data-tab="det" onclick="switchTab('det')">Deterministic (2)</button><button class="tab-btn" data-tab="mc" onclick="switchTab('mc')">Monte Carlo (20)</button></div><div class="filter-bar"><label>Min probability<input type="number" id="fMinProb" min="0" max="1" step="0.05" value="0" oninput="applyFilters()"></label><label>Max distance<input type="number" id="fMaxHop" min="1" step="1" placeholder="any" oninput="applyFilters()"></label><label style="flex:1">Search target label<input type="text" id="fSearch" placeholder="substring…" oninput="applyFilters()" style="width:100%"></label></div><div class="tab-pane active" data-tab="det"><div class="card"
+     data-source="library/src/main/base/com/google/android/cameraview/SizeMap.java" data-target="library/src/main/base/com/google/android/cameraview/AspectRatio.java"
+     data-prob="0.440637415679464" data-hop="1" data-rank="1">
+  <div class="card-header" onclick="this.parentElement.classList.toggle('open')">
+    <div class="source-target">
+      <span class="class-badge source" title="library/src/main/base/com/google/android/cameraview/SizeMap.java">SizeMap</span>
+      <span class="arrow-icon">→</span>
+      <span class="class-badge target" title="library/src/main/base/com/google/android/cameraview/AspectRatio.java">AspectRatio</span>
+    </div>
+    <div class="metrics-mini">
+      <div class="metric-pill rank-m" data-tooltip="Rank in the DET list."><span class="val">#1</span><span class="lbl">Rank</span></div>
+      <div class="metric-pill prob" style="color:var(--orange)" data-tooltip="HyCPA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility."><span class="val" style="color:var(--orange)">0.4406</span><span class="lbl">Prob</span></div>
+      <div class="metric-pill hop" data-tooltip="Number of edges (distance) in the propagation path from the source class to this target."><span class="val">1</span><span class="lbl">Distance</span></div>
+      <div class="metric-pill health" data-tooltip="Target health = 1 − code smell score (computed from CK metrics)."><span class="val">0.71</span><span class="lbl">Health</span></div>
+    </div>
+    <span class="toggle-icon">▼</span>
+  </div>
+  <div class="card-body">
+    <h4 style="color:var(--text2);font-size:12px;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:8px;">Propagation Path</h4>
+    <div class="path-diagram">
+      <div class="path-node first">
+        <div class="node-circle" title="library/src/main/base/com/google/android/cameraview/SizeMap.java">SI</div>
+        <div class="node-label" title="library/src/main/base/com/google/android/cameraview/SizeMap.java">SizeMap</div>
+        <div class="node-health" style="color:var(--green)" data-tooltip="Structural health (1 − code smell score from CK metrics). 1.00 (green) = healthy; 0.00 (red) = many CK metrics in the bad zone.">⚕ 0.92</div>
+      </div>
+      <div class="path-edge">
+        <div class="edge-arrow"><span class="line"></span><span class="tip">&#9658;</span></div>
+        <div class="edge-tags">
+          <span class="edge-tag cochange" data-tooltip="Co-change weight: number of times these two classes were committed together in the project history.">co-change: 2</span>
+          <span class="edge-tag coupling" data-tooltip="METHOD_INVOCATION_ATOMIC_PARAMETER" title="METHOD_INVOCATION_ATOMIC_PARAMETER">Method Invocation Atomic Parameter</span>
+          <span class="edge-tag coupling" data-tooltip="METHOD_INVOCATION_OBJECT_PARAMETER" title="METHOD_INVOCATION_OBJECT_PARAMETER">Method Invocation Object Parameter</span>
+          <span class="edge-tag coupling" data-tooltip="METHOD_PARAMETER_TYPE" title="METHOD_PARAMETER_TYPE">Method Parameter Type</span>
+          <span class="edge-tag coupling" data-tooltip="PARAMETERIZED_TYPE" title="PARAMETERIZED_TYPE">Parameterized Type</span>
+        </div>
+      </div>
+      <div class="path-node last">
+        <div class="node-circle" title="library/src/main/base/com/google/android/cameraview/AspectRatio.java">AS</div>
+        <div class="node-label" title="library/src/main/base/com/google/android/cameraview/AspectRatio.java">AspectRatio</div>
+        <div class="node-health" style="color:var(--orange)" data-tooltip="Structural health (1 − code smell score from CK metrics). 1.00 (green) = healthy; 0.00 (red) = many CK metrics in the bad zone.">⚕ 0.71</div>
+      </div>
+    </div>
+    <div style="margin-top:10px;font-size:11px;color:var(--text2)">      <strong>Via:</strong> <code>library/src/main/base/com/google/android/cameraview/SizeMap.java</code>    </div>
+    <div style="margin-top:16px; font-size:11px; color:var(--text2);"><div><strong>Source:</strong> <code>library/src/main/base/com/google/android/cameraview/SizeMap.java</code></div><div><strong>Target:</strong> <code>library/src/main/base/com/google/android/cameraview/AspectRatio.java</code></div></div>    <div class="validation-section" id="validation_det_0">
+      <h4>📋 Validation — Is this propagation correct?</h4>
+      <div class="vote-buttons">
+        <button class="vote-btn correct"   onclick="selectVote('det_0','correct',this)">✅ Correct</button>
+        <button class="vote-btn incorrect" onclick="selectVote('det_0','incorrect',this)">❌ Incorrect</button>
+        <button class="vote-btn unsure"    onclick="selectVote('det_0','unsure',this)">❓ Unsure</button>
+      </div>
+      <textarea class="validation-comment" id="comment_det_0" placeholder="Optional comment (e.g., why you think it is incorrect)…" oninput="saveComment('det_0', this.value)"></textarea>
+      <div class="submit-row">
+        <button class="submit-btn" id="submitBtn_det_0" onclick="submitVote('det_0')" disabled>Submit</button>
+        <span class="submit-status" id="status_det_0"></span>
+      </div>
+      <input type="hidden" id="vote_det_0" value="">
+      <input type="hidden" id="meta_kind_det_0" value="det">
+      <input type="hidden" id="meta_source_det_0" value="library/src/main/base/com/google/android/cameraview/SizeMap.java">
+      <input type="hidden" id="meta_target_det_0" value="library/src/main/base/com/google/android/cameraview/AspectRatio.java">
+      <input type="hidden" id="meta_rank_det_0" value="1">
+      <input type="hidden" id="meta_prob_det_0" value="0.440637415679464">
+      <input type="hidden" id="meta_hop_det_0" value="1">
+    </div>
+  </div>
+</div>
+<div class="card"
+     data-source="library/src/main/base/com/google/android/cameraview/SizeMap.java" data-target="library/src/main/base/com/google/android/cameraview/Size.java"
+     data-prob="0.4085025750673321" data-hop="1" data-rank="2">
+  <div class="card-header" onclick="this.parentElement.classList.toggle('open')">
+    <div class="source-target">
+      <span class="class-badge source" title="library/src/main/base/com/google/android/cameraview/SizeMap.java">SizeMap</span>
+      <span class="arrow-icon">→</span>
+      <span class="class-badge target" title="library/src/main/base/com/google/android/cameraview/Size.java">Size</span>
+    </div>
+    <div class="metrics-mini">
+      <div class="metric-pill rank-m" data-tooltip="Rank in the DET list."><span class="val">#2</span><span class="lbl">Rank</span></div>
+      <div class="metric-pill prob" style="color:var(--orange)" data-tooltip="HyCPA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility."><span class="val" style="color:var(--orange)">0.4085</span><span class="lbl">Prob</span></div>
+      <div class="metric-pill hop" data-tooltip="Number of edges (distance) in the propagation path from the source class to this target."><span class="val">1</span><span class="lbl">Distance</span></div>
+      <div class="metric-pill health" data-tooltip="Target health = 1 − code smell score (computed from CK metrics)."><span class="val">0.92</span><span class="lbl">Health</span></div>
+    </div>
+    <span class="toggle-icon">▼</span>
+  </div>
+  <div class="card-body">
+    <h4 style="color:var(--text2);font-size:12px;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:8px;">Propagation Path</h4>
+    <div class="path-diagram">
+      <div class="path-node first">
+        <div class="node-circle" title="library/src/main/base/com/google/android/cameraview/SizeMap.java">SI</div>
+        <div class="node-label" title="library/src/main/base/com/google/android/cameraview/SizeMap.java">SizeMap</div>
+        <div class="node-health" style="color:var(--green)" data-tooltip="Structural health (1 − code smell score from CK metrics). 1.00 (green) = healthy; 0.00 (red) = many CK metrics in the bad zone.">⚕ 0.92</div>
+      </div>
+      <div class="path-edge">
+        <div class="edge-arrow"><span class="line"></span><span class="tip">&#9658;</span></div>
+        <div class="edge-tags">
+          <span class="edge-tag cochange" data-tooltip="Co-change weight: number of times these two classes were committed together in the project history.">co-change: 2</span>
+          <span class="edge-tag coupling" data-tooltip="METHOD_INVOCATION_ATOMIC_PARAMETER" title="METHOD_INVOCATION_ATOMIC_PARAMETER">Method Invocation Atomic Parameter</span>
+          <span class="edge-tag coupling" data-tooltip="METHOD_PARAMETER_TYPE" title="METHOD_PARAMETER_TYPE">Method Parameter Type</span>
+          <span class="edge-tag coupling" data-tooltip="PARAMETERIZED_TYPE" title="PARAMETERIZED_TYPE">Parameterized Type</span>
+        </div>
+      </div>
+      <div class="path-node last">
+        <div class="node-circle" title="library/src/main/base/com/google/android/cameraview/Size.java">SI</div>
+        <div class="node-label" title="library/src/main/base/com/google/android/cameraview/Size.java">Size</div>
+        <div class="node-health" style="color:var(--green)" data-tooltip="Structural health (1 − code smell score from CK metrics). 1.00 (green) = healthy; 0.00 (red) = many CK metrics in the bad zone.">⚕ 0.92</div>
+      </div>
+    </div>
+    <div style="margin-top:10px;font-size:11px;color:var(--text2)">      <strong>Via:</strong> <code>library/src/main/base/com/google/android/cameraview/SizeMap.java</code>    </div>
+    <div style="margin-top:16px; font-size:11px; color:var(--text2);"><div><strong>Source:</strong> <code>library/src/main/base/com/google/android/cameraview/SizeMap.java</code></div><div><strong>Target:</strong> <code>library/src/main/base/com/google/android/cameraview/Size.java</code></div></div>    <div class="validation-section" id="validation_det_1">
+      <h4>📋 Validation — Is this propagation correct?</h4>
+      <div class="vote-buttons">
+        <button class="vote-btn correct"   onclick="selectVote('det_1','correct',this)">✅ Correct</button>
+        <button class="vote-btn incorrect" onclick="selectVote('det_1','incorrect',this)">❌ Incorrect</button>
+        <button class="vote-btn unsure"    onclick="selectVote('det_1','unsure',this)">❓ Unsure</button>
+      </div>
+      <textarea class="validation-comment" id="comment_det_1" placeholder="Optional comment (e.g., why you think it is incorrect)…" oninput="saveComment('det_1', this.value)"></textarea>
+      <div class="submit-row">
+        <button class="submit-btn" id="submitBtn_det_1" onclick="submitVote('det_1')" disabled>Submit</button>
+        <span class="submit-status" id="status_det_1"></span>
+      </div>
+      <input type="hidden" id="vote_det_1" value="">
+      <input type="hidden" id="meta_kind_det_1" value="det">
+      <input type="hidden" id="meta_source_det_1" value="library/src/main/base/com/google/android/cameraview/SizeMap.java">
+      <input type="hidden" id="meta_target_det_1" value="library/src/main/base/com/google/android/cameraview/Size.java">
+      <input type="hidden" id="meta_rank_det_1" value="2">
+      <input type="hidden" id="meta_prob_det_1" value="0.4085025750673321">
+      <input type="hidden" id="meta_hop_det_1" value="1">
+    </div>
+  </div>
+</div>
+</div><div class="tab-pane" data-tab="mc"><div class="card"
+     data-source="library/src/main/base/com/google/android/cameraview/SizeMap.java" data-target="library/src/main/base/com/google/android/cameraview/AspectRatio.java"
+     data-prob="0.802" data-hop="1.8167082294264338" data-rank="1">
+  <div class="card-header" onclick="this.parentElement.classList.toggle('open')">
+    <div class="source-target">
+      <span class="class-badge source" title="library/src/main/base/com/google/android/cameraview/SizeMap.java">SizeMap</span>
+      <span class="arrow-icon">→</span>
+      <span class="class-badge target" title="library/src/main/base/com/google/android/cameraview/AspectRatio.java">AspectRatio</span>
+    </div>
+    <div class="metrics-mini">
+      <div class="metric-pill rank-m" data-tooltip="Rank in the MC list."><span class="val">#1</span><span class="lbl">Rank</span></div>
+      <div class="metric-pill prob" style="color:var(--red)" data-tooltip="HyCPA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility."><span class="val" style="color:var(--red)">0.8020</span><span class="lbl">Prob</span></div>
+      <div class="metric-pill hop" data-tooltip="Number of edges (distance) in the propagation path from the source class to this target."><span class="val">1.82</span><span class="lbl">Avg Distance</span></div>
+      <div class="metric-pill health" data-tooltip="Target health = 1 − code smell score (computed from CK metrics)."><span class="val">0.71</span><span class="lbl">Health</span></div>
+    </div>
+    <span class="toggle-icon">▼</span>
+  </div>
+  <div class="card-body">
+    <h4 style="color:var(--text2);font-size:12px;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:8px;">Propagation Path</h4>
+    <div class="path-diagram">
+      <div class="path-node first">
+        <div class="node-circle" title="library/src/main/base/com/google/android/cameraview/SizeMap.java">SI</div>
+        <div class="node-label" title="library/src/main/base/com/google/android/cameraview/SizeMap.java">SizeMap</div>
+        <div class="node-health" style="color:var(--green)" data-tooltip="Structural health (1 − code smell score from CK metrics). 1.00 (green) = healthy; 0.00 (red) = many CK metrics in the bad zone.">⚕ 0.92</div>
+      </div>
+      <div class="path-edge">
+        <div class="edge-arrow"><span class="line"></span><span class="tip">&#9658;</span></div>
+        <div class="edge-tags">
+          <span class="edge-tag cochange" data-tooltip="Co-change weight: number of times these two classes were committed together in the project history.">co-change: 2</span>
+          <span class="edge-tag coupling" data-tooltip="METHOD_INVOCATION_ATOMIC_PARAMETER" title="METHOD_INVOCATION_ATOMIC_PARAMETER">Method Invocation Atomic Parameter</span>
+          <span class="edge-tag coupling" data-tooltip="METHOD_INVOCATION_OBJECT_PARAMETER" title="METHOD_INVOCATION_OBJECT_PARAMETER">Method Invocation Object Parameter</span>
+          <span class="edge-tag coupling" data-tooltip="METHOD_PARAMETER_TYPE" title="METHOD_PARAMETER_TYPE">Method Parameter Type</span>
+          <span class="edge-tag coupling" data-tooltip="PARAMETERIZED_TYPE" title="PARAMETERIZED_TYPE">Parameterized Type</span>
+        </div>
+      </div>
+      <div class="path-node last">
+        <div class="node-circle" title="library/src/main/base/com/google/android/cameraview/AspectRatio.java">AS</div>
+        <div class="node-label" title="library/src/main/base/com/google/android/cameraview/AspectRatio.java">AspectRatio</div>
+        <div class="node-health" style="color:var(--orange)" data-tooltip="Structural health (1 − code smell score from CK metrics). 1.00 (green) = healthy; 0.00 (red) = many CK metrics in the bad zone.">⚕ 0.71</div>
+      </div>
+    </div>
+    <div style="margin-top:10px;font-size:11px;color:var(--text2);font-style:italic">      Monte Carlo entry — no causal path is available; avg_hop = 1.82 aggregates across runs.    </div>
+    <div style="margin-top:16px; font-size:11px; color:var(--text2);"><div><strong>Source:</strong> <code>library/src/main/base/com/google/android/cameraview/SizeMap.java</code></div><div><strong>Target:</strong> <code>library/src/main/base/com/google/android/cameraview/AspectRatio.java</code></div></div>    <div class="validation-section" id="validation_mc_0">
+      <h4>📋 Validation — Is this propagation correct?</h4>
+      <div class="vote-buttons">
+        <button class="vote-btn correct"   onclick="selectVote('mc_0','correct',this)">✅ Correct</button>
+        <button class="vote-btn incorrect" onclick="selectVote('mc_0','incorrect',this)">❌ Incorrect</button>
+        <button class="vote-btn unsure"    onclick="selectVote('mc_0','unsure',this)">❓ Unsure</button>
+      </div>
+      <textarea class="validation-comment" id="comment_mc_0" placeholder="Optional comment (e.g., why you think it is incorrect)…" oninput="saveComment('mc_0', this.value)"></textarea>
+      <div class="submit-row">
+        <button class="submit-btn" id="submitBtn_mc_0" onclick="submitVote('mc_0')" disabled>Submit</button>
+        <span class="submit-status" id="status_mc_0"></span>
+      </div>
+      <input type="hidden" id="vote_mc_0" value="">
+      <input type="hidden" id="meta_kind_mc_0" value="mc">
+      <input type="hidden" id="meta_source_mc_0" value="library/src/main/base/com/google/android/cameraview/SizeMap.java">
+      <input type="hidden" id="meta_target_mc_0" value="library/src/main/base/com/google/android/cameraview/AspectRatio.java">
+      <input type="hidden" id="meta_rank_mc_0" value="1">
+      <input type="hidden" id="meta_prob_mc_0" value="0.802">
+      <input type="hidden" id="meta_hop_mc_0" value="1.8167082294264338">
+    </div>
+  </div>
+</div>
+<div class="card"
+     data-source="library/src/main/base/com/google/android/cameraview/SizeMap.java" data-target="library/src/main/base/com/google/android/cameraview/Size.java"
+     data-prob="0.783" data-hop="1.8160919540229885" data-rank="2">
+  <div class="card-header" onclick="this.parentElement.classList.toggle('open')">
+    <div class="source-target">
+      <span class="class-badge source" title="library/src/main/base/com/google/android/cameraview/SizeMap.java">SizeMap</span>
+      <span class="arrow-icon">→</span>
+      <span class="class-badge target" title="library/src/main/base/com/google/android/cameraview/Size.java">Size</span>
+    </div>
+    <div class="metrics-mini">
+      <div class="metric-pill rank-m" data-tooltip="Rank in the MC list."><span class="val">#2</span><span class="lbl">Rank</span></div>
+      <div class="metric-pill prob" style="color:var(--red)" data-tooltip="HyCPA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility."><span class="val" style="color:var(--red)">0.7830</span><span class="lbl">Prob</span></div>
+      <div class="metric-pill hop" data-tooltip="Number of edges (distance) in the propagation path from the source class to this target."><span class="val">1.82</span><span class="lbl">Avg Distance</span></div>
+      <div class="metric-pill health" data-tooltip="Target health = 1 − code smell score (computed from CK metrics)."><span class="val">0.92</span><span class="lbl">Health</span></div>
+    </div>
+    <span class="toggle-icon">▼</span>
+  </div>
+  <div class="card-body">
+    <h4 style="color:var(--text2);font-size:12px;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:8px;">Propagation Path</h4>
+    <div class="path-diagram">
+      <div class="path-node first">
+        <div class="node-circle" title="library/src/main/base/com/google/android/cameraview/SizeMap.java">SI</div>
+        <div class="node-label" title="library/src/main/base/com/google/android/cameraview/SizeMap.java">SizeMap</div>
+        <div class="node-health" style="color:var(--green)" data-tooltip="Structural health (1 − code smell score from CK metrics). 1.00 (green) = healthy; 0.00 (red) = many CK metrics in the bad zone.">⚕ 0.92</div>
+      </div>
+      <div class="path-edge">
+        <div class="edge-arrow"><span class="line"></span><span class="tip">&#9658;</span></div>
+        <div class="edge-tags">
+          <span class="edge-tag cochange" data-tooltip="Co-change weight: number of times these two classes were committed together in the project history.">co-change: 2</span>
+          <span class="edge-tag coupling" data-tooltip="METHOD_INVOCATION_ATOMIC_PARAMETER" title="METHOD_INVOCATION_ATOMIC_PARAMETER">Method Invocation Atomic Parameter</span>
+          <span class="edge-tag coupling" data-tooltip="METHOD_PARAMETER_TYPE" title="METHOD_PARAMETER_TYPE">Method Parameter Type</span>
+          <span class="edge-tag coupling" data-tooltip="PARAMETERIZED_TYPE" title="PARAMETERIZED_TYPE">Parameterized Type</span>
+        </div>
+      </div>
+      <div class="path-node last">
+        <div class="node-circle" title="library/src/main/base/com/google/android/cameraview/Size.java">SI</div>
+        <div class="node-label" title="library/src/main/base/com/google/android/cameraview/Size.java">Size</div>
+        <div class="node-health" style="color:var(--green)" data-tooltip="Structural health (1 − code smell score from CK metrics). 1.00 (green) = healthy; 0.00 (red) = many CK metrics in the bad zone.">⚕ 0.92</div>
+      </div>
+    </div>
+    <div style="margin-top:10px;font-size:11px;color:var(--text2);font-style:italic">      Monte Carlo entry — no causal path is available; avg_hop = 1.82 aggregates across runs.    </div>
+    <div style="margin-top:16px; font-size:11px; color:var(--text2);"><div><strong>Source:</strong> <code>library/src/main/base/com/google/android/cameraview/SizeMap.java</code></div><div><strong>Target:</strong> <code>library/src/main/base/com/google/android/cameraview/Size.java</code></div></div>    <div class="validation-section" id="validation_mc_1">
+      <h4>📋 Validation — Is this propagation correct?</h4>
+      <div class="vote-buttons">
+        <button class="vote-btn correct"   onclick="selectVote('mc_1','correct',this)">✅ Correct</button>
+        <button class="vote-btn incorrect" onclick="selectVote('mc_1','incorrect',this)">❌ Incorrect</button>
+        <button class="vote-btn unsure"    onclick="selectVote('mc_1','unsure',this)">❓ Unsure</button>
+      </div>
+      <textarea class="validation-comment" id="comment_mc_1" placeholder="Optional comment (e.g., why you think it is incorrect)…" oninput="saveComment('mc_1', this.value)"></textarea>
+      <div class="submit-row">
+        <button class="submit-btn" id="submitBtn_mc_1" onclick="submitVote('mc_1')" disabled>Submit</button>
+        <span class="submit-status" id="status_mc_1"></span>
+      </div>
+      <input type="hidden" id="vote_mc_1" value="">
+      <input type="hidden" id="meta_kind_mc_1" value="mc">
+      <input type="hidden" id="meta_source_mc_1" value="library/src/main/base/com/google/android/cameraview/SizeMap.java">
+      <input type="hidden" id="meta_target_mc_1" value="library/src/main/base/com/google/android/cameraview/Size.java">
+      <input type="hidden" id="meta_rank_mc_1" value="2">
+      <input type="hidden" id="meta_prob_mc_1" value="0.783">
+      <input type="hidden" id="meta_hop_mc_1" value="1.8160919540229885">
+    </div>
+  </div>
+</div>
+<div class="card"
+     data-source="library/src/main/base/com/google/android/cameraview/SizeMap.java" data-target="library/src/main/api21/com/google/android/cameraview/Camera2.java"
+     data-prob="0.704" data-hop="2.315340909090909" data-rank="3">
+  <div class="card-header" onclick="this.parentElement.classList.toggle('open')">
+    <div class="source-target">
+      <span class="class-badge source" title="library/src/main/base/com/google/android/cameraview/SizeMap.java">SizeMap</span>
+      <span class="arrow-icon">→</span>
+      <span class="class-badge target" title="library/src/main/api21/com/google/android/cameraview/Camera2.java">Camera2</span>
+    </div>
+    <div class="metrics-mini">
+      <div class="metric-pill rank-m" data-tooltip="Rank in the MC list."><span class="val">#3</span><span class="lbl">Rank</span></div>
+      <div class="metric-pill prob" style="color:var(--red)" data-tooltip="HyCPA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility."><span class="val" style="color:var(--red)">0.7040</span><span class="lbl">Prob</span></div>
+      <div class="metric-pill hop" data-tooltip="Number of edges (distance) in the propagation path from the source class to this target."><span class="val">2.32</span><span class="lbl">Avg Distance</span></div>
+      <div class="metric-pill health" data-tooltip="Target health = 1 − code smell score (computed from CK metrics)."><span class="val">0.48</span><span class="lbl">Health</span></div>
+    </div>
+    <span class="toggle-icon">▼</span>
+  </div>
+  <div class="card-body">
+    <h4 style="color:var(--text2);font-size:12px;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:8px;">Propagation Path</h4>
+    <div class="path-diagram">
+      <div class="path-node first">
+        <div class="node-circle" title="library/src/main/base/com/google/android/cameraview/SizeMap.java">SI</div>
+        <div class="node-label" title="library/src/main/base/com/google/android/cameraview/SizeMap.java">SizeMap</div>
+        <div class="node-health" style="color:var(--green)" data-tooltip="Structural health (1 − code smell score from CK metrics). 1.00 (green) = healthy; 0.00 (red) = many CK metrics in the bad zone.">⚕ 0.92</div>
+      </div>
+      <div class="path-edge">
+        <div class="edge-arrow"><span class="line"></span><span class="tip">&#9658;</span></div>
+        <div class="edge-tags">
+          <span class="edge-tag cochange" data-tooltip="Co-change weight: number of times these two classes were committed together in the project history.">co-change: 14</span>
+          <span class="edge-tag none" data-tooltip="No structural coupling detected; arc inferred solely from co-change history.">no structural coupling</span>
+        </div>
+      </div>
+      <div class="path-node last">
+        <div class="node-circle" title="library/src/main/api21/com/google/android/cameraview/Camera2.java">CA</div>
+        <div class="node-label" title="library/src/main/api21/com/google/android/cameraview/Camera2.java">Camera2</div>
+        <div class="node-health" style="color:var(--red)" data-tooltip="Structural health (1 − code smell score from CK metrics). 1.00 (green) = healthy; 0.00 (red) = many CK metrics in the bad zone.">⚕ 0.48</div>
+      </div>
+    </div>
+    <div style="margin-top:10px;font-size:11px;color:var(--text2);font-style:italic">      Monte Carlo entry — no causal path is available; avg_hop = 2.32 aggregates across runs.    </div>
+    <div style="margin-top:16px; font-size:11px; color:var(--text2);"><div><strong>Source:</strong> <code>library/src/main/base/com/google/android/cameraview/SizeMap.java</code></div><div><strong>Target:</strong> <code>library/src/main/api21/com/google/android/cameraview/Camera2.java</code></div></div>    <div class="validation-section" id="validation_mc_2">
+      <h4>📋 Validation — Is this propagation correct?</h4>
+      <div class="vote-buttons">
+        <button class="vote-btn correct"   onclick="selectVote('mc_2','correct',this)">✅ Correct</button>
+        <button class="vote-btn incorrect" onclick="selectVote('mc_2','incorrect',this)">❌ Incorrect</button>
+        <button class="vote-btn unsure"    onclick="selectVote('mc_2','unsure',this)">❓ Unsure</button>
+      </div>
+      <textarea class="validation-comment" id="comment_mc_2" placeholder="Optional comment (e.g., why you think it is incorrect)…" oninput="saveComment('mc_2', this.value)"></textarea>
+      <div class="submit-row">
+        <button class="submit-btn" id="submitBtn_mc_2" onclick="submitVote('mc_2')" disabled>Submit</button>
+        <span class="submit-status" id="status_mc_2"></span>
+      </div>
+      <input type="hidden" id="vote_mc_2" value="">
+      <input type="hidden" id="meta_kind_mc_2" value="mc">
+      <input type="hidden" id="meta_source_mc_2" value="library/src/main/base/com/google/android/cameraview/SizeMap.java">
+      <input type="hidden" id="meta_target_mc_2" value="library/src/main/api21/com/google/android/cameraview/Camera2.java">
+      <input type="hidden" id="meta_rank_mc_2" value="3">
+      <input type="hidden" id="meta_prob_mc_2" value="0.704">
+      <input type="hidden" id="meta_hop_mc_2" value="2.315340909090909">
+    </div>
+  </div>
+</div>
+<div class="card"
+     data-source="library/src/main/base/com/google/android/cameraview/SizeMap.java" data-target="library/src/main/api14/com/google/android/cameraview/Camera1.java"
+     data-prob="0.7" data-hop="2.3657142857142857" data-rank="4">
+  <div class="card-header" onclick="this.parentElement.classList.toggle('open')">
+    <div class="source-target">
+      <span class="class-badge source" title="library/src/main/base/com/google/android/cameraview/SizeMap.java">SizeMap</span>
+      <span class="arrow-icon">→</span>
+      <span class="class-badge target" title="library/src/main/api14/com/google/android/cameraview/Camera1.java">Camera1</span>
+    </div>
+    <div class="metrics-mini">
+      <div class="metric-pill rank-m" data-tooltip="Rank in the MC list."><span class="val">#4</span><span class="lbl">Rank</span></div>
+      <div class="metric-pill prob" style="color:var(--red)" data-tooltip="HyCPA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility."><span class="val" style="color:var(--red)">0.7000</span><span class="lbl">Prob</span></div>
+      <div class="metric-pill hop" data-tooltip="Number of edges (distance) in the propagation path from the source class to this target."><span class="val">2.37</span><span class="lbl">Avg Distance</span></div>
+      <div class="metric-pill health" data-tooltip="Target health = 1 − code smell score (computed from CK metrics)."><span class="val">0.60</span><span class="lbl">Health</span></div>
+    </div>
+    <span class="toggle-icon">▼</span>
+  </div>
+  <div class="card-body">
+    <h4 style="color:var(--text2);font-size:12px;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:8px;">Propagation Path</h4>
+    <div class="path-diagram">
+      <div class="path-node first">
+        <div class="node-circle" title="library/src/main/base/com/google/android/cameraview/SizeMap.java">SI</div>
+        <div class="node-label" title="library/src/main/base/com/google/android/cameraview/SizeMap.java">SizeMap</div>
+        <div class="node-health" style="color:var(--green)" data-tooltip="Structural health (1 − code smell score from CK metrics). 1.00 (green) = healthy; 0.00 (red) = many CK metrics in the bad zone.">⚕ 0.92</div>
+      </div>
+      <div class="path-edge">
+        <div class="edge-arrow"><span class="line"></span><span class="tip">&#9658;</span></div>
+        <div class="edge-tags">
+          <span class="edge-tag cochange" data-tooltip="Co-change weight: number of times these two classes were committed together in the project history.">co-change: 15</span>
+          <span class="edge-tag none" data-tooltip="No structural coupling detected; arc inferred solely from co-change history.">no structural coupling</span>
+        </div>
+      </div>
+      <div class="path-node last">
+        <div class="node-circle" title="library/src/main/api14/com/google/android/cameraview/Camera1.java">CA</div>
+        <div class="node-label" title="library/src/main/api14/com/google/android/cameraview/Camera1.java">Camera1</div>
+        <div class="node-health" style="color:var(--orange)" data-tooltip="Structural health (1 − code smell score from CK metrics). 1.00 (green) = healthy; 0.00 (red) = many CK metrics in the bad zone.">⚕ 0.60</div>
+      </div>
+    </div>
+    <div style="margin-top:10px;font-size:11px;color:var(--text2);font-style:italic">      Monte Carlo entry — no causal path is available; avg_hop = 2.37 aggregates across runs.    </div>
+    <div style="margin-top:16px; font-size:11px; color:var(--text2);"><div><strong>Source:</strong> <code>library/src/main/base/com/google/android/cameraview/SizeMap.java</code></div><div><strong>Target:</strong> <code>library/src/main/api14/com/google/android/cameraview/Camera1.java</code></div></div>    <div class="validation-section" id="validation_mc_3">
+      <h4>📋 Validation — Is this propagation correct?</h4>
+      <div class="vote-buttons">
+        <button class="vote-btn correct"   onclick="selectVote('mc_3','correct',this)">✅ Correct</button>
+        <button class="vote-btn incorrect" onclick="selectVote('mc_3','incorrect',this)">❌ Incorrect</button>
+        <button class="vote-btn unsure"    onclick="selectVote('mc_3','unsure',this)">❓ Unsure</button>
+      </div>
+      <textarea class="validation-comment" id="comment_mc_3" placeholder="Optional comment (e.g., why you think it is incorrect)…" oninput="saveComment('mc_3', this.value)"></textarea>
+      <div class="submit-row">
+        <button class="submit-btn" id="submitBtn_mc_3" onclick="submitVote('mc_3')" disabled>Submit</button>
+        <span class="submit-status" id="status_mc_3"></span>
+      </div>
+      <input type="hidden" id="vote_mc_3" value="">
+      <input type="hidden" id="meta_kind_mc_3" value="mc">
+      <input type="hidden" id="meta_source_mc_3" value="library/src/main/base/com/google/android/cameraview/SizeMap.java">
+      <input type="hidden" id="meta_target_mc_3" value="library/src/main/api14/com/google/android/cameraview/Camera1.java">
+      <input type="hidden" id="meta_rank_mc_3" value="4">
+      <input type="hidden" id="meta_prob_mc_3" value="0.7">
+      <input type="hidden" id="meta_hop_mc_3" value="2.3657142857142857">
+    </div>
+  </div>
+</div>
+<div class="card"
+     data-source="library/src/main/base/com/google/android/cameraview/SizeMap.java" data-target="library/src/main/java/com/google/android/cameraview/CameraView.java"
+     data-prob="0.688" data-hop="2.627906976744186" data-rank="5">
+  <div class="card-header" onclick="this.parentElement.classList.toggle('open')">
+    <div class="source-target">
+      <span class="class-badge source" title="library/src/main/base/com/google/android/cameraview/SizeMap.java">SizeMap</span>
+      <span class="arrow-icon">→</span>
+      <span class="class-badge target" title="library/src/main/java/com/google/android/cameraview/CameraView.java">CameraView</span>
+    </div>
+    <div class="metrics-mini">
+      <div class="metric-pill rank-m" data-tooltip="Rank in the MC list."><span class="val">#5</span><span class="lbl">Rank</span></div>
+      <div class="metric-pill prob" style="color:var(--red)" data-tooltip="HyCPA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility."><span class="val" style="color:var(--red)">0.6880</span><span class="lbl">Prob</span></div>
+      <div class="metric-pill hop" data-tooltip="Number of edges (distance) in the propagation path from the source class to this target."><span class="val">2.63</span><span class="lbl">Avg Distance</span></div>
+      <div class="metric-pill health" data-tooltip="Target health = 1 − code smell score (computed from CK metrics)."><span class="val">0.52</span><span class="lbl">Health</span></div>
+    </div>
+    <span class="toggle-icon">▼</span>
+  </div>
+  <div class="card-body">
+    <h4 style="color:var(--text2);font-size:12px;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:8px;">Propagation Path</h4>
+    <div class="path-diagram">
+      <div class="path-node first">
+        <div class="node-circle" title="library/src/main/base/com/google/android/cameraview/SizeMap.java">SI</div>
+        <div class="node-label" title="library/src/main/base/com/google/android/cameraview/SizeMap.java">SizeMap</div>
+        <div class="node-health" style="color:var(--green)" data-tooltip="Structural health (1 − code smell score from CK metrics). 1.00 (green) = healthy; 0.00 (red) = many CK metrics in the bad zone.">⚕ 0.92</div>
+      </div>
+      <div class="path-edge">
+        <div class="edge-arrow"><span class="line"></span><span class="tip">&#9658;</span></div>
+        <div class="edge-tags">
+          <span class="edge-tag cochange" data-tooltip="Co-change weight: number of times these two classes were committed together in the project history.">co-change: 4</span>
+          <span class="edge-tag none" data-tooltip="No structural coupling detected; arc inferred solely from co-change history.">no structural coupling</span>
+        </div>
+      </div>
+      <div class="path-node last">
+        <div class="node-circle" title="library/src/main/java/com/google/android/cameraview/CameraView.java">CA</div>
+        <div class="node-label" title="library/src/main/java/com/google/android/cameraview/CameraView.java">CameraView</div>
+        <div class="node-health" style="color:var(--orange)" data-tooltip="Structural health (1 − code smell score from CK metrics). 1.00 (green) = healthy; 0.00 (red) = many CK metrics in the bad zone.">⚕ 0.52</div>
+      </div>
+    </div>
+    <div style="margin-top:10px;font-size:11px;color:var(--text2);font-style:italic">      Monte Carlo entry — no causal path is available; avg_hop = 2.63 aggregates across runs.    </div>
+    <div style="margin-top:16px; font-size:11px; color:var(--text2);"><div><strong>Source:</strong> <code>library/src/main/base/com/google/android/cameraview/SizeMap.java</code></div><div><strong>Target:</strong> <code>library/src/main/java/com/google/android/cameraview/CameraView.java</code></div></div>    <div class="validation-section" id="validation_mc_4">
+      <h4>📋 Validation — Is this propagation correct?</h4>
+      <div class="vote-buttons">
+        <button class="vote-btn correct"   onclick="selectVote('mc_4','correct',this)">✅ Correct</button>
+        <button class="vote-btn incorrect" onclick="selectVote('mc_4','incorrect',this)">❌ Incorrect</button>
+        <button class="vote-btn unsure"    onclick="selectVote('mc_4','unsure',this)">❓ Unsure</button>
+      </div>
+      <textarea class="validation-comment" id="comment_mc_4" placeholder="Optional comment (e.g., why you think it is incorrect)…" oninput="saveComment('mc_4', this.value)"></textarea>
+      <div class="submit-row">
+        <button class="submit-btn" id="submitBtn_mc_4" onclick="submitVote('mc_4')" disabled>Submit</button>
+        <span class="submit-status" id="status_mc_4"></span>
+      </div>
+      <input type="hidden" id="vote_mc_4" value="">
+      <input type="hidden" id="meta_kind_mc_4" value="mc">
+      <input type="hidden" id="meta_source_mc_4" value="library/src/main/base/com/google/android/cameraview/SizeMap.java">
+      <input type="hidden" id="meta_target_mc_4" value="library/src/main/java/com/google/android/cameraview/CameraView.java">
+      <input type="hidden" id="meta_rank_mc_4" value="5">
+      <input type="hidden" id="meta_prob_mc_4" value="0.688">
+      <input type="hidden" id="meta_hop_mc_4" value="2.627906976744186">
+    </div>
+  </div>
+</div>
+<div class="card"
+     data-source="library/src/main/base/com/google/android/cameraview/SizeMap.java" data-target="demo/src/main/java/com/google/android/cameraview/demo/MainActivity.java"
+     data-prob="0.615" data-hop="2.707317073170732" data-rank="6">
+  <div class="card-header" onclick="this.parentElement.classList.toggle('open')">
+    <div class="source-target">
+      <span class="class-badge source" title="library/src/main/base/com/google/android/cameraview/SizeMap.java">SizeMap</span>
+      <span class="arrow-icon">→</span>
+      <span class="class-badge target" title="demo/src/main/java/com/google/android/cameraview/demo/MainActivity.java">MainActivity</span>
+    </div>
+    <div class="metrics-mini">
+      <div class="metric-pill rank-m" data-tooltip="Rank in the MC list."><span class="val">#6</span><span class="lbl">Rank</span></div>
+      <div class="metric-pill prob" style="color:var(--red)" data-tooltip="HyCPA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility."><span class="val" style="color:var(--red)">0.6150</span><span class="lbl">Prob</span></div>
+      <div class="metric-pill hop" data-tooltip="Number of edges (distance) in the propagation path from the source class to this target."><span class="val">2.71</span><span class="lbl">Avg Distance</span></div>
+      <div class="metric-pill health" data-tooltip="Target health = 1 − code smell score (computed from CK metrics)."><span class="val">0.63</span><span class="lbl">Health</span></div>
+    </div>
+    <span class="toggle-icon">▼</span>
+  </div>
+  <div class="card-body">
+    <h4 style="color:var(--text2);font-size:12px;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:8px;">Propagation Path</h4>
+    <div class="path-diagram">
+      <div class="path-node first">
+        <div class="node-circle" title="library/src/main/base/com/google/android/cameraview/SizeMap.java">SI</div>
+        <div class="node-label" title="library/src/main/base/com/google/android/cameraview/SizeMap.java">SizeMap</div>
+        <div class="node-health" style="color:var(--green)" data-tooltip="Structural health (1 − code smell score from CK metrics). 1.00 (green) = healthy; 0.00 (red) = many CK metrics in the bad zone.">⚕ 0.92</div>
+      </div>
+      <div class="path-edge">
+        <div class="edge-arrow"><span class="line"></span><span class="tip">&#9658;</span></div>
+        <div class="edge-tags">
+          <span class="edge-tag cochange" data-tooltip="Co-change weight: number of times these two classes were committed together in the project history.">co-change: 6</span>
+          <span class="edge-tag none" data-tooltip="No structural coupling detected; arc inferred solely from co-change history.">no structural coupling</span>
+        </div>
+      </div>
+      <div class="path-node last">
+        <div class="node-circle" title="demo/src/main/java/com/google/android/cameraview/demo/MainActivity.java">MA</div>
+        <div class="node-label" title="demo/src/main/java/com/google/android/cameraview/demo/MainActivity.java">MainActivity</div>
+        <div class="node-health" style="color:var(--orange)" data-tooltip="Structural health (1 − code smell score from CK metrics). 1.00 (green) = healthy; 0.00 (red) = many CK metrics in the bad zone.">⚕ 0.63</div>
+      </div>
+    </div>
+    <div style="margin-top:10px;font-size:11px;color:var(--text2);font-style:italic">      Monte Carlo entry — no causal path is available; avg_hop = 2.71 aggregates across runs.    </div>
+    <div style="margin-top:16px; font-size:11px; color:var(--text2);"><div><strong>Source:</strong> <code>library/src/main/base/com/google/android/cameraview/SizeMap.java</code></div><div><strong>Target:</strong> <code>demo/src/main/java/com/google/android/cameraview/demo/MainActivity.java</code></div></div>    <div class="validation-section" id="validation_mc_5">
+      <h4>📋 Validation — Is this propagation correct?</h4>
+      <div class="vote-buttons">
+        <button class="vote-btn correct"   onclick="selectVote('mc_5','correct',this)">✅ Correct</button>
+        <button class="vote-btn incorrect" onclick="selectVote('mc_5','incorrect',this)">❌ Incorrect</button>
+        <button class="vote-btn unsure"    onclick="selectVote('mc_5','unsure',this)">❓ Unsure</button>
+      </div>
+      <textarea class="validation-comment" id="comment_mc_5" placeholder="Optional comment (e.g., why you think it is incorrect)…" oninput="saveComment('mc_5', this.value)"></textarea>
+      <div class="submit-row">
+        <button class="submit-btn" id="submitBtn_mc_5" onclick="submitVote('mc_5')" disabled>Submit</button>
+        <span class="submit-status" id="status_mc_5"></span>
+      </div>
+      <input type="hidden" id="vote_mc_5" value="">
+      <input type="hidden" id="meta_kind_mc_5" value="mc">
+      <input type="hidden" id="meta_source_mc_5" value="library/src/main/base/com/google/android/cameraview/SizeMap.java">
+      <input type="hidden" id="meta_target_mc_5" value="demo/src/main/java/com/google/android/cameraview/demo/MainActivity.java">
+      <input type="hidden" id="meta_rank_mc_5" value="6">
+      <input type="hidden" id="meta_prob_mc_5" value="0.615">
+      <input type="hidden" id="meta_hop_mc_5" value="2.707317073170732">
+    </div>
+  </div>
+</div>
+<div class="card"
+     data-source="library/src/main/base/com/google/android/cameraview/SizeMap.java" data-target="library/src/main/base/com/google/android/cameraview/CameraViewImpl.java"
+     data-prob="0.582" data-hop="2.9450171821305844" data-rank="7">
+  <div class="card-header" onclick="this.parentElement.classList.toggle('open')">
+    <div class="source-target">
+      <span class="class-badge source" title="library/src/main/base/com/google/android/cameraview/SizeMap.java">SizeMap</span>
+      <span class="arrow-icon">→</span>
+      <span class="class-badge target" title="library/src/main/base/com/google/android/cameraview/CameraViewImpl.java">CameraViewImpl</span>
+    </div>
+    <div class="metrics-mini">
+      <div class="metric-pill rank-m" data-tooltip="Rank in the MC list."><span class="val">#7</span><span class="lbl">Rank</span></div>
+      <div class="metric-pill prob" style="color:var(--red)" data-tooltip="HyCPA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility."><span class="val" style="color:var(--red)">0.5820</span><span class="lbl">Prob</span></div>
+      <div class="metric-pill hop" data-tooltip="Number of edges (distance) in the propagation path from the source class to this target."><span class="val">2.95</span><span class="lbl">Avg Distance</span></div>
+      <div class="metric-pill health" data-tooltip="Target health = 1 − code smell score (computed from CK metrics)."><span class="val">0.94</span><span class="lbl">Health</span></div>
+    </div>
+    <span class="toggle-icon">▼</span>
+  </div>
+  <div class="card-body">
+    <h4 style="color:var(--text2);font-size:12px;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:8px;">Propagation Path</h4>
+    <div class="path-diagram">
+      <div class="path-node first">
+        <div class="node-circle" title="library/src/main/base/com/google/android/cameraview/SizeMap.java">SI</div>
+        <div class="node-label" title="library/src/main/base/com/google/android/cameraview/SizeMap.java">SizeMap</div>
+        <div class="node-health" style="color:var(--green)" data-tooltip="Structural health (1 − code smell score from CK metrics). 1.00 (green) = healthy; 0.00 (red) = many CK metrics in the bad zone.">⚕ 0.92</div>
+      </div>
+      <div class="path-edge">
+        <div class="edge-arrow"><span class="line"></span><span class="tip">&#9658;</span></div>
+        <div class="edge-tags">
+          <span class="edge-tag cochange" data-tooltip="Co-change weight: number of times these two classes were committed together in the project history.">co-change: 4</span>
+          <span class="edge-tag none" data-tooltip="No structural coupling detected; arc inferred solely from co-change history.">no structural coupling</span>
+        </div>
+      </div>
+      <div class="path-node last">
+        <div class="node-circle" title="library/src/main/base/com/google/android/cameraview/CameraViewImpl.java">CA</div>
+        <div class="node-label" title="library/src/main/base/com/google/android/cameraview/CameraViewImpl.java">CameraViewImpl</div>
+        <div class="node-health" style="color:var(--green)" data-tooltip="Structural health (1 − code smell score from CK metrics). 1.00 (green) = healthy; 0.00 (red) = many CK metrics in the bad zone.">⚕ 0.94</div>
+      </div>
+    </div>
+    <div style="margin-top:10px;font-size:11px;color:var(--text2);font-style:italic">      Monte Carlo entry — no causal path is available; avg_hop = 2.95 aggregates across runs.    </div>
+    <div style="margin-top:16px; font-size:11px; color:var(--text2);"><div><strong>Source:</strong> <code>library/src/main/base/com/google/android/cameraview/SizeMap.java</code></div><div><strong>Target:</strong> <code>library/src/main/base/com/google/android/cameraview/CameraViewImpl.java</code></div></div>    <div class="validation-section" id="validation_mc_6">
+      <h4>📋 Validation — Is this propagation correct?</h4>
+      <div class="vote-buttons">
+        <button class="vote-btn correct"   onclick="selectVote('mc_6','correct',this)">✅ Correct</button>
+        <button class="vote-btn incorrect" onclick="selectVote('mc_6','incorrect',this)">❌ Incorrect</button>
+        <button class="vote-btn unsure"    onclick="selectVote('mc_6','unsure',this)">❓ Unsure</button>
+      </div>
+      <textarea class="validation-comment" id="comment_mc_6" placeholder="Optional comment (e.g., why you think it is incorrect)…" oninput="saveComment('mc_6', this.value)"></textarea>
+      <div class="submit-row">
+        <button class="submit-btn" id="submitBtn_mc_6" onclick="submitVote('mc_6')" disabled>Submit</button>
+        <span class="submit-status" id="status_mc_6"></span>
+      </div>
+      <input type="hidden" id="vote_mc_6" value="">
+      <input type="hidden" id="meta_kind_mc_6" value="mc">
+      <input type="hidden" id="meta_source_mc_6" value="library/src/main/base/com/google/android/cameraview/SizeMap.java">
+      <input type="hidden" id="meta_target_mc_6" value="library/src/main/base/com/google/android/cameraview/CameraViewImpl.java">
+      <input type="hidden" id="meta_rank_mc_6" value="7">
+      <input type="hidden" id="meta_prob_mc_6" value="0.582">
+      <input type="hidden" id="meta_hop_mc_6" value="2.9450171821305844">
+    </div>
+  </div>
+</div>
+<div class="card"
+     data-source="library/src/main/base/com/google/android/cameraview/SizeMap.java" data-target="library/src/androidTest/java/com/google/android/cameraview/CameraViewTest.java"
+     data-prob="0.514" data-hop="2.906614785992218" data-rank="8">
+  <div class="card-header" onclick="this.parentElement.classList.toggle('open')">
+    <div class="source-target">
+      <span class="class-badge source" title="library/src/main/base/com/google/android/cameraview/SizeMap.java">SizeMap</span>
+      <span class="arrow-icon">→</span>
+      <span class="class-badge target" title="library/src/androidTest/java/com/google/android/cameraview/CameraViewTest.java">CameraViewTest</span>
+    </div>
+    <div class="metrics-mini">
+      <div class="metric-pill rank-m" data-tooltip="Rank in the MC list."><span class="val">#8</span><span class="lbl">Rank</span></div>
+      <div class="metric-pill prob" style="color:var(--red)" data-tooltip="HyCPA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility."><span class="val" style="color:var(--red)">0.5140</span><span class="lbl">Prob</span></div>
+      <div class="metric-pill hop" data-tooltip="Number of edges (distance) in the propagation path from the source class to this target."><span class="val">2.91</span><span class="lbl">Avg Distance</span></div>
+      <div class="metric-pill health" data-tooltip="Target health = 1 − code smell score (computed from CK metrics)."><span class="val">0.87</span><span class="lbl">Health</span></div>
+    </div>
+    <span class="toggle-icon">▼</span>
+  </div>
+  <div class="card-body">
+    <h4 style="color:var(--text2);font-size:12px;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:8px;">Propagation Path</h4>
+    <div class="path-diagram">
+      <div class="path-node first">
+        <div class="node-circle" title="library/src/main/base/com/google/android/cameraview/SizeMap.java">SI</div>
+        <div class="node-label" title="library/src/main/base/com/google/android/cameraview/SizeMap.java">SizeMap</div>
+        <div class="node-health" style="color:var(--green)" data-tooltip="Structural health (1 − code smell score from CK metrics). 1.00 (green) = healthy; 0.00 (red) = many CK metrics in the bad zone.">⚕ 0.92</div>
+      </div>
+      <div class="path-edge">
+        <div class="edge-arrow"><span class="line"></span><span class="tip">&#9658;</span></div>
+        <div class="edge-tags">
+          <span class="edge-tag cochange" data-tooltip="Co-change weight: number of times these two classes were committed together in the project history.">co-change: 6</span>
+          <span class="edge-tag none" data-tooltip="No structural coupling detected; arc inferred solely from co-change history.">no structural coupling</span>
+        </div>
+      </div>
+      <div class="path-node last">
+        <div class="node-circle" title="library/src/androidTest/java/com/google/android/cameraview/CameraViewTest.java">CA</div>
+        <div class="node-label" title="library/src/androidTest/java/com/google/android/cameraview/CameraViewTest.java">CameraViewTest</div>
+        <div class="node-health" style="color:var(--green)" data-tooltip="Structural health (1 − code smell score from CK metrics). 1.00 (green) = healthy; 0.00 (red) = many CK metrics in the bad zone.">⚕ 0.87</div>
+      </div>
+    </div>
+    <div style="margin-top:10px;font-size:11px;color:var(--text2);font-style:italic">      Monte Carlo entry — no causal path is available; avg_hop = 2.91 aggregates across runs.    </div>
+    <div style="margin-top:16px; font-size:11px; color:var(--text2);"><div><strong>Source:</strong> <code>library/src/main/base/com/google/android/cameraview/SizeMap.java</code></div><div><strong>Target:</strong> <code>library/src/androidTest/java/com/google/android/cameraview/CameraViewTest.java</code></div></div>    <div class="validation-section" id="validation_mc_7">
+      <h4>📋 Validation — Is this propagation correct?</h4>
+      <div class="vote-buttons">
+        <button class="vote-btn correct"   onclick="selectVote('mc_7','correct',this)">✅ Correct</button>
+        <button class="vote-btn incorrect" onclick="selectVote('mc_7','incorrect',this)">❌ Incorrect</button>
+        <button class="vote-btn unsure"    onclick="selectVote('mc_7','unsure',this)">❓ Unsure</button>
+      </div>
+      <textarea class="validation-comment" id="comment_mc_7" placeholder="Optional comment (e.g., why you think it is incorrect)…" oninput="saveComment('mc_7', this.value)"></textarea>
+      <div class="submit-row">
+        <button class="submit-btn" id="submitBtn_mc_7" onclick="submitVote('mc_7')" disabled>Submit</button>
+        <span class="submit-status" id="status_mc_7"></span>
+      </div>
+      <input type="hidden" id="vote_mc_7" value="">
+      <input type="hidden" id="meta_kind_mc_7" value="mc">
+      <input type="hidden" id="meta_source_mc_7" value="library/src/main/base/com/google/android/cameraview/SizeMap.java">
+      <input type="hidden" id="meta_target_mc_7" value="library/src/androidTest/java/com/google/android/cameraview/CameraViewTest.java">
+      <input type="hidden" id="meta_rank_mc_7" value="8">
+      <input type="hidden" id="meta_prob_mc_7" value="0.514">
+      <input type="hidden" id="meta_hop_mc_7" value="2.906614785992218">
+    </div>
+  </div>
+</div>
+<div class="card"
+     data-source="library/src/main/base/com/google/android/cameraview/SizeMap.java" data-target="library/src/main/java/com/google/android/cameraview/DisplayOrientationDetector.java"
+     data-prob="0.461" data-hop="3.2906724511930587" data-rank="9">
+  <div class="card-header" onclick="this.parentElement.classList.toggle('open')">
+    <div class="source-target">
+      <span class="class-badge source" title="library/src/main/base/com/google/android/cameraview/SizeMap.java">SizeMap</span>
+      <span class="arrow-icon">→</span>
+      <span class="class-badge target" title="library/src/main/java/com/google/android/cameraview/DisplayOrientationDetector.java">DisplayOrientationDetector</span>
+    </div>
+    <div class="metrics-mini">
+      <div class="metric-pill rank-m" data-tooltip="Rank in the MC list."><span class="val">#9</span><span class="lbl">Rank</span></div>
+      <div class="metric-pill prob" style="color:var(--orange)" data-tooltip="HyCPA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility."><span class="val" style="color:var(--orange)">0.4610</span><span class="lbl">Prob</span></div>
+      <div class="metric-pill hop" data-tooltip="Number of edges (distance) in the propagation path from the source class to this target."><span class="val">3.29</span><span class="lbl">Avg Distance</span></div>
+      <div class="metric-pill health" data-tooltip="Target health = 1 − code smell score (computed from CK metrics)."><span class="val">0.92</span><span class="lbl">Health</span></div>
+    </div>
+    <span class="toggle-icon">▼</span>
+  </div>
+  <div class="card-body">
+    <h4 style="color:var(--text2);font-size:12px;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:8px;">Propagation Path</h4>
+    <div class="path-diagram">
+      <div class="path-node first">
+        <div class="node-circle" title="library/src/main/base/com/google/android/cameraview/SizeMap.java">SI</div>
+        <div class="node-label" title="library/src/main/base/com/google/android/cameraview/SizeMap.java">SizeMap</div>
+        <div class="node-health" style="color:var(--green)" data-tooltip="Structural health (1 − code smell score from CK metrics). 1.00 (green) = healthy; 0.00 (red) = many CK metrics in the bad zone.">⚕ 0.92</div>
+      </div>
+      <div class="path-edge">
+        <div class="edge-arrow"><span class="line"></span><span class="tip">&#9658;</span></div>
+        <div class="edge-tags">
+          <span class="edge-tag cochange" data-tooltip="Co-change weight: number of times these two classes were committed together in the project history.">co-change: 2</span>
+          <span class="edge-tag none" data-tooltip="No structural coupling detected; arc inferred solely from co-change history.">no structural coupling</span>
+        </div>
+      </div>
+      <div class="path-node last">
+        <div class="node-circle" title="library/src/main/java/com/google/android/cameraview/DisplayOrientationDetector.java">DI</div>
+        <div class="node-label" title="library/src/main/java/com/google/android/cameraview/DisplayOrientationDetector.java">DisplayOrientationDetector</div>
+        <div class="node-health" style="color:var(--green)" data-tooltip="Structural health (1 − code smell score from CK metrics). 1.00 (green) = healthy; 0.00 (red) = many CK metrics in the bad zone.">⚕ 0.92</div>
+      </div>
+    </div>
+    <div style="margin-top:10px;font-size:11px;color:var(--text2);font-style:italic">      Monte Carlo entry — no causal path is available; avg_hop = 3.29 aggregates across runs.    </div>
+    <div style="margin-top:16px; font-size:11px; color:var(--text2);"><div><strong>Source:</strong> <code>library/src/main/base/com/google/android/cameraview/SizeMap.java</code></div><div><strong>Target:</strong> <code>library/src/main/java/com/google/android/cameraview/DisplayOrientationDetector.java</code></div></div>    <div class="validation-section" id="validation_mc_8">
+      <h4>📋 Validation — Is this propagation correct?</h4>
+      <div class="vote-buttons">
+        <button class="vote-btn correct"   onclick="selectVote('mc_8','correct',this)">✅ Correct</button>
+        <button class="vote-btn incorrect" onclick="selectVote('mc_8','incorrect',this)">❌ Incorrect</button>
+        <button class="vote-btn unsure"    onclick="selectVote('mc_8','unsure',this)">❓ Unsure</button>
+      </div>
+      <textarea class="validation-comment" id="comment_mc_8" placeholder="Optional comment (e.g., why you think it is incorrect)…" oninput="saveComment('mc_8', this.value)"></textarea>
+      <div class="submit-row">
+        <button class="submit-btn" id="submitBtn_mc_8" onclick="submitVote('mc_8')" disabled>Submit</button>
+        <span class="submit-status" id="status_mc_8"></span>
+      </div>
+      <input type="hidden" id="vote_mc_8" value="">
+      <input type="hidden" id="meta_kind_mc_8" value="mc">
+      <input type="hidden" id="meta_source_mc_8" value="library/src/main/base/com/google/android/cameraview/SizeMap.java">
+      <input type="hidden" id="meta_target_mc_8" value="library/src/main/java/com/google/android/cameraview/DisplayOrientationDetector.java">
+      <input type="hidden" id="meta_rank_mc_8" value="9">
+      <input type="hidden" id="meta_prob_mc_8" value="0.461">
+      <input type="hidden" id="meta_hop_mc_8" value="3.2906724511930587">
+    </div>
+  </div>
+</div>
+<div class="card"
+     data-source="library/src/main/base/com/google/android/cameraview/SizeMap.java" data-target="library/src/main/api14/com/google/android/cameraview/TextureViewPreview.java"
+     data-prob="0.449" data-hop="3.1358574610244987" data-rank="10">
+  <div class="card-header" onclick="this.parentElement.classList.toggle('open')">
+    <div class="source-target">
+      <span class="class-badge source" title="library/src/main/base/com/google/android/cameraview/SizeMap.java">SizeMap</span>
+      <span class="arrow-icon">→</span>
+      <span class="class-badge target" title="library/src/main/api14/com/google/android/cameraview/TextureViewPreview.java">TextureViewPreview</span>
+    </div>
+    <div class="metrics-mini">
+      <div class="metric-pill rank-m" data-tooltip="Rank in the MC list."><span class="val">#10</span><span class="lbl">Rank</span></div>
+      <div class="metric-pill prob" style="color:var(--orange)" data-tooltip="HyCPA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility."><span class="val" style="color:var(--orange)">0.4490</span><span class="lbl">Prob</span></div>
+      <div class="metric-pill hop" data-tooltip="Number of edges (distance) in the propagation path from the source class to this target."><span class="val">3.14</span><span class="lbl">Avg Distance</span></div>
+      <div class="metric-pill health" data-tooltip="Target health = 1 − code smell score (computed from CK metrics)."><span class="val">0.94</span><span class="lbl">Health</span></div>
+    </div>
+    <span class="toggle-icon">▼</span>
+  </div>
+  <div class="card-body">
+    <h4 style="color:var(--text2);font-size:12px;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:8px;">Propagation Path</h4>
+    <div class="path-diagram">
+      <div class="path-node first">
+        <div class="node-circle" title="library/src/main/base/com/google/android/cameraview/SizeMap.java">SI</div>
+        <div class="node-label" title="library/src/main/base/com/google/android/cameraview/SizeMap.java">SizeMap</div>
+        <div class="node-health" style="color:var(--green)" data-tooltip="Structural health (1 − code smell score from CK metrics). 1.00 (green) = healthy; 0.00 (red) = many CK metrics in the bad zone.">⚕ 0.92</div>
+      </div>
+      <div class="path-edge">
+        <div class="edge-arrow"><span class="line"></span><span class="tip">&#9658;</span></div>
+        <div class="edge-tags">
+          <span class="edge-tag cochange" data-tooltip="Co-change weight: number of times these two classes were committed together in the project history.">co-change: 4</span>
+          <span class="edge-tag none" data-tooltip="No structural coupling detected; arc inferred solely from co-change history.">no structural coupling</span>
+        </div>
+      </div>
+      <div class="path-node last">
+        <div class="node-circle" title="library/src/main/api14/com/google/android/cameraview/TextureViewPreview.java">TE</div>
+        <div class="node-label" title="library/src/main/api14/com/google/android/cameraview/TextureViewPreview.java">TextureViewPreview</div>
+        <div class="node-health" style="color:var(--green)" data-tooltip="Structural health (1 − code smell score from CK metrics). 1.00 (green) = healthy; 0.00 (red) = many CK metrics in the bad zone.">⚕ 0.94</div>
+      </div>
+    </div>
+    <div style="margin-top:10px;font-size:11px;color:var(--text2);font-style:italic">      Monte Carlo entry — no causal path is available; avg_hop = 3.14 aggregates across runs.    </div>
+    <div style="margin-top:16px; font-size:11px; color:var(--text2);"><div><strong>Source:</strong> <code>library/src/main/base/com/google/android/cameraview/SizeMap.java</code></div><div><strong>Target:</strong> <code>library/src/main/api14/com/google/android/cameraview/TextureViewPreview.java</code></div></div>    <div class="validation-section" id="validation_mc_9">
+      <h4>📋 Validation — Is this propagation correct?</h4>
+      <div class="vote-buttons">
+        <button class="vote-btn correct"   onclick="selectVote('mc_9','correct',this)">✅ Correct</button>
+        <button class="vote-btn incorrect" onclick="selectVote('mc_9','incorrect',this)">❌ Incorrect</button>
+        <button class="vote-btn unsure"    onclick="selectVote('mc_9','unsure',this)">❓ Unsure</button>
+      </div>
+      <textarea class="validation-comment" id="comment_mc_9" placeholder="Optional comment (e.g., why you think it is incorrect)…" oninput="saveComment('mc_9', this.value)"></textarea>
+      <div class="submit-row">
+        <button class="submit-btn" id="submitBtn_mc_9" onclick="submitVote('mc_9')" disabled>Submit</button>
+        <span class="submit-status" id="status_mc_9"></span>
+      </div>
+      <input type="hidden" id="vote_mc_9" value="">
+      <input type="hidden" id="meta_kind_mc_9" value="mc">
+      <input type="hidden" id="meta_source_mc_9" value="library/src/main/base/com/google/android/cameraview/SizeMap.java">
+      <input type="hidden" id="meta_target_mc_9" value="library/src/main/api14/com/google/android/cameraview/TextureViewPreview.java">
+      <input type="hidden" id="meta_rank_mc_9" value="10">
+      <input type="hidden" id="meta_prob_mc_9" value="0.449">
+      <input type="hidden" id="meta_hop_mc_9" value="3.1358574610244987">
+    </div>
+  </div>
+</div>
+<div class="card"
+     data-source="library/src/main/base/com/google/android/cameraview/SizeMap.java" data-target="library/src/main/api23/com/google/android/cameraview/Camera2Api23.java"
+     data-prob="0.405" data-hop="3.1604938271604937" data-rank="11">
+  <div class="card-header" onclick="this.parentElement.classList.toggle('open')">
+    <div class="source-target">
+      <span class="class-badge source" title="library/src/main/base/com/google/android/cameraview/SizeMap.java">SizeMap</span>
+      <span class="arrow-icon">→</span>
+      <span class="class-badge target" title="library/src/main/api23/com/google/android/cameraview/Camera2Api23.java">Camera2Api23</span>
+    </div>
+    <div class="metrics-mini">
+      <div class="metric-pill rank-m" data-tooltip="Rank in the MC list."><span class="val">#11</span><span class="lbl">Rank</span></div>
+      <div class="metric-pill prob" style="color:var(--orange)" data-tooltip="HyCPA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility."><span class="val" style="color:var(--orange)">0.4050</span><span class="lbl">Prob</span></div>
+      <div class="metric-pill hop" data-tooltip="Number of edges (distance) in the propagation path from the source class to this target."><span class="val">3.16</span><span class="lbl">Avg Distance</span></div>
+      <div class="metric-pill health" data-tooltip="Target health = 1 − code smell score (computed from CK metrics)."><span class="val">0.90</span><span class="lbl">Health</span></div>
+    </div>
+    <span class="toggle-icon">▼</span>
+  </div>
+  <div class="card-body">
+    <h4 style="color:var(--text2);font-size:12px;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:8px;">Propagation Path</h4>
+    <div class="path-diagram">
+      <div class="path-node first">
+        <div class="node-circle" title="library/src/main/base/com/google/android/cameraview/SizeMap.java">SI</div>
+        <div class="node-label" title="library/src/main/base/com/google/android/cameraview/SizeMap.java">SizeMap</div>
+        <div class="node-health" style="color:var(--green)" data-tooltip="Structural health (1 − code smell score from CK metrics). 1.00 (green) = healthy; 0.00 (red) = many CK metrics in the bad zone.">⚕ 0.92</div>
+      </div>
+      <div class="path-edge">
+        <div class="edge-arrow"><span class="line"></span><span class="tip">&#9658;</span></div>
+        <div class="edge-tags">
+          <span class="edge-tag cochange" data-tooltip="Co-change weight: number of times these two classes were committed together in the project history.">co-change: 2</span>
+          <span class="edge-tag none" data-tooltip="No structural coupling detected; arc inferred solely from co-change history.">no structural coupling</span>
+        </div>
+      </div>
+      <div class="path-node last">
+        <div class="node-circle" title="library/src/main/api23/com/google/android/cameraview/Camera2Api23.java">CA</div>
+        <div class="node-label" title="library/src/main/api23/com/google/android/cameraview/Camera2Api23.java">Camera2Api23</div>
+        <div class="node-health" style="color:var(--green)" data-tooltip="Structural health (1 − code smell score from CK metrics). 1.00 (green) = healthy; 0.00 (red) = many CK metrics in the bad zone.">⚕ 0.90</div>
+      </div>
+    </div>
+    <div style="margin-top:10px;font-size:11px;color:var(--text2);font-style:italic">      Monte Carlo entry — no causal path is available; avg_hop = 3.16 aggregates across runs.    </div>
+    <div style="margin-top:16px; font-size:11px; color:var(--text2);"><div><strong>Source:</strong> <code>library/src/main/base/com/google/android/cameraview/SizeMap.java</code></div><div><strong>Target:</strong> <code>library/src/main/api23/com/google/android/cameraview/Camera2Api23.java</code></div></div>    <div class="validation-section" id="validation_mc_10">
+      <h4>📋 Validation — Is this propagation correct?</h4>
+      <div class="vote-buttons">
+        <button class="vote-btn correct"   onclick="selectVote('mc_10','correct',this)">✅ Correct</button>
+        <button class="vote-btn incorrect" onclick="selectVote('mc_10','incorrect',this)">❌ Incorrect</button>
+        <button class="vote-btn unsure"    onclick="selectVote('mc_10','unsure',this)">❓ Unsure</button>
+      </div>
+      <textarea class="validation-comment" id="comment_mc_10" placeholder="Optional comment (e.g., why you think it is incorrect)…" oninput="saveComment('mc_10', this.value)"></textarea>
+      <div class="submit-row">
+        <button class="submit-btn" id="submitBtn_mc_10" onclick="submitVote('mc_10')" disabled>Submit</button>
+        <span class="submit-status" id="status_mc_10"></span>
+      </div>
+      <input type="hidden" id="vote_mc_10" value="">
+      <input type="hidden" id="meta_kind_mc_10" value="mc">
+      <input type="hidden" id="meta_source_mc_10" value="library/src/main/base/com/google/android/cameraview/SizeMap.java">
+      <input type="hidden" id="meta_target_mc_10" value="library/src/main/api23/com/google/android/cameraview/Camera2Api23.java">
+      <input type="hidden" id="meta_rank_mc_10" value="11">
+      <input type="hidden" id="meta_prob_mc_10" value="0.405">
+      <input type="hidden" id="meta_hop_mc_10" value="3.1604938271604937">
+    </div>
+  </div>
+</div>
+<div class="card"
+     data-source="library/src/main/base/com/google/android/cameraview/SizeMap.java" data-target="library/src/main/api14/com/google/android/cameraview/SurfaceViewPreview.java"
+     data-prob="0.369" data-hop="3.4471544715447155" data-rank="12">
+  <div class="card-header" onclick="this.parentElement.classList.toggle('open')">
+    <div class="source-target">
+      <span class="class-badge source" title="library/src/main/base/com/google/android/cameraview/SizeMap.java">SizeMap</span>
+      <span class="arrow-icon">→</span>
+      <span class="class-badge target" title="library/src/main/api14/com/google/android/cameraview/SurfaceViewPreview.java">SurfaceViewPreview</span>
+    </div>
+    <div class="metrics-mini">
+      <div class="metric-pill rank-m" data-tooltip="Rank in the MC list."><span class="val">#12</span><span class="lbl">Rank</span></div>
+      <div class="metric-pill prob" style="color:var(--orange)" data-tooltip="HyCPA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility."><span class="val" style="color:var(--orange)">0.3690</span><span class="lbl">Prob</span></div>
+      <div class="metric-pill hop" data-tooltip="Number of edges (distance) in the propagation path from the source class to this target."><span class="val">3.45</span><span class="lbl">Avg Distance</span></div>
+      <div class="metric-pill health" data-tooltip="Target health = 1 − code smell score (computed from CK metrics)."><span class="val">0.92</span><span class="lbl">Health</span></div>
+    </div>
+    <span class="toggle-icon">▼</span>
+  </div>
+  <div class="card-body">
+    <h4 style="color:var(--text2);font-size:12px;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:8px;">Propagation Path</h4>
+    <div class="path-diagram">
+      <div class="path-node first">
+        <div class="node-circle" title="library/src/main/base/com/google/android/cameraview/SizeMap.java">SI</div>
+        <div class="node-label" title="library/src/main/base/com/google/android/cameraview/SizeMap.java">SizeMap</div>
+        <div class="node-health" style="color:var(--green)" data-tooltip="Structural health (1 − code smell score from CK metrics). 1.00 (green) = healthy; 0.00 (red) = many CK metrics in the bad zone.">⚕ 0.92</div>
+      </div>
+      <div class="path-edge">
+        <div class="edge-arrow"><span class="line"></span><span class="tip">&#9658;</span></div>
+        <div class="edge-tags">
+          <span class="edge-tag cochange" data-tooltip="Co-change weight: number of times these two classes were committed together in the project history.">co-change: 2</span>
+          <span class="edge-tag none" data-tooltip="No structural coupling detected; arc inferred solely from co-change history.">no structural coupling</span>
+        </div>
+      </div>
+      <div class="path-node last">
+        <div class="node-circle" title="library/src/main/api14/com/google/android/cameraview/SurfaceViewPreview.java">SU</div>
+        <div class="node-label" title="library/src/main/api14/com/google/android/cameraview/SurfaceViewPreview.java">SurfaceViewPreview</div>
+        <div class="node-health" style="color:var(--green)" data-tooltip="Structural health (1 − code smell score from CK metrics). 1.00 (green) = healthy; 0.00 (red) = many CK metrics in the bad zone.">⚕ 0.92</div>
+      </div>
+    </div>
+    <div style="margin-top:10px;font-size:11px;color:var(--text2);font-style:italic">      Monte Carlo entry — no causal path is available; avg_hop = 3.45 aggregates across runs.    </div>
+    <div style="margin-top:16px; font-size:11px; color:var(--text2);"><div><strong>Source:</strong> <code>library/src/main/base/com/google/android/cameraview/SizeMap.java</code></div><div><strong>Target:</strong> <code>library/src/main/api14/com/google/android/cameraview/SurfaceViewPreview.java</code></div></div>    <div class="validation-section" id="validation_mc_11">
+      <h4>📋 Validation — Is this propagation correct?</h4>
+      <div class="vote-buttons">
+        <button class="vote-btn correct"   onclick="selectVote('mc_11','correct',this)">✅ Correct</button>
+        <button class="vote-btn incorrect" onclick="selectVote('mc_11','incorrect',this)">❌ Incorrect</button>
+        <button class="vote-btn unsure"    onclick="selectVote('mc_11','unsure',this)">❓ Unsure</button>
+      </div>
+      <textarea class="validation-comment" id="comment_mc_11" placeholder="Optional comment (e.g., why you think it is incorrect)…" oninput="saveComment('mc_11', this.value)"></textarea>
+      <div class="submit-row">
+        <button class="submit-btn" id="submitBtn_mc_11" onclick="submitVote('mc_11')" disabled>Submit</button>
+        <span class="submit-status" id="status_mc_11"></span>
+      </div>
+      <input type="hidden" id="vote_mc_11" value="">
+      <input type="hidden" id="meta_kind_mc_11" value="mc">
+      <input type="hidden" id="meta_source_mc_11" value="library/src/main/base/com/google/android/cameraview/SizeMap.java">
+      <input type="hidden" id="meta_target_mc_11" value="library/src/main/api14/com/google/android/cameraview/SurfaceViewPreview.java">
+      <input type="hidden" id="meta_rank_mc_11" value="12">
+      <input type="hidden" id="meta_prob_mc_11" value="0.369">
+      <input type="hidden" id="meta_hop_mc_11" value="3.4471544715447155">
+    </div>
+  </div>
+</div>
+<div class="card"
+     data-source="library/src/main/base/com/google/android/cameraview/SizeMap.java" data-target="library/src/test/java/com/google/android/cameraview/AspectRatioTest.java"
+     data-prob="0.342" data-hop="3.1871345029239766" data-rank="13">
+  <div class="card-header" onclick="this.parentElement.classList.toggle('open')">
+    <div class="source-target">
+      <span class="class-badge source" title="library/src/main/base/com/google/android/cameraview/SizeMap.java">SizeMap</span>
+      <span class="arrow-icon">→</span>
+      <span class="class-badge target" title="library/src/test/java/com/google/android/cameraview/AspectRatioTest.java">AspectRatioTest</span>
+    </div>
+    <div class="metrics-mini">
+      <div class="metric-pill rank-m" data-tooltip="Rank in the MC list."><span class="val">#13</span><span class="lbl">Rank</span></div>
+      <div class="metric-pill prob" style="color:var(--orange)" data-tooltip="HyCPA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility."><span class="val" style="color:var(--orange)">0.3420</span><span class="lbl">Prob</span></div>
+      <div class="metric-pill hop" data-tooltip="Number of edges (distance) in the propagation path from the source class to this target."><span class="val">3.19</span><span class="lbl">Avg Distance</span></div>
+      <div class="metric-pill health" data-tooltip="Target health = 1 − code smell score (computed from CK metrics)."><span class="val">0.88</span><span class="lbl">Health</span></div>
+    </div>
+    <span class="toggle-icon">▼</span>
+  </div>
+  <div class="card-body">
+    <h4 style="color:var(--text2);font-size:12px;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:8px;">Propagation Path</h4>
+    <div class="path-diagram">
+      <div class="path-node first">
+        <div class="node-circle" title="library/src/main/base/com/google/android/cameraview/SizeMap.java">SI</div>
+        <div class="node-label" title="library/src/main/base/com/google/android/cameraview/SizeMap.java">SizeMap</div>
+        <div class="node-health" style="color:var(--green)" data-tooltip="Structural health (1 − code smell score from CK metrics). 1.00 (green) = healthy; 0.00 (red) = many CK metrics in the bad zone.">⚕ 0.92</div>
+      </div>
+      <div class="path-edge">
+        <div class="edge-arrow"><span class="line"></span><span class="tip">&#9658;</span></div>
+        <div class="edge-tags">
+          <span class="edge-tag cochange" data-tooltip="Co-change weight: number of times these two classes were committed together in the project history.">co-change: 2</span>
+          <span class="edge-tag none" data-tooltip="No structural coupling detected; arc inferred solely from co-change history.">no structural coupling</span>
+        </div>
+      </div>
+      <div class="path-node last">
+        <div class="node-circle" title="library/src/test/java/com/google/android/cameraview/AspectRatioTest.java">AS</div>
+        <div class="node-label" title="library/src/test/java/com/google/android/cameraview/AspectRatioTest.java">AspectRatioTest</div>
+        <div class="node-health" style="color:var(--green)" data-tooltip="Structural health (1 − code smell score from CK metrics). 1.00 (green) = healthy; 0.00 (red) = many CK metrics in the bad zone.">⚕ 0.88</div>
+      </div>
+    </div>
+    <div style="margin-top:10px;font-size:11px;color:var(--text2);font-style:italic">      Monte Carlo entry — no causal path is available; avg_hop = 3.19 aggregates across runs.    </div>
+    <div style="margin-top:16px; font-size:11px; color:var(--text2);"><div><strong>Source:</strong> <code>library/src/main/base/com/google/android/cameraview/SizeMap.java</code></div><div><strong>Target:</strong> <code>library/src/test/java/com/google/android/cameraview/AspectRatioTest.java</code></div></div>    <div class="validation-section" id="validation_mc_12">
+      <h4>📋 Validation — Is this propagation correct?</h4>
+      <div class="vote-buttons">
+        <button class="vote-btn correct"   onclick="selectVote('mc_12','correct',this)">✅ Correct</button>
+        <button class="vote-btn incorrect" onclick="selectVote('mc_12','incorrect',this)">❌ Incorrect</button>
+        <button class="vote-btn unsure"    onclick="selectVote('mc_12','unsure',this)">❓ Unsure</button>
+      </div>
+      <textarea class="validation-comment" id="comment_mc_12" placeholder="Optional comment (e.g., why you think it is incorrect)…" oninput="saveComment('mc_12', this.value)"></textarea>
+      <div class="submit-row">
+        <button class="submit-btn" id="submitBtn_mc_12" onclick="submitVote('mc_12')" disabled>Submit</button>
+        <span class="submit-status" id="status_mc_12"></span>
+      </div>
+      <input type="hidden" id="vote_mc_12" value="">
+      <input type="hidden" id="meta_kind_mc_12" value="mc">
+      <input type="hidden" id="meta_source_mc_12" value="library/src/main/base/com/google/android/cameraview/SizeMap.java">
+      <input type="hidden" id="meta_target_mc_12" value="library/src/test/java/com/google/android/cameraview/AspectRatioTest.java">
+      <input type="hidden" id="meta_rank_mc_12" value="13">
+      <input type="hidden" id="meta_prob_mc_12" value="0.342">
+      <input type="hidden" id="meta_hop_mc_12" value="3.1871345029239766">
+    </div>
+  </div>
+</div>
+<div class="card"
+     data-source="library/src/main/base/com/google/android/cameraview/SizeMap.java" data-target="demo/src/main/java/com/google/android/cameraview/demo/AspectRatioFragment.java"
+     data-prob="0.34" data-hop="3.4176470588235293" data-rank="14">
+  <div class="card-header" onclick="this.parentElement.classList.toggle('open')">
+    <div class="source-target">
+      <span class="class-badge source" title="library/src/main/base/com/google/android/cameraview/SizeMap.java">SizeMap</span>
+      <span class="arrow-icon">→</span>
+      <span class="class-badge target" title="demo/src/main/java/com/google/android/cameraview/demo/AspectRatioFragment.java">AspectRatioFragment</span>
+    </div>
+    <div class="metrics-mini">
+      <div class="metric-pill rank-m" data-tooltip="Rank in the MC list."><span class="val">#14</span><span class="lbl">Rank</span></div>
+      <div class="metric-pill prob" style="color:var(--orange)" data-tooltip="HyCPA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility."><span class="val" style="color:var(--orange)">0.3400</span><span class="lbl">Prob</span></div>
+      <div class="metric-pill hop" data-tooltip="Number of edges (distance) in the propagation path from the source class to this target."><span class="val">3.42</span><span class="lbl">Avg Distance</span></div>
+      <div class="metric-pill health" data-tooltip="Target health = 1 − code smell score (computed from CK metrics)."><span class="val">0.98</span><span class="lbl">Health</span></div>
+    </div>
+    <span class="toggle-icon">▼</span>
+  </div>
+  <div class="card-body">
+    <h4 style="color:var(--text2);font-size:12px;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:8px;">Propagation Path</h4>
+    <div class="path-diagram">
+      <div class="path-node first">
+        <div class="node-circle" title="library/src/main/base/com/google/android/cameraview/SizeMap.java">SI</div>
+        <div class="node-label" title="library/src/main/base/com/google/android/cameraview/SizeMap.java">SizeMap</div>
+        <div class="node-health" style="color:var(--green)" data-tooltip="Structural health (1 − code smell score from CK metrics). 1.00 (green) = healthy; 0.00 (red) = many CK metrics in the bad zone.">⚕ 0.92</div>
+      </div>
+      <div class="path-edge">
+        <div class="edge-arrow"><span class="line"></span><span class="tip">&#9658;</span></div>
+        <div class="edge-tags">
+          <span class="edge-tag cochange" data-tooltip="Co-change weight: number of times these two classes were committed together in the project history.">co-change: 2</span>
+          <span class="edge-tag none" data-tooltip="No structural coupling detected; arc inferred solely from co-change history.">no structural coupling</span>
+        </div>
+      </div>
+      <div class="path-node last">
+        <div class="node-circle" title="demo/src/main/java/com/google/android/cameraview/demo/AspectRatioFragment.java">AS</div>
+        <div class="node-label" title="demo/src/main/java/com/google/android/cameraview/demo/AspectRatioFragment.java">AspectRatioFragment</div>
+        <div class="node-health" style="color:var(--green)" data-tooltip="Structural health (1 − code smell score from CK metrics). 1.00 (green) = healthy; 0.00 (red) = many CK metrics in the bad zone.">⚕ 0.98</div>
+      </div>
+    </div>
+    <div style="margin-top:10px;font-size:11px;color:var(--text2);font-style:italic">      Monte Carlo entry — no causal path is available; avg_hop = 3.42 aggregates across runs.    </div>
+    <div style="margin-top:16px; font-size:11px; color:var(--text2);"><div><strong>Source:</strong> <code>library/src/main/base/com/google/android/cameraview/SizeMap.java</code></div><div><strong>Target:</strong> <code>demo/src/main/java/com/google/android/cameraview/demo/AspectRatioFragment.java</code></div></div>    <div class="validation-section" id="validation_mc_13">
+      <h4>📋 Validation — Is this propagation correct?</h4>
+      <div class="vote-buttons">
+        <button class="vote-btn correct"   onclick="selectVote('mc_13','correct',this)">✅ Correct</button>
+        <button class="vote-btn incorrect" onclick="selectVote('mc_13','incorrect',this)">❌ Incorrect</button>
+        <button class="vote-btn unsure"    onclick="selectVote('mc_13','unsure',this)">❓ Unsure</button>
+      </div>
+      <textarea class="validation-comment" id="comment_mc_13" placeholder="Optional comment (e.g., why you think it is incorrect)…" oninput="saveComment('mc_13', this.value)"></textarea>
+      <div class="submit-row">
+        <button class="submit-btn" id="submitBtn_mc_13" onclick="submitVote('mc_13')" disabled>Submit</button>
+        <span class="submit-status" id="status_mc_13"></span>
+      </div>
+      <input type="hidden" id="vote_mc_13" value="">
+      <input type="hidden" id="meta_kind_mc_13" value="mc">
+      <input type="hidden" id="meta_source_mc_13" value="library/src/main/base/com/google/android/cameraview/SizeMap.java">
+      <input type="hidden" id="meta_target_mc_13" value="demo/src/main/java/com/google/android/cameraview/demo/AspectRatioFragment.java">
+      <input type="hidden" id="meta_rank_mc_13" value="14">
+      <input type="hidden" id="meta_prob_mc_13" value="0.34">
+      <input type="hidden" id="meta_hop_mc_13" value="3.4176470588235293">
+    </div>
+  </div>
+</div>
+<div class="card"
+     data-source="library/src/main/base/com/google/android/cameraview/SizeMap.java" data-target="library/src/androidTest/java/com/google/android/cameraview/CameraViewActivity.java"
+     data-prob="0.33" data-hop="3.415151515151515" data-rank="15">
+  <div class="card-header" onclick="this.parentElement.classList.toggle('open')">
+    <div class="source-target">
+      <span class="class-badge source" title="library/src/main/base/com/google/android/cameraview/SizeMap.java">SizeMap</span>
+      <span class="arrow-icon">→</span>
+      <span class="class-badge target" title="library/src/androidTest/java/com/google/android/cameraview/CameraViewActivity.java">CameraViewActivity</span>
+    </div>
+    <div class="metrics-mini">
+      <div class="metric-pill rank-m" data-tooltip="Rank in the MC list."><span class="val">#15</span><span class="lbl">Rank</span></div>
+      <div class="metric-pill prob" style="color:var(--orange)" data-tooltip="HyCPA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility."><span class="val" style="color:var(--orange)">0.3300</span><span class="lbl">Prob</span></div>
+      <div class="metric-pill hop" data-tooltip="Number of edges (distance) in the propagation path from the source class to this target."><span class="val">3.42</span><span class="lbl">Avg Distance</span></div>
+      <div class="metric-pill health" data-tooltip="Target health = 1 − code smell score (computed from CK metrics)."><span class="val">0.94</span><span class="lbl">Health</span></div>
+    </div>
+    <span class="toggle-icon">▼</span>
+  </div>
+  <div class="card-body">
+    <h4 style="color:var(--text2);font-size:12px;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:8px;">Propagation Path</h4>
+    <div class="path-diagram">
+      <div class="path-node first">
+        <div class="node-circle" title="library/src/main/base/com/google/android/cameraview/SizeMap.java">SI</div>
+        <div class="node-label" title="library/src/main/base/com/google/android/cameraview/SizeMap.java">SizeMap</div>
+        <div class="node-health" style="color:var(--green)" data-tooltip="Structural health (1 − code smell score from CK metrics). 1.00 (green) = healthy; 0.00 (red) = many CK metrics in the bad zone.">⚕ 0.92</div>
+      </div>
+      <div class="path-edge">
+        <div class="edge-arrow"><span class="line"></span><span class="tip">&#9658;</span></div>
+        <div class="edge-tags">
+          <span class="edge-tag cochange" data-tooltip="Co-change weight: number of times these two classes were committed together in the project history.">co-change: 2</span>
+          <span class="edge-tag none" data-tooltip="No structural coupling detected; arc inferred solely from co-change history.">no structural coupling</span>
+        </div>
+      </div>
+      <div class="path-node last">
+        <div class="node-circle" title="library/src/androidTest/java/com/google/android/cameraview/CameraViewActivity.java">CA</div>
+        <div class="node-label" title="library/src/androidTest/java/com/google/android/cameraview/CameraViewActivity.java">CameraViewActivity</div>
+        <div class="node-health" style="color:var(--green)" data-tooltip="Structural health (1 − code smell score from CK metrics). 1.00 (green) = healthy; 0.00 (red) = many CK metrics in the bad zone.">⚕ 0.94</div>
+      </div>
+    </div>
+    <div style="margin-top:10px;font-size:11px;color:var(--text2);font-style:italic">      Monte Carlo entry — no causal path is available; avg_hop = 3.42 aggregates across runs.    </div>
+    <div style="margin-top:16px; font-size:11px; color:var(--text2);"><div><strong>Source:</strong> <code>library/src/main/base/com/google/android/cameraview/SizeMap.java</code></div><div><strong>Target:</strong> <code>library/src/androidTest/java/com/google/android/cameraview/CameraViewActivity.java</code></div></div>    <div class="validation-section" id="validation_mc_14">
+      <h4>📋 Validation — Is this propagation correct?</h4>
+      <div class="vote-buttons">
+        <button class="vote-btn correct"   onclick="selectVote('mc_14','correct',this)">✅ Correct</button>
+        <button class="vote-btn incorrect" onclick="selectVote('mc_14','incorrect',this)">❌ Incorrect</button>
+        <button class="vote-btn unsure"    onclick="selectVote('mc_14','unsure',this)">❓ Unsure</button>
+      </div>
+      <textarea class="validation-comment" id="comment_mc_14" placeholder="Optional comment (e.g., why you think it is incorrect)…" oninput="saveComment('mc_14', this.value)"></textarea>
+      <div class="submit-row">
+        <button class="submit-btn" id="submitBtn_mc_14" onclick="submitVote('mc_14')" disabled>Submit</button>
+        <span class="submit-status" id="status_mc_14"></span>
+      </div>
+      <input type="hidden" id="vote_mc_14" value="">
+      <input type="hidden" id="meta_kind_mc_14" value="mc">
+      <input type="hidden" id="meta_source_mc_14" value="library/src/main/base/com/google/android/cameraview/SizeMap.java">
+      <input type="hidden" id="meta_target_mc_14" value="library/src/androidTest/java/com/google/android/cameraview/CameraViewActivity.java">
+      <input type="hidden" id="meta_rank_mc_14" value="15">
+      <input type="hidden" id="meta_prob_mc_14" value="0.33">
+      <input type="hidden" id="meta_hop_mc_14" value="3.415151515151515">
+    </div>
+  </div>
+</div>
+<div class="card"
+     data-source="library/src/main/base/com/google/android/cameraview/SizeMap.java" data-target="library/src/androidTest/java/com/google/android/cameraview/AspectRatioInstrumentationTest.java"
+     data-prob="0.324" data-hop="3.0895061728395063" data-rank="16">
+  <div class="card-header" onclick="this.parentElement.classList.toggle('open')">
+    <div class="source-target">
+      <span class="class-badge source" title="library/src/main/base/com/google/android/cameraview/SizeMap.java">SizeMap</span>
+      <span class="arrow-icon">→</span>
+      <span class="class-badge target" title="library/src/androidTest/java/com/google/android/cameraview/AspectRatioInstrumentationTest.java">AspectRatioInstrumentationTest</span>
+    </div>
+    <div class="metrics-mini">
+      <div class="metric-pill rank-m" data-tooltip="Rank in the MC list."><span class="val">#16</span><span class="lbl">Rank</span></div>
+      <div class="metric-pill prob" style="color:var(--orange)" data-tooltip="HyCPA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility."><span class="val" style="color:var(--orange)">0.3240</span><span class="lbl">Prob</span></div>
+      <div class="metric-pill hop" data-tooltip="Number of edges (distance) in the propagation path from the source class to this target."><span class="val">3.09</span><span class="lbl">Avg Distance</span></div>
+      <div class="metric-pill health" data-tooltip="Target health = 1 − code smell score (computed from CK metrics)."><span class="val">0.98</span><span class="lbl">Health</span></div>
+    </div>
+    <span class="toggle-icon">▼</span>
+  </div>
+  <div class="card-body">
+    <h4 style="color:var(--text2);font-size:12px;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:8px;">Propagation Path</h4>
+    <div class="path-diagram">
+      <div class="path-node first">
+        <div class="node-circle" title="library/src/main/base/com/google/android/cameraview/SizeMap.java">SI</div>
+        <div class="node-label" title="library/src/main/base/com/google/android/cameraview/SizeMap.java">SizeMap</div>
+        <div class="node-health" style="color:var(--green)" data-tooltip="Structural health (1 − code smell score from CK metrics). 1.00 (green) = healthy; 0.00 (red) = many CK metrics in the bad zone.">⚕ 0.92</div>
+      </div>
+      <div class="path-edge">
+        <div class="edge-arrow"><span class="line"></span><span class="tip">&#9658;</span></div>
+        <div class="edge-tags">
+          <span class="edge-tag cochange" data-tooltip="Co-change weight: number of times these two classes were committed together in the project history.">co-change: 4</span>
+          <span class="edge-tag none" data-tooltip="No structural coupling detected; arc inferred solely from co-change history.">no structural coupling</span>
+        </div>
+      </div>
+      <div class="path-node last">
+        <div class="node-circle" title="library/src/androidTest/java/com/google/android/cameraview/AspectRatioInstrumentationTest.java">AS</div>
+        <div class="node-label" title="library/src/androidTest/java/com/google/android/cameraview/AspectRatioInstrumentationTest.java">AspectRatioInstrumentationTest</div>
+        <div class="node-health" style="color:var(--green)" data-tooltip="Structural health (1 − code smell score from CK metrics). 1.00 (green) = healthy; 0.00 (red) = many CK metrics in the bad zone.">⚕ 0.98</div>
+      </div>
+    </div>
+    <div style="margin-top:10px;font-size:11px;color:var(--text2);font-style:italic">      Monte Carlo entry — no causal path is available; avg_hop = 3.09 aggregates across runs.    </div>
+    <div style="margin-top:16px; font-size:11px; color:var(--text2);"><div><strong>Source:</strong> <code>library/src/main/base/com/google/android/cameraview/SizeMap.java</code></div><div><strong>Target:</strong> <code>library/src/androidTest/java/com/google/android/cameraview/AspectRatioInstrumentationTest.java</code></div></div>    <div class="validation-section" id="validation_mc_15">
+      <h4>📋 Validation — Is this propagation correct?</h4>
+      <div class="vote-buttons">
+        <button class="vote-btn correct"   onclick="selectVote('mc_15','correct',this)">✅ Correct</button>
+        <button class="vote-btn incorrect" onclick="selectVote('mc_15','incorrect',this)">❌ Incorrect</button>
+        <button class="vote-btn unsure"    onclick="selectVote('mc_15','unsure',this)">❓ Unsure</button>
+      </div>
+      <textarea class="validation-comment" id="comment_mc_15" placeholder="Optional comment (e.g., why you think it is incorrect)…" oninput="saveComment('mc_15', this.value)"></textarea>
+      <div class="submit-row">
+        <button class="submit-btn" id="submitBtn_mc_15" onclick="submitVote('mc_15')" disabled>Submit</button>
+        <span class="submit-status" id="status_mc_15"></span>
+      </div>
+      <input type="hidden" id="vote_mc_15" value="">
+      <input type="hidden" id="meta_kind_mc_15" value="mc">
+      <input type="hidden" id="meta_source_mc_15" value="library/src/main/base/com/google/android/cameraview/SizeMap.java">
+      <input type="hidden" id="meta_target_mc_15" value="library/src/androidTest/java/com/google/android/cameraview/AspectRatioInstrumentationTest.java">
+      <input type="hidden" id="meta_rank_mc_15" value="16">
+      <input type="hidden" id="meta_prob_mc_15" value="0.324">
+      <input type="hidden" id="meta_hop_mc_15" value="3.0895061728395063">
+    </div>
+  </div>
+</div>
+<div class="card"
+     data-source="library/src/main/base/com/google/android/cameraview/SizeMap.java" data-target="library/src/androidTest/java/com/google/android/cameraview/CameraViewActions.java"
+     data-prob="0.317" data-hop="3.3438485804416405" data-rank="17">
+  <div class="card-header" onclick="this.parentElement.classList.toggle('open')">
+    <div class="source-target">
+      <span class="class-badge source" title="library/src/main/base/com/google/android/cameraview/SizeMap.java">SizeMap</span>
+      <span class="arrow-icon">→</span>
+      <span class="class-badge target" title="library/src/androidTest/java/com/google/android/cameraview/CameraViewActions.java">CameraViewActions</span>
+    </div>
+    <div class="metrics-mini">
+      <div class="metric-pill rank-m" data-tooltip="Rank in the MC list."><span class="val">#17</span><span class="lbl">Rank</span></div>
+      <div class="metric-pill prob" style="color:var(--orange)" data-tooltip="HyCPA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility."><span class="val" style="color:var(--orange)">0.3170</span><span class="lbl">Prob</span></div>
+      <div class="metric-pill hop" data-tooltip="Number of edges (distance) in the propagation path from the source class to this target."><span class="val">3.34</span><span class="lbl">Avg Distance</span></div>
+      <div class="metric-pill health" data-tooltip="Target health = 1 − code smell score (computed from CK metrics)."><span class="val">0.98</span><span class="lbl">Health</span></div>
+    </div>
+    <span class="toggle-icon">▼</span>
+  </div>
+  <div class="card-body">
+    <h4 style="color:var(--text2);font-size:12px;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:8px;">Propagation Path</h4>
+    <div class="path-diagram">
+      <div class="path-node first">
+        <div class="node-circle" title="library/src/main/base/com/google/android/cameraview/SizeMap.java">SI</div>
+        <div class="node-label" title="library/src/main/base/com/google/android/cameraview/SizeMap.java">SizeMap</div>
+        <div class="node-health" style="color:var(--green)" data-tooltip="Structural health (1 − code smell score from CK metrics). 1.00 (green) = healthy; 0.00 (red) = many CK metrics in the bad zone.">⚕ 0.92</div>
+      </div>
+      <div class="path-edge">
+        <div class="edge-arrow"><span class="line"></span><span class="tip">&#9658;</span></div>
+        <div class="edge-tags">
+          <span class="edge-tag cochange" data-tooltip="Co-change weight: number of times these two classes were committed together in the project history.">co-change: 2</span>
+          <span class="edge-tag none" data-tooltip="No structural coupling detected; arc inferred solely from co-change history.">no structural coupling</span>
+        </div>
+      </div>
+      <div class="path-node last">
+        <div class="node-circle" title="library/src/androidTest/java/com/google/android/cameraview/CameraViewActions.java">CA</div>
+        <div class="node-label" title="library/src/androidTest/java/com/google/android/cameraview/CameraViewActions.java">CameraViewActions</div>
+        <div class="node-health" style="color:var(--green)" data-tooltip="Structural health (1 − code smell score from CK metrics). 1.00 (green) = healthy; 0.00 (red) = many CK metrics in the bad zone.">⚕ 0.98</div>
+      </div>
+    </div>
+    <div style="margin-top:10px;font-size:11px;color:var(--text2);font-style:italic">      Monte Carlo entry — no causal path is available; avg_hop = 3.34 aggregates across runs.    </div>
+    <div style="margin-top:16px; font-size:11px; color:var(--text2);"><div><strong>Source:</strong> <code>library/src/main/base/com/google/android/cameraview/SizeMap.java</code></div><div><strong>Target:</strong> <code>library/src/androidTest/java/com/google/android/cameraview/CameraViewActions.java</code></div></div>    <div class="validation-section" id="validation_mc_16">
+      <h4>📋 Validation — Is this propagation correct?</h4>
+      <div class="vote-buttons">
+        <button class="vote-btn correct"   onclick="selectVote('mc_16','correct',this)">✅ Correct</button>
+        <button class="vote-btn incorrect" onclick="selectVote('mc_16','incorrect',this)">❌ Incorrect</button>
+        <button class="vote-btn unsure"    onclick="selectVote('mc_16','unsure',this)">❓ Unsure</button>
+      </div>
+      <textarea class="validation-comment" id="comment_mc_16" placeholder="Optional comment (e.g., why you think it is incorrect)…" oninput="saveComment('mc_16', this.value)"></textarea>
+      <div class="submit-row">
+        <button class="submit-btn" id="submitBtn_mc_16" onclick="submitVote('mc_16')" disabled>Submit</button>
+        <span class="submit-status" id="status_mc_16"></span>
+      </div>
+      <input type="hidden" id="vote_mc_16" value="">
+      <input type="hidden" id="meta_kind_mc_16" value="mc">
+      <input type="hidden" id="meta_source_mc_16" value="library/src/main/base/com/google/android/cameraview/SizeMap.java">
+      <input type="hidden" id="meta_target_mc_16" value="library/src/androidTest/java/com/google/android/cameraview/CameraViewActions.java">
+      <input type="hidden" id="meta_rank_mc_16" value="17">
+      <input type="hidden" id="meta_prob_mc_16" value="0.317">
+      <input type="hidden" id="meta_hop_mc_16" value="3.3438485804416405">
+    </div>
+  </div>
+</div>
+<div class="card"
+     data-source="library/src/main/base/com/google/android/cameraview/SizeMap.java" data-target="library/src/androidTest/java/com/google/android/cameraview/CameraViewMatchers.java"
+     data-prob="0.274" data-hop="3.5328467153284673" data-rank="18">
+  <div class="card-header" onclick="this.parentElement.classList.toggle('open')">
+    <div class="source-target">
+      <span class="class-badge source" title="library/src/main/base/com/google/android/cameraview/SizeMap.java">SizeMap</span>
+      <span class="arrow-icon">→</span>
+      <span class="class-badge target" title="library/src/androidTest/java/com/google/android/cameraview/CameraViewMatchers.java">CameraViewMatchers</span>
+    </div>
+    <div class="metrics-mini">
+      <div class="metric-pill rank-m" data-tooltip="Rank in the MC list."><span class="val">#18</span><span class="lbl">Rank</span></div>
+      <div class="metric-pill prob" style="color:var(--green)" data-tooltip="HyCPA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility."><span class="val" style="color:var(--green)">0.2740</span><span class="lbl">Prob</span></div>
+      <div class="metric-pill hop" data-tooltip="Number of edges (distance) in the propagation path from the source class to this target."><span class="val">3.53</span><span class="lbl">Avg Distance</span></div>
+      <div class="metric-pill health" data-tooltip="Target health = 1 − code smell score (computed from CK metrics)."><span class="val">0.98</span><span class="lbl">Health</span></div>
+    </div>
+    <span class="toggle-icon">▼</span>
+  </div>
+  <div class="card-body">
+    <h4 style="color:var(--text2);font-size:12px;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:8px;">Propagation Path</h4>
+    <div class="path-diagram">
+      <div class="path-node first">
+        <div class="node-circle" title="library/src/main/base/com/google/android/cameraview/SizeMap.java">SI</div>
+        <div class="node-label" title="library/src/main/base/com/google/android/cameraview/SizeMap.java">SizeMap</div>
+        <div class="node-health" style="color:var(--green)" data-tooltip="Structural health (1 − code smell score from CK metrics). 1.00 (green) = healthy; 0.00 (red) = many CK metrics in the bad zone.">⚕ 0.92</div>
+      </div>
+      <div class="path-edge">
+        <div class="edge-arrow"><span class="line"></span><span class="tip">&#9658;</span></div>
+        <div class="edge-tags">
+          <span class="edge-tag cochange" data-tooltip="Co-change weight: number of times these two classes were committed together in the project history.">co-change: 2</span>
+          <span class="edge-tag none" data-tooltip="No structural coupling detected; arc inferred solely from co-change history.">no structural coupling</span>
+        </div>
+      </div>
+      <div class="path-node last">
+        <div class="node-circle" title="library/src/androidTest/java/com/google/android/cameraview/CameraViewMatchers.java">CA</div>
+        <div class="node-label" title="library/src/androidTest/java/com/google/android/cameraview/CameraViewMatchers.java">CameraViewMatchers</div>
+        <div class="node-health" style="color:var(--green)" data-tooltip="Structural health (1 − code smell score from CK metrics). 1.00 (green) = healthy; 0.00 (red) = many CK metrics in the bad zone.">⚕ 0.98</div>
+      </div>
+    </div>
+    <div style="margin-top:10px;font-size:11px;color:var(--text2);font-style:italic">      Monte Carlo entry — no causal path is available; avg_hop = 3.53 aggregates across runs.    </div>
+    <div style="margin-top:16px; font-size:11px; color:var(--text2);"><div><strong>Source:</strong> <code>library/src/main/base/com/google/android/cameraview/SizeMap.java</code></div><div><strong>Target:</strong> <code>library/src/androidTest/java/com/google/android/cameraview/CameraViewMatchers.java</code></div></div>    <div class="validation-section" id="validation_mc_17">
+      <h4>📋 Validation — Is this propagation correct?</h4>
+      <div class="vote-buttons">
+        <button class="vote-btn correct"   onclick="selectVote('mc_17','correct',this)">✅ Correct</button>
+        <button class="vote-btn incorrect" onclick="selectVote('mc_17','incorrect',this)">❌ Incorrect</button>
+        <button class="vote-btn unsure"    onclick="selectVote('mc_17','unsure',this)">❓ Unsure</button>
+      </div>
+      <textarea class="validation-comment" id="comment_mc_17" placeholder="Optional comment (e.g., why you think it is incorrect)…" oninput="saveComment('mc_17', this.value)"></textarea>
+      <div class="submit-row">
+        <button class="submit-btn" id="submitBtn_mc_17" onclick="submitVote('mc_17')" disabled>Submit</button>
+        <span class="submit-status" id="status_mc_17"></span>
+      </div>
+      <input type="hidden" id="vote_mc_17" value="">
+      <input type="hidden" id="meta_kind_mc_17" value="mc">
+      <input type="hidden" id="meta_source_mc_17" value="library/src/main/base/com/google/android/cameraview/SizeMap.java">
+      <input type="hidden" id="meta_target_mc_17" value="library/src/androidTest/java/com/google/android/cameraview/CameraViewMatchers.java">
+      <input type="hidden" id="meta_rank_mc_17" value="18">
+      <input type="hidden" id="meta_prob_mc_17" value="0.274">
+      <input type="hidden" id="meta_hop_mc_17" value="3.5328467153284673">
+    </div>
+  </div>
+</div>
+<div class="card"
+     data-source="library/src/main/base/com/google/android/cameraview/SizeMap.java" data-target="library/src/main/base/com/google/android/cameraview/Constants.java"
+     data-prob="0.269" data-hop="3.282527881040892" data-rank="19">
+  <div class="card-header" onclick="this.parentElement.classList.toggle('open')">
+    <div class="source-target">
+      <span class="class-badge source" title="library/src/main/base/com/google/android/cameraview/SizeMap.java">SizeMap</span>
+      <span class="arrow-icon">→</span>
+      <span class="class-badge target" title="library/src/main/base/com/google/android/cameraview/Constants.java">Constants</span>
+    </div>
+    <div class="metrics-mini">
+      <div class="metric-pill rank-m" data-tooltip="Rank in the MC list."><span class="val">#19</span><span class="lbl">Rank</span></div>
+      <div class="metric-pill prob" style="color:var(--green)" data-tooltip="HyCPA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility."><span class="val" style="color:var(--green)">0.2690</span><span class="lbl">Prob</span></div>
+      <div class="metric-pill hop" data-tooltip="Number of edges (distance) in the propagation path from the source class to this target."><span class="val">3.28</span><span class="lbl">Avg Distance</span></div>
+      <div class="metric-pill health" data-tooltip="Target health = 1 − code smell score (computed from CK metrics)."><span class="val">0.92</span><span class="lbl">Health</span></div>
+    </div>
+    <span class="toggle-icon">▼</span>
+  </div>
+  <div class="card-body">
+    <h4 style="color:var(--text2);font-size:12px;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:8px;">Propagation Path</h4>
+    <div class="path-diagram">
+      <div class="path-node first">
+        <div class="node-circle" title="library/src/main/base/com/google/android/cameraview/SizeMap.java">SI</div>
+        <div class="node-label" title="library/src/main/base/com/google/android/cameraview/SizeMap.java">SizeMap</div>
+        <div class="node-health" style="color:var(--green)" data-tooltip="Structural health (1 − code smell score from CK metrics). 1.00 (green) = healthy; 0.00 (red) = many CK metrics in the bad zone.">⚕ 0.92</div>
+      </div>
+      <div class="path-edge">
+        <div class="edge-arrow"><span class="line"></span><span class="tip">&#9658;</span></div>
+        <div class="edge-tags">
+          <span class="edge-tag cochange" data-tooltip="Co-change weight: number of times these two classes were committed together in the project history.">co-change: 2</span>
+          <span class="edge-tag none" data-tooltip="No structural coupling detected; arc inferred solely from co-change history.">no structural coupling</span>
+        </div>
+      </div>
+      <div class="path-node last">
+        <div class="node-circle" title="library/src/main/base/com/google/android/cameraview/Constants.java">CO</div>
+        <div class="node-label" title="library/src/main/base/com/google/android/cameraview/Constants.java">Constants</div>
+        <div class="node-health" style="color:var(--green)" data-tooltip="Structural health (1 − code smell score from CK metrics). 1.00 (green) = healthy; 0.00 (red) = many CK metrics in the bad zone.">⚕ 0.92</div>
+      </div>
+    </div>
+    <div style="margin-top:10px;font-size:11px;color:var(--text2);font-style:italic">      Monte Carlo entry — no causal path is available; avg_hop = 3.28 aggregates across runs.    </div>
+    <div style="margin-top:16px; font-size:11px; color:var(--text2);"><div><strong>Source:</strong> <code>library/src/main/base/com/google/android/cameraview/SizeMap.java</code></div><div><strong>Target:</strong> <code>library/src/main/base/com/google/android/cameraview/Constants.java</code></div></div>    <div class="validation-section" id="validation_mc_18">
+      <h4>📋 Validation — Is this propagation correct?</h4>
+      <div class="vote-buttons">
+        <button class="vote-btn correct"   onclick="selectVote('mc_18','correct',this)">✅ Correct</button>
+        <button class="vote-btn incorrect" onclick="selectVote('mc_18','incorrect',this)">❌ Incorrect</button>
+        <button class="vote-btn unsure"    onclick="selectVote('mc_18','unsure',this)">❓ Unsure</button>
+      </div>
+      <textarea class="validation-comment" id="comment_mc_18" placeholder="Optional comment (e.g., why you think it is incorrect)…" oninput="saveComment('mc_18', this.value)"></textarea>
+      <div class="submit-row">
+        <button class="submit-btn" id="submitBtn_mc_18" onclick="submitVote('mc_18')" disabled>Submit</button>
+        <span class="submit-status" id="status_mc_18"></span>
+      </div>
+      <input type="hidden" id="vote_mc_18" value="">
+      <input type="hidden" id="meta_kind_mc_18" value="mc">
+      <input type="hidden" id="meta_source_mc_18" value="library/src/main/base/com/google/android/cameraview/SizeMap.java">
+      <input type="hidden" id="meta_target_mc_18" value="library/src/main/base/com/google/android/cameraview/Constants.java">
+      <input type="hidden" id="meta_rank_mc_18" value="19">
+      <input type="hidden" id="meta_prob_mc_18" value="0.269">
+      <input type="hidden" id="meta_hop_mc_18" value="3.282527881040892">
+    </div>
+  </div>
+</div>
+<div class="card"
+     data-source="library/src/main/base/com/google/android/cameraview/SizeMap.java" data-target="library/src/androidTest/java/com/google/android/cameraview/AspectRatioIsCloseTo.java"
+     data-prob="0.219" data-hop="3.2009132420091326" data-rank="20">
+  <div class="card-header" onclick="this.parentElement.classList.toggle('open')">
+    <div class="source-target">
+      <span class="class-badge source" title="library/src/main/base/com/google/android/cameraview/SizeMap.java">SizeMap</span>
+      <span class="arrow-icon">→</span>
+      <span class="class-badge target" title="library/src/androidTest/java/com/google/android/cameraview/AspectRatioIsCloseTo.java">AspectRatioIsCloseTo</span>
+    </div>
+    <div class="metrics-mini">
+      <div class="metric-pill rank-m" data-tooltip="Rank in the MC list."><span class="val">#20</span><span class="lbl">Rank</span></div>
+      <div class="metric-pill prob" style="color:var(--green)" data-tooltip="HyCPA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility."><span class="val" style="color:var(--green)">0.2190</span><span class="lbl">Prob</span></div>
+      <div class="metric-pill hop" data-tooltip="Number of edges (distance) in the propagation path from the source class to this target."><span class="val">3.20</span><span class="lbl">Avg Distance</span></div>
+      <div class="metric-pill health" data-tooltip="Target health = 1 − code smell score (computed from CK metrics)."><span class="val">0.94</span><span class="lbl">Health</span></div>
+    </div>
+    <span class="toggle-icon">▼</span>
+  </div>
+  <div class="card-body">
+    <h4 style="color:var(--text2);font-size:12px;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:8px;">Propagation Path</h4>
+    <div class="path-diagram">
+      <div class="path-node first">
+        <div class="node-circle" title="library/src/main/base/com/google/android/cameraview/SizeMap.java">SI</div>
+        <div class="node-label" title="library/src/main/base/com/google/android/cameraview/SizeMap.java">SizeMap</div>
+        <div class="node-health" style="color:var(--green)" data-tooltip="Structural health (1 − code smell score from CK metrics). 1.00 (green) = healthy; 0.00 (red) = many CK metrics in the bad zone.">⚕ 0.92</div>
+      </div>
+      <div class="path-edge">
+        <div class="edge-arrow"><span class="line"></span><span class="tip">&#9658;</span></div>
+        <div class="edge-tags">
+          <span class="edge-tag cochange" data-tooltip="Co-change weight: number of times these two classes were committed together in the project history.">co-change: 2</span>
+          <span class="edge-tag none" data-tooltip="No structural coupling detected; arc inferred solely from co-change history.">no structural coupling</span>
+        </div>
+      </div>
+      <div class="path-node last">
+        <div class="node-circle" title="library/src/androidTest/java/com/google/android/cameraview/AspectRatioIsCloseTo.java">AS</div>
+        <div class="node-label" title="library/src/androidTest/java/com/google/android/cameraview/AspectRatioIsCloseTo.java">AspectRatioIsCloseTo</div>
+        <div class="node-health" style="color:var(--green)" data-tooltip="Structural health (1 − code smell score from CK metrics). 1.00 (green) = healthy; 0.00 (red) = many CK metrics in the bad zone.">⚕ 0.94</div>
+      </div>
+    </div>
+    <div style="margin-top:10px;font-size:11px;color:var(--text2);font-style:italic">      Monte Carlo entry — no causal path is available; avg_hop = 3.20 aggregates across runs.    </div>
+    <div style="margin-top:16px; font-size:11px; color:var(--text2);"><div><strong>Source:</strong> <code>library/src/main/base/com/google/android/cameraview/SizeMap.java</code></div><div><strong>Target:</strong> <code>library/src/androidTest/java/com/google/android/cameraview/AspectRatioIsCloseTo.java</code></div></div>    <div class="validation-section" id="validation_mc_19">
+      <h4>📋 Validation — Is this propagation correct?</h4>
+      <div class="vote-buttons">
+        <button class="vote-btn correct"   onclick="selectVote('mc_19','correct',this)">✅ Correct</button>
+        <button class="vote-btn incorrect" onclick="selectVote('mc_19','incorrect',this)">❌ Incorrect</button>
+        <button class="vote-btn unsure"    onclick="selectVote('mc_19','unsure',this)">❓ Unsure</button>
+      </div>
+      <textarea class="validation-comment" id="comment_mc_19" placeholder="Optional comment (e.g., why you think it is incorrect)…" oninput="saveComment('mc_19', this.value)"></textarea>
+      <div class="submit-row">
+        <button class="submit-btn" id="submitBtn_mc_19" onclick="submitVote('mc_19')" disabled>Submit</button>
+        <span class="submit-status" id="status_mc_19"></span>
+      </div>
+      <input type="hidden" id="vote_mc_19" value="">
+      <input type="hidden" id="meta_kind_mc_19" value="mc">
+      <input type="hidden" id="meta_source_mc_19" value="library/src/main/base/com/google/android/cameraview/SizeMap.java">
+      <input type="hidden" id="meta_target_mc_19" value="library/src/androidTest/java/com/google/android/cameraview/AspectRatioIsCloseTo.java">
+      <input type="hidden" id="meta_rank_mc_19" value="20">
+      <input type="hidden" id="meta_prob_mc_19" value="0.219">
+      <input type="hidden" id="meta_hop_mc_19" value="3.2009132420091326">
+    </div>
+  </div>
+</div>
+</div></div><script>const REPO = 'google_cameraview';
+const SOURCE_SAFE = 'library_src_main_base_com_google_android_cameraview_SizeMap_java';
+const STORAGE_PREFIX = 'ocpa_vote_' + REPO + '__' + SOURCE_SAFE + '__';
+const FORMSUBMIT_URL = 'https://formsubmit.co/ajax/change.vein@gmail.com';
+document.addEventListener('DOMContentLoaded', () => {
+  const email = localStorage.getItem('email_' + REPO) || '';
+  if (email) document.getElementById('userEmail').value = email;
+  document.querySelectorAll('.validation-comment').forEach(ta => {
+    const id = ta.id.replace('comment_', '');
+    const saved = localStorage.getItem(STORAGE_PREFIX + id + '__comment');
+    if (saved) ta.value = saved;
+  });
+  document.querySelectorAll('.card').forEach(card => {
+    const vBtn = card.querySelector('.vote-btn');
+    if (!vBtn) return;
+    const idMatch = vBtn.getAttribute('onclick').match(/selectVote\('([^']+)'/);
+    if (!idMatch) return;
+    const id = idMatch[1];
+    const stored = localStorage.getItem(STORAGE_PREFIX + id);
+    if (stored) {
+      try {
+        const o = JSON.parse(stored);
+        const btn = card.querySelector('.vote-btn.' + o.Vote);
+        if (btn) { btn.classList.add('selected'); document.getElementById('vote_' + id).value = o.Vote; }
+        const st = document.getElementById('status_' + id);
+        if (st) { st.textContent = '✓ Submitted'; }
+      } catch (e) {}
+    }
+  });
+  switchTab('det');
+});
+function saveEmail(v) {
+  localStorage.setItem('email_' + REPO, v);
+  document.getElementById('userEmail').classList.remove('invalid');
+}
+function saveComment(id, value) {
+  localStorage.setItem(STORAGE_PREFIX + id + '__comment', value);
+}
+function selectVote(id, vote, btn) {
+  btn.parentElement.querySelectorAll('.vote-btn').forEach(b => b.classList.remove('selected'));
+  btn.classList.add('selected');
+  document.getElementById('vote_' + id).value = vote;
+  document.getElementById('submitBtn_' + id).disabled = false;
+}
+function switchTab(name) {
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.toggle('active', b.dataset.tab === name));
+  document.querySelectorAll('.tab-pane').forEach(p => p.classList.toggle('active', p.dataset.tab === name));
+}
+function applyFilters() {
+  const minP = parseFloat(document.getElementById('fMinProb').value) || 0;
+  const maxH = parseFloat(document.getElementById('fMaxHop').value);
+  const q = document.getElementById('fSearch').value.toLowerCase();
+  document.querySelectorAll('.tab-pane .card').forEach(card => {
+    const p = parseFloat(card.dataset.prob);
+    const h = parseFloat(card.dataset.hop);
+    const t = (card.dataset.target || '').toLowerCase();
+    let show = true;
+    if (p < minP) show = false;
+    if (!isNaN(maxH) && h > maxH) show = false;
+    if (q && !t.includes(q)) show = false;
+    card.style.display = show ? '' : 'none';
+  });
+}
+async function submitVote(id) {
+  const vote = document.getElementById('vote_' + id).value;
+  if (!vote) return;
+  const email = document.getElementById('userEmail').value.trim();
+  if (!email || !email.includes('@')) {
+    document.getElementById('userEmail').classList.add('invalid');
+    document.getElementById('userEmail').focus();
+    alert('Please enter a valid email in the header before submitting.');
+    return;
+  }
+  const comment = document.getElementById('comment_' + id).value;
+  const kind    = document.getElementById('meta_kind_' + id).value;
+  const source  = document.getElementById('meta_source_' + id).value;
+  const target  = document.getElementById('meta_target_' + id).value;
+  const rank    = document.getElementById('meta_rank_' + id).value;
+  const prob    = document.getElementById('meta_prob_' + id).value;
+  const hop     = document.getElementById('meta_hop_' + id).value;
+  const statusEl  = document.getElementById('status_'    + id);
+  const submitBtn = document.getElementById('submitBtn_' + id);
+  submitBtn.disabled = true;
+  statusEl.textContent = 'Submitting…';
+  statusEl.className = 'submit-status';
+  const payload = {
+    _subject: '[HyCPA Validation] ' + REPO + ' — ' + source + ' → ' + target + ': ' + vote.toUpperCase(),
+    Email: email, Repository: REPO,
+    Source_Class: source, Affected_Class: target,
+    Type: kind, Rank: rank, Prob: prob, Hop: hop,
+    Vote: vote, Comment: comment, Timestamp: new Date().toISOString()
+  };
+  localStorage.setItem(STORAGE_PREFIX + id, JSON.stringify(payload));
+  try {
+    const resp = await fetch(FORMSUBMIT_URL, {
+      method: 'POST', headers: {'Content-Type':'application/json','Accept':'application/json'},
+      body: JSON.stringify(payload)
+    });
+    if (resp.ok) { statusEl.textContent = '✓ Submitted'; }
+    else { statusEl.textContent = '⚠ Saved locally (server error)'; statusEl.classList.add('error'); }
+  } catch (e) {
+    statusEl.textContent = '⚠ Saved locally (offline)';
+    statusEl.classList.add('error');
+  }
+  submitBtn.disabled = false;
+}
+</script></body></html>

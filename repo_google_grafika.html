@@ -1,11 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>OCPA — google/grafika</title>
-<style>
-
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>HyCPA — google/grafika</title><style>
 :root {
   --bg: #0d1117; --surface: #161b22; --surface2: #21262d;
   --border: #30363d; --text: #e6edf3; --text2: #8b949e;
@@ -81,1593 +74,1198 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, Bl
   .container { padding: 16px; }
   .src-meta { display: none; }
 }
-
-</style>
-</head>
-<body>
-
-<!-- ── Sticky Header ── -->
-<div class="page-header">
-  <div class="header-title">
-    <a class="back" href="index.html">← Back to repository list</a>
-    <h1>📊 google/grafika</h1>
-    <div class="algo">Link Communities &nbsp;·&nbsp; 63 source classes analysed</div>
-  </div>
-  <div class="header-email">
-    <label>Email <span>*</span> (required)</label>
-    <input type="email" id="userEmail" placeholder="your@email.com"
-      oninput="saveEmail(this.value)" />
-  </div>
-  <div class="header-actions">
-    <button class="btn" onclick="toggleCommunities()">🔗 Show Communities</button>
-    <button class="btn btn-primary" onclick="submitAll()">✅ Submit All</button>
-  </div>
-</div>
-
-<!-- ── Communities panel ── -->
-<div class="communities-panel" id="commPanel">
-  <h3>Communities in this repository</h3>
-  <div class="comm-grid" id="commGrid"></div>
-</div>
-
-<!-- ── Main content ── -->
-<div class="container">
-
-  <!-- Summary bar -->
-  <div class="summary-bar">
-    <div class="summary-card"><div class="val">63</div><div class="lbl">Source Classes</div></div>
-    <div class="summary-card"><div class="val">3723</div><div class="lbl">Total Affected</div></div>
-    <div class="summary-card"><div class="val">124.89</div><div class="lbl">Max Impact Score</div></div>
-    <div class="summary-card"><div class="val">5888.2</div><div class="lbl">Cumulative Score</div></div>
-  </div>
-
-  <!-- Source class accordion -->
-  <div class="src-block" id="src_0">
+</style></head><body><div class="page-header"><div class="header-title"><a class="back" href="index.html">← Back to repository list</a><h1>📊 google/grafika</h1></div><div class="header-email"><label>Email <span>*</span> (required)</label><input type="email" id="userEmail" placeholder="your@email.com" oninput="saveEmail(this.value)" /></div><div class="header-actions"><a class="btn" href="help.html">❓ How to read this site</a><button class="btn" onclick="toggleCommunities()">🔗 Show Communities</button><button class="btn btn-primary" onclick="submitAll()">✅ Submit All</button></div></div><div class="communities-panel" id="commPanel"><h3>Communities in this repository</h3><div class="comm-grid" id="commGrid"></div></div><div class="container"><div class="summary-bar"><div class="summary-card"><div class="val">49</div><div class="lbl">Classes Analysed</div></div><div class="summary-card"><div class="val">163</div><div class="lbl">Deterministic Targets</div></div><div class="summary-card"><div class="val">1238</div><div class="lbl">Monte-Carlo Targets</div></div><div class="summary-card"><div class="val">0.442</div><div class="lbl">Max Class Code Smell Score</div></div></div>  <div class="src-block" id="src_0">
     <button class="src-header" onclick="toggleBlock(0)">
-      <span class="src-name">com.android.grafika.gles.GeneratedTexture</span>
+      <span class="src-name">app/src/main/java/com/android/grafika/RecordFBOActivity.java</span>
       <span class="src-meta">
-        <span class="badge">Score 124.8862</span>
-        <span class="badge">Affected 61</span>
-        <span class="badge">Communities 38</span>
-        <span class="badge">Waves 5</span>
+        <span class="badge">Det 19</span>
+        <span class="badge">MC 39</span>
+        <span class="badge">Code Smell 0.308</span>
+        <span class="badge">C4, C8, C12, C17 +6</span>
       </span>
       <span class="chevron" id="chev_0">▶</span>
     </button>
     <div class="src-body" id="body_0" style="display:none">
       <div class="analysis-row">
-        <label>Analysis of <strong>com.android.grafika.gles.GeneratedTexture</strong></label>
+        <label>Analysis of <strong>app/src/main/java/com/android/grafika/RecordFBOActivity.java</strong></label>
         <textarea class="analysis-field" id="analysis_0" rows="3"
           placeholder="Enter your analysis for this class…"
-          oninput="saveAnalysis('com.android.grafika.gles.GeneratedTexture', this.value)"></textarea>
+          oninput="saveAnalysis('app/src/main/java/com/android/grafika/RecordFBOActivity.java', this.value)"></textarea>
       </div>
-      <div class="progress-note" id="prog_com_android_grafika_gles_GeneratedTexture"></div>
-      <a class="detail-link" href="repo_google_grafika__com_android_grafika_gles_GeneratedTexture.html">
-        📋 View 61 affected classes →
+      <div class="progress-note" id="prog_app_src_main_java_com_android_grafika_RecordFBOActivity_java"></div>
+      <a class="detail-link" href="repo_google_grafika__app_src_main_java_com_android_grafika_RecordFBOActivity.java.html">
+        📋 View 19 deterministic / 39 MC targets →
       </a>
     </div>
   </div>
   <div class="src-block" id="src_1">
     <button class="src-header" onclick="toggleBlock(1)">
-      <span class="src-name">com.android.grafika.MoviePlayer</span>
+      <span class="src-name">app/src/main/java/com/android/grafika/ContinuousCaptureActivity.java</span>
       <span class="src-meta">
-        <span class="badge">Score 123.6766</span>
-        <span class="badge">Affected 61</span>
-        <span class="badge">Communities 38</span>
-        <span class="badge">Waves 4</span>
+        <span class="badge">Det 16</span>
+        <span class="badge">MC 36</span>
+        <span class="badge">Code Smell 0.442</span>
+        <span class="badge">C3, C7, C10, C15 +2</span>
       </span>
       <span class="chevron" id="chev_1">▶</span>
     </button>
     <div class="src-body" id="body_1" style="display:none">
       <div class="analysis-row">
-        <label>Analysis of <strong>com.android.grafika.MoviePlayer</strong></label>
+        <label>Analysis of <strong>app/src/main/java/com/android/grafika/ContinuousCaptureActivity.java</strong></label>
         <textarea class="analysis-field" id="analysis_1" rows="3"
           placeholder="Enter your analysis for this class…"
-          oninput="saveAnalysis('com.android.grafika.MoviePlayer', this.value)"></textarea>
+          oninput="saveAnalysis('app/src/main/java/com/android/grafika/ContinuousCaptureActivity.java', this.value)"></textarea>
       </div>
-      <div class="progress-note" id="prog_com_android_grafika_MoviePlayer"></div>
-      <a class="detail-link" href="repo_google_grafika__com_android_grafika_MoviePlayer.html">
-        📋 View 61 affected classes →
+      <div class="progress-note" id="prog_app_src_main_java_com_android_grafika_ContinuousCaptureActivity_java"></div>
+      <a class="detail-link" href="repo_google_grafika__app_src_main_java_com_android_grafika_ContinuousCaptureActivity.java.html">
+        📋 View 16 deterministic / 36 MC targets →
       </a>
     </div>
   </div>
   <div class="src-block" id="src_2">
     <button class="src-header" onclick="toggleBlock(2)">
-      <span class="src-name">com.android.grafika.gles.Sprite2d</span>
+      <span class="src-name">app/src/main/java/com/android/grafika/HardwareScalerActivity.java</span>
       <span class="src-meta">
-        <span class="badge">Score 123.3435</span>
-        <span class="badge">Affected 61</span>
-        <span class="badge">Communities 38</span>
-        <span class="badge">Waves 4</span>
+        <span class="badge">Det 16</span>
+        <span class="badge">MC 36</span>
+        <span class="badge">Code Smell 0.346</span>
+        <span class="badge">C4, C8, C12, C17 +3</span>
       </span>
       <span class="chevron" id="chev_2">▶</span>
     </button>
     <div class="src-body" id="body_2" style="display:none">
       <div class="analysis-row">
-        <label>Analysis of <strong>com.android.grafika.gles.Sprite2d</strong></label>
+        <label>Analysis of <strong>app/src/main/java/com/android/grafika/HardwareScalerActivity.java</strong></label>
         <textarea class="analysis-field" id="analysis_2" rows="3"
           placeholder="Enter your analysis for this class…"
-          oninput="saveAnalysis('com.android.grafika.gles.Sprite2d', this.value)"></textarea>
+          oninput="saveAnalysis('app/src/main/java/com/android/grafika/HardwareScalerActivity.java', this.value)"></textarea>
       </div>
-      <div class="progress-note" id="prog_com_android_grafika_gles_Sprite2d"></div>
-      <a class="detail-link" href="repo_google_grafika__com_android_grafika_gles_Sprite2d.html">
-        📋 View 61 affected classes →
+      <div class="progress-note" id="prog_app_src_main_java_com_android_grafika_HardwareScalerActivity_java"></div>
+      <a class="detail-link" href="repo_google_grafika__app_src_main_java_com_android_grafika_HardwareScalerActivity.java.html">
+        📋 View 16 deterministic / 36 MC targets →
       </a>
     </div>
   </div>
   <div class="src-block" id="src_3">
     <button class="src-header" onclick="toggleBlock(3)">
-      <span class="src-name">src/com/android/grafika/ConstantCaptureActivity.java</span>
+      <span class="src-name">app/src/main/java/com/android/grafika/CameraCaptureActivity.java</span>
       <span class="src-meta">
-        <span class="badge">Score 122.4689</span>
-        <span class="badge">Affected 61</span>
-        <span class="badge">Communities 38</span>
-        <span class="badge">Waves 3</span>
+        <span class="badge">Det 15</span>
+        <span class="badge">MC 35</span>
+        <span class="badge">Code Smell 0.327</span>
+        <span class="badge">C0, C1, C2, C3 +1</span>
       </span>
       <span class="chevron" id="chev_3">▶</span>
     </button>
     <div class="src-body" id="body_3" style="display:none">
       <div class="analysis-row">
-        <label>Analysis of <strong>src/com/android/grafika/ConstantCaptureActivity.java</strong></label>
+        <label>Analysis of <strong>app/src/main/java/com/android/grafika/CameraCaptureActivity.java</strong></label>
         <textarea class="analysis-field" id="analysis_3" rows="3"
           placeholder="Enter your analysis for this class…"
-          oninput="saveAnalysis('src/com/android/grafika/ConstantCaptureActivity.java', this.value)"></textarea>
+          oninput="saveAnalysis('app/src/main/java/com/android/grafika/CameraCaptureActivity.java', this.value)"></textarea>
       </div>
-      <div class="progress-note" id="prog_src_com_android_grafika_ConstantCaptureActivity_java"></div>
-      <a class="detail-link" href="repo_google_grafika__src_com_android_grafika_ConstantCaptureActivity_java.html">
-        📋 View 61 affected classes →
+      <div class="progress-note" id="prog_app_src_main_java_com_android_grafika_CameraCaptureActivity_java"></div>
+      <a class="detail-link" href="repo_google_grafika__app_src_main_java_com_android_grafika_CameraCaptureActivity.java.html">
+        📋 View 15 deterministic / 35 MC targets →
       </a>
     </div>
   </div>
   <div class="src-block" id="src_4">
     <button class="src-header" onclick="toggleBlock(4)">
-      <span class="src-name">com.android.grafika.TextureMovieEncoder2</span>
+      <span class="src-name">app/src/main/java/com/android/grafika/TextureFromCameraActivity.java</span>
       <span class="src-meta">
-        <span class="badge">Score 120.3829</span>
-        <span class="badge">Affected 61</span>
-        <span class="badge">Communities 38</span>
-        <span class="badge">Waves 5</span>
+        <span class="badge">Det 10</span>
+        <span class="badge">MC 36</span>
+        <span class="badge">Code Smell 0.346</span>
+        <span class="badge">C1, C5, C6, C7 +3</span>
       </span>
       <span class="chevron" id="chev_4">▶</span>
     </button>
     <div class="src-body" id="body_4" style="display:none">
       <div class="analysis-row">
-        <label>Analysis of <strong>com.android.grafika.TextureMovieEncoder2</strong></label>
+        <label>Analysis of <strong>app/src/main/java/com/android/grafika/TextureFromCameraActivity.java</strong></label>
         <textarea class="analysis-field" id="analysis_4" rows="3"
           placeholder="Enter your analysis for this class…"
-          oninput="saveAnalysis('com.android.grafika.TextureMovieEncoder2', this.value)"></textarea>
+          oninput="saveAnalysis('app/src/main/java/com/android/grafika/TextureFromCameraActivity.java', this.value)"></textarea>
       </div>
-      <div class="progress-note" id="prog_com_android_grafika_TextureMovieEncoder2"></div>
-      <a class="detail-link" href="repo_google_grafika__com_android_grafika_TextureMovieEncoder2.html">
-        📋 View 61 affected classes →
+      <div class="progress-note" id="prog_app_src_main_java_com_android_grafika_TextureFromCameraActivity_java"></div>
+      <a class="detail-link" href="repo_google_grafika__app_src_main_java_com_android_grafika_TextureFromCameraActivity.java.html">
+        📋 View 10 deterministic / 36 MC targets →
       </a>
     </div>
   </div>
   <div class="src-block" id="src_5">
     <button class="src-header" onclick="toggleBlock(5)">
-      <span class="src-name">com.android.grafika.PlayMovieActivity</span>
+      <span class="src-name">app/src/main/java/com/android/grafika/TextureUploadActivity.java</span>
       <span class="src-meta">
-        <span class="badge">Score 116.3353</span>
-        <span class="badge">Affected 61</span>
-        <span class="badge">Communities 38</span>
-        <span class="badge">Waves 4</span>
+        <span class="badge">Det 8</span>
+        <span class="badge">MC 37</span>
+        <span class="badge">Code Smell 0.173</span>
+        <span class="badge">C1, C5, C6, C7 +4</span>
       </span>
       <span class="chevron" id="chev_5">▶</span>
     </button>
     <div class="src-body" id="body_5" style="display:none">
       <div class="analysis-row">
-        <label>Analysis of <strong>com.android.grafika.PlayMovieActivity</strong></label>
+        <label>Analysis of <strong>app/src/main/java/com/android/grafika/TextureUploadActivity.java</strong></label>
         <textarea class="analysis-field" id="analysis_5" rows="3"
           placeholder="Enter your analysis for this class…"
-          oninput="saveAnalysis('com.android.grafika.PlayMovieActivity', this.value)"></textarea>
+          oninput="saveAnalysis('app/src/main/java/com/android/grafika/TextureUploadActivity.java', this.value)"></textarea>
       </div>
-      <div class="progress-note" id="prog_com_android_grafika_PlayMovieActivity"></div>
-      <a class="detail-link" href="repo_google_grafika__com_android_grafika_PlayMovieActivity.html">
-        📋 View 61 affected classes →
+      <div class="progress-note" id="prog_app_src_main_java_com_android_grafika_TextureUploadActivity_java"></div>
+      <a class="detail-link" href="repo_google_grafika__app_src_main_java_com_android_grafika_TextureUploadActivity.java.html">
+        📋 View 8 deterministic / 37 MC targets →
       </a>
     </div>
   </div>
   <div class="src-block" id="src_6">
     <button class="src-header" onclick="toggleBlock(6)">
-      <span class="src-name">com.android.grafika.gles.WindowSurface</span>
+      <span class="src-name">app/src/main/java/com/android/grafika/PlayMovieSurfaceActivity.java</span>
       <span class="src-meta">
-        <span class="badge">Score 116.0561</span>
-        <span class="badge">Affected 61</span>
-        <span class="badge">Communities 38</span>
-        <span class="badge">Waves 3</span>
+        <span class="badge">Det 7</span>
+        <span class="badge">MC 36</span>
+        <span class="badge">Code Smell 0.288</span>
+        <span class="badge">C2, C6, C10, C11 +4</span>
       </span>
       <span class="chevron" id="chev_6">▶</span>
     </button>
     <div class="src-body" id="body_6" style="display:none">
       <div class="analysis-row">
-        <label>Analysis of <strong>com.android.grafika.gles.WindowSurface</strong></label>
+        <label>Analysis of <strong>app/src/main/java/com/android/grafika/PlayMovieSurfaceActivity.java</strong></label>
         <textarea class="analysis-field" id="analysis_6" rows="3"
           placeholder="Enter your analysis for this class…"
-          oninput="saveAnalysis('com.android.grafika.gles.WindowSurface', this.value)"></textarea>
+          oninput="saveAnalysis('app/src/main/java/com/android/grafika/PlayMovieSurfaceActivity.java', this.value)"></textarea>
       </div>
-      <div class="progress-note" id="prog_com_android_grafika_gles_WindowSurface"></div>
-      <a class="detail-link" href="repo_google_grafika__com_android_grafika_gles_WindowSurface.html">
-        📋 View 61 affected classes →
+      <div class="progress-note" id="prog_app_src_main_java_com_android_grafika_PlayMovieSurfaceActivity_java"></div>
+      <a class="detail-link" href="repo_google_grafika__app_src_main_java_com_android_grafika_PlayMovieSurfaceActivity.java.html">
+        📋 View 7 deterministic / 36 MC targets →
       </a>
     </div>
   </div>
   <div class="src-block" id="src_7">
     <button class="src-header" onclick="toggleBlock(7)">
-      <span class="src-name">com.android.grafika.HardwareScalerActivity</span>
+      <span class="src-name">app/src/main/java/com/android/grafika/TextureMovieEncoder.java</span>
       <span class="src-meta">
-        <span class="badge">Score 115.6783</span>
-        <span class="badge">Affected 61</span>
-        <span class="badge">Communities 38</span>
-        <span class="badge">Waves 4</span>
+        <span class="badge">Det 7</span>
+        <span class="badge">MC 35</span>
+        <span class="badge">Code Smell 0.385</span>
+        <span class="badge">C1, C5, C6, C7 +2</span>
       </span>
       <span class="chevron" id="chev_7">▶</span>
     </button>
     <div class="src-body" id="body_7" style="display:none">
       <div class="analysis-row">
-        <label>Analysis of <strong>com.android.grafika.HardwareScalerActivity</strong></label>
+        <label>Analysis of <strong>app/src/main/java/com/android/grafika/TextureMovieEncoder.java</strong></label>
         <textarea class="analysis-field" id="analysis_7" rows="3"
           placeholder="Enter your analysis for this class…"
-          oninput="saveAnalysis('com.android.grafika.HardwareScalerActivity', this.value)"></textarea>
+          oninput="saveAnalysis('app/src/main/java/com/android/grafika/TextureMovieEncoder.java', this.value)"></textarea>
       </div>
-      <div class="progress-note" id="prog_com_android_grafika_HardwareScalerActivity"></div>
-      <a class="detail-link" href="repo_google_grafika__com_android_grafika_HardwareScalerActivity.html">
-        📋 View 61 affected classes →
+      <div class="progress-note" id="prog_app_src_main_java_com_android_grafika_TextureMovieEncoder_java"></div>
+      <a class="detail-link" href="repo_google_grafika__app_src_main_java_com_android_grafika_TextureMovieEncoder.java.html">
+        📋 View 7 deterministic / 35 MC targets →
       </a>
     </div>
   </div>
   <div class="src-block" id="src_8">
     <button class="src-header" onclick="toggleBlock(8)">
-      <span class="src-name">com.android.grafika.MovieSliders</span>
+      <span class="src-name">app/src/main/java/com/android/grafika/ContentManager.java</span>
       <span class="src-meta">
-        <span class="badge">Score 115.5008</span>
-        <span class="badge">Affected 61</span>
-        <span class="badge">Communities 38</span>
-        <span class="badge">Waves 4</span>
+        <span class="badge">Det 5</span>
+        <span class="badge">MC 36</span>
+        <span class="badge">Code Smell 0.173</span>
+        <span class="badge">C2, C6, C10, C11 +3</span>
       </span>
       <span class="chevron" id="chev_8">▶</span>
     </button>
     <div class="src-body" id="body_8" style="display:none">
       <div class="analysis-row">
-        <label>Analysis of <strong>com.android.grafika.MovieSliders</strong></label>
+        <label>Analysis of <strong>app/src/main/java/com/android/grafika/ContentManager.java</strong></label>
         <textarea class="analysis-field" id="analysis_8" rows="3"
           placeholder="Enter your analysis for this class…"
-          oninput="saveAnalysis('com.android.grafika.MovieSliders', this.value)"></textarea>
+          oninput="saveAnalysis('app/src/main/java/com/android/grafika/ContentManager.java', this.value)"></textarea>
       </div>
-      <div class="progress-note" id="prog_com_android_grafika_MovieSliders"></div>
-      <a class="detail-link" href="repo_google_grafika__com_android_grafika_MovieSliders.html">
-        📋 View 61 affected classes →
+      <div class="progress-note" id="prog_app_src_main_java_com_android_grafika_ContentManager_java"></div>
+      <a class="detail-link" href="repo_google_grafika__app_src_main_java_com_android_grafika_ContentManager.java.html">
+        📋 View 5 deterministic / 36 MC targets →
       </a>
     </div>
   </div>
   <div class="src-block" id="src_9">
     <button class="src-header" onclick="toggleBlock(9)">
-      <span class="src-name">com.android.grafika.gles.FlatShadedProgram</span>
+      <span class="src-name">app/src/main/java/com/android/grafika/DoubleDecodeActivity.java</span>
       <span class="src-meta">
-        <span class="badge">Score 115.0643</span>
-        <span class="badge">Affected 61</span>
-        <span class="badge">Communities 38</span>
-        <span class="badge">Waves 5</span>
+        <span class="badge">Det 7</span>
+        <span class="badge">MC 34</span>
+        <span class="badge">Code Smell 0.135</span>
+        <span class="badge">C2, C6, C10, C11 +1</span>
       </span>
       <span class="chevron" id="chev_9">▶</span>
     </button>
     <div class="src-body" id="body_9" style="display:none">
       <div class="analysis-row">
-        <label>Analysis of <strong>com.android.grafika.gles.FlatShadedProgram</strong></label>
+        <label>Analysis of <strong>app/src/main/java/com/android/grafika/DoubleDecodeActivity.java</strong></label>
         <textarea class="analysis-field" id="analysis_9" rows="3"
           placeholder="Enter your analysis for this class…"
-          oninput="saveAnalysis('com.android.grafika.gles.FlatShadedProgram', this.value)"></textarea>
+          oninput="saveAnalysis('app/src/main/java/com/android/grafika/DoubleDecodeActivity.java', this.value)"></textarea>
       </div>
-      <div class="progress-note" id="prog_com_android_grafika_gles_FlatShadedProgram"></div>
-      <a class="detail-link" href="repo_google_grafika__com_android_grafika_gles_FlatShadedProgram.html">
-        📋 View 61 affected classes →
+      <div class="progress-note" id="prog_app_src_main_java_com_android_grafika_DoubleDecodeActivity_java"></div>
+      <a class="detail-link" href="repo_google_grafika__app_src_main_java_com_android_grafika_DoubleDecodeActivity.java.html">
+        📋 View 7 deterministic / 34 MC targets →
       </a>
     </div>
   </div>
   <div class="src-block" id="src_10">
     <button class="src-header" onclick="toggleBlock(10)">
-      <span class="src-name">com.android.grafika.MultiSurfaceActivity</span>
+      <span class="src-name">app/src/main/java/com/android/grafika/ScheduledSwapActivity.java</span>
       <span class="src-meta">
-        <span class="badge">Score 112.8689</span>
-        <span class="badge">Affected 61</span>
-        <span class="badge">Communities 38</span>
-        <span class="badge">Waves 4</span>
+        <span class="badge">Det 5</span>
+        <span class="badge">MC 36</span>
+        <span class="badge">Code Smell 0.308</span>
+        <span class="badge">C2, C6, C10, C11 +3</span>
       </span>
       <span class="chevron" id="chev_10">▶</span>
     </button>
     <div class="src-body" id="body_10" style="display:none">
       <div class="analysis-row">
-        <label>Analysis of <strong>com.android.grafika.MultiSurfaceActivity</strong></label>
+        <label>Analysis of <strong>app/src/main/java/com/android/grafika/ScheduledSwapActivity.java</strong></label>
         <textarea class="analysis-field" id="analysis_10" rows="3"
           placeholder="Enter your analysis for this class…"
-          oninput="saveAnalysis('com.android.grafika.MultiSurfaceActivity', this.value)"></textarea>
+          oninput="saveAnalysis('app/src/main/java/com/android/grafika/ScheduledSwapActivity.java', this.value)"></textarea>
       </div>
-      <div class="progress-note" id="prog_com_android_grafika_MultiSurfaceActivity"></div>
-      <a class="detail-link" href="repo_google_grafika__com_android_grafika_MultiSurfaceActivity.html">
-        📋 View 61 affected classes →
+      <div class="progress-note" id="prog_app_src_main_java_com_android_grafika_ScheduledSwapActivity_java"></div>
+      <a class="detail-link" href="repo_google_grafika__app_src_main_java_com_android_grafika_ScheduledSwapActivity.java.html">
+        📋 View 5 deterministic / 36 MC targets →
       </a>
     </div>
   </div>
   <div class="src-block" id="src_11">
     <button class="src-header" onclick="toggleBlock(11)">
-      <span class="src-name">com.android.grafika.AspectFrameLayout</span>
+      <span class="src-name">app/src/main/java/com/android/grafika/MainActivity.java</span>
       <span class="src-meta">
-        <span class="badge">Score 110.1776</span>
-        <span class="badge">Affected 61</span>
-        <span class="badge">Communities 38</span>
-        <span class="badge">Waves 4</span>
+        <span class="badge">Det 5</span>
+        <span class="badge">MC 35</span>
+        <span class="badge">Code Smell 0.173</span>
+        <span class="badge">C2, C6, C10, C11 +2</span>
       </span>
       <span class="chevron" id="chev_11">▶</span>
     </button>
     <div class="src-body" id="body_11" style="display:none">
       <div class="analysis-row">
-        <label>Analysis of <strong>com.android.grafika.AspectFrameLayout</strong></label>
+        <label>Analysis of <strong>app/src/main/java/com/android/grafika/MainActivity.java</strong></label>
         <textarea class="analysis-field" id="analysis_11" rows="3"
           placeholder="Enter your analysis for this class…"
-          oninput="saveAnalysis('com.android.grafika.AspectFrameLayout', this.value)"></textarea>
+          oninput="saveAnalysis('app/src/main/java/com/android/grafika/MainActivity.java', this.value)"></textarea>
       </div>
-      <div class="progress-note" id="prog_com_android_grafika_AspectFrameLayout"></div>
-      <a class="detail-link" href="repo_google_grafika__com_android_grafika_AspectFrameLayout.html">
-        📋 View 61 affected classes →
+      <div class="progress-note" id="prog_app_src_main_java_com_android_grafika_MainActivity_java"></div>
+      <a class="detail-link" href="repo_google_grafika__app_src_main_java_com_android_grafika_MainActivity.java.html">
+        📋 View 5 deterministic / 35 MC targets →
       </a>
     </div>
   </div>
   <div class="src-block" id="src_12">
     <button class="src-header" onclick="toggleBlock(12)">
-      <span class="src-name">com.android.grafika.gles.FullFrameRect</span>
+      <span class="src-name">app/src/main/java/com/android/grafika/ReadPixelsActivity.java</span>
       <span class="src-meta">
-        <span class="badge">Score 109.7449</span>
-        <span class="badge">Affected 61</span>
-        <span class="badge">Communities 38</span>
-        <span class="badge">Waves 4</span>
+        <span class="badge">Det 4</span>
+        <span class="badge">MC 36</span>
+        <span class="badge">Code Smell 0.173</span>
+        <span class="badge">C1, C5, C6, C7 +3</span>
       </span>
       <span class="chevron" id="chev_12">▶</span>
     </button>
     <div class="src-body" id="body_12" style="display:none">
       <div class="analysis-row">
-        <label>Analysis of <strong>com.android.grafika.gles.FullFrameRect</strong></label>
+        <label>Analysis of <strong>app/src/main/java/com/android/grafika/ReadPixelsActivity.java</strong></label>
         <textarea class="analysis-field" id="analysis_12" rows="3"
           placeholder="Enter your analysis for this class…"
-          oninput="saveAnalysis('com.android.grafika.gles.FullFrameRect', this.value)"></textarea>
+          oninput="saveAnalysis('app/src/main/java/com/android/grafika/ReadPixelsActivity.java', this.value)"></textarea>
       </div>
-      <div class="progress-note" id="prog_com_android_grafika_gles_FullFrameRect"></div>
-      <a class="detail-link" href="repo_google_grafika__com_android_grafika_gles_FullFrameRect.html">
-        📋 View 61 affected classes →
+      <div class="progress-note" id="prog_app_src_main_java_com_android_grafika_ReadPixelsActivity_java"></div>
+      <a class="detail-link" href="repo_google_grafika__app_src_main_java_com_android_grafika_ReadPixelsActivity.java.html">
+        📋 View 4 deterministic / 36 MC targets →
       </a>
     </div>
   </div>
   <div class="src-block" id="src_13">
     <button class="src-header" onclick="toggleBlock(13)">
-      <span class="src-name">com.android.grafika.ScreenRecordActivity</span>
+      <span class="src-name">app/src/main/java/com/android/grafika/gles/EglSurfaceBase.java</span>
       <span class="src-meta">
-        <span class="badge">Score 109.5308</span>
-        <span class="badge">Affected 61</span>
-        <span class="badge">Communities 38</span>
-        <span class="badge">Waves 4</span>
+        <span class="badge">Det 2</span>
+        <span class="badge">MC 36</span>
+        <span class="badge">Code Smell 0.173</span>
+        <span class="badge">C2, C6, C10, C11 +3</span>
       </span>
       <span class="chevron" id="chev_13">▶</span>
     </button>
     <div class="src-body" id="body_13" style="display:none">
       <div class="analysis-row">
-        <label>Analysis of <strong>com.android.grafika.ScreenRecordActivity</strong></label>
+        <label>Analysis of <strong>app/src/main/java/com/android/grafika/gles/EglSurfaceBase.java</strong></label>
         <textarea class="analysis-field" id="analysis_13" rows="3"
           placeholder="Enter your analysis for this class…"
-          oninput="saveAnalysis('com.android.grafika.ScreenRecordActivity', this.value)"></textarea>
+          oninput="saveAnalysis('app/src/main/java/com/android/grafika/gles/EglSurfaceBase.java', this.value)"></textarea>
       </div>
-      <div class="progress-note" id="prog_com_android_grafika_ScreenRecordActivity"></div>
-      <a class="detail-link" href="repo_google_grafika__com_android_grafika_ScreenRecordActivity.html">
-        📋 View 61 affected classes →
+      <div class="progress-note" id="prog_app_src_main_java_com_android_grafika_gles_EglSurfaceBase_java"></div>
+      <a class="detail-link" href="repo_google_grafika__app_src_main_java_com_android_grafika_gles_EglSurfaceBase.java.html">
+        📋 View 2 deterministic / 36 MC targets →
       </a>
     </div>
   </div>
   <div class="src-block" id="src_14">
     <button class="src-header" onclick="toggleBlock(14)">
-      <span class="src-name">src/com/android/grafika/WindowSurface.java</span>
+      <span class="src-name">app/src/main/java/com/android/grafika/GeneratedMovie.java</span>
       <span class="src-meta">
-        <span class="badge">Score 108.9795</span>
-        <span class="badge">Affected 61</span>
-        <span class="badge">Communities 38</span>
-        <span class="badge">Waves 4</span>
+        <span class="badge">Det 3</span>
+        <span class="badge">MC 35</span>
+        <span class="badge">Code Smell 0.346</span>
+        <span class="badge">C2, C6, C10, C11 +2</span>
       </span>
       <span class="chevron" id="chev_14">▶</span>
     </button>
     <div class="src-body" id="body_14" style="display:none">
       <div class="analysis-row">
-        <label>Analysis of <strong>src/com/android/grafika/WindowSurface.java</strong></label>
+        <label>Analysis of <strong>app/src/main/java/com/android/grafika/GeneratedMovie.java</strong></label>
         <textarea class="analysis-field" id="analysis_14" rows="3"
           placeholder="Enter your analysis for this class…"
-          oninput="saveAnalysis('src/com/android/grafika/WindowSurface.java', this.value)"></textarea>
+          oninput="saveAnalysis('app/src/main/java/com/android/grafika/GeneratedMovie.java', this.value)"></textarea>
       </div>
-      <div class="progress-note" id="prog_src_com_android_grafika_WindowSurface_java"></div>
-      <a class="detail-link" href="repo_google_grafika__src_com_android_grafika_WindowSurface_java.html">
-        📋 View 61 affected classes →
+      <div class="progress-note" id="prog_app_src_main_java_com_android_grafika_GeneratedMovie_java"></div>
+      <a class="detail-link" href="repo_google_grafika__app_src_main_java_com_android_grafika_GeneratedMovie.java.html">
+        📋 View 3 deterministic / 35 MC targets →
       </a>
     </div>
   </div>
   <div class="src-block" id="src_15">
     <button class="src-header" onclick="toggleBlock(15)">
-      <span class="src-name">com.android.grafika.MiscUtils</span>
+      <span class="src-name">app/src/main/java/com/android/grafika/MovieSliders.java</span>
       <span class="src-meta">
-        <span class="badge">Score 106.1101</span>
-        <span class="badge">Affected 61</span>
-        <span class="badge">Communities 38</span>
-        <span class="badge">Waves 4</span>
+        <span class="badge">Det 4</span>
+        <span class="badge">MC 34</span>
+        <span class="badge">Code Smell 0.135</span>
+        <span class="badge">C1, C5, C6, C7 +1</span>
       </span>
       <span class="chevron" id="chev_15">▶</span>
     </button>
     <div class="src-body" id="body_15" style="display:none">
       <div class="analysis-row">
-        <label>Analysis of <strong>com.android.grafika.MiscUtils</strong></label>
+        <label>Analysis of <strong>app/src/main/java/com/android/grafika/MovieSliders.java</strong></label>
         <textarea class="analysis-field" id="analysis_15" rows="3"
           placeholder="Enter your analysis for this class…"
-          oninput="saveAnalysis('com.android.grafika.MiscUtils', this.value)"></textarea>
+          oninput="saveAnalysis('app/src/main/java/com/android/grafika/MovieSliders.java', this.value)"></textarea>
       </div>
-      <div class="progress-note" id="prog_com_android_grafika_MiscUtils"></div>
-      <a class="detail-link" href="repo_google_grafika__com_android_grafika_MiscUtils.html">
-        📋 View 61 affected classes →
+      <div class="progress-note" id="prog_app_src_main_java_com_android_grafika_MovieSliders_java"></div>
+      <a class="detail-link" href="repo_google_grafika__app_src_main_java_com_android_grafika_MovieSliders.java.html">
+        📋 View 4 deterministic / 34 MC targets →
       </a>
     </div>
   </div>
   <div class="src-block" id="src_16">
     <button class="src-header" onclick="toggleBlock(16)">
-      <span class="src-name">com.android.grafika.gles.EglSurfaceBase</span>
+      <span class="src-name">app/src/main/java/com/android/grafika/GlesInfoActivity.java</span>
       <span class="src-meta">
-        <span class="badge">Score 104.4381</span>
-        <span class="badge">Affected 61</span>
-        <span class="badge">Communities 38</span>
-        <span class="badge">Waves 3</span>
+        <span class="badge">Det 3</span>
+        <span class="badge">MC 35</span>
+        <span class="badge">Code Smell 0.115</span>
+        <span class="badge">C1, C5, C6, C7 +2</span>
       </span>
       <span class="chevron" id="chev_16">▶</span>
     </button>
     <div class="src-body" id="body_16" style="display:none">
       <div class="analysis-row">
-        <label>Analysis of <strong>com.android.grafika.gles.EglSurfaceBase</strong></label>
+        <label>Analysis of <strong>app/src/main/java/com/android/grafika/GlesInfoActivity.java</strong></label>
         <textarea class="analysis-field" id="analysis_16" rows="3"
           placeholder="Enter your analysis for this class…"
-          oninput="saveAnalysis('com.android.grafika.gles.EglSurfaceBase', this.value)"></textarea>
+          oninput="saveAnalysis('app/src/main/java/com/android/grafika/GlesInfoActivity.java', this.value)"></textarea>
       </div>
-      <div class="progress-note" id="prog_com_android_grafika_gles_EglSurfaceBase"></div>
-      <a class="detail-link" href="repo_google_grafika__com_android_grafika_gles_EglSurfaceBase.html">
-        📋 View 61 affected classes →
+      <div class="progress-note" id="prog_app_src_main_java_com_android_grafika_GlesInfoActivity_java"></div>
+      <a class="detail-link" href="repo_google_grafika__app_src_main_java_com_android_grafika_GlesInfoActivity.java.html">
+        📋 View 3 deterministic / 35 MC targets →
       </a>
     </div>
   </div>
   <div class="src-block" id="src_17">
     <button class="src-header" onclick="toggleBlock(17)">
-      <span class="src-name">com.android.grafika.GeneratedMovie</span>
+      <span class="src-name">app/src/main/java/com/android/grafika/PlayMovieActivity.java</span>
       <span class="src-meta">
-        <span class="badge">Score 103.9169</span>
-        <span class="badge">Affected 61</span>
-        <span class="badge">Communities 38</span>
-        <span class="badge">Waves 4</span>
+        <span class="badge">Det 3</span>
+        <span class="badge">MC 35</span>
+        <span class="badge">Code Smell 0.308</span>
+        <span class="badge">C2, C6, C10, C11 +2</span>
       </span>
       <span class="chevron" id="chev_17">▶</span>
     </button>
     <div class="src-body" id="body_17" style="display:none">
       <div class="analysis-row">
-        <label>Analysis of <strong>com.android.grafika.GeneratedMovie</strong></label>
+        <label>Analysis of <strong>app/src/main/java/com/android/grafika/PlayMovieActivity.java</strong></label>
         <textarea class="analysis-field" id="analysis_17" rows="3"
           placeholder="Enter your analysis for this class…"
-          oninput="saveAnalysis('com.android.grafika.GeneratedMovie', this.value)"></textarea>
+          oninput="saveAnalysis('app/src/main/java/com/android/grafika/PlayMovieActivity.java', this.value)"></textarea>
       </div>
-      <div class="progress-note" id="prog_com_android_grafika_GeneratedMovie"></div>
-      <a class="detail-link" href="repo_google_grafika__com_android_grafika_GeneratedMovie.html">
-        📋 View 61 affected classes →
+      <div class="progress-note" id="prog_app_src_main_java_com_android_grafika_PlayMovieActivity_java"></div>
+      <a class="detail-link" href="repo_google_grafika__app_src_main_java_com_android_grafika_PlayMovieActivity.java.html">
+        📋 View 3 deterministic / 35 MC targets →
       </a>
     </div>
   </div>
   <div class="src-block" id="src_18">
     <button class="src-header" onclick="toggleBlock(18)">
-      <span class="src-name">com.android.grafika.CircularEncoderBuffer</span>
+      <span class="src-name">app/src/main/java/com/android/grafika/gles/Sprite2d.java</span>
       <span class="src-meta">
-        <span class="badge">Score 103.8804</span>
-        <span class="badge">Affected 61</span>
-        <span class="badge">Communities 38</span>
-        <span class="badge">Waves 5</span>
+        <span class="badge">Det 3</span>
+        <span class="badge">MC 35</span>
+        <span class="badge">Code Smell 0.212</span>
+        <span class="badge">C1, C5, C6, C7 +2</span>
       </span>
       <span class="chevron" id="chev_18">▶</span>
     </button>
     <div class="src-body" id="body_18" style="display:none">
       <div class="analysis-row">
-        <label>Analysis of <strong>com.android.grafika.CircularEncoderBuffer</strong></label>
+        <label>Analysis of <strong>app/src/main/java/com/android/grafika/gles/Sprite2d.java</strong></label>
         <textarea class="analysis-field" id="analysis_18" rows="3"
           placeholder="Enter your analysis for this class…"
-          oninput="saveAnalysis('com.android.grafika.CircularEncoderBuffer', this.value)"></textarea>
+          oninput="saveAnalysis('app/src/main/java/com/android/grafika/gles/Sprite2d.java', this.value)"></textarea>
       </div>
-      <div class="progress-note" id="prog_com_android_grafika_CircularEncoderBuffer"></div>
-      <a class="detail-link" href="repo_google_grafika__com_android_grafika_CircularEncoderBuffer.html">
-        📋 View 61 affected classes →
+      <div class="progress-note" id="prog_app_src_main_java_com_android_grafika_gles_Sprite2d_java"></div>
+      <a class="detail-link" href="repo_google_grafika__app_src_main_java_com_android_grafika_gles_Sprite2d.java.html">
+        📋 View 3 deterministic / 35 MC targets →
       </a>
     </div>
   </div>
   <div class="src-block" id="src_19">
     <button class="src-header" onclick="toggleBlock(19)">
-      <span class="src-name">com.android.grafika.CameraSurfaceRenderer</span>
+      <span class="src-name">app/src/main/java/com/android/grafika/MultiSurfaceActivity.java</span>
       <span class="src-meta">
-        <span class="badge">Score 103.1417</span>
-        <span class="badge">Affected 61</span>
-        <span class="badge">Communities 38</span>
-        <span class="badge">Waves 4</span>
+        <span class="badge">Det 3</span>
+        <span class="badge">MC 34</span>
+        <span class="badge">Code Smell 0.346</span>
+        <span class="badge">C2, C6, C10, C11 +1</span>
       </span>
       <span class="chevron" id="chev_19">▶</span>
     </button>
     <div class="src-body" id="body_19" style="display:none">
       <div class="analysis-row">
-        <label>Analysis of <strong>com.android.grafika.CameraSurfaceRenderer</strong></label>
+        <label>Analysis of <strong>app/src/main/java/com/android/grafika/MultiSurfaceActivity.java</strong></label>
         <textarea class="analysis-field" id="analysis_19" rows="3"
           placeholder="Enter your analysis for this class…"
-          oninput="saveAnalysis('com.android.grafika.CameraSurfaceRenderer', this.value)"></textarea>
+          oninput="saveAnalysis('app/src/main/java/com/android/grafika/MultiSurfaceActivity.java', this.value)"></textarea>
       </div>
-      <div class="progress-note" id="prog_com_android_grafika_CameraSurfaceRenderer"></div>
-      <a class="detail-link" href="repo_google_grafika__com_android_grafika_CameraSurfaceRenderer.html">
-        📋 View 61 affected classes →
+      <div class="progress-note" id="prog_app_src_main_java_com_android_grafika_MultiSurfaceActivity_java"></div>
+      <a class="detail-link" href="repo_google_grafika__app_src_main_java_com_android_grafika_MultiSurfaceActivity.java.html">
+        📋 View 3 deterministic / 34 MC targets →
       </a>
     </div>
   </div>
   <div class="src-block" id="src_20">
     <button class="src-header" onclick="toggleBlock(20)">
-      <span class="src-name">com.android.grafika.VideoEncoderCore</span>
+      <span class="src-name">app/src/main/java/com/android/grafika/TextureViewGLActivity.java</span>
       <span class="src-meta">
-        <span class="badge">Score 101.9150</span>
-        <span class="badge">Affected 61</span>
-        <span class="badge">Communities 38</span>
-        <span class="badge">Waves 5</span>
+        <span class="badge">Det 3</span>
+        <span class="badge">MC 34</span>
+        <span class="badge">Code Smell 0.154</span>
+        <span class="badge">C1, C5, C6, C7 +1</span>
       </span>
       <span class="chevron" id="chev_20">▶</span>
     </button>
     <div class="src-body" id="body_20" style="display:none">
       <div class="analysis-row">
-        <label>Analysis of <strong>com.android.grafika.VideoEncoderCore</strong></label>
+        <label>Analysis of <strong>app/src/main/java/com/android/grafika/TextureViewGLActivity.java</strong></label>
         <textarea class="analysis-field" id="analysis_20" rows="3"
           placeholder="Enter your analysis for this class…"
-          oninput="saveAnalysis('com.android.grafika.VideoEncoderCore', this.value)"></textarea>
+          oninput="saveAnalysis('app/src/main/java/com/android/grafika/TextureViewGLActivity.java', this.value)"></textarea>
       </div>
-      <div class="progress-note" id="prog_com_android_grafika_VideoEncoderCore"></div>
-      <a class="detail-link" href="repo_google_grafika__com_android_grafika_VideoEncoderCore.html">
-        📋 View 61 affected classes →
+      <div class="progress-note" id="prog_app_src_main_java_com_android_grafika_TextureViewGLActivity_java"></div>
+      <a class="detail-link" href="repo_google_grafika__app_src_main_java_com_android_grafika_TextureViewGLActivity.java.html">
+        📋 View 3 deterministic / 34 MC targets →
       </a>
     </div>
   </div>
   <div class="src-block" id="src_21">
     <button class="src-header" onclick="toggleBlock(21)">
-      <span class="src-name">com.android.grafika.CircularEncoder</span>
+      <span class="src-name">app/src/main/java/com/android/grafika/gles/Drawable2d.java</span>
       <span class="src-meta">
-        <span class="badge">Score 101.8663</span>
-        <span class="badge">Affected 61</span>
-        <span class="badge">Communities 38</span>
-        <span class="badge">Waves 4</span>
+        <span class="badge">Det 1</span>
+        <span class="badge">MC 36</span>
+        <span class="badge">Code Smell 0.019</span>
+        <span class="badge">C1, C5, C6, C7 +3</span>
       </span>
       <span class="chevron" id="chev_21">▶</span>
     </button>
     <div class="src-body" id="body_21" style="display:none">
       <div class="analysis-row">
-        <label>Analysis of <strong>com.android.grafika.CircularEncoder</strong></label>
+        <label>Analysis of <strong>app/src/main/java/com/android/grafika/gles/Drawable2d.java</strong></label>
         <textarea class="analysis-field" id="analysis_21" rows="3"
           placeholder="Enter your analysis for this class…"
-          oninput="saveAnalysis('com.android.grafika.CircularEncoder', this.value)"></textarea>
+          oninput="saveAnalysis('app/src/main/java/com/android/grafika/gles/Drawable2d.java', this.value)"></textarea>
       </div>
-      <div class="progress-note" id="prog_com_android_grafika_CircularEncoder"></div>
-      <a class="detail-link" href="repo_google_grafika__com_android_grafika_CircularEncoder.html">
-        📋 View 61 affected classes →
+      <div class="progress-note" id="prog_app_src_main_java_com_android_grafika_gles_Drawable2d_java"></div>
+      <a class="detail-link" href="repo_google_grafika__app_src_main_java_com_android_grafika_gles_Drawable2d.java.html">
+        📋 View 1 deterministic / 36 MC targets →
       </a>
     </div>
   </div>
   <div class="src-block" id="src_22">
     <button class="src-header" onclick="toggleBlock(22)">
-      <span class="src-name">com.android.grafika.MovieEightRects</span>
+      <span class="src-name">app/src/main/java/com/android/grafika/gles/WindowSurface.java</span>
       <span class="src-meta">
-        <span class="badge">Score 101.6634</span>
-        <span class="badge">Affected 61</span>
-        <span class="badge">Communities 38</span>
-        <span class="badge">Waves 5</span>
+        <span class="badge">Det 2</span>
+        <span class="badge">MC 34</span>
+        <span class="badge">Code Smell 0.058</span>
+        <span class="badge">C1, C5, C6, C7 +1</span>
       </span>
       <span class="chevron" id="chev_22">▶</span>
     </button>
     <div class="src-body" id="body_22" style="display:none">
       <div class="analysis-row">
-        <label>Analysis of <strong>com.android.grafika.MovieEightRects</strong></label>
+        <label>Analysis of <strong>app/src/main/java/com/android/grafika/gles/WindowSurface.java</strong></label>
         <textarea class="analysis-field" id="analysis_22" rows="3"
           placeholder="Enter your analysis for this class…"
-          oninput="saveAnalysis('com.android.grafika.MovieEightRects', this.value)"></textarea>
+          oninput="saveAnalysis('app/src/main/java/com/android/grafika/gles/WindowSurface.java', this.value)"></textarea>
       </div>
-      <div class="progress-note" id="prog_com_android_grafika_MovieEightRects"></div>
-      <a class="detail-link" href="repo_google_grafika__com_android_grafika_MovieEightRects.html">
-        📋 View 61 affected classes →
+      <div class="progress-note" id="prog_app_src_main_java_com_android_grafika_gles_WindowSurface_java"></div>
+      <a class="detail-link" href="repo_google_grafika__app_src_main_java_com_android_grafika_gles_WindowSurface.java.html">
+        📋 View 2 deterministic / 34 MC targets →
       </a>
     </div>
   </div>
   <div class="src-block" id="src_23">
     <button class="src-header" onclick="toggleBlock(23)">
-      <span class="src-name">com.android.grafika.SoftInputSurfaceActivity</span>
+      <span class="src-name">app/src/main/java/com/android/grafika/gles/FullFrameRect.java</span>
       <span class="src-meta">
-        <span class="badge">Score 101.4019</span>
-        <span class="badge">Affected 61</span>
-        <span class="badge">Communities 38</span>
-        <span class="badge">Waves 4</span>
+        <span class="badge">Det 2</span>
+        <span class="badge">MC 34</span>
+        <span class="badge">Code Smell 0.077</span>
+        <span class="badge">C1, C5, C6, C7 +1</span>
       </span>
       <span class="chevron" id="chev_23">▶</span>
     </button>
     <div class="src-body" id="body_23" style="display:none">
       <div class="analysis-row">
-        <label>Analysis of <strong>com.android.grafika.SoftInputSurfaceActivity</strong></label>
+        <label>Analysis of <strong>app/src/main/java/com/android/grafika/gles/FullFrameRect.java</strong></label>
         <textarea class="analysis-field" id="analysis_23" rows="3"
           placeholder="Enter your analysis for this class…"
-          oninput="saveAnalysis('com.android.grafika.SoftInputSurfaceActivity', this.value)"></textarea>
+          oninput="saveAnalysis('app/src/main/java/com/android/grafika/gles/FullFrameRect.java', this.value)"></textarea>
       </div>
-      <div class="progress-note" id="prog_com_android_grafika_SoftInputSurfaceActivity"></div>
-      <a class="detail-link" href="repo_google_grafika__com_android_grafika_SoftInputSurfaceActivity.html">
-        📋 View 61 affected classes →
+      <div class="progress-note" id="prog_app_src_main_java_com_android_grafika_gles_FullFrameRect_java"></div>
+      <a class="detail-link" href="repo_google_grafika__app_src_main_java_com_android_grafika_gles_FullFrameRect.java.html">
+        📋 View 2 deterministic / 34 MC targets →
       </a>
     </div>
   </div>
   <div class="src-block" id="src_24">
     <button class="src-header" onclick="toggleBlock(24)">
-      <span class="src-name">com.android.grafika.CameraUtils</span>
+      <span class="src-name">app/src/main/java/com/android/grafika/gles/GeneratedTexture.java</span>
       <span class="src-meta">
-        <span class="badge">Score 99.8507</span>
-        <span class="badge">Affected 61</span>
-        <span class="badge">Communities 38</span>
-        <span class="badge">Waves 4</span>
+        <span class="badge">Det 1</span>
+        <span class="badge">MC 35</span>
+        <span class="badge">Code Smell 0.019</span>
+        <span class="badge">C1, C5, C6, C7 +2</span>
       </span>
       <span class="chevron" id="chev_24">▶</span>
     </button>
     <div class="src-body" id="body_24" style="display:none">
       <div class="analysis-row">
-        <label>Analysis of <strong>com.android.grafika.CameraUtils</strong></label>
+        <label>Analysis of <strong>app/src/main/java/com/android/grafika/gles/GeneratedTexture.java</strong></label>
         <textarea class="analysis-field" id="analysis_24" rows="3"
           placeholder="Enter your analysis for this class…"
-          oninput="saveAnalysis('com.android.grafika.CameraUtils', this.value)"></textarea>
+          oninput="saveAnalysis('app/src/main/java/com/android/grafika/gles/GeneratedTexture.java', this.value)"></textarea>
       </div>
-      <div class="progress-note" id="prog_com_android_grafika_CameraUtils"></div>
-      <a class="detail-link" href="repo_google_grafika__com_android_grafika_CameraUtils.html">
-        📋 View 61 affected classes →
+      <div class="progress-note" id="prog_app_src_main_java_com_android_grafika_gles_GeneratedTexture_java"></div>
+      <a class="detail-link" href="repo_google_grafika__app_src_main_java_com_android_grafika_gles_GeneratedTexture.java.html">
+        📋 View 1 deterministic / 35 MC targets →
       </a>
     </div>
   </div>
   <div class="src-block" id="src_25">
     <button class="src-header" onclick="toggleBlock(25)">
-      <span class="src-name">com.android.grafika.TextureFromCameraActivity</span>
+      <span class="src-name">app/src/main/java/com/android/grafika/gles/Texture2dProgram.java</span>
       <span class="src-meta">
-        <span class="badge">Score 99.3520</span>
-        <span class="badge">Affected 61</span>
-        <span class="badge">Communities 38</span>
-        <span class="badge">Waves 4</span>
+        <span class="badge">Det 1</span>
+        <span class="badge">MC 35</span>
+        <span class="badge">Code Smell 0.019</span>
+        <span class="badge">C1, C5, C6, C7 +2</span>
       </span>
       <span class="chevron" id="chev_25">▶</span>
     </button>
     <div class="src-body" id="body_25" style="display:none">
       <div class="analysis-row">
-        <label>Analysis of <strong>com.android.grafika.TextureFromCameraActivity</strong></label>
+        <label>Analysis of <strong>app/src/main/java/com/android/grafika/gles/Texture2dProgram.java</strong></label>
         <textarea class="analysis-field" id="analysis_25" rows="3"
           placeholder="Enter your analysis for this class…"
-          oninput="saveAnalysis('com.android.grafika.TextureFromCameraActivity', this.value)"></textarea>
+          oninput="saveAnalysis('app/src/main/java/com/android/grafika/gles/Texture2dProgram.java', this.value)"></textarea>
       </div>
-      <div class="progress-note" id="prog_com_android_grafika_TextureFromCameraActivity"></div>
-      <a class="detail-link" href="repo_google_grafika__com_android_grafika_TextureFromCameraActivity.html">
-        📋 View 61 affected classes →
+      <div class="progress-note" id="prog_app_src_main_java_com_android_grafika_gles_Texture2dProgram_java"></div>
+      <a class="detail-link" href="repo_google_grafika__app_src_main_java_com_android_grafika_gles_Texture2dProgram.java.html">
+        📋 View 1 deterministic / 35 MC targets →
       </a>
     </div>
   </div>
   <div class="src-block" id="src_26">
     <button class="src-header" onclick="toggleBlock(26)">
-      <span class="src-name">com.android.grafika.gles.EglCore</span>
+      <span class="src-name">app/src/main/java/com/android/grafika/LiveCameraActivity.java</span>
       <span class="src-meta">
-        <span class="badge">Score 98.3288</span>
-        <span class="badge">Affected 61</span>
-        <span class="badge">Communities 38</span>
-        <span class="badge">Waves 3</span>
+        <span class="badge">Det 1</span>
+        <span class="badge">MC 34</span>
+        <span class="badge">Code Smell 0.058</span>
+        <span class="badge">C1, C5, C6, C7 +1</span>
       </span>
       <span class="chevron" id="chev_26">▶</span>
     </button>
     <div class="src-body" id="body_26" style="display:none">
       <div class="analysis-row">
-        <label>Analysis of <strong>com.android.grafika.gles.EglCore</strong></label>
+        <label>Analysis of <strong>app/src/main/java/com/android/grafika/LiveCameraActivity.java</strong></label>
         <textarea class="analysis-field" id="analysis_26" rows="3"
           placeholder="Enter your analysis for this class…"
-          oninput="saveAnalysis('com.android.grafika.gles.EglCore', this.value)"></textarea>
+          oninput="saveAnalysis('app/src/main/java/com/android/grafika/LiveCameraActivity.java', this.value)"></textarea>
       </div>
-      <div class="progress-note" id="prog_com_android_grafika_gles_EglCore"></div>
-      <a class="detail-link" href="repo_google_grafika__com_android_grafika_gles_EglCore.html">
-        📋 View 61 affected classes →
+      <div class="progress-note" id="prog_app_src_main_java_com_android_grafika_LiveCameraActivity_java"></div>
+      <a class="detail-link" href="repo_google_grafika__app_src_main_java_com_android_grafika_LiveCameraActivity.java.html">
+        📋 View 1 deterministic / 34 MC targets →
       </a>
     </div>
   </div>
   <div class="src-block" id="src_27">
     <button class="src-header" onclick="toggleBlock(27)">
-      <span class="src-name">com.android.grafika.PlayMovieSurfaceActivity</span>
+      <span class="src-name">app/src/main/java/com/android/grafika/gles/EglCore.java</span>
       <span class="src-meta">
-        <span class="badge">Score 97.0582</span>
-        <span class="badge">Affected 61</span>
-        <span class="badge">Communities 38</span>
-        <span class="badge">Waves 4</span>
+        <span class="badge">Det 0</span>
+        <span class="badge">MC 35</span>
+        <span class="badge">Code Smell 0.423</span>
+        <span class="badge">C2, C6, C10, C11 +2</span>
       </span>
       <span class="chevron" id="chev_27">▶</span>
     </button>
     <div class="src-body" id="body_27" style="display:none">
       <div class="analysis-row">
-        <label>Analysis of <strong>com.android.grafika.PlayMovieSurfaceActivity</strong></label>
+        <label>Analysis of <strong>app/src/main/java/com/android/grafika/gles/EglCore.java</strong></label>
         <textarea class="analysis-field" id="analysis_27" rows="3"
           placeholder="Enter your analysis for this class…"
-          oninput="saveAnalysis('com.android.grafika.PlayMovieSurfaceActivity', this.value)"></textarea>
+          oninput="saveAnalysis('app/src/main/java/com/android/grafika/gles/EglCore.java', this.value)"></textarea>
       </div>
-      <div class="progress-note" id="prog_com_android_grafika_PlayMovieSurfaceActivity"></div>
-      <a class="detail-link" href="repo_google_grafika__com_android_grafika_PlayMovieSurfaceActivity.html">
-        📋 View 61 affected classes →
+      <div class="progress-note" id="prog_app_src_main_java_com_android_grafika_gles_EglCore_java"></div>
+      <a class="detail-link" href="repo_google_grafika__app_src_main_java_com_android_grafika_gles_EglCore.java.html">
+        📋 View 0 deterministic / 35 MC targets →
       </a>
     </div>
   </div>
   <div class="src-block" id="src_28">
     <button class="src-header" onclick="toggleBlock(28)">
-      <span class="src-name">com.android.grafika.RecordFBOActivity</span>
+      <span class="src-name">app/src/main/java/com/android/grafika/CameraUtils.java</span>
       <span class="src-meta">
-        <span class="badge">Score 95.4846</span>
-        <span class="badge">Affected 61</span>
-        <span class="badge">Communities 38</span>
-        <span class="badge">Waves 4</span>
+        <span class="badge">Det 0</span>
+        <span class="badge">MC 34</span>
+        <span class="badge">Code Smell 0.077</span>
+        <span class="badge">C1, C5, C6, C7 +1</span>
       </span>
       <span class="chevron" id="chev_28">▶</span>
     </button>
     <div class="src-body" id="body_28" style="display:none">
       <div class="analysis-row">
-        <label>Analysis of <strong>com.android.grafika.RecordFBOActivity</strong></label>
+        <label>Analysis of <strong>app/src/main/java/com/android/grafika/CameraUtils.java</strong></label>
         <textarea class="analysis-field" id="analysis_28" rows="3"
           placeholder="Enter your analysis for this class…"
-          oninput="saveAnalysis('com.android.grafika.RecordFBOActivity', this.value)"></textarea>
+          oninput="saveAnalysis('app/src/main/java/com/android/grafika/CameraUtils.java', this.value)"></textarea>
       </div>
-      <div class="progress-note" id="prog_com_android_grafika_RecordFBOActivity"></div>
-      <a class="detail-link" href="repo_google_grafika__com_android_grafika_RecordFBOActivity.html">
-        📋 View 61 affected classes →
+      <div class="progress-note" id="prog_app_src_main_java_com_android_grafika_CameraUtils_java"></div>
+      <a class="detail-link" href="repo_google_grafika__app_src_main_java_com_android_grafika_CameraUtils.java.html">
+        📋 View 0 deterministic / 34 MC targets →
       </a>
     </div>
   </div>
   <div class="src-block" id="src_29">
     <button class="src-header" onclick="toggleBlock(29)">
-      <span class="src-name">com.android.grafika.gles.Drawable2d</span>
+      <span class="src-name">app/src/main/java/com/android/grafika/CodecOpenActivity.java</span>
       <span class="src-meta">
-        <span class="badge">Score 95.1364</span>
-        <span class="badge">Affected 61</span>
-        <span class="badge">Communities 38</span>
-        <span class="badge">Waves 4</span>
+        <span class="badge">Det 0</span>
+        <span class="badge">MC 34</span>
+        <span class="badge">Code Smell 0.115</span>
+        <span class="badge">C1, C5, C6, C7 +1</span>
       </span>
       <span class="chevron" id="chev_29">▶</span>
     </button>
     <div class="src-body" id="body_29" style="display:none">
       <div class="analysis-row">
-        <label>Analysis of <strong>com.android.grafika.gles.Drawable2d</strong></label>
+        <label>Analysis of <strong>app/src/main/java/com/android/grafika/CodecOpenActivity.java</strong></label>
         <textarea class="analysis-field" id="analysis_29" rows="3"
           placeholder="Enter your analysis for this class…"
-          oninput="saveAnalysis('com.android.grafika.gles.Drawable2d', this.value)"></textarea>
+          oninput="saveAnalysis('app/src/main/java/com/android/grafika/CodecOpenActivity.java', this.value)"></textarea>
       </div>
-      <div class="progress-note" id="prog_com_android_grafika_gles_Drawable2d"></div>
-      <a class="detail-link" href="repo_google_grafika__com_android_grafika_gles_Drawable2d.html">
-        📋 View 61 affected classes →
+      <div class="progress-note" id="prog_app_src_main_java_com_android_grafika_CodecOpenActivity_java"></div>
+      <a class="detail-link" href="repo_google_grafika__app_src_main_java_com_android_grafika_CodecOpenActivity.java.html">
+        📋 View 0 deterministic / 34 MC targets →
       </a>
     </div>
   </div>
   <div class="src-block" id="src_30">
     <button class="src-header" onclick="toggleBlock(30)">
-      <span class="src-name">com.android.grafika.ScaledDrawable2d</span>
+      <span class="src-name">app/src/main/java/com/android/grafika/MoviePlayer.java</span>
       <span class="src-meta">
-        <span class="badge">Score 94.9499</span>
-        <span class="badge">Affected 61</span>
-        <span class="badge">Communities 38</span>
-        <span class="badge">Waves 5</span>
+        <span class="badge">Det 0</span>
+        <span class="badge">MC 34</span>
+        <span class="badge">Code Smell 0.019</span>
+        <span class="badge">C1, C5, C6, C7 +1</span>
       </span>
       <span class="chevron" id="chev_30">▶</span>
     </button>
     <div class="src-body" id="body_30" style="display:none">
       <div class="analysis-row">
-        <label>Analysis of <strong>com.android.grafika.ScaledDrawable2d</strong></label>
+        <label>Analysis of <strong>app/src/main/java/com/android/grafika/MoviePlayer.java</strong></label>
         <textarea class="analysis-field" id="analysis_30" rows="3"
           placeholder="Enter your analysis for this class…"
-          oninput="saveAnalysis('com.android.grafika.ScaledDrawable2d', this.value)"></textarea>
+          oninput="saveAnalysis('app/src/main/java/com/android/grafika/MoviePlayer.java', this.value)"></textarea>
       </div>
-      <div class="progress-note" id="prog_com_android_grafika_ScaledDrawable2d"></div>
-      <a class="detail-link" href="repo_google_grafika__com_android_grafika_ScaledDrawable2d.html">
-        📋 View 61 affected classes →
+      <div class="progress-note" id="prog_app_src_main_java_com_android_grafika_MoviePlayer_java"></div>
+      <a class="detail-link" href="repo_google_grafika__app_src_main_java_com_android_grafika_MoviePlayer.java.html">
+        📋 View 0 deterministic / 34 MC targets →
       </a>
     </div>
   </div>
   <div class="src-block" id="src_31">
     <button class="src-header" onclick="toggleBlock(31)">
-      <span class="src-name">com.android.grafika.TextureMovieEncoder</span>
+      <span class="src-name">app/src/main/java/com/android/grafika/PermissionHelper.java</span>
       <span class="src-meta">
-        <span class="badge">Score 94.5979</span>
-        <span class="badge">Affected 61</span>
-        <span class="badge">Communities 38</span>
-        <span class="badge">Waves 4</span>
+        <span class="badge">Det 0</span>
+        <span class="badge">MC 34</span>
+        <span class="badge">Code Smell 0.058</span>
+        <span class="badge">C1, C5, C6, C7 +2</span>
       </span>
       <span class="chevron" id="chev_31">▶</span>
     </button>
     <div class="src-body" id="body_31" style="display:none">
       <div class="analysis-row">
-        <label>Analysis of <strong>com.android.grafika.TextureMovieEncoder</strong></label>
+        <label>Analysis of <strong>app/src/main/java/com/android/grafika/PermissionHelper.java</strong></label>
         <textarea class="analysis-field" id="analysis_31" rows="3"
           placeholder="Enter your analysis for this class…"
-          oninput="saveAnalysis('com.android.grafika.TextureMovieEncoder', this.value)"></textarea>
+          oninput="saveAnalysis('app/src/main/java/com/android/grafika/PermissionHelper.java', this.value)"></textarea>
       </div>
-      <div class="progress-note" id="prog_com_android_grafika_TextureMovieEncoder"></div>
-      <a class="detail-link" href="repo_google_grafika__com_android_grafika_TextureMovieEncoder.html">
-        📋 View 61 affected classes →
+      <div class="progress-note" id="prog_app_src_main_java_com_android_grafika_PermissionHelper_java"></div>
+      <a class="detail-link" href="repo_google_grafika__app_src_main_java_com_android_grafika_PermissionHelper.java.html">
+        📋 View 0 deterministic / 34 MC targets →
       </a>
     </div>
   </div>
   <div class="src-block" id="src_32">
     <button class="src-header" onclick="toggleBlock(32)">
-      <span class="src-name">com.android.grafika.ContentManager</span>
+      <span class="src-name">app/src/main/java/com/android/grafika/SoftInputSurfaceActivity.java</span>
       <span class="src-meta">
-        <span class="badge">Score 94.4694</span>
-        <span class="badge">Affected 61</span>
-        <span class="badge">Communities 38</span>
-        <span class="badge">Waves 4</span>
+        <span class="badge">Det 0</span>
+        <span class="badge">MC 34</span>
+        <span class="badge">Code Smell 0.346</span>
+        <span class="badge">C1, C5, C6, C7 +1</span>
       </span>
       <span class="chevron" id="chev_32">▶</span>
     </button>
     <div class="src-body" id="body_32" style="display:none">
       <div class="analysis-row">
-        <label>Analysis of <strong>com.android.grafika.ContentManager</strong></label>
+        <label>Analysis of <strong>app/src/main/java/com/android/grafika/SoftInputSurfaceActivity.java</strong></label>
         <textarea class="analysis-field" id="analysis_32" rows="3"
           placeholder="Enter your analysis for this class…"
-          oninput="saveAnalysis('com.android.grafika.ContentManager', this.value)"></textarea>
+          oninput="saveAnalysis('app/src/main/java/com/android/grafika/SoftInputSurfaceActivity.java', this.value)"></textarea>
       </div>
-      <div class="progress-note" id="prog_com_android_grafika_ContentManager"></div>
-      <a class="detail-link" href="repo_google_grafika__com_android_grafika_ContentManager.html">
-        📋 View 61 affected classes →
+      <div class="progress-note" id="prog_app_src_main_java_com_android_grafika_SoftInputSurfaceActivity_java"></div>
+      <a class="detail-link" href="repo_google_grafika__app_src_main_java_com_android_grafika_SoftInputSurfaceActivity.java.html">
+        📋 View 0 deterministic / 34 MC targets →
       </a>
     </div>
   </div>
   <div class="src-block" id="src_33">
     <button class="src-header" onclick="toggleBlock(33)">
-      <span class="src-name">com.android.grafika.AboutBox</span>
+      <span class="src-name">app/src/main/java/com/android/grafika/SpeedControlCallback.java</span>
       <span class="src-meta">
-        <span class="badge">Score 93.7218</span>
-        <span class="badge">Affected 61</span>
-        <span class="badge">Communities 38</span>
-        <span class="badge">Waves 4</span>
+        <span class="badge">Det 0</span>
+        <span class="badge">MC 34</span>
+        <span class="badge">Code Smell 0.212</span>
+        <span class="badge">C2, C6, C10, C11 +1</span>
       </span>
       <span class="chevron" id="chev_33">▶</span>
     </button>
     <div class="src-body" id="body_33" style="display:none">
       <div class="analysis-row">
-        <label>Analysis of <strong>com.android.grafika.AboutBox</strong></label>
+        <label>Analysis of <strong>app/src/main/java/com/android/grafika/SpeedControlCallback.java</strong></label>
         <textarea class="analysis-field" id="analysis_33" rows="3"
           placeholder="Enter your analysis for this class…"
-          oninput="saveAnalysis('com.android.grafika.AboutBox', this.value)"></textarea>
+          oninput="saveAnalysis('app/src/main/java/com/android/grafika/SpeedControlCallback.java', this.value)"></textarea>
       </div>
-      <div class="progress-note" id="prog_com_android_grafika_AboutBox"></div>
-      <a class="detail-link" href="repo_google_grafika__com_android_grafika_AboutBox.html">
-        📋 View 61 affected classes →
+      <div class="progress-note" id="prog_app_src_main_java_com_android_grafika_SpeedControlCallback_java"></div>
+      <a class="detail-link" href="repo_google_grafika__app_src_main_java_com_android_grafika_SpeedControlCallback.java.html">
+        📋 View 0 deterministic / 34 MC targets →
       </a>
     </div>
   </div>
   <div class="src-block" id="src_34">
     <button class="src-header" onclick="toggleBlock(34)">
-      <span class="src-name">com.android.grafika.LiveCameraActivity</span>
+      <span class="src-name">app/src/main/java/com/android/grafika/TextureViewCanvasActivity.java</span>
       <span class="src-meta">
-        <span class="badge">Score 93.0453</span>
-        <span class="badge">Affected 61</span>
-        <span class="badge">Communities 38</span>
-        <span class="badge">Waves 4</span>
+        <span class="badge">Det 0</span>
+        <span class="badge">MC 34</span>
+        <span class="badge">Code Smell 0.115</span>
+        <span class="badge">C1, C5, C6, C7 +1</span>
       </span>
       <span class="chevron" id="chev_34">▶</span>
     </button>
     <div class="src-body" id="body_34" style="display:none">
       <div class="analysis-row">
-        <label>Analysis of <strong>com.android.grafika.LiveCameraActivity</strong></label>
+        <label>Analysis of <strong>app/src/main/java/com/android/grafika/TextureViewCanvasActivity.java</strong></label>
         <textarea class="analysis-field" id="analysis_34" rows="3"
           placeholder="Enter your analysis for this class…"
-          oninput="saveAnalysis('com.android.grafika.LiveCameraActivity', this.value)"></textarea>
+          oninput="saveAnalysis('app/src/main/java/com/android/grafika/TextureViewCanvasActivity.java', this.value)"></textarea>
       </div>
-      <div class="progress-note" id="prog_com_android_grafika_LiveCameraActivity"></div>
-      <a class="detail-link" href="repo_google_grafika__com_android_grafika_LiveCameraActivity.html">
-        📋 View 61 affected classes →
+      <div class="progress-note" id="prog_app_src_main_java_com_android_grafika_TextureViewCanvasActivity_java"></div>
+      <a class="detail-link" href="repo_google_grafika__app_src_main_java_com_android_grafika_TextureViewCanvasActivity.java.html">
+        📋 View 0 deterministic / 34 MC targets →
       </a>
     </div>
   </div>
   <div class="src-block" id="src_35">
     <button class="src-header" onclick="toggleBlock(35)">
-      <span class="src-name">com.android.grafika.TextureViewGLActivity</span>
+      <span class="src-name">app/src/main/java/com/android/grafika/gles/OffscreenSurface.java</span>
       <span class="src-meta">
-        <span class="badge">Score 93.0247</span>
-        <span class="badge">Affected 61</span>
-        <span class="badge">Communities 38</span>
-        <span class="badge">Waves 4</span>
+        <span class="badge">Det 2</span>
+        <span class="badge">MC 5</span>
+        <span class="badge">Code Smell 0.058</span>
+        <span class="badge">C18, C37</span>
       </span>
       <span class="chevron" id="chev_35">▶</span>
     </button>
     <div class="src-body" id="body_35" style="display:none">
       <div class="analysis-row">
-        <label>Analysis of <strong>com.android.grafika.TextureViewGLActivity</strong></label>
+        <label>Analysis of <strong>app/src/main/java/com/android/grafika/gles/OffscreenSurface.java</strong></label>
         <textarea class="analysis-field" id="analysis_35" rows="3"
           placeholder="Enter your analysis for this class…"
-          oninput="saveAnalysis('com.android.grafika.TextureViewGLActivity', this.value)"></textarea>
+          oninput="saveAnalysis('app/src/main/java/com/android/grafika/gles/OffscreenSurface.java', this.value)"></textarea>
       </div>
-      <div class="progress-note" id="prog_com_android_grafika_TextureViewGLActivity"></div>
-      <a class="detail-link" href="repo_google_grafika__com_android_grafika_TextureViewGLActivity.html">
-        📋 View 61 affected classes →
+      <div class="progress-note" id="prog_app_src_main_java_com_android_grafika_gles_OffscreenSurface_java"></div>
+      <a class="detail-link" href="repo_google_grafika__app_src_main_java_com_android_grafika_gles_OffscreenSurface.java.html">
+        📋 View 2 deterministic / 5 MC targets →
       </a>
     </div>
   </div>
   <div class="src-block" id="src_36">
     <button class="src-header" onclick="toggleBlock(36)">
-      <span class="src-name">com.android.grafika.gles.Texture2dProgram</span>
+      <span class="src-name">app/src/main/java/com/android/grafika/ScreenRecordActivity.java</span>
       <span class="src-meta">
-        <span class="badge">Score 91.9966</span>
-        <span class="badge">Affected 61</span>
-        <span class="badge">Communities 38</span>
-        <span class="badge">Waves 4</span>
+        <span class="badge">Det 1</span>
+        <span class="badge">MC 2</span>
+        <span class="badge">Code Smell 0.365</span>
+        <span class="badge">C31, C32</span>
       </span>
       <span class="chevron" id="chev_36">▶</span>
     </button>
     <div class="src-body" id="body_36" style="display:none">
       <div class="analysis-row">
-        <label>Analysis of <strong>com.android.grafika.gles.Texture2dProgram</strong></label>
+        <label>Analysis of <strong>app/src/main/java/com/android/grafika/ScreenRecordActivity.java</strong></label>
         <textarea class="analysis-field" id="analysis_36" rows="3"
           placeholder="Enter your analysis for this class…"
-          oninput="saveAnalysis('com.android.grafika.gles.Texture2dProgram', this.value)"></textarea>
+          oninput="saveAnalysis('app/src/main/java/com/android/grafika/ScreenRecordActivity.java', this.value)"></textarea>
       </div>
-      <div class="progress-note" id="prog_com_android_grafika_gles_Texture2dProgram"></div>
-      <a class="detail-link" href="repo_google_grafika__com_android_grafika_gles_Texture2dProgram.html">
-        📋 View 61 affected classes →
+      <div class="progress-note" id="prog_app_src_main_java_com_android_grafika_ScreenRecordActivity_java"></div>
+      <a class="detail-link" href="repo_google_grafika__app_src_main_java_com_android_grafika_ScreenRecordActivity.java.html">
+        📋 View 1 deterministic / 2 MC targets →
       </a>
     </div>
   </div>
   <div class="src-block" id="src_37">
     <button class="src-header" onclick="toggleBlock(37)">
-      <span class="src-name">com.android.grafika.SpeedControlCallback</span>
+      <span class="src-name">app/src/main/java/com/android/grafika/CircularEncoder.java</span>
       <span class="src-meta">
-        <span class="badge">Score 91.8398</span>
-        <span class="badge">Affected 61</span>
-        <span class="badge">Communities 38</span>
-        <span class="badge">Waves 4</span>
+        <span class="badge">Det 1</span>
+        <span class="badge">MC 1</span>
+        <span class="badge">Code Smell 0.135</span>
+        <span class="badge">C9, C16</span>
       </span>
       <span class="chevron" id="chev_37">▶</span>
     </button>
     <div class="src-body" id="body_37" style="display:none">
       <div class="analysis-row">
-        <label>Analysis of <strong>com.android.grafika.SpeedControlCallback</strong></label>
+        <label>Analysis of <strong>app/src/main/java/com/android/grafika/CircularEncoder.java</strong></label>
         <textarea class="analysis-field" id="analysis_37" rows="3"
           placeholder="Enter your analysis for this class…"
-          oninput="saveAnalysis('com.android.grafika.SpeedControlCallback', this.value)"></textarea>
+          oninput="saveAnalysis('app/src/main/java/com/android/grafika/CircularEncoder.java', this.value)"></textarea>
       </div>
-      <div class="progress-note" id="prog_com_android_grafika_SpeedControlCallback"></div>
-      <a class="detail-link" href="repo_google_grafika__com_android_grafika_SpeedControlCallback.html">
-        📋 View 61 affected classes →
+      <div class="progress-note" id="prog_app_src_main_java_com_android_grafika_CircularEncoder_java"></div>
+      <a class="detail-link" href="repo_google_grafika__app_src_main_java_com_android_grafika_CircularEncoder.java.html">
+        📋 View 1 deterministic / 1 MC targets →
       </a>
     </div>
   </div>
   <div class="src-block" id="src_38">
     <button class="src-header" onclick="toggleBlock(38)">
-      <span class="src-name">app/src/main/java/com/android/grafika/CameraPermissionHelper.java</span>
+      <span class="src-name">app/src/main/java/com/android/grafika/TextureMovieEncoder2.java</span>
       <span class="src-meta">
-        <span class="badge">Score 91.3114</span>
-        <span class="badge">Affected 61</span>
-        <span class="badge">Communities 38</span>
-        <span class="badge">Waves 4</span>
+        <span class="badge">Det 1</span>
+        <span class="badge">MC 1</span>
+        <span class="badge">Code Smell 0.135</span>
+        <span class="badge">C27, C35</span>
       </span>
       <span class="chevron" id="chev_38">▶</span>
     </button>
     <div class="src-body" id="body_38" style="display:none">
       <div class="analysis-row">
-        <label>Analysis of <strong>app/src/main/java/com/android/grafika/CameraPermissionHelper.java</strong></label>
+        <label>Analysis of <strong>app/src/main/java/com/android/grafika/TextureMovieEncoder2.java</strong></label>
         <textarea class="analysis-field" id="analysis_38" rows="3"
           placeholder="Enter your analysis for this class…"
-          oninput="saveAnalysis('app/src/main/java/com/android/grafika/CameraPermissionHelper.java', this.value)"></textarea>
+          oninput="saveAnalysis('app/src/main/java/com/android/grafika/TextureMovieEncoder2.java', this.value)"></textarea>
       </div>
-      <div class="progress-note" id="prog_app_src_main_java_com_android_grafika_CameraPermissionHelper_java"></div>
-      <a class="detail-link" href="repo_google_grafika__app_src_main_java_com_android_grafika_CameraPermissionHelper_java.html">
-        📋 View 61 affected classes →
+      <div class="progress-note" id="prog_app_src_main_java_com_android_grafika_TextureMovieEncoder2_java"></div>
+      <a class="detail-link" href="repo_google_grafika__app_src_main_java_com_android_grafika_TextureMovieEncoder2.java.html">
+        📋 View 1 deterministic / 1 MC targets →
       </a>
     </div>
   </div>
   <div class="src-block" id="src_39">
     <button class="src-header" onclick="toggleBlock(39)">
-      <span class="src-name">com.android.grafika.MainActivity</span>
+      <span class="src-name">app/src/main/java/com/android/grafika/MovieEightRects.java</span>
       <span class="src-meta">
-        <span class="badge">Score 91.0587</span>
-        <span class="badge">Affected 61</span>
-        <span class="badge">Communities 38</span>
-        <span class="badge">Waves 3</span>
+        <span class="badge">Det 1</span>
+        <span class="badge">MC 1</span>
+        <span class="badge">Code Smell 0.212</span>
+        <span class="badge">C13</span>
       </span>
       <span class="chevron" id="chev_39">▶</span>
     </button>
     <div class="src-body" id="body_39" style="display:none">
       <div class="analysis-row">
-        <label>Analysis of <strong>com.android.grafika.MainActivity</strong></label>
+        <label>Analysis of <strong>app/src/main/java/com/android/grafika/MovieEightRects.java</strong></label>
         <textarea class="analysis-field" id="analysis_39" rows="3"
           placeholder="Enter your analysis for this class…"
-          oninput="saveAnalysis('com.android.grafika.MainActivity', this.value)"></textarea>
+          oninput="saveAnalysis('app/src/main/java/com/android/grafika/MovieEightRects.java', this.value)"></textarea>
       </div>
-      <div class="progress-note" id="prog_com_android_grafika_MainActivity"></div>
-      <a class="detail-link" href="repo_google_grafika__com_android_grafika_MainActivity.html">
-        📋 View 61 affected classes →
+      <div class="progress-note" id="prog_app_src_main_java_com_android_grafika_MovieEightRects_java"></div>
+      <a class="detail-link" href="repo_google_grafika__app_src_main_java_com_android_grafika_MovieEightRects.java.html">
+        📋 View 1 deterministic / 1 MC targets →
       </a>
     </div>
   </div>
   <div class="src-block" id="src_40">
     <button class="src-header" onclick="toggleBlock(40)">
-      <span class="src-name">src/com/android/grafika/MultiSurfaceTest.java</span>
+      <span class="src-name">app/src/main/java/com/android/grafika/gles/FlatShadedProgram.java</span>
       <span class="src-meta">
-        <span class="badge">Score 90.9154</span>
-        <span class="badge">Affected 61</span>
-        <span class="badge">Communities 38</span>
-        <span class="badge">Waves 4</span>
+        <span class="badge">Det 1</span>
+        <span class="badge">MC 1</span>
+        <span class="badge">Code Smell 0.173</span>
+        <span class="badge">C20, C36, C38</span>
       </span>
       <span class="chevron" id="chev_40">▶</span>
     </button>
     <div class="src-body" id="body_40" style="display:none">
       <div class="analysis-row">
-        <label>Analysis of <strong>src/com/android/grafika/MultiSurfaceTest.java</strong></label>
+        <label>Analysis of <strong>app/src/main/java/com/android/grafika/gles/FlatShadedProgram.java</strong></label>
         <textarea class="analysis-field" id="analysis_40" rows="3"
           placeholder="Enter your analysis for this class…"
-          oninput="saveAnalysis('src/com/android/grafika/MultiSurfaceTest.java', this.value)"></textarea>
+          oninput="saveAnalysis('app/src/main/java/com/android/grafika/gles/FlatShadedProgram.java', this.value)"></textarea>
       </div>
-      <div class="progress-note" id="prog_src_com_android_grafika_MultiSurfaceTest_java"></div>
-      <a class="detail-link" href="repo_google_grafika__src_com_android_grafika_MultiSurfaceTest_java.html">
-        📋 View 61 affected classes →
+      <div class="progress-note" id="prog_app_src_main_java_com_android_grafika_gles_FlatShadedProgram_java"></div>
+      <a class="detail-link" href="repo_google_grafika__app_src_main_java_com_android_grafika_gles_FlatShadedProgram.java.html">
+        📋 View 1 deterministic / 1 MC targets →
       </a>
     </div>
   </div>
   <div class="src-block" id="src_41">
     <button class="src-header" onclick="toggleBlock(41)">
-      <span class="src-name">com.android.grafika.GlesInfoActivity</span>
+      <span class="src-name">app/src/main/java/com/android/grafika/ScaledDrawable2d.java</span>
       <span class="src-meta">
-        <span class="badge">Score 87.8929</span>
-        <span class="badge">Affected 61</span>
-        <span class="badge">Communities 38</span>
-        <span class="badge">Waves 4</span>
+        <span class="badge">Det 0</span>
+        <span class="badge">MC 1</span>
+        <span class="badge">Code Smell 0.096</span>
+        <span class="badge">C29</span>
       </span>
       <span class="chevron" id="chev_41">▶</span>
     </button>
     <div class="src-body" id="body_41" style="display:none">
       <div class="analysis-row">
-        <label>Analysis of <strong>com.android.grafika.GlesInfoActivity</strong></label>
+        <label>Analysis of <strong>app/src/main/java/com/android/grafika/ScaledDrawable2d.java</strong></label>
         <textarea class="analysis-field" id="analysis_41" rows="3"
           placeholder="Enter your analysis for this class…"
-          oninput="saveAnalysis('com.android.grafika.GlesInfoActivity', this.value)"></textarea>
+          oninput="saveAnalysis('app/src/main/java/com/android/grafika/ScaledDrawable2d.java', this.value)"></textarea>
       </div>
-      <div class="progress-note" id="prog_com_android_grafika_GlesInfoActivity"></div>
-      <a class="detail-link" href="repo_google_grafika__com_android_grafika_GlesInfoActivity.html">
-        📋 View 61 affected classes →
+      <div class="progress-note" id="prog_app_src_main_java_com_android_grafika_ScaledDrawable2d_java"></div>
+      <a class="detail-link" href="repo_google_grafika__app_src_main_java_com_android_grafika_ScaledDrawable2d.java.html">
+        📋 View 0 deterministic / 1 MC targets →
       </a>
     </div>
   </div>
   <div class="src-block" id="src_42">
     <button class="src-header" onclick="toggleBlock(42)">
-      <span class="src-name">com.android.grafika.gles.GlUtil</span>
+      <span class="src-name">app/src/main/java/com/android/grafika/AboutBox.java</span>
       <span class="src-meta">
-        <span class="badge">Score 87.5095</span>
-        <span class="badge">Affected 61</span>
-        <span class="badge">Communities 38</span>
-        <span class="badge">Waves 4</span>
+        <span class="badge">Det 0</span>
+        <span class="badge">MC 0</span>
+        <span class="badge">Code Smell 0.019</span>
+        <span class="badge">C22</span>
       </span>
       <span class="chevron" id="chev_42">▶</span>
     </button>
     <div class="src-body" id="body_42" style="display:none">
       <div class="analysis-row">
-        <label>Analysis of <strong>com.android.grafika.gles.GlUtil</strong></label>
+        <label>Analysis of <strong>app/src/main/java/com/android/grafika/AboutBox.java</strong></label>
         <textarea class="analysis-field" id="analysis_42" rows="3"
           placeholder="Enter your analysis for this class…"
-          oninput="saveAnalysis('com.android.grafika.gles.GlUtil', this.value)"></textarea>
+          oninput="saveAnalysis('app/src/main/java/com/android/grafika/AboutBox.java', this.value)"></textarea>
       </div>
-      <div class="progress-note" id="prog_com_android_grafika_gles_GlUtil"></div>
-      <a class="detail-link" href="repo_google_grafika__com_android_grafika_gles_GlUtil.html">
-        📋 View 61 affected classes →
+      <div class="progress-note" id="prog_app_src_main_java_com_android_grafika_AboutBox_java"></div>
+      <a class="detail-link" href="repo_google_grafika__app_src_main_java_com_android_grafika_AboutBox.java.html">
+        📋 View 0 deterministic / 0 MC targets →
       </a>
     </div>
   </div>
   <div class="src-block" id="src_43">
     <button class="src-header" onclick="toggleBlock(43)">
-      <span class="src-name">src/com/android/grafika/Drawable2d.java</span>
+      <span class="src-name">app/src/main/java/com/android/grafika/AspectFrameLayout.java</span>
       <span class="src-meta">
-        <span class="badge">Score 86.9214</span>
-        <span class="badge">Affected 61</span>
-        <span class="badge">Communities 38</span>
-        <span class="badge">Waves 4</span>
+        <span class="badge">Det 0</span>
+        <span class="badge">MC 0</span>
+        <span class="badge">Code Smell 0.115</span>
+        <span class="badge">C0, C15, C24</span>
       </span>
       <span class="chevron" id="chev_43">▶</span>
     </button>
     <div class="src-body" id="body_43" style="display:none">
       <div class="analysis-row">
-        <label>Analysis of <strong>src/com/android/grafika/Drawable2d.java</strong></label>
+        <label>Analysis of <strong>app/src/main/java/com/android/grafika/AspectFrameLayout.java</strong></label>
         <textarea class="analysis-field" id="analysis_43" rows="3"
           placeholder="Enter your analysis for this class…"
-          oninput="saveAnalysis('src/com/android/grafika/Drawable2d.java', this.value)"></textarea>
+          oninput="saveAnalysis('app/src/main/java/com/android/grafika/AspectFrameLayout.java', this.value)"></textarea>
       </div>
-      <div class="progress-note" id="prog_src_com_android_grafika_Drawable2d_java"></div>
-      <a class="detail-link" href="repo_google_grafika__src_com_android_grafika_Drawable2d_java.html">
-        📋 View 61 affected classes →
+      <div class="progress-note" id="prog_app_src_main_java_com_android_grafika_AspectFrameLayout_java"></div>
+      <a class="detail-link" href="repo_google_grafika__app_src_main_java_com_android_grafika_AspectFrameLayout.java.html">
+        📋 View 0 deterministic / 0 MC targets →
       </a>
     </div>
   </div>
   <div class="src-block" id="src_44">
     <button class="src-header" onclick="toggleBlock(44)">
-      <span class="src-name">src/com/android/grafika/EglCore.java</span>
+      <span class="src-name">app/src/main/java/com/android/grafika/CircularEncoderBuffer.java</span>
       <span class="src-meta">
-        <span class="badge">Score 86.9214</span>
-        <span class="badge">Affected 61</span>
-        <span class="badge">Communities 38</span>
-        <span class="badge">Waves 4</span>
+        <span class="badge">Det 0</span>
+        <span class="badge">MC 0</span>
+        <span class="badge">Code Smell 0.308</span>
+        <span class="badge">C9</span>
       </span>
       <span class="chevron" id="chev_44">▶</span>
     </button>
     <div class="src-body" id="body_44" style="display:none">
       <div class="analysis-row">
-        <label>Analysis of <strong>src/com/android/grafika/EglCore.java</strong></label>
+        <label>Analysis of <strong>app/src/main/java/com/android/grafika/CircularEncoderBuffer.java</strong></label>
         <textarea class="analysis-field" id="analysis_44" rows="3"
           placeholder="Enter your analysis for this class…"
-          oninput="saveAnalysis('src/com/android/grafika/EglCore.java', this.value)"></textarea>
+          oninput="saveAnalysis('app/src/main/java/com/android/grafika/CircularEncoderBuffer.java', this.value)"></textarea>
       </div>
-      <div class="progress-note" id="prog_src_com_android_grafika_EglCore_java"></div>
-      <a class="detail-link" href="repo_google_grafika__src_com_android_grafika_EglCore_java.html">
-        📋 View 61 affected classes →
+      <div class="progress-note" id="prog_app_src_main_java_com_android_grafika_CircularEncoderBuffer_java"></div>
+      <a class="detail-link" href="repo_google_grafika__app_src_main_java_com_android_grafika_CircularEncoderBuffer.java.html">
+        📋 View 0 deterministic / 0 MC targets →
       </a>
     </div>
   </div>
   <div class="src-block" id="src_45">
     <button class="src-header" onclick="toggleBlock(45)">
-      <span class="src-name">src/com/android/grafika/FullFrameRect.java</span>
+      <span class="src-name">app/src/main/java/com/android/grafika/MiscUtils.java</span>
       <span class="src-meta">
-        <span class="badge">Score 86.9214</span>
-        <span class="badge">Affected 61</span>
-        <span class="badge">Communities 38</span>
-        <span class="badge">Waves 4</span>
+        <span class="badge">Det 0</span>
+        <span class="badge">MC 0</span>
+        <span class="badge">Code Smell 0.058</span>
+        <span class="badge">C23, C26</span>
       </span>
       <span class="chevron" id="chev_45">▶</span>
     </button>
     <div class="src-body" id="body_45" style="display:none">
       <div class="analysis-row">
-        <label>Analysis of <strong>src/com/android/grafika/FullFrameRect.java</strong></label>
+        <label>Analysis of <strong>app/src/main/java/com/android/grafika/MiscUtils.java</strong></label>
         <textarea class="analysis-field" id="analysis_45" rows="3"
           placeholder="Enter your analysis for this class…"
-          oninput="saveAnalysis('src/com/android/grafika/FullFrameRect.java', this.value)"></textarea>
+          oninput="saveAnalysis('app/src/main/java/com/android/grafika/MiscUtils.java', this.value)"></textarea>
       </div>
-      <div class="progress-note" id="prog_src_com_android_grafika_FullFrameRect_java"></div>
-      <a class="detail-link" href="repo_google_grafika__src_com_android_grafika_FullFrameRect_java.html">
-        📋 View 61 affected classes →
+      <div class="progress-note" id="prog_app_src_main_java_com_android_grafika_MiscUtils_java"></div>
+      <a class="detail-link" href="repo_google_grafika__app_src_main_java_com_android_grafika_MiscUtils.java.html">
+        📋 View 0 deterministic / 0 MC targets →
       </a>
     </div>
   </div>
   <div class="src-block" id="src_46">
     <button class="src-header" onclick="toggleBlock(46)">
-      <span class="src-name">src/com/android/grafika/GeneratedTexture.java</span>
+      <span class="src-name">app/src/main/java/com/android/grafika/VideoEncoderCore.java</span>
       <span class="src-meta">
-        <span class="badge">Score 86.9214</span>
-        <span class="badge">Affected 61</span>
-        <span class="badge">Communities 38</span>
-        <span class="badge">Waves 4</span>
+        <span class="badge">Det 0</span>
+        <span class="badge">MC 0</span>
+        <span class="badge">Code Smell 0.231</span>
+        <span class="badge">C28, C34, C35</span>
       </span>
       <span class="chevron" id="chev_46">▶</span>
     </button>
     <div class="src-body" id="body_46" style="display:none">
       <div class="analysis-row">
-        <label>Analysis of <strong>src/com/android/grafika/GeneratedTexture.java</strong></label>
+        <label>Analysis of <strong>app/src/main/java/com/android/grafika/VideoEncoderCore.java</strong></label>
         <textarea class="analysis-field" id="analysis_46" rows="3"
           placeholder="Enter your analysis for this class…"
-          oninput="saveAnalysis('src/com/android/grafika/GeneratedTexture.java', this.value)"></textarea>
+          oninput="saveAnalysis('app/src/main/java/com/android/grafika/VideoEncoderCore.java', this.value)"></textarea>
       </div>
-      <div class="progress-note" id="prog_src_com_android_grafika_GeneratedTexture_java"></div>
-      <a class="detail-link" href="repo_google_grafika__src_com_android_grafika_GeneratedTexture_java.html">
-        📋 View 61 affected classes →
+      <div class="progress-note" id="prog_app_src_main_java_com_android_grafika_VideoEncoderCore_java"></div>
+      <a class="detail-link" href="repo_google_grafika__app_src_main_java_com_android_grafika_VideoEncoderCore.java.html">
+        📋 View 0 deterministic / 0 MC targets →
       </a>
     </div>
   </div>
   <div class="src-block" id="src_47">
     <button class="src-header" onclick="toggleBlock(47)">
-      <span class="src-name">src/com/android/grafika/Sprite2d.java</span>
+      <span class="src-name">app/src/main/java/com/android/grafika/WorkDialog.java</span>
       <span class="src-meta">
-        <span class="badge">Score 86.9214</span>
-        <span class="badge">Affected 61</span>
-        <span class="badge">Communities 38</span>
-        <span class="badge">Waves 4</span>
+        <span class="badge">Det 0</span>
+        <span class="badge">MC 0</span>
+        <span class="badge">Code Smell 0.058</span>
+        <span class="badge">C14, C25</span>
       </span>
       <span class="chevron" id="chev_47">▶</span>
     </button>
     <div class="src-body" id="body_47" style="display:none">
       <div class="analysis-row">
-        <label>Analysis of <strong>src/com/android/grafika/Sprite2d.java</strong></label>
+        <label>Analysis of <strong>app/src/main/java/com/android/grafika/WorkDialog.java</strong></label>
         <textarea class="analysis-field" id="analysis_47" rows="3"
           placeholder="Enter your analysis for this class…"
-          oninput="saveAnalysis('src/com/android/grafika/Sprite2d.java', this.value)"></textarea>
+          oninput="saveAnalysis('app/src/main/java/com/android/grafika/WorkDialog.java', this.value)"></textarea>
       </div>
-      <div class="progress-note" id="prog_src_com_android_grafika_Sprite2d_java"></div>
-      <a class="detail-link" href="repo_google_grafika__src_com_android_grafika_Sprite2d_java.html">
-        📋 View 61 affected classes →
+      <div class="progress-note" id="prog_app_src_main_java_com_android_grafika_WorkDialog_java"></div>
+      <a class="detail-link" href="repo_google_grafika__app_src_main_java_com_android_grafika_WorkDialog.java.html">
+        📋 View 0 deterministic / 0 MC targets →
       </a>
     </div>
   </div>
   <div class="src-block" id="src_48">
     <button class="src-header" onclick="toggleBlock(48)">
-      <span class="src-name">src/com/android/grafika/Texture2dProgram.java</span>
+      <span class="src-name">app/src/main/java/com/android/grafika/gles/GlUtil.java</span>
       <span class="src-meta">
-        <span class="badge">Score 86.9214</span>
-        <span class="badge">Affected 61</span>
-        <span class="badge">Communities 38</span>
-        <span class="badge">Waves 4</span>
+        <span class="badge">Det 0</span>
+        <span class="badge">MC 0</span>
+        <span class="badge">Code Smell 0.231</span>
+        <span class="badge">C21, C30, C33, C36</span>
       </span>
       <span class="chevron" id="chev_48">▶</span>
     </button>
     <div class="src-body" id="body_48" style="display:none">
       <div class="analysis-row">
-        <label>Analysis of <strong>src/com/android/grafika/Texture2dProgram.java</strong></label>
+        <label>Analysis of <strong>app/src/main/java/com/android/grafika/gles/GlUtil.java</strong></label>
         <textarea class="analysis-field" id="analysis_48" rows="3"
           placeholder="Enter your analysis for this class…"
-          oninput="saveAnalysis('src/com/android/grafika/Texture2dProgram.java', this.value)"></textarea>
+          oninput="saveAnalysis('app/src/main/java/com/android/grafika/gles/GlUtil.java', this.value)"></textarea>
       </div>
-      <div class="progress-note" id="prog_src_com_android_grafika_Texture2dProgram_java"></div>
-      <a class="detail-link" href="repo_google_grafika__src_com_android_grafika_Texture2dProgram_java.html">
-        📋 View 61 affected classes →
+      <div class="progress-note" id="prog_app_src_main_java_com_android_grafika_gles_GlUtil_java"></div>
+      <a class="detail-link" href="repo_google_grafika__app_src_main_java_com_android_grafika_gles_GlUtil.java.html">
+        📋 View 0 deterministic / 0 MC targets →
       </a>
     </div>
   </div>
-  <div class="src-block" id="src_49">
-    <button class="src-header" onclick="toggleBlock(49)">
-      <span class="src-name">com.android.grafika.CameraCaptureActivity</span>
-      <span class="src-meta">
-        <span class="badge">Score 86.2632</span>
-        <span class="badge">Affected 61</span>
-        <span class="badge">Communities 38</span>
-        <span class="badge">Waves 3</span>
-      </span>
-      <span class="chevron" id="chev_49">▶</span>
-    </button>
-    <div class="src-body" id="body_49" style="display:none">
-      <div class="analysis-row">
-        <label>Analysis of <strong>com.android.grafika.CameraCaptureActivity</strong></label>
-        <textarea class="analysis-field" id="analysis_49" rows="3"
-          placeholder="Enter your analysis for this class…"
-          oninput="saveAnalysis('com.android.grafika.CameraCaptureActivity', this.value)"></textarea>
-      </div>
-      <div class="progress-note" id="prog_com_android_grafika_CameraCaptureActivity"></div>
-      <a class="detail-link" href="repo_google_grafika__com_android_grafika_CameraCaptureActivity.html">
-        📋 View 61 affected classes →
-      </a>
-    </div>
-  </div>
-  <div class="src-block" id="src_50">
-    <button class="src-header" onclick="toggleBlock(50)">
-      <span class="src-name">com.android.grafika.ScheduledSwapActivity</span>
-      <span class="src-meta">
-        <span class="badge">Score 85.2155</span>
-        <span class="badge">Affected 61</span>
-        <span class="badge">Communities 38</span>
-        <span class="badge">Waves 4</span>
-      </span>
-      <span class="chevron" id="chev_50">▶</span>
-    </button>
-    <div class="src-body" id="body_50" style="display:none">
-      <div class="analysis-row">
-        <label>Analysis of <strong>com.android.grafika.ScheduledSwapActivity</strong></label>
-        <textarea class="analysis-field" id="analysis_50" rows="3"
-          placeholder="Enter your analysis for this class…"
-          oninput="saveAnalysis('com.android.grafika.ScheduledSwapActivity', this.value)"></textarea>
-      </div>
-      <div class="progress-note" id="prog_com_android_grafika_ScheduledSwapActivity"></div>
-      <a class="detail-link" href="repo_google_grafika__com_android_grafika_ScheduledSwapActivity.html">
-        📋 View 61 affected classes →
-      </a>
-    </div>
-  </div>
-  <div class="src-block" id="src_51">
-    <button class="src-header" onclick="toggleBlock(51)">
-      <span class="src-name">com.android.grafika.gles.OffscreenSurface</span>
-      <span class="src-meta">
-        <span class="badge">Score 84.2331</span>
-        <span class="badge">Affected 61</span>
-        <span class="badge">Communities 38</span>
-        <span class="badge">Waves 4</span>
-      </span>
-      <span class="chevron" id="chev_51">▶</span>
-    </button>
-    <div class="src-body" id="body_51" style="display:none">
-      <div class="analysis-row">
-        <label>Analysis of <strong>com.android.grafika.gles.OffscreenSurface</strong></label>
-        <textarea class="analysis-field" id="analysis_51" rows="3"
-          placeholder="Enter your analysis for this class…"
-          oninput="saveAnalysis('com.android.grafika.gles.OffscreenSurface', this.value)"></textarea>
-      </div>
-      <div class="progress-note" id="prog_com_android_grafika_gles_OffscreenSurface"></div>
-      <a class="detail-link" href="repo_google_grafika__com_android_grafika_gles_OffscreenSurface.html">
-        📋 View 61 affected classes →
-      </a>
-    </div>
-  </div>
-  <div class="src-block" id="src_52">
-    <button class="src-header" onclick="toggleBlock(52)">
-      <span class="src-name">com.android.grafika.ContinuousCaptureActivity</span>
-      <span class="src-meta">
-        <span class="badge">Score 83.3321</span>
-        <span class="badge">Affected 61</span>
-        <span class="badge">Communities 38</span>
-        <span class="badge">Waves 3</span>
-      </span>
-      <span class="chevron" id="chev_52">▶</span>
-    </button>
-    <div class="src-body" id="body_52" style="display:none">
-      <div class="analysis-row">
-        <label>Analysis of <strong>com.android.grafika.ContinuousCaptureActivity</strong></label>
-        <textarea class="analysis-field" id="analysis_52" rows="3"
-          placeholder="Enter your analysis for this class…"
-          oninput="saveAnalysis('com.android.grafika.ContinuousCaptureActivity', this.value)"></textarea>
-      </div>
-      <div class="progress-note" id="prog_com_android_grafika_ContinuousCaptureActivity"></div>
-      <a class="detail-link" href="repo_google_grafika__com_android_grafika_ContinuousCaptureActivity.html">
-        📋 View 61 affected classes →
-      </a>
-    </div>
-  </div>
-  <div class="src-block" id="src_53">
-    <button class="src-header" onclick="toggleBlock(53)">
-      <span class="src-name">com.android.grafika.PermissionHelper</span>
-      <span class="src-meta">
-        <span class="badge">Score 82.1223</span>
-        <span class="badge">Affected 61</span>
-        <span class="badge">Communities 38</span>
-        <span class="badge">Waves 4</span>
-      </span>
-      <span class="chevron" id="chev_53">▶</span>
-    </button>
-    <div class="src-body" id="body_53" style="display:none">
-      <div class="analysis-row">
-        <label>Analysis of <strong>com.android.grafika.PermissionHelper</strong></label>
-        <textarea class="analysis-field" id="analysis_53" rows="3"
-          placeholder="Enter your analysis for this class…"
-          oninput="saveAnalysis('com.android.grafika.PermissionHelper', this.value)"></textarea>
-      </div>
-      <div class="progress-note" id="prog_com_android_grafika_PermissionHelper"></div>
-      <a class="detail-link" href="repo_google_grafika__com_android_grafika_PermissionHelper.html">
-        📋 View 61 affected classes →
-      </a>
-    </div>
-  </div>
-  <div class="src-block" id="src_54">
-    <button class="src-header" onclick="toggleBlock(54)">
-      <span class="src-name">com.android.grafika.DoubleDecodeActivity</span>
-      <span class="src-meta">
-        <span class="badge">Score 79.0246</span>
-        <span class="badge">Affected 61</span>
-        <span class="badge">Communities 38</span>
-        <span class="badge">Waves 4</span>
-      </span>
-      <span class="chevron" id="chev_54">▶</span>
-    </button>
-    <div class="src-body" id="body_54" style="display:none">
-      <div class="analysis-row">
-        <label>Analysis of <strong>com.android.grafika.DoubleDecodeActivity</strong></label>
-        <textarea class="analysis-field" id="analysis_54" rows="3"
-          placeholder="Enter your analysis for this class…"
-          oninput="saveAnalysis('com.android.grafika.DoubleDecodeActivity', this.value)"></textarea>
-      </div>
-      <div class="progress-note" id="prog_com_android_grafika_DoubleDecodeActivity"></div>
-      <a class="detail-link" href="repo_google_grafika__com_android_grafika_DoubleDecodeActivity.html">
-        📋 View 61 affected classes →
-      </a>
-    </div>
-  </div>
-  <div class="src-block" id="src_55">
-    <button class="src-header" onclick="toggleBlock(55)">
-      <span class="src-name">com.android.grafika.WorkDialog</span>
-      <span class="src-meta">
-        <span class="badge">Score 72.4200</span>
-        <span class="badge">Affected 61</span>
-        <span class="badge">Communities 38</span>
-        <span class="badge">Waves 5</span>
-      </span>
-      <span class="chevron" id="chev_55">▶</span>
-    </button>
-    <div class="src-body" id="body_55" style="display:none">
-      <div class="analysis-row">
-        <label>Analysis of <strong>com.android.grafika.WorkDialog</strong></label>
-        <textarea class="analysis-field" id="analysis_55" rows="3"
-          placeholder="Enter your analysis for this class…"
-          oninput="saveAnalysis('com.android.grafika.WorkDialog', this.value)"></textarea>
-      </div>
-      <div class="progress-note" id="prog_com_android_grafika_WorkDialog"></div>
-      <a class="detail-link" href="repo_google_grafika__com_android_grafika_WorkDialog.html">
-        📋 View 61 affected classes →
-      </a>
-    </div>
-  </div>
-  <div class="src-block" id="src_56">
-    <button class="src-header" onclick="toggleBlock(56)">
-      <span class="src-name">com.android.grafika.CodecOpenActivity</span>
-      <span class="src-meta">
-        <span class="badge">Score 72.0092</span>
-        <span class="badge">Affected 61</span>
-        <span class="badge">Communities 38</span>
-        <span class="badge">Waves 4</span>
-      </span>
-      <span class="chevron" id="chev_56">▶</span>
-    </button>
-    <div class="src-body" id="body_56" style="display:none">
-      <div class="analysis-row">
-        <label>Analysis of <strong>com.android.grafika.CodecOpenActivity</strong></label>
-        <textarea class="analysis-field" id="analysis_56" rows="3"
-          placeholder="Enter your analysis for this class…"
-          oninput="saveAnalysis('com.android.grafika.CodecOpenActivity', this.value)"></textarea>
-      </div>
-      <div class="progress-note" id="prog_com_android_grafika_CodecOpenActivity"></div>
-      <a class="detail-link" href="repo_google_grafika__com_android_grafika_CodecOpenActivity.html">
-        📋 View 61 affected classes →
-      </a>
-    </div>
-  </div>
-  <div class="src-block" id="src_57">
-    <button class="src-header" onclick="toggleBlock(57)">
-      <span class="src-name">src/com/android/grafika/EglSurfaceBase.java</span>
-      <span class="src-meta">
-        <span class="badge">Score 71.4996</span>
-        <span class="badge">Affected 61</span>
-        <span class="badge">Communities 38</span>
-        <span class="badge">Waves 5</span>
-      </span>
-      <span class="chevron" id="chev_57">▶</span>
-    </button>
-    <div class="src-body" id="body_57" style="display:none">
-      <div class="analysis-row">
-        <label>Analysis of <strong>src/com/android/grafika/EglSurfaceBase.java</strong></label>
-        <textarea class="analysis-field" id="analysis_57" rows="3"
-          placeholder="Enter your analysis for this class…"
-          oninput="saveAnalysis('src/com/android/grafika/EglSurfaceBase.java', this.value)"></textarea>
-      </div>
-      <div class="progress-note" id="prog_src_com_android_grafika_EglSurfaceBase_java"></div>
-      <a class="detail-link" href="repo_google_grafika__src_com_android_grafika_EglSurfaceBase_java.html">
-        📋 View 61 affected classes →
-      </a>
-    </div>
-  </div>
-  <div class="src-block" id="src_58">
-    <button class="src-header" onclick="toggleBlock(58)">
-      <span class="src-name">com.android.grafika.TextureUploadActivity</span>
-      <span class="src-meta">
-        <span class="badge">Score 69.1153</span>
-        <span class="badge">Affected 61</span>
-        <span class="badge">Communities 38</span>
-        <span class="badge">Waves 4</span>
-      </span>
-      <span class="chevron" id="chev_58">▶</span>
-    </button>
-    <div class="src-body" id="body_58" style="display:none">
-      <div class="analysis-row">
-        <label>Analysis of <strong>com.android.grafika.TextureUploadActivity</strong></label>
-        <textarea class="analysis-field" id="analysis_58" rows="3"
-          placeholder="Enter your analysis for this class…"
-          oninput="saveAnalysis('com.android.grafika.TextureUploadActivity', this.value)"></textarea>
-      </div>
-      <div class="progress-note" id="prog_com_android_grafika_TextureUploadActivity"></div>
-      <a class="detail-link" href="repo_google_grafika__com_android_grafika_TextureUploadActivity.html">
-        📋 View 61 affected classes →
-      </a>
-    </div>
-  </div>
-  <div class="src-block" id="src_59">
-    <button class="src-header" onclick="toggleBlock(59)">
-      <span class="src-name">com.android.grafika.ReadPixelsActivity</span>
-      <span class="src-meta">
-        <span class="badge">Score 67.3584</span>
-        <span class="badge">Affected 61</span>
-        <span class="badge">Communities 38</span>
-        <span class="badge">Waves 4</span>
-      </span>
-      <span class="chevron" id="chev_59">▶</span>
-    </button>
-    <div class="src-body" id="body_59" style="display:none">
-      <div class="analysis-row">
-        <label>Analysis of <strong>com.android.grafika.ReadPixelsActivity</strong></label>
-        <textarea class="analysis-field" id="analysis_59" rows="3"
-          placeholder="Enter your analysis for this class…"
-          oninput="saveAnalysis('com.android.grafika.ReadPixelsActivity', this.value)"></textarea>
-      </div>
-      <div class="progress-note" id="prog_com_android_grafika_ReadPixelsActivity"></div>
-      <a class="detail-link" href="repo_google_grafika__com_android_grafika_ReadPixelsActivity.html">
-        📋 View 61 affected classes →
-      </a>
-    </div>
-  </div>
-  <div class="src-block" id="src_60">
-    <button class="src-header" onclick="toggleBlock(60)">
-      <span class="src-name">com.android.grafika.TextureViewCanvasActivity</span>
-      <span class="src-meta">
-        <span class="badge">Score 57.5294</span>
-        <span class="badge">Affected 61</span>
-        <span class="badge">Communities 38</span>
-        <span class="badge">Waves 5</span>
-      </span>
-      <span class="chevron" id="chev_60">▶</span>
-    </button>
-    <div class="src-body" id="body_60" style="display:none">
-      <div class="analysis-row">
-        <label>Analysis of <strong>com.android.grafika.TextureViewCanvasActivity</strong></label>
-        <textarea class="analysis-field" id="analysis_60" rows="3"
-          placeholder="Enter your analysis for this class…"
-          oninput="saveAnalysis('com.android.grafika.TextureViewCanvasActivity', this.value)"></textarea>
-      </div>
-      <div class="progress-note" id="prog_com_android_grafika_TextureViewCanvasActivity"></div>
-      <a class="detail-link" href="repo_google_grafika__com_android_grafika_TextureViewCanvasActivity.html">
-        📋 View 61 affected classes →
-      </a>
-    </div>
-  </div>
-  <div class="src-block" id="src_61">
-    <button class="src-header" onclick="toggleBlock(61)">
-      <span class="src-name">com.android.grafika.ChorTestActivity$ChorRenderThread</span>
-      <span class="src-meta">
-        <span class="badge">Score 1.0000</span>
-        <span class="badge">Affected 1</span>
-        <span class="badge">Communities 1</span>
-        <span class="badge">Waves 0</span>
-      </span>
-      <span class="chevron" id="chev_61">▶</span>
-    </button>
-    <div class="src-body" id="body_61" style="display:none">
-      <div class="analysis-row">
-        <label>Analysis of <strong>com.android.grafika.ChorTestActivity$ChorRenderThread</strong></label>
-        <textarea class="analysis-field" id="analysis_61" rows="3"
-          placeholder="Enter your analysis for this class…"
-          oninput="saveAnalysis('com.android.grafika.ChorTestActivity$ChorRenderThread', this.value)"></textarea>
-      </div>
-      <div class="progress-note" id="prog_com_android_grafika_ChorTestActivity_ChorRenderThread"></div>
-      <a class="detail-link" href="repo_google_grafika__com_android_grafika_ChorTestActivity_ChorRenderThread.html">
-        📋 View 1 affected classes →
-      </a>
-    </div>
-  </div>
-  <div class="src-block" id="src_62">
-    <button class="src-header" onclick="toggleBlock(62)">
-      <span class="src-name">com.android.grafika.ColorBarActivity</span>
-      <span class="src-meta">
-        <span class="badge">Score 1.0000</span>
-        <span class="badge">Affected 1</span>
-        <span class="badge">Communities 0</span>
-        <span class="badge">Waves 0</span>
-      </span>
-      <span class="chevron" id="chev_62">▶</span>
-    </button>
-    <div class="src-body" id="body_62" style="display:none">
-      <div class="analysis-row">
-        <label>Analysis of <strong>com.android.grafika.ColorBarActivity</strong></label>
-        <textarea class="analysis-field" id="analysis_62" rows="3"
-          placeholder="Enter your analysis for this class…"
-          oninput="saveAnalysis('com.android.grafika.ColorBarActivity', this.value)"></textarea>
-      </div>
-      <div class="progress-note" id="prog_com_android_grafika_ColorBarActivity"></div>
-      <a class="detail-link" href="repo_google_grafika__com_android_grafika_ColorBarActivity.html">
-        📋 View 1 affected classes →
-      </a>
-    </div>
-  </div>
-
-  <!-- General analysis -->
-  <div class="general-section">
-    <h2>📝 General Analysis</h2>
-    <textarea id="generalAnalysis"
-      placeholder="Enter your overall analysis and observations for this repository…"
-      oninput="localStorage.setItem('general_' + REPO, this.value)"></textarea>
-    <div class="submit-row">
-      <button class="btn" onclick="exportCSV()">📥 Export CSV</button>
-      <button class="btn btn-primary" onclick="submitAll()">✅ Submit All</button>
-      <span class="submit-status-msg" id="submitStatus" style="display:none"></span>
-    </div>
-  </div>
-
-</div>
-
-<script>
-const REPO       = 'google_grafika';
-const COMMUNITIES = [{"id": 1, "total": 71, "affected": 71, "avg_score": 2.237}, {"id": 2, "total": 10, "affected": 10, "avg_score": 1.511}, {"id": 3, "total": 8, "affected": 8, "avg_score": 1.4157}, {"id": 4, "total": 8, "affected": 8, "avg_score": 1.6482}, {"id": 5, "total": 6, "affected": 6, "avg_score": 1.248}, {"id": 6, "total": 6, "affected": 6, "avg_score": 2.0452}, {"id": 7, "total": 5, "affected": 5, "avg_score": 1.3036}, {"id": 8, "total": 4, "affected": 4, "avg_score": 2.3108}, {"id": 9, "total": 4, "affected": 4, "avg_score": 0.8914}, {"id": 10, "total": 3, "affected": 3, "avg_score": 1.6439}, {"id": 11, "total": 3, "affected": 3, "avg_score": 2.2417}, {"id": 12, "total": 3, "affected": 3, "avg_score": 2.2417}, {"id": 13, "total": 3, "affected": 3, "avg_score": 1.0235}, {"id": 14, "total": 3, "affected": 3, "avg_score": 2.4199}, {"id": 15, "total": 2, "affected": 2, "avg_score": 1.4366}, {"id": 16, "total": 2, "affected": 2, "avg_score": 1.3916}, {"id": 17, "total": 2, "affected": 2, "avg_score": 2.1997}, {"id": 18, "total": 2, "affected": 2, "avg_score": 2.8542}, {"id": 19, "total": 2, "affected": 2, "avg_score": 1.1272}, {"id": 20, "total": 2, "affected": 2, "avg_score": 1.3136}, {"id": 21, "total": 2, "affected": 2, "avg_score": 1.222}, {"id": 22, "total": 2, "affected": 2, "avg_score": 1.1623}, {"id": 23, "total": 2, "affected": 2, "avg_score": 1.2358}, {"id": 24, "total": 2, "affected": 2, "avg_score": 1.539}, {"id": 25, "total": 2, "affected": 2, "avg_score": 3.1173}, {"id": 26, "total": 2, "affected": 2, "avg_score": 1.5452}, {"id": 27, "total": 2, "affected": 2, "avg_score": 1.2759}, {"id": 28, "total": 2, "affected": 2, "avg_score": 1.0523}, {"id": 29, "total": 2, "affected": 2, "avg_score": 1.5177}, {"id": 30, "total": 2, "affected": 2, "avg_score": 1.2112}, {"id": 31, "total": 2, "affected": 2, "avg_score": 3.7881}, {"id": 32, "total": 2, "affected": 2, "avg_score": 3.7884}, {"id": 33, "total": 2, "affected": 2, "avg_score": 1.6996}, {"id": 34, "total": 2, "affected": 2, "avg_score": 0.8161}, {"id": 35, "total": 2, "affected": 2, "avg_score": 0.8161}, {"id": 36, "total": 2, "affected": 2, "avg_score": 1.3229}, {"id": 37, "total": 2, "affected": 2, "avg_score": 2.6806}, {"id": 38, "total": 2, "affected": 2, "avg_score": 3.7881}, {"id": 39, "total": 2, "affected": 2, "avg_score": 1.0}];
-
-document.addEventListener("DOMContentLoaded", () => {
+<div class="general-section"><h2>📝 General Analysis</h2><textarea id="generalAnalysis" placeholder="Enter your overall analysis and observations for this repository…" oninput="localStorage.setItem('general_' + REPO, this.value)"></textarea><div class="submit-row"><button class="btn" onclick="exportCSV()">📥 Export CSV</button><button class="btn btn-primary" onclick="submitAll()">✅ Submit All</button><span class="submit-status-msg" id="submitStatus" style="display:none"></span></div></div></div><script>const REPO = 'google_grafika';
+const COMMUNITIES = [{"id": 0, "total": 4, "touched": 4}, {"id": 1, "total": 35, "touched": 35}, {"id": 2, "total": 2, "touched": 2}, {"id": 3, "total": 3, "touched": 3}, {"id": 4, "total": 8, "touched": 8}, {"id": 5, "total": 2, "touched": 2}, {"id": 6, "total": 12, "touched": 12}, {"id": 7, "total": 2, "touched": 2}, {"id": 8, "total": 5, "touched": 5}, {"id": 9, "total": 4, "touched": 4}, {"id": 10, "total": 3, "touched": 3}, {"id": 11, "total": 3, "touched": 3}, {"id": 12, "total": 2, "touched": 2}, {"id": 13, "total": 2, "touched": 2}];
+document.addEventListener('DOMContentLoaded', () => {
   const email = localStorage.getItem('email_' + REPO) || '';
   if (email) document.getElementById('userEmail').value = email;
   const gen = localStorage.getItem('general_' + REPO) || '';
   if (gen) document.getElementById('generalAnalysis').value = gen;
   document.querySelectorAll('.analysis-field').forEach(ta => {
     const srcName = ta.closest('.src-block').querySelector('.src-name').textContent;
-    const saved   = localStorage.getItem('cls_analysis_' + REPO + '__' + srcName);
+    const saved = localStorage.getItem('cls_analysis_' + REPO + '__' + srcName);
     if (saved) ta.value = saved;
   });
   document.querySelectorAll('.src-block').forEach(block => {
     const srcName = block.querySelector('.src-name').textContent;
     const safeKey = srcName.replace(/[^a-zA-Z0-9]/g, '_');
-    const prefix  = 'ocpa_vote_' + REPO + '__' + safeKey + '__';
+    const prefix = 'ocpa_vote_' + REPO + '__' + safeKey + '__';
     let count = 0;
     for (let i = 0; i < localStorage.length; i++) {
       const k = localStorage.key(i);
@@ -1680,26 +1278,22 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 });
-
 function saveEmail(v) {
   localStorage.setItem('email_' + REPO, v);
   document.getElementById('userEmail').classList.remove('invalid');
 }
-
 function saveAnalysis(srcKey, value) {
   localStorage.setItem('cls_analysis_' + REPO + '__' + srcKey, value);
 }
-
 function toggleBlock(idx) {
   const body = document.getElementById('body_' + idx);
   const chev = document.getElementById('chev_' + idx);
-  const hdr  = body.previousElementSibling;
-  const open = body.style.display === "block";
-  body.style.display = open ? "none" : "block";
-  chev.classList.toggle("open", !open);
-  hdr.classList.toggle("open", !open);
+  const hdr = body.previousElementSibling;
+  const open = body.style.display === 'block';
+  body.style.display = open ? 'none' : 'block';
+  chev.classList.toggle('open', !open);
+  hdr.classList.toggle('open', !open);
 }
-
 function toggleCommunities() {
   const panel = document.getElementById('commPanel');
   panel.classList.toggle('open');
@@ -1707,24 +1301,19 @@ function toggleCommunities() {
     renderCommunities();
   }
 }
-
 function renderCommunities() {
-  const map = {};
-  COMMUNITIES.forEach(c => {
-    if (!map[c.id]) map[c.id] = { id: c.id, affected: 0, total: c.total, scores: [] };
-    map[c.id].affected = Math.max(map[c.id].affected, c.affected);
-    map[c.id].scores.push(c.avg_score);
-  });
   const grid = document.getElementById('commGrid');
-  Object.values(map).sort((a,b) => a.id - b.id).forEach(c => {
-    const avg = c.scores.reduce((s,x) => s+x, 0) / c.scores.length;
-    const chip = document.createElement("div");
-    chip.className = "comm-chip";
-    chip.innerHTML = '<span class="cid">C' + c.id + '</span> <span class="cdata">' + c.affected + '/' + c.total + ' classes &nbsp;·&nbsp; avg ' + avg.toFixed(3) + '</span>';
+  if (!COMMUNITIES.length) {
+    grid.innerHTML = '<span style="color:var(--text2)">No community data available.</span>';
+    return;
+  }
+  COMMUNITIES.forEach(c => {
+    const chip = document.createElement('div');
+    chip.className = 'comm-chip';
+    chip.innerHTML = '<span class="cid">C' + c.id + '</span> <span class="cdata">' + c.touched + '/' + c.total + ' nodes touched</span>';
     grid.appendChild(chip);
   });
 }
-
 function submitAll() {
   const email = document.getElementById('userEmail').value.trim();
   if (!email || !email.includes('@')) {
@@ -1736,42 +1325,39 @@ function submitAll() {
   const general = document.getElementById('generalAnalysis').value;
   const ts = new Date().toISOString();
   localStorage.setItem('ocpa_vote_' + REPO + '__general', JSON.stringify({
-    Email: email, Repository: REPO, Type: "general",
+    Email: email, Repository: REPO, Type: 'general',
     Comment: general, Timestamp: ts
   }));
   document.querySelectorAll('.src-block').forEach((block, idx) => {
-    const srcName  = block.querySelector('.src-name').textContent;
+    const srcName = block.querySelector('.src-name').textContent;
     const analysis = document.getElementById('analysis_' + idx)?.value || '';
     if (analysis.trim()) {
       localStorage.setItem('ocpa_vote_' + REPO + '__cls__' + idx, JSON.stringify({
         Email: email, Repository: REPO, Source_Class: srcName,
-        Type: "class", Comment: analysis, Timestamp: ts
+        Type: 'class', Comment: analysis, Timestamp: ts
       }));
     }
   });
   const status = document.getElementById('submitStatus');
   status.textContent = '✓ Saved locally!';
-  status.style.display = "inline";
-  setTimeout(() => { status.style.display = "none"; }, 3000);
+  status.style.display = 'inline';
+  setTimeout(() => { status.style.display = 'none'; }, 3000);
 }
-
 function exportCSV() {
   const email = document.getElementById('userEmail').value.trim();
-  const rows  = [['Repository','Email','Source_Class','Analysis','Timestamp']];
+  const rows = [['Repository','Email','Source_Class','Analysis','Timestamp']];
   document.querySelectorAll('.src-block').forEach((block, idx) => {
-    const srcName  = block.querySelector('.src-name').textContent;
+    const srcName = block.querySelector('.src-name').textContent;
     const analysis = document.getElementById('analysis_' + idx)?.value || '';
     rows.push([REPO, email, srcName, analysis, new Date().toISOString()]);
   });
   const gen = document.getElementById('generalAnalysis').value;
   rows.push([REPO, email, 'GENERAL', gen, new Date().toISOString()]);
-  const csv  = rows.map(r => r.map(c => '"' + String(c).replace(/"/g, '""') + '"').join(',')).join('\n');
-  const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
-  const a    = document.createElement("a");
-  a.href     = URL.createObjectURL(blob);
+  const csv = rows.map(r => r.map(c => '"' + String(c).replace(/"/g, '""') + '"').join(',')).join('\n');
+  const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
   a.download = 'analysis_' + REPO + '.csv';
   a.click();
 }
-</script>
-</body>
-</html>
+</script></body></html>
