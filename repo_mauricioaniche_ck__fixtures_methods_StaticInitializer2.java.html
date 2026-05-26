@@ -1,4 +1,10 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>HyCPA — fixtures/methods/StaticInitializer2.java</title><style>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HyCPA — fixtures/methods/StaticInitializer2.java</title>
+  <style>
 :root {
   --bg: #0d1117; --surface: #161b22; --surface2: #21262d;
   --border: #30363d; --text: #e6edf3; --text2: #8b949e;
@@ -131,9 +137,47 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, Bl
 /* ── Tooltip fix: allow tooltips inside cards to escape the card border ── */
 .card { overflow: visible !important; }
 .card-header, .metrics-mini, .metric-pill { overflow: visible; }
-</style></head><body><div class="page-header"><a class="back-btn" href="repo_mauricioaniche_ck.html">← Back</a><span class="src-label">Class:</span><span class="src-name-h">fixtures/methods/StaticInitializer2.java</span><span class="src-label" style="margin-left:12px">Code Smell Score: 0.058 · Communities: C7, C8, C9</span><div class="header-email-wrap" style="margin-left:auto"><label>Email (required to submit)</label><input type="email" id="userEmail" class="header-email-input" placeholder="your@email.com" oninput="saveEmail(this.value)" /></div><a class="export-btn" href="help.html">❓ Help</a><a class="export-btn" href="repo_mauricioaniche_ck.html">📁 Repo</a></div><div class="container"><div class="tabs"><button class="tab-btn active" data-tab="det" onclick="switchTab('det')">Deterministic (0)</button><button class="tab-btn" data-tab="mc" onclick="switchTab('mc')">Monte Carlo (1)</button></div><div class="filter-bar"><label>Min probability<input type="number" id="fMinProb" min="0" max="1" step="0.05" value="0" oninput="applyFilters()"></label><label>Max distance<input type="number" id="fMaxHop" min="1" step="1" placeholder="any" oninput="applyFilters()"></label><label style="flex:1">Search target label<input type="text" id="fSearch" placeholder="substring…" oninput="applyFilters()" style="width:100%"></label></div><div class="tab-pane active" data-tab="det"><p class="none-text">No deterministic targets above θ.</p></div><div class="tab-pane" data-tab="mc"><div class="card"
+</style>
+</head>
+<body>
+<div class="page-header">
+  <a class="back-btn" href="repo_mauricioaniche_ck.html">← Back</a>
+  <span class="src-label">Class:</span>
+  <span class="src-name-h">fixtures/methods/StaticInitializer2.java</span>
+  <span class="src-label" style="margin-left:12px">Code Smell Score: 0.167 · Communities: C6</span>
+  <div class="header-email-wrap" style="margin-left:auto">
+    <label>Email (required to submit)</label>
+    <input type="email" id="userEmail" class="header-email-input"
+           placeholder="your@email.com" oninput="saveEmail(this.value)" />
+  </div>
+  <a class="export-btn" href="help.html">❓ Help</a>
+  <a class="export-btn" href="repo_mauricioaniche_ck.html">📁 Repo</a>
+</div>
+
+<div class="container">
+  <div class="tabs">
+    <button class="tab-btn active" data-tab="det" onclick="switchTab('det')">Deterministic (0)</button>
+    <button class="tab-btn" data-tab="prob" onclick="switchTab('prob')">Probabilistic (3)</button>
+  </div>
+  <div class="filter-bar">
+    <label>Min probability
+      <input type="number" id="fMinProb" min="0" max="1" step="0.05" value="0" oninput="applyFilters()">
+    </label>
+    <label>Max distance
+      <input type="number" id="fMaxHop" min="1" step="1" placeholder="any" oninput="applyFilters()">
+    </label>
+    <label style="flex:1">Search target label
+      <input type="text" id="fSearch" placeholder="substring…" oninput="applyFilters()" style="width:100%">
+    </label>
+  </div>
+
+  <div class="tab-pane active" data-tab="det">
+    <p class="none-text">No deterministic targets above θ.</p>
+  </div>
+
+  <div class="tab-pane" data-tab="prob"><div class="card"
      data-source="fixtures/methods/StaticInitializer2.java" data-target="src/main/java/com/github/mauricioaniche/ck/CKVisitor.java"
-     data-prob="0.071" data-hop="1.0704225352112675" data-rank="1">
+     data-prob="0.127" data-hop="1.094488188976378" data-rank="1">
   <div class="card-header" onclick="this.parentElement.classList.toggle('open')">
     <div class="source-target">
       <span class="class-badge source" title="fixtures/methods/StaticInitializer2.java">StaticInitializer2</span>
@@ -141,59 +185,243 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, Bl
       <span class="class-badge target" title="src/main/java/com/github/mauricioaniche/ck/CKVisitor.java">CKVisitor</span>
     </div>
     <div class="metrics-mini">
-      <div class="metric-pill rank-m" data-tooltip="Rank in the MC list."><span class="val">#1</span><span class="lbl">Rank</span></div>
-      <div class="metric-pill prob" style="color:var(--green)" data-tooltip="HyCPA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility."><span class="val" style="color:var(--green)">0.0710</span><span class="lbl">Prob</span></div>
-      <div class="metric-pill hop" data-tooltip="Number of edges (distance) in the propagation path from the source class to this target."><span class="val">1.07</span><span class="lbl">Avg Distance</span></div>
-      <div class="metric-pill health" data-tooltip="Target health = 1 − code smell score (computed from CK metrics)."><span class="val">0.63</span><span class="lbl">Health</span></div>
+      <div class="metric-pill rank-m" data-tooltip="Rank in the PROB list.">
+        <span class="val">#1</span><span class="lbl">Rank</span>
+      </div>
+      <div class="metric-pill prob" style="color:var(--green)"
+           data-tooltip="HyCPA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
+        <span class="val" style="color:var(--green)">0.1270</span>
+        <span class="lbl">Prob</span>
+      </div>
+      <div class="metric-pill hop"
+           data-tooltip="Number of edges (distance) in the propagation path from the source class to this target.">
+        <span class="val">1.09</span><span class="lbl">Avg Distance</span>
+      </div>
+      <div class="metric-pill health"
+           data-tooltip="Target health.">
+        <span class="val">0.63</span><span class="lbl">Health</span>
+      </div>
     </div>
     <span class="toggle-icon">▼</span>
   </div>
   <div class="card-body">
-    <h4 style="color:var(--text2);font-size:12px;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:8px;">Propagation Path</h4>
-    <div class="path-diagram">
+    <h4 style="color:var(--text2);font-size:12px;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:8px;">Propagation Path</h4><div class="path-diagram">
       <div class="path-node first">
         <div class="node-circle" title="fixtures/methods/StaticInitializer2.java">ST</div>
         <div class="node-label" title="fixtures/methods/StaticInitializer2.java">StaticInitializer2</div>
-        <div class="node-health" style="color:var(--green)" data-tooltip="Structural health (1 − code smell score from CK metrics). 1.00 (green) = healthy; 0.00 (red) = many CK metrics in the bad zone.">⚕ 0.94</div>
+        <div class="node-health" style="color:var(--green)"
+             data-tooltip="Structural health (1 − code smell score from CK metrics). 1.00 (green) = healthy; 0.00 (red) = many CK metrics in the bad zone.">⚕ 0.83</div>
       </div>
       <div class="path-edge">
         <div class="edge-arrow"><span class="line"></span><span class="tip">&#9658;</span></div>
         <div class="edge-tags">
-          <span class="edge-tag cochange" data-tooltip="Co-change weight: number of times these two classes were committed together in the project history.">co-change: 1</span>
-          <span class="edge-tag none" data-tooltip="No structural coupling detected; arc inferred solely from co-change history.">no structural coupling</span>
+          <span class="edge-tag cochange"
+                data-tooltip="Co-change weight: number of times these two classes were committed together in the project history.">co-change: 1</span>
         </div>
       </div>
       <div class="path-node last">
         <div class="node-circle" title="src/main/java/com/github/mauricioaniche/ck/CKVisitor.java">CK</div>
         <div class="node-label" title="src/main/java/com/github/mauricioaniche/ck/CKVisitor.java">CKVisitor</div>
-        <div class="node-health" style="color:var(--orange)" data-tooltip="Structural health (1 − code smell score from CK metrics). 1.00 (green) = healthy; 0.00 (red) = many CK metrics in the bad zone.">⚕ 0.63</div>
+        <div class="node-health" style="color:var(--orange)"
+             data-tooltip="Structural health (1 − code smell score from CK metrics). 1.00 (green) = healthy; 0.00 (red) = many CK metrics in the bad zone.">⚕ 0.63</div>
       </div>
+  </div>
+    <div style="margin-top:10px;font-size:11px;color:var(--text2);font-style:italic">Probabilistic entry — no causal path is available; avg_hop = 1.09 aggregates across runs.</div>
+    <div style="margin-top:16px;font-size:11px;color:var(--text2);">
+      <div><strong>Source:</strong> <code>fixtures/methods/StaticInitializer2.java</code></div>
+      <div><strong>Target:</strong> <code>src/main/java/com/github/mauricioaniche/ck/CKVisitor.java</code></div>
     </div>
-    <div style="margin-top:10px;font-size:11px;color:var(--text2);font-style:italic">      Monte Carlo entry — no causal path is available; avg_hop = 1.07 aggregates across runs.    </div>
-    <div style="margin-top:16px; font-size:11px; color:var(--text2);"><div><strong>Source:</strong> <code>fixtures/methods/StaticInitializer2.java</code></div><div><strong>Target:</strong> <code>src/main/java/com/github/mauricioaniche/ck/CKVisitor.java</code></div></div>    <div class="validation-section" id="validation_mc_0">
+    <div class="validation-section" id="validation_prob_0">
       <h4>📋 Validation — Is this propagation correct?</h4>
       <div class="vote-buttons">
-        <button class="vote-btn correct"   onclick="selectVote('mc_0','correct',this)">✅ Correct</button>
-        <button class="vote-btn incorrect" onclick="selectVote('mc_0','incorrect',this)">❌ Incorrect</button>
-        <button class="vote-btn unsure"    onclick="selectVote('mc_0','unsure',this)">❓ Unsure</button>
+        <button class="vote-btn correct"   onclick="selectVote('prob_0','correct',this)">✅ Correct</button>
+        <button class="vote-btn incorrect" onclick="selectVote('prob_0','incorrect',this)">❌ Incorrect</button>
+        <button class="vote-btn unsure"    onclick="selectVote('prob_0','unsure',this)">❓ Unsure</button>
       </div>
-      <textarea class="validation-comment" id="comment_mc_0" placeholder="Optional comment (e.g., why you think it is incorrect)…" oninput="saveComment('mc_0', this.value)"></textarea>
+      <textarea class="validation-comment" id="comment_prob_0"
+                placeholder="Optional comment (e.g., why you think it is incorrect)…"
+                oninput="saveComment('prob_0', this.value)"></textarea>
       <div class="submit-row">
-        <button class="submit-btn" id="submitBtn_mc_0" onclick="submitVote('mc_0')" disabled>Submit</button>
-        <span class="submit-status" id="status_mc_0"></span>
+        <button class="submit-btn" id="submitBtn_prob_0"
+                onclick="submitVote('prob_0')" disabled>Submit</button>
+        <span class="submit-status" id="status_prob_0"></span>
       </div>
-      <input type="hidden" id="vote_mc_0" value="">
-      <input type="hidden" id="meta_kind_mc_0" value="mc">
-      <input type="hidden" id="meta_source_mc_0" value="fixtures/methods/StaticInitializer2.java">
-      <input type="hidden" id="meta_target_mc_0" value="src/main/java/com/github/mauricioaniche/ck/CKVisitor.java">
-      <input type="hidden" id="meta_rank_mc_0" value="1">
-      <input type="hidden" id="meta_prob_mc_0" value="0.071">
-      <input type="hidden" id="meta_hop_mc_0" value="1.0704225352112675">
+      <input type="hidden" id="vote_prob_0"         value="">
+      <input type="hidden" id="meta_kind_prob_0"   value="prob">
+      <input type="hidden" id="meta_source_prob_0" value="fixtures/methods/StaticInitializer2.java">
+      <input type="hidden" id="meta_target_prob_0" value="src/main/java/com/github/mauricioaniche/ck/CKVisitor.java">
+      <input type="hidden" id="meta_rank_prob_0"   value="1">
+      <input type="hidden" id="meta_prob_prob_0"   value="0.127">
+      <input type="hidden" id="meta_hop_prob_0"    value="1.094488188976378">
+    </div>
+  </div>
+</div><div class="card"
+     data-source="fixtures/methods/StaticInitializer2.java" data-target="src/test/java/com/github/mauricioaniche/ck/WordCountsTest.java"
+     data-prob="0.06" data-hop="1.3833333333333333" data-rank="2">
+  <div class="card-header" onclick="this.parentElement.classList.toggle('open')">
+    <div class="source-target">
+      <span class="class-badge source" title="fixtures/methods/StaticInitializer2.java">StaticInitializer2</span>
+      <span class="arrow-icon">→</span>
+      <span class="class-badge target" title="src/test/java/com/github/mauricioaniche/ck/WordCountsTest.java">WordCountsTest</span>
+    </div>
+    <div class="metrics-mini">
+      <div class="metric-pill rank-m" data-tooltip="Rank in the PROB list.">
+        <span class="val">#2</span><span class="lbl">Rank</span>
+      </div>
+      <div class="metric-pill prob" style="color:var(--green)"
+           data-tooltip="HyCPA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
+        <span class="val" style="color:var(--green)">0.0600</span>
+        <span class="lbl">Prob</span>
+      </div>
+      <div class="metric-pill hop"
+           data-tooltip="Number of edges (distance) in the propagation path from the source class to this target.">
+        <span class="val">1.38</span><span class="lbl">Avg Distance</span>
+      </div>
+      <div class="metric-pill health"
+           data-tooltip="Target health.">
+        <span class="val">0.92</span><span class="lbl">Health</span>
+      </div>
+    </div>
+    <span class="toggle-icon">▼</span>
+  </div>
+  <div class="card-body">
+    <h4 style="color:var(--text2);font-size:12px;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:8px;">Propagation Path</h4><div class="path-diagram">
+      <div class="path-node first">
+        <div class="node-circle" title="fixtures/methods/StaticInitializer2.java">ST</div>
+        <div class="node-label" title="fixtures/methods/StaticInitializer2.java">StaticInitializer2</div>
+        <div class="node-health" style="color:var(--green)"
+             data-tooltip="Structural health (1 − code smell score from CK metrics). 1.00 (green) = healthy; 0.00 (red) = many CK metrics in the bad zone.">⚕ 0.83</div>
+      </div>
+      <div class="path-edge">
+        <div class="edge-arrow"><span class="line"></span><span class="tip">&#9658;</span></div>
+        <div class="edge-tags">
+          <span class="edge-tag cochange"
+                data-tooltip="Co-change weight: number of times these two classes were committed together in the project history.">co-change: 1</span>
+        </div>
+      </div>
+      <div class="path-node last">
+        <div class="node-circle" title="src/test/java/com/github/mauricioaniche/ck/WordCountsTest.java">WO</div>
+        <div class="node-label" title="src/test/java/com/github/mauricioaniche/ck/WordCountsTest.java">WordCountsTest</div>
+        <div class="node-health" style="color:var(--green)"
+             data-tooltip="Structural health (1 − code smell score from CK metrics). 1.00 (green) = healthy; 0.00 (red) = many CK metrics in the bad zone.">⚕ 0.92</div>
+      </div>
+  </div>
+    <div style="margin-top:10px;font-size:11px;color:var(--text2);font-style:italic">Probabilistic entry — no causal path is available; avg_hop = 1.38 aggregates across runs.</div>
+    <div style="margin-top:16px;font-size:11px;color:var(--text2);">
+      <div><strong>Source:</strong> <code>fixtures/methods/StaticInitializer2.java</code></div>
+      <div><strong>Target:</strong> <code>src/test/java/com/github/mauricioaniche/ck/WordCountsTest.java</code></div>
+    </div>
+    <div class="validation-section" id="validation_prob_1">
+      <h4>📋 Validation — Is this propagation correct?</h4>
+      <div class="vote-buttons">
+        <button class="vote-btn correct"   onclick="selectVote('prob_1','correct',this)">✅ Correct</button>
+        <button class="vote-btn incorrect" onclick="selectVote('prob_1','incorrect',this)">❌ Incorrect</button>
+        <button class="vote-btn unsure"    onclick="selectVote('prob_1','unsure',this)">❓ Unsure</button>
+      </div>
+      <textarea class="validation-comment" id="comment_prob_1"
+                placeholder="Optional comment (e.g., why you think it is incorrect)…"
+                oninput="saveComment('prob_1', this.value)"></textarea>
+      <div class="submit-row">
+        <button class="submit-btn" id="submitBtn_prob_1"
+                onclick="submitVote('prob_1')" disabled>Submit</button>
+        <span class="submit-status" id="status_prob_1"></span>
+      </div>
+      <input type="hidden" id="vote_prob_1"         value="">
+      <input type="hidden" id="meta_kind_prob_1"   value="prob">
+      <input type="hidden" id="meta_source_prob_1" value="fixtures/methods/StaticInitializer2.java">
+      <input type="hidden" id="meta_target_prob_1" value="src/test/java/com/github/mauricioaniche/ck/WordCountsTest.java">
+      <input type="hidden" id="meta_rank_prob_1"   value="2">
+      <input type="hidden" id="meta_prob_prob_1"   value="0.06">
+      <input type="hidden" id="meta_hop_prob_1"    value="1.3833333333333333">
+    </div>
+  </div>
+</div><div class="card"
+     data-source="fixtures/methods/StaticInitializer2.java" data-target="src/test/java/com/github/mauricioaniche/ck/MethodsTest.java"
+     data-prob="0.058" data-hop="1.2586206896551724" data-rank="3">
+  <div class="card-header" onclick="this.parentElement.classList.toggle('open')">
+    <div class="source-target">
+      <span class="class-badge source" title="fixtures/methods/StaticInitializer2.java">StaticInitializer2</span>
+      <span class="arrow-icon">→</span>
+      <span class="class-badge target" title="src/test/java/com/github/mauricioaniche/ck/MethodsTest.java">MethodsTest</span>
+    </div>
+    <div class="metrics-mini">
+      <div class="metric-pill rank-m" data-tooltip="Rank in the PROB list.">
+        <span class="val">#3</span><span class="lbl">Rank</span>
+      </div>
+      <div class="metric-pill prob" style="color:var(--green)"
+           data-tooltip="HyCPA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
+        <span class="val" style="color:var(--green)">0.0580</span>
+        <span class="lbl">Prob</span>
+      </div>
+      <div class="metric-pill hop"
+           data-tooltip="Number of edges (distance) in the propagation path from the source class to this target.">
+        <span class="val">1.26</span><span class="lbl">Avg Distance</span>
+      </div>
+      <div class="metric-pill health"
+           data-tooltip="Target health.">
+        <span class="val">0.85</span><span class="lbl">Health</span>
+      </div>
+    </div>
+    <span class="toggle-icon">▼</span>
+  </div>
+  <div class="card-body">
+    <h4 style="color:var(--text2);font-size:12px;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:8px;">Propagation Path</h4><div class="path-diagram">
+      <div class="path-node first">
+        <div class="node-circle" title="fixtures/methods/StaticInitializer2.java">ST</div>
+        <div class="node-label" title="fixtures/methods/StaticInitializer2.java">StaticInitializer2</div>
+        <div class="node-health" style="color:var(--green)"
+             data-tooltip="Structural health (1 − code smell score from CK metrics). 1.00 (green) = healthy; 0.00 (red) = many CK metrics in the bad zone.">⚕ 0.83</div>
+      </div>
+      <div class="path-edge">
+        <div class="edge-arrow"><span class="line"></span><span class="tip">&#9658;</span></div>
+        <div class="edge-tags">
+          <span class="edge-tag cochange"
+                data-tooltip="Co-change weight: number of times these two classes were committed together in the project history.">co-change: 2</span>
+        </div>
+      </div>
+      <div class="path-node last">
+        <div class="node-circle" title="src/test/java/com/github/mauricioaniche/ck/MethodsTest.java">ME</div>
+        <div class="node-label" title="src/test/java/com/github/mauricioaniche/ck/MethodsTest.java">MethodsTest</div>
+        <div class="node-health" style="color:var(--green)"
+             data-tooltip="Structural health (1 − code smell score from CK metrics). 1.00 (green) = healthy; 0.00 (red) = many CK metrics in the bad zone.">⚕ 0.85</div>
+      </div>
+  </div>
+    <div style="margin-top:10px;font-size:11px;color:var(--text2);font-style:italic">Probabilistic entry — no causal path is available; avg_hop = 1.26 aggregates across runs.</div>
+    <div style="margin-top:16px;font-size:11px;color:var(--text2);">
+      <div><strong>Source:</strong> <code>fixtures/methods/StaticInitializer2.java</code></div>
+      <div><strong>Target:</strong> <code>src/test/java/com/github/mauricioaniche/ck/MethodsTest.java</code></div>
+    </div>
+    <div class="validation-section" id="validation_prob_2">
+      <h4>📋 Validation — Is this propagation correct?</h4>
+      <div class="vote-buttons">
+        <button class="vote-btn correct"   onclick="selectVote('prob_2','correct',this)">✅ Correct</button>
+        <button class="vote-btn incorrect" onclick="selectVote('prob_2','incorrect',this)">❌ Incorrect</button>
+        <button class="vote-btn unsure"    onclick="selectVote('prob_2','unsure',this)">❓ Unsure</button>
+      </div>
+      <textarea class="validation-comment" id="comment_prob_2"
+                placeholder="Optional comment (e.g., why you think it is incorrect)…"
+                oninput="saveComment('prob_2', this.value)"></textarea>
+      <div class="submit-row">
+        <button class="submit-btn" id="submitBtn_prob_2"
+                onclick="submitVote('prob_2')" disabled>Submit</button>
+        <span class="submit-status" id="status_prob_2"></span>
+      </div>
+      <input type="hidden" id="vote_prob_2"         value="">
+      <input type="hidden" id="meta_kind_prob_2"   value="prob">
+      <input type="hidden" id="meta_source_prob_2" value="fixtures/methods/StaticInitializer2.java">
+      <input type="hidden" id="meta_target_prob_2" value="src/test/java/com/github/mauricioaniche/ck/MethodsTest.java">
+      <input type="hidden" id="meta_rank_prob_2"   value="3">
+      <input type="hidden" id="meta_prob_prob_2"   value="0.058">
+      <input type="hidden" id="meta_hop_prob_2"    value="1.2586206896551724">
     </div>
   </div>
 </div>
-</div></div><script>const REPO = 'mauricioaniche_ck';
-const SOURCE_SAFE = 'fixtures_methods_StaticInitializer2_java';
+  </div>
+</div>
+
+<script>
+const REPO = "mauricioaniche_ck";
+const SOURCE_SAFE = "fixtures_methods_StaticInitializer2_java";
 const STORAGE_PREFIX = 'ocpa_vote_' + REPO + '__' + SOURCE_SAFE + '__';
 const FORMSUBMIT_URL = 'https://formsubmit.co/ajax/change.vein@gmail.com';
 document.addEventListener('DOMContentLoaded', () => {
@@ -223,23 +451,28 @@ document.addEventListener('DOMContentLoaded', () => {
   });
   switchTab('det');
 });
+
 function saveEmail(v) {
   localStorage.setItem('email_' + REPO, v);
   document.getElementById('userEmail').classList.remove('invalid');
 }
+
 function saveComment(id, value) {
   localStorage.setItem(STORAGE_PREFIX + id + '__comment', value);
 }
+
 function selectVote(id, vote, btn) {
   btn.parentElement.querySelectorAll('.vote-btn').forEach(b => b.classList.remove('selected'));
   btn.classList.add('selected');
   document.getElementById('vote_' + id).value = vote;
   document.getElementById('submitBtn_' + id).disabled = false;
 }
+
 function switchTab(name) {
   document.querySelectorAll('.tab-btn').forEach(b => b.classList.toggle('active', b.dataset.tab === name));
   document.querySelectorAll('.tab-pane').forEach(p => p.classList.toggle('active', p.dataset.tab === name));
 }
+
 function applyFilters() {
   const minP = parseFloat(document.getElementById('fMinProb').value) || 0;
   const maxH = parseFloat(document.getElementById('fMaxHop').value);
@@ -255,6 +488,7 @@ function applyFilters() {
     card.style.display = show ? '' : 'none';
   });
 }
+
 async function submitVote(id) {
   const vote = document.getElementById('vote_' + id).value;
   if (!vote) return;
@@ -275,10 +509,10 @@ async function submitVote(id) {
   const statusEl  = document.getElementById('status_'    + id);
   const submitBtn = document.getElementById('submitBtn_' + id);
   submitBtn.disabled = true;
-  statusEl.textContent = 'Submitting…';
+  statusEl.textContent = 'Submitting\u2026';
   statusEl.className = 'submit-status';
   const payload = {
-    _subject: '[HyCPA Validation] ' + REPO + ' — ' + source + ' → ' + target + ': ' + vote.toUpperCase(),
+    _subject: '[HyCPA Validation] ' + REPO + ' \u2014 ' + source + ' \u2192 ' + target + ': ' + vote.toUpperCase(),
     Email: email, Repository: REPO,
     Source_Class: source, Affected_Class: target,
     Type: kind, Rank: rank, Prob: prob, Hop: hop,
@@ -287,15 +521,19 @@ async function submitVote(id) {
   localStorage.setItem(STORAGE_PREFIX + id, JSON.stringify(payload));
   try {
     const resp = await fetch(FORMSUBMIT_URL, {
-      method: 'POST', headers: {'Content-Type':'application/json','Accept':'application/json'},
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
       body: JSON.stringify(payload)
     });
-    if (resp.ok) { statusEl.textContent = '✓ Submitted'; }
-    else { statusEl.textContent = '⚠ Saved locally (server error)'; statusEl.classList.add('error'); }
+    if (resp.ok) { statusEl.textContent = '\u2713 Submitted'; }
+    else { statusEl.textContent = '\u26a0 Saved locally (server error)'; statusEl.classList.add('error'); }
   } catch (e) {
-    statusEl.textContent = '⚠ Saved locally (offline)';
+    statusEl.textContent = '\u26a0 Saved locally (offline)';
     statusEl.classList.add('error');
   }
   submitBtn.disabled = false;
 }
-</script></body></html>
+
+</script>
+</body>
+</html>

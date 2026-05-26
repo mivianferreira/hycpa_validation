@@ -1,0 +1,1430 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HyCPA — Community 3 · google/gson</title>
+  <style>
+:root {
+  --bg: #0d1117; --surface: #161b22; --surface2: #21262d;
+  --border: #30363d; --text: #e6edf3; --text2: #8b949e;
+  --accent: #58a6ff; --green: #3fb950; --orange: #e3b341; --red: #f85149;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { background: var(--bg); color: var(--text); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif; padding-bottom: 48px; }
+
+/* ── Header ── */
+.page-header { background: var(--surface); border-bottom: 1px solid var(--border); padding: 12px 24px; display: flex; align-items: center; gap: 20px; }
+.back-btn { color: var(--text2); font-size: 12px; text-decoration: none; white-space: nowrap; }
+.back-btn:hover { color: var(--accent); }
+.header-title { font-size: 15px; color: var(--text); }
+.header-title strong { color: var(--accent); }
+
+/* ── Stats pills ── */
+.stats-row { display: flex; gap: 12px; padding: 16px 24px; background: var(--surface); border-bottom: 1px solid var(--border); flex-wrap: wrap; }
+.stat-pill { background: var(--surface2); border: 1px solid var(--border); border-radius: 8px; padding: 10px 20px; display: flex; flex-direction: column; align-items: center; gap: 2px; min-width: 90px; }
+.pill-val { font-size: 22px; font-weight: 700; color: var(--text); line-height: 1; }
+.pill-lbl { font-size: 10px; color: var(--text2); text-transform: uppercase; letter-spacing: 0.5px; margin-top: 2px; }
+
+/* ── Content sections ── */
+.content-section { padding: 24px; }
+.section-title { font-size: 11px; font-weight: 600; color: var(--text2); text-transform: uppercase; letter-spacing: 0.6px; margin-bottom: 14px; display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
+
+/* ── Node table ── */
+.node-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+.node-table th { background: var(--surface); color: var(--text2); font-weight: 600; font-size: 10px; text-transform: uppercase; letter-spacing: 0.5px; padding: 8px 12px; text-align: left; border-bottom: 2px solid var(--border); white-space: nowrap; }
+.node-table td { padding: 7px 12px; border-bottom: 1px solid var(--border); vertical-align: middle; }
+.node-table tbody tr:hover td { background: var(--surface); }
+.health-badge { display: inline-block; padding: 2px 9px; border-radius: 10px; font-size: 11px; font-weight: 700; color: #0d1117; white-space: nowrap; }
+.class-path { font-size: 11px; color: var(--text2); font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', monospace; word-break: break-all; }
+td.num { text-align: right; font-weight: 600; white-space: nowrap; }
+td.overlap { color: var(--accent); }
+
+/* ── Coupling matrix ── */
+.matrix-wrap { overflow: auto; }
+.matrix { border-collapse: collapse; }
+.matrix-corner { min-width: 16px; }
+.matrix-col-hdr { padding: 0 1px 4px 1px; vertical-align: bottom; }
+.matrix-col-hdr span { display: block; writing-mode: vertical-rl; transform: rotate(180deg); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-height: 140px; color: var(--text2); font-weight: 400; font-size: 10px; cursor: default; text-align: left; }
+.matrix-row-hdr { text-align: right; padding: 1px 6px 1px 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 200px; color: var(--text2); font-weight: 400; font-size: 10px; cursor: default; }
+.matrix-cell { width: 16px; height: 16px; min-width: 16px; min-height: 16px; border: 1px solid #1c2129; cursor: default; }
+.matrix-cell.empty { background: transparent; }
+.matrix-cell.self-cell { background: var(--surface2); }
+.matrix-cell.filled { }
+
+/* ── Legend inline ── */
+.legend-inline { display: inline-flex; align-items: center; gap: 6px; font-size: 10px; color: var(--text2); font-weight: 400; text-transform: none; letter-spacing: 0; }
+.li-cell { display: inline-block; width: 10px; height: 10px; border-radius: 2px; vertical-align: middle; flex-shrink: 0; }
+</style>
+</head>
+<body>
+
+<div class="page-header">
+  <a class="back-btn" href="repo_google_gson.html">← Back to google/gson</a>
+  <span class="header-title">Community <strong>C3</strong> — google/gson</span>
+</div>
+
+<div class="stats-row">
+  <div class="stat-pill"><span class="pill-val">19</span><span class="pill-lbl">Nodes</span></div>
+  <div class="stat-pill"><span class="pill-val">338</span><span class="pill-lbl">Arcs</span></div>
+  <div class="stat-pill"><span class="pill-val">19</span><span class="pill-lbl">Overlapping</span></div>
+  <div class="stat-pill"><span class="pill-val">26</span><span class="pill-lbl">Coupled arcs</span></div>
+  <div class="stat-pill"><span class="pill-val">0</span><span class="pill-lbl">Co-change only</span></div>
+</div>
+
+<section class="content-section">
+  <h2 class="section-title">Nodes</h2>
+  <table class="node-table">
+    <thead>
+      <tr>
+        <th>Health</th>
+        <th>Class</th>
+        <th>Degree</th>
+        <th>Communities</th>
+      </tr>
+    </thead>
+    <tbody>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#f85149">0.423</span></td>
+        <td class="class-path" title="gson/src/main/java/com/google/gson/Gson.java">gson/src/main/java/com/google/gson/Gson.java</td>
+        <td class="num">35</td>
+        <td class="num overlap">33</td>
+      </tr>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#f85149">0.481</span></td>
+        <td class="class-path" title="gson/src/main/java/com/google/gson/GsonBuilder.java">gson/src/main/java/com/google/gson/GsonBuilder.java</td>
+        <td class="num">35</td>
+        <td class="num overlap">22</td>
+      </tr>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#e3b341">0.538</span></td>
+        <td class="class-path" title="gson/src/main/java/com/google/gson/internal/GsonTypes.java">gson/src/main/java/com/google/gson/internal/GsonTypes.java</td>
+        <td class="num">36</td>
+        <td class="num overlap">5</td>
+      </tr>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#e3b341">0.577</span></td>
+        <td class="class-path" title="gson/src/test/java/com/google/gson/functional/DefaultTypeAdaptersTest.java">gson/src/test/java/com/google/gson/functional/DefaultTypeAdaptersTest.java</td>
+        <td class="num">36</td>
+        <td class="num overlap">10</td>
+      </tr>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#e3b341">0.577</span></td>
+        <td class="class-path" title="gson/src/test/java/com/google/gson/stream/JsonReaderTest.java">gson/src/test/java/com/google/gson/stream/JsonReaderTest.java</td>
+        <td class="num">36</td>
+        <td class="num overlap">3</td>
+      </tr>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#e3b341">0.635</span></td>
+        <td class="class-path" title="gson/src/main/java/com/google/gson/internal/bind/util/ISO8601Utils.java">gson/src/main/java/com/google/gson/internal/bind/util/ISO8601Utils.java</td>
+        <td class="num">36</td>
+        <td class="num overlap">3</td>
+      </tr>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#e3b341">0.692</span></td>
+        <td class="class-path" title="gson/src/test/java/com/google/gson/functional/ReflectionAccessFilterTest.java">gson/src/test/java/com/google/gson/functional/ReflectionAccessFilterTest.java</td>
+        <td class="num">32</td>
+        <td class="num overlap">6</td>
+      </tr>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#e3b341">0.712</span></td>
+        <td class="class-path" title="gson/src/test/java/com/google/gson/functional/VersioningTest.java">gson/src/test/java/com/google/gson/functional/VersioningTest.java</td>
+        <td class="num">36</td>
+        <td class="num overlap">3</td>
+      </tr>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#e3b341">0.731</span></td>
+        <td class="class-path" title="gson/src/test/java/com/google/gson/JsonArrayTest.java">gson/src/test/java/com/google/gson/JsonArrayTest.java</td>
+        <td class="num">36</td>
+        <td class="num overlap">4</td>
+      </tr>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#3fb950">0.750</span></td>
+        <td class="class-path" title="gson/src/test/java/com/google/gson/JsonObjectTest.java">gson/src/test/java/com/google/gson/JsonObjectTest.java</td>
+        <td class="num">36</td>
+        <td class="num overlap">7</td>
+      </tr>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#3fb950">0.827</span></td>
+        <td class="class-path" title="gson/src/main/java/com/google/gson/TypeAdapter.java">gson/src/main/java/com/google/gson/TypeAdapter.java</td>
+        <td class="num">35</td>
+        <td class="num overlap">21</td>
+      </tr>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#3fb950">0.827</span></td>
+        <td class="class-path" title="gson/src/test/java/com/google/gson/functional/TypeHierarchyAdapterTest.java">gson/src/test/java/com/google/gson/functional/TypeHierarchyAdapterTest.java</td>
+        <td class="num">36</td>
+        <td class="num overlap">3</td>
+      </tr>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#3fb950">0.827</span></td>
+        <td class="class-path" title="gson/src/test/java/com/google/gson/internal/bind/util/ISO8601UtilsTest.java">gson/src/test/java/com/google/gson/internal/bind/util/ISO8601UtilsTest.java</td>
+        <td class="num">36</td>
+        <td class="num overlap">4</td>
+      </tr>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#3fb950">0.846</span></td>
+        <td class="class-path" title="gson/src/main/java/com/google/gson/JsonIOException.java">gson/src/main/java/com/google/gson/JsonIOException.java</td>
+        <td class="num">36</td>
+        <td class="num overlap">8</td>
+      </tr>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#3fb950">0.885</span></td>
+        <td class="class-path" title="gson/src/test/java/com/google/gson/functional/InstanceCreatorTest.java">gson/src/test/java/com/google/gson/functional/InstanceCreatorTest.java</td>
+        <td class="num">36</td>
+        <td class="num overlap">3</td>
+      </tr>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#3fb950">0.885</span></td>
+        <td class="class-path" title="gson/src/test/java/com/google/gson/functional/TypeVariableTest.java">gson/src/test/java/com/google/gson/functional/TypeVariableTest.java</td>
+        <td class="num">36</td>
+        <td class="num overlap">2</td>
+      </tr>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#3fb950">0.920</span></td>
+        <td class="class-path" title="gson/src/main/java/com/google/gson/JsonSerializer.java">gson/src/main/java/com/google/gson/JsonSerializer.java</td>
+        <td class="num">35</td>
+        <td class="num overlap">7</td>
+      </tr>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#3fb950">0.942</span></td>
+        <td class="class-path" title="extras/src/test/java/com/google/gson/typeadapters/PostConstructAdapterFactoryTest.java">extras/src/test/java/com/google/gson/typeadapters/PostConstructAdapterFactoryTest.java</td>
+        <td class="num">36</td>
+        <td class="num overlap">2</td>
+      </tr>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#3fb950">0.942</span></td>
+        <td class="class-path" title="gson/src/test/java/com/google/gson/common/TestTypes.java">gson/src/test/java/com/google/gson/common/TestTypes.java</td>
+        <td class="num">36</td>
+        <td class="num overlap">3</td>
+      </tr>
+      
+    </tbody>
+  </table>
+</section>
+
+
+<section class="content-section">
+  <h2 class="section-title">Coupling matrix
+    <span class="legend-inline">
+      <span class="li-cell" style="background:#30363d"></span>Co-change only
+      <span class="li-cell" style="background:#3fb950"></span>Weak
+      <span class="li-cell" style="background:#e3b341"></span>Moderate
+      <span class="li-cell" style="background:#f85149"></span>Strong
+    </span>
+  </h2>
+  <div class="matrix-wrap">
+    <table class="matrix">
+      <thead>
+        <tr>
+          <th class="matrix-corner"></th>
+          <th class="matrix-col-hdr" title="gson/src/main/java/com/google/gson/Gson.java"><span>Gson</span></th><th class="matrix-col-hdr" title="gson/src/main/java/com/google/gson/GsonBuilder.java"><span>GsonBuilder</span></th><th class="matrix-col-hdr" title="gson/src/main/java/com/google/gson/internal/GsonTypes.java"><span>GsonTypes</span></th><th class="matrix-col-hdr" title="gson/src/test/java/com/google/gson/functional/DefaultTypeAdaptersTest.java"><span>DefaultTypeAdaptersTest</span></th><th class="matrix-col-hdr" title="gson/src/test/java/com/google/gson/stream/JsonReaderTest.java"><span>JsonReaderTest</span></th><th class="matrix-col-hdr" title="gson/src/main/java/com/google/gson/internal/bind/util/ISO8601Utils.java"><span>ISO8601Utils</span></th><th class="matrix-col-hdr" title="gson/src/test/java/com/google/gson/functional/ReflectionAccessFilterTest.java"><span>ReflectionAccessFilterTest</span></th><th class="matrix-col-hdr" title="gson/src/test/java/com/google/gson/functional/VersioningTest.java"><span>VersioningTest</span></th><th class="matrix-col-hdr" title="gson/src/test/java/com/google/gson/JsonArrayTest.java"><span>JsonArrayTest</span></th><th class="matrix-col-hdr" title="gson/src/test/java/com/google/gson/JsonObjectTest.java"><span>JsonObjectTest</span></th><th class="matrix-col-hdr" title="gson/src/main/java/com/google/gson/TypeAdapter.java"><span>TypeAdapter</span></th><th class="matrix-col-hdr" title="gson/src/test/java/com/google/gson/functional/TypeHierarchyAdapterTest.java"><span>TypeHierarchyAdapterTest</span></th><th class="matrix-col-hdr" title="gson/src/test/java/com/google/gson/internal/bind/util/ISO8601UtilsTest.java"><span>ISO8601UtilsTest</span></th><th class="matrix-col-hdr" title="gson/src/main/java/com/google/gson/JsonIOException.java"><span>JsonIOException</span></th><th class="matrix-col-hdr" title="gson/src/test/java/com/google/gson/functional/InstanceCreatorTest.java"><span>InstanceCreatorTest</span></th><th class="matrix-col-hdr" title="gson/src/test/java/com/google/gson/functional/TypeVariableTest.java"><span>TypeVariableTest</span></th><th class="matrix-col-hdr" title="gson/src/main/java/com/google/gson/JsonSerializer.java"><span>JsonSerializer</span></th><th class="matrix-col-hdr" title="extras/src/test/java/com/google/gson/typeadapters/PostConstructAdapterFactoryTest.java"><span>PostConstructAdapterFactoryTest</span></th><th class="matrix-col-hdr" title="gson/src/test/java/com/google/gson/common/TestTypes.java"><span>TestTypes</span></th>
+        </tr>
+      </thead>
+      <tbody>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="gson/src/main/java/com/google/gson/Gson.java">Gson</th>
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#191-27d83" title="Gson → GsonBuilder · weight: 30 · cw: 4.6656 · CONSTANT, METHOD_INVOCATION_OBJECT_PARAMETER, METHOD_PARAMETER_TYPE, METHOD_RETURN_TYPE, OBJECT_PARAMETER_COUPLING, VARIABLE_CLASS_INSTANCE_CREATION, VARIABLE_RETURN_STATEMENT, VARIABLE_SINGLE_DECLARATION"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Gson → GsonTypes · weight: 12 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Gson → DefaultTypeAdaptersTest · weight: 18 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Gson → JsonReaderTest · weight: 14 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Gson → ISO8601Utils · weight: 12 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Gson → VersioningTest · weight: 12 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Gson → JsonArrayTest · weight: 12 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Gson → JsonObjectTest · weight: 16 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#1c1-35b95" title="Gson → TypeAdapter · weight: 19 · cw: 5.7994 · DATA_ABSTRACTION_COUPLING, METHOD_INVOCATION_OBJECT_PARAMETER, METHOD_PARAMETER_TYPE, METHOD_RETURN_TYPE, PARAMETERIZED_TYPE, VARIABLE_DECLARATION_STATEMENT, VARIABLE_FIELD_DECLARATION, VARIABLE_RETURN_STATEMENT, VARIABLE_SINGLE_DECLARATION"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Gson → TypeHierarchyAdapterTest · weight: 8 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Gson → ISO8601UtilsTest · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#f16e46" title="Gson → JsonIOException · weight: 4 · cw: 0.8517 · EXCEPTION_USAGE, OBJECT_PARAMETER_COUPLING"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Gson → InstanceCreatorTest · weight: 13 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Gson → TypeVariableTest · weight: 8 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Gson → JsonSerializer · weight: 6 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Gson → PostConstructAdapterFactoryTest · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Gson → TestTypes · weight: 12 · cw: 0.0000 · co-change only"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="gson/src/main/java/com/google/gson/GsonBuilder.java">GsonBuilder</th>
+          
+            <td class="matrix-cell filled" style="background:#16c-1cc75" title="GsonBuilder → Gson · weight: 30 · cw: 3.7632 · METHOD_PARAMETER_TYPE, METHOD_RETURN_TYPE, OBJECT_PARAMETER_COUPLING, VARIABLE_CLASS_INSTANCE_CREATION, VARIABLE_RETURN_STATEMENT, VARIABLE_SINGLE_DECLARATION"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GsonBuilder → GsonTypes · weight: 13 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GsonBuilder → DefaultTypeAdaptersTest · weight: 19 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GsonBuilder → JsonReaderTest · weight: 12 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GsonBuilder → ISO8601Utils · weight: 13 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GsonBuilder → VersioningTest · weight: 13 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GsonBuilder → JsonArrayTest · weight: 12 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GsonBuilder → JsonObjectTest · weight: 16 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#13b-eb62" title="GsonBuilder → TypeAdapter · weight: 18 · cw: 2.6142 · METHOD_RETURN_TYPE, PARAMETERIZED_TYPE, VARIABLE_DECLARATION_STATEMENT, VARIABLE_RETURN_STATEMENT"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GsonBuilder → TypeHierarchyAdapterTest · weight: 8 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GsonBuilder → ISO8601UtilsTest · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GsonBuilder → JsonIOException · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GsonBuilder → InstanceCreatorTest · weight: 12 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GsonBuilder → TypeVariableTest · weight: 8 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#e79c42" title="GsonBuilder → JsonSerializer · weight: 5 · cw: 0.6167 · PARAMETERIZED_TYPE"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GsonBuilder → PostConstructAdapterFactoryTest · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GsonBuilder → TestTypes · weight: 12 · cw: 0.0000 · co-change only"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="gson/src/main/java/com/google/gson/internal/GsonTypes.java">GsonTypes</th>
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GsonTypes → Gson · weight: 12 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GsonTypes → GsonBuilder · weight: 13 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GsonTypes → DefaultTypeAdaptersTest · weight: 12 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GsonTypes → JsonReaderTest · weight: 9 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GsonTypes → ISO8601Utils · weight: 10 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GsonTypes → ReflectionAccessFilterTest · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GsonTypes → VersioningTest · weight: 10 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GsonTypes → JsonArrayTest · weight: 9 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GsonTypes → JsonObjectTest · weight: 12 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GsonTypes → TypeAdapter · weight: 12 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GsonTypes → TypeHierarchyAdapterTest · weight: 7 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GsonTypes → ISO8601UtilsTest · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GsonTypes → JsonIOException · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GsonTypes → InstanceCreatorTest · weight: 9 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GsonTypes → TypeVariableTest · weight: 6 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GsonTypes → JsonSerializer · weight: 3 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GsonTypes → PostConstructAdapterFactoryTest · weight: 3 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GsonTypes → TestTypes · weight: 9 · cw: 0.0000 · co-change only"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="gson/src/test/java/com/google/gson/functional/DefaultTypeAdaptersTest.java">DefaultTypeAdaptersTest</th>
+          
+            <td class="matrix-cell filled" style="background:#19e-2b988" title="DefaultTypeAdaptersTest → Gson · weight: 18 · cw: 4.9731 · ATOMIC_PARAMETER_COUPLING, DATA_ABSTRACTION_COUPLING, METHOD_INVOCATION_OBJECT_PARAMETER, METHOD_PARAMETER_TYPE, VARIABLE_CLASS_INSTANCE_CREATION, VARIABLE_DECLARATION_STATEMENT, VARIABLE_FIELD_DECLARATION, VARIABLE_SINGLE_DECLARATION"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#13d-f363" title="DefaultTypeAdaptersTest → GsonBuilder · weight: 19 · cw: 2.6566 · ATOMIC_PARAMETER_COUPLING, METHOD_INVOCATION_ATOMIC_PARAMETER, METHOD_INVOCATION_OBJECT_PARAMETER, VARIABLE_DECLARATION_STATEMENT"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="DefaultTypeAdaptersTest → GsonTypes · weight: 12 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="DefaultTypeAdaptersTest → JsonReaderTest · weight: 13 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="DefaultTypeAdaptersTest → ISO8601Utils · weight: 13 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="DefaultTypeAdaptersTest → ReflectionAccessFilterTest · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="DefaultTypeAdaptersTest → VersioningTest · weight: 12 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="DefaultTypeAdaptersTest → JsonArrayTest · weight: 13 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="DefaultTypeAdaptersTest → JsonObjectTest · weight: 18 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#167-1b573" title="DefaultTypeAdaptersTest → TypeAdapter · weight: 16 · cw: 3.6443 · ATOMIC_PARAMETER_COUPLING, INHERITANCE, METHOD_INVOCATION_OBJECT_PARAMETER, PARAMETERIZED_TYPE, VARIABLE_CLASS_INSTANCE_CREATION, VARIABLE_DECLARATION_STATEMENT"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="DefaultTypeAdaptersTest → TypeHierarchyAdapterTest · weight: 8 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="DefaultTypeAdaptersTest → ISO8601UtilsTest · weight: 6 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="DefaultTypeAdaptersTest → JsonIOException · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="DefaultTypeAdaptersTest → InstanceCreatorTest · weight: 13 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="DefaultTypeAdaptersTest → TypeVariableTest · weight: 9 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="DefaultTypeAdaptersTest → JsonSerializer · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="DefaultTypeAdaptersTest → PostConstructAdapterFactoryTest · weight: 5 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="DefaultTypeAdaptersTest → TestTypes · weight: 13 · cw: 0.0000 · co-change only"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="gson/src/test/java/com/google/gson/stream/JsonReaderTest.java">JsonReaderTest</th>
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonReaderTest → Gson · weight: 14 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonReaderTest → GsonBuilder · weight: 12 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonReaderTest → GsonTypes · weight: 9 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonReaderTest → DefaultTypeAdaptersTest · weight: 13 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonReaderTest → ISO8601Utils · weight: 9 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonReaderTest → ReflectionAccessFilterTest · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonReaderTest → VersioningTest · weight: 9 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonReaderTest → JsonArrayTest · weight: 10 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonReaderTest → JsonObjectTest · weight: 13 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonReaderTest → TypeAdapter · weight: 12 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonReaderTest → TypeHierarchyAdapterTest · weight: 6 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonReaderTest → ISO8601UtilsTest · weight: 3 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonReaderTest → JsonIOException · weight: 3 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonReaderTest → InstanceCreatorTest · weight: 10 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonReaderTest → TypeVariableTest · weight: 7 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonReaderTest → JsonSerializer · weight: 3 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonReaderTest → PostConstructAdapterFactoryTest · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonReaderTest → TestTypes · weight: 10 · cw: 0.0000 · co-change only"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="gson/src/main/java/com/google/gson/internal/bind/util/ISO8601Utils.java">ISO8601Utils</th>
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ISO8601Utils → Gson · weight: 12 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ISO8601Utils → GsonBuilder · weight: 13 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ISO8601Utils → GsonTypes · weight: 10 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ISO8601Utils → DefaultTypeAdaptersTest · weight: 13 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ISO8601Utils → JsonReaderTest · weight: 9 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ISO8601Utils → ReflectionAccessFilterTest · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ISO8601Utils → VersioningTest · weight: 10 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ISO8601Utils → JsonArrayTest · weight: 9 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ISO8601Utils → JsonObjectTest · weight: 12 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ISO8601Utils → TypeAdapter · weight: 12 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ISO8601Utils → TypeHierarchyAdapterTest · weight: 7 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ISO8601Utils → ISO8601UtilsTest · weight: 5 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ISO8601Utils → JsonIOException · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ISO8601Utils → InstanceCreatorTest · weight: 9 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ISO8601Utils → TypeVariableTest · weight: 6 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ISO8601Utils → JsonSerializer · weight: 3 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ISO8601Utils → PostConstructAdapterFactoryTest · weight: 3 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ISO8601Utils → TestTypes · weight: 9 · cw: 0.0000 · co-change only"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="gson/src/test/java/com/google/gson/functional/ReflectionAccessFilterTest.java">ReflectionAccessFilterTest</th>
+          
+            <td class="matrix-cell filled" style="background:#125-825a" title="ReflectionAccessFilterTest → Gson · weight: 6 · cw: 2.0766 · METHOD_INVOCATION_ATOMIC_PARAMETER, METHOD_INVOCATION_OBJECT_PARAMETER, VARIABLE_DECLARATION_STATEMENT"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#13d-f363" title="ReflectionAccessFilterTest → GsonBuilder · weight: 6 · cw: 2.6566 · ATOMIC_PARAMETER_COUPLING, METHOD_INVOCATION_ATOMIC_PARAMETER, METHOD_INVOCATION_OBJECT_PARAMETER, VARIABLE_DECLARATION_STATEMENT"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ReflectionAccessFilterTest → GsonTypes · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ReflectionAccessFilterTest → DefaultTypeAdaptersTest · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ReflectionAccessFilterTest → JsonReaderTest · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ReflectionAccessFilterTest → ISO8601Utils · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ReflectionAccessFilterTest → VersioningTest · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ReflectionAccessFilterTest → JsonArrayTest · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ReflectionAccessFilterTest → JsonObjectTest · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#1002a4c" title="ReflectionAccessFilterTest → TypeAdapter · weight: 1 · cw: 1.1967 · ATOMIC_PARAMETER_COUPLING, PARAMETERIZED_TYPE"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ReflectionAccessFilterTest → TypeHierarchyAdapterTest · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ReflectionAccessFilterTest → ISO8601UtilsTest · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ReflectionAccessFilterTest → JsonIOException · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ReflectionAccessFilterTest → InstanceCreatorTest · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ReflectionAccessFilterTest → TypeVariableTest · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#1002a4c" title="ReflectionAccessFilterTest → JsonSerializer · weight: 1 · cw: 1.1967 · ATOMIC_PARAMETER_COUPLING, PARAMETERIZED_TYPE"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ReflectionAccessFilterTest → PostConstructAdapterFactoryTest · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ReflectionAccessFilterTest → TestTypes · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="gson/src/test/java/com/google/gson/functional/VersioningTest.java">VersioningTest</th>
+          
+            <td class="matrix-cell filled" style="background:#13f-fc64" title="VersioningTest → Gson · weight: 12 · cw: 2.6999 · METHOD_INVOCATION_OBJECT_PARAMETER, METHOD_RETURN_TYPE, VARIABLE_DECLARATION_STATEMENT, VARIABLE_RETURN_STATEMENT"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#104164d" title="VersioningTest → GsonBuilder · weight: 13 · cw: 1.2963 · ATOMIC_PARAMETER_COUPLING, METHOD_INVOCATION_ATOMIC_PARAMETER"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="VersioningTest → GsonTypes · weight: 10 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="VersioningTest → DefaultTypeAdaptersTest · weight: 12 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="VersioningTest → JsonReaderTest · weight: 9 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="VersioningTest → ISO8601Utils · weight: 10 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="VersioningTest → ReflectionAccessFilterTest · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="VersioningTest → JsonArrayTest · weight: 9 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="VersioningTest → JsonObjectTest · weight: 12 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="VersioningTest → TypeAdapter · weight: 12 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="VersioningTest → TypeHierarchyAdapterTest · weight: 7 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="VersioningTest → ISO8601UtilsTest · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="VersioningTest → JsonIOException · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="VersioningTest → InstanceCreatorTest · weight: 9 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="VersioningTest → TypeVariableTest · weight: 6 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="VersioningTest → JsonSerializer · weight: 3 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="VersioningTest → PostConstructAdapterFactoryTest · weight: 3 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="VersioningTest → TestTypes · weight: 9 · cw: 0.0000 · co-change only"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="gson/src/test/java/com/google/gson/JsonArrayTest.java">JsonArrayTest</th>
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonArrayTest → Gson · weight: 12 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonArrayTest → GsonBuilder · weight: 12 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonArrayTest → GsonTypes · weight: 9 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonArrayTest → DefaultTypeAdaptersTest · weight: 13 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonArrayTest → JsonReaderTest · weight: 10 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonArrayTest → ISO8601Utils · weight: 9 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonArrayTest → ReflectionAccessFilterTest · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonArrayTest → VersioningTest · weight: 9 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonArrayTest → JsonObjectTest · weight: 15 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonArrayTest → TypeAdapter · weight: 12 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonArrayTest → TypeHierarchyAdapterTest · weight: 6 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonArrayTest → ISO8601UtilsTest · weight: 3 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonArrayTest → JsonIOException · weight: 3 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonArrayTest → InstanceCreatorTest · weight: 10 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonArrayTest → TypeVariableTest · weight: 7 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonArrayTest → JsonSerializer · weight: 3 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonArrayTest → PostConstructAdapterFactoryTest · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonArrayTest → TestTypes · weight: 10 · cw: 0.0000 · co-change only"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="gson/src/test/java/com/google/gson/JsonObjectTest.java">JsonObjectTest</th>
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonObjectTest → Gson · weight: 16 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonObjectTest → GsonBuilder · weight: 16 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonObjectTest → GsonTypes · weight: 12 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonObjectTest → DefaultTypeAdaptersTest · weight: 18 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonObjectTest → JsonReaderTest · weight: 13 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonObjectTest → ISO8601Utils · weight: 12 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonObjectTest → ReflectionAccessFilterTest · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonObjectTest → VersioningTest · weight: 12 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonObjectTest → JsonArrayTest · weight: 15 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonObjectTest → TypeAdapter · weight: 16 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonObjectTest → TypeHierarchyAdapterTest · weight: 8 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonObjectTest → ISO8601UtilsTest · weight: 5 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonObjectTest → JsonIOException · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonObjectTest → InstanceCreatorTest · weight: 13 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonObjectTest → TypeVariableTest · weight: 9 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonObjectTest → JsonSerializer · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonObjectTest → PostConstructAdapterFactoryTest · weight: 5 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonObjectTest → TestTypes · weight: 13 · cw: 0.0000 · co-change only"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="gson/src/main/java/com/google/gson/TypeAdapter.java">TypeAdapter</th>
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="TypeAdapter → Gson · weight: 19 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="TypeAdapter → GsonBuilder · weight: 18 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="TypeAdapter → GsonTypes · weight: 12 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="TypeAdapter → DefaultTypeAdaptersTest · weight: 16 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="TypeAdapter → JsonReaderTest · weight: 12 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="TypeAdapter → ISO8601Utils · weight: 12 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="TypeAdapter → VersioningTest · weight: 12 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="TypeAdapter → JsonArrayTest · weight: 12 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="TypeAdapter → JsonObjectTest · weight: 16 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="TypeAdapter → TypeHierarchyAdapterTest · weight: 8 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="TypeAdapter → ISO8601UtilsTest · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#f16e46" title="TypeAdapter → JsonIOException · weight: 4 · cw: 0.8517 · EXCEPTION_USAGE, OBJECT_PARAMETER_COUPLING"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="TypeAdapter → InstanceCreatorTest · weight: 12 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="TypeAdapter → TypeVariableTest · weight: 8 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="TypeAdapter → JsonSerializer · weight: 5 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="TypeAdapter → PostConstructAdapterFactoryTest · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="TypeAdapter → TestTypes · weight: 12 · cw: 0.0000 · co-change only"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="gson/src/test/java/com/google/gson/functional/TypeHierarchyAdapterTest.java">TypeHierarchyAdapterTest</th>
+          
+            <td class="matrix-cell filled" style="background:#1070a4e" title="TypeHierarchyAdapterTest → Gson · weight: 8 · cw: 1.3603 · METHOD_INVOCATION_OBJECT_PARAMETER, VARIABLE_DECLARATION_STATEMENT"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#121-7258" title="TypeHierarchyAdapterTest → GsonBuilder · weight: 8 · cw: 1.9987 · ATOMIC_PARAMETER_COUPLING, METHOD_INVOCATION_ATOMIC_PARAMETER, METHOD_INVOCATION_OBJECT_PARAMETER"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="TypeHierarchyAdapterTest → GsonTypes · weight: 7 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="TypeHierarchyAdapterTest → DefaultTypeAdaptersTest · weight: 8 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="TypeHierarchyAdapterTest → JsonReaderTest · weight: 6 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="TypeHierarchyAdapterTest → ISO8601Utils · weight: 7 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="TypeHierarchyAdapterTest → ReflectionAccessFilterTest · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="TypeHierarchyAdapterTest → VersioningTest · weight: 7 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="TypeHierarchyAdapterTest → JsonArrayTest · weight: 6 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="TypeHierarchyAdapterTest → JsonObjectTest · weight: 8 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="TypeHierarchyAdapterTest → TypeAdapter · weight: 8 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="TypeHierarchyAdapterTest → ISO8601UtilsTest · weight: 3 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="TypeHierarchyAdapterTest → JsonIOException · weight: 3 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="TypeHierarchyAdapterTest → InstanceCreatorTest · weight: 6 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="TypeHierarchyAdapterTest → TypeVariableTest · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#fb3e4a" title="TypeHierarchyAdapterTest → JsonSerializer · weight: 2 · cw: 1.0951 · INTERFACE, PARAMETERIZED_TYPE"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="TypeHierarchyAdapterTest → PostConstructAdapterFactoryTest · weight: 2 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="TypeHierarchyAdapterTest → TestTypes · weight: 6 · cw: 0.0000 · co-change only"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="gson/src/test/java/com/google/gson/internal/bind/util/ISO8601UtilsTest.java">ISO8601UtilsTest</th>
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ISO8601UtilsTest → Gson · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ISO8601UtilsTest → GsonBuilder · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ISO8601UtilsTest → GsonTypes · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ISO8601UtilsTest → DefaultTypeAdaptersTest · weight: 6 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ISO8601UtilsTest → JsonReaderTest · weight: 3 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#eb8b44" title="ISO8601UtilsTest → ISO8601Utils · weight: 5 · cw: 0.7024 · METHOD_INVOCATION_OBJECT_PARAMETER"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ISO8601UtilsTest → ReflectionAccessFilterTest · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ISO8601UtilsTest → VersioningTest · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ISO8601UtilsTest → JsonArrayTest · weight: 3 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ISO8601UtilsTest → JsonObjectTest · weight: 5 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ISO8601UtilsTest → TypeAdapter · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ISO8601UtilsTest → TypeHierarchyAdapterTest · weight: 3 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ISO8601UtilsTest → JsonIOException · weight: 2 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ISO8601UtilsTest → InstanceCreatorTest · weight: 3 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ISO8601UtilsTest → TypeVariableTest · weight: 2 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ISO8601UtilsTest → JsonSerializer · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ISO8601UtilsTest → PostConstructAdapterFactoryTest · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ISO8601UtilsTest → TestTypes · weight: 3 · cw: 0.0000 · co-change only"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="gson/src/main/java/com/google/gson/JsonIOException.java">JsonIOException</th>
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonIOException → Gson · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonIOException → GsonBuilder · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonIOException → GsonTypes · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonIOException → DefaultTypeAdaptersTest · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonIOException → JsonReaderTest · weight: 3 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonIOException → ISO8601Utils · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonIOException → ReflectionAccessFilterTest · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonIOException → VersioningTest · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonIOException → JsonArrayTest · weight: 3 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonIOException → JsonObjectTest · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonIOException → TypeAdapter · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonIOException → TypeHierarchyAdapterTest · weight: 3 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonIOException → ISO8601UtilsTest · weight: 2 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonIOException → InstanceCreatorTest · weight: 3 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonIOException → TypeVariableTest · weight: 2 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonIOException → JsonSerializer · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonIOException → PostConstructAdapterFactoryTest · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonIOException → TestTypes · weight: 3 · cw: 0.0000 · co-change only"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="gson/src/test/java/com/google/gson/functional/InstanceCreatorTest.java">InstanceCreatorTest</th>
+          
+            <td class="matrix-cell filled" style="background:#1070a4e" title="InstanceCreatorTest → Gson · weight: 13 · cw: 1.3603 · METHOD_INVOCATION_OBJECT_PARAMETER, VARIABLE_DECLARATION_STATEMENT"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#121-7258" title="InstanceCreatorTest → GsonBuilder · weight: 12 · cw: 1.9987 · ATOMIC_PARAMETER_COUPLING, METHOD_INVOCATION_ATOMIC_PARAMETER, METHOD_INVOCATION_OBJECT_PARAMETER"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="InstanceCreatorTest → GsonTypes · weight: 9 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="InstanceCreatorTest → DefaultTypeAdaptersTest · weight: 13 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="InstanceCreatorTest → JsonReaderTest · weight: 10 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="InstanceCreatorTest → ISO8601Utils · weight: 9 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="InstanceCreatorTest → ReflectionAccessFilterTest · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="InstanceCreatorTest → VersioningTest · weight: 9 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="InstanceCreatorTest → JsonArrayTest · weight: 10 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="InstanceCreatorTest → JsonObjectTest · weight: 13 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="InstanceCreatorTest → TypeAdapter · weight: 12 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="InstanceCreatorTest → TypeHierarchyAdapterTest · weight: 6 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="InstanceCreatorTest → ISO8601UtilsTest · weight: 3 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="InstanceCreatorTest → JsonIOException · weight: 3 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="InstanceCreatorTest → TypeVariableTest · weight: 7 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="InstanceCreatorTest → JsonSerializer · weight: 3 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="InstanceCreatorTest → PostConstructAdapterFactoryTest · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="InstanceCreatorTest → TestTypes · weight: 10 · cw: 0.0000 · co-change only"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="gson/src/test/java/com/google/gson/functional/TypeVariableTest.java">TypeVariableTest</th>
+          
+            <td class="matrix-cell filled" style="background:#136-d360" title="TypeVariableTest → Gson · weight: 8 · cw: 2.4903 · ATOMIC_PARAMETER_COUPLING, METHOD_INVOCATION_OBJECT_PARAMETER, VARIABLE_CLASS_INSTANCE_CREATION, VARIABLE_DECLARATION_STATEMENT"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="TypeVariableTest → GsonBuilder · weight: 8 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="TypeVariableTest → GsonTypes · weight: 6 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="TypeVariableTest → DefaultTypeAdaptersTest · weight: 9 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="TypeVariableTest → JsonReaderTest · weight: 7 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="TypeVariableTest → ISO8601Utils · weight: 6 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="TypeVariableTest → ReflectionAccessFilterTest · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="TypeVariableTest → VersioningTest · weight: 6 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="TypeVariableTest → JsonArrayTest · weight: 7 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="TypeVariableTest → JsonObjectTest · weight: 9 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="TypeVariableTest → TypeAdapter · weight: 8 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="TypeVariableTest → TypeHierarchyAdapterTest · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="TypeVariableTest → ISO8601UtilsTest · weight: 2 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="TypeVariableTest → JsonIOException · weight: 2 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="TypeVariableTest → InstanceCreatorTest · weight: 7 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="TypeVariableTest → JsonSerializer · weight: 2 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="TypeVariableTest → PostConstructAdapterFactoryTest · weight: 3 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="TypeVariableTest → TestTypes · weight: 7 · cw: 0.0000 · co-change only"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="gson/src/main/java/com/google/gson/JsonSerializer.java">JsonSerializer</th>
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonSerializer → Gson · weight: 6 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonSerializer → GsonBuilder · weight: 5 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonSerializer → GsonTypes · weight: 3 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonSerializer → DefaultTypeAdaptersTest · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonSerializer → JsonReaderTest · weight: 3 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonSerializer → ISO8601Utils · weight: 3 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonSerializer → VersioningTest · weight: 3 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonSerializer → JsonArrayTest · weight: 3 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonSerializer → JsonObjectTest · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonSerializer → TypeAdapter · weight: 5 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonSerializer → TypeHierarchyAdapterTest · weight: 2 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonSerializer → ISO8601UtilsTest · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonSerializer → JsonIOException · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonSerializer → InstanceCreatorTest · weight: 3 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonSerializer → TypeVariableTest · weight: 2 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonSerializer → PostConstructAdapterFactoryTest · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonSerializer → TestTypes · weight: 3 · cw: 0.0000 · co-change only"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="extras/src/test/java/com/google/gson/typeadapters/PostConstructAdapterFactoryTest.java">PostConstructAdapterFactoryTest</th>
+          
+            <td class="matrix-cell filled" style="background:#1070a4e" title="PostConstructAdapterFactoryTest → Gson · weight: 4 · cw: 1.3603 · METHOD_INVOCATION_OBJECT_PARAMETER, VARIABLE_DECLARATION_STATEMENT"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#121-7258" title="PostConstructAdapterFactoryTest → GsonBuilder · weight: 4 · cw: 1.9987 · ATOMIC_PARAMETER_COUPLING, METHOD_INVOCATION_ATOMIC_PARAMETER, METHOD_INVOCATION_OBJECT_PARAMETER"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="PostConstructAdapterFactoryTest → GsonTypes · weight: 3 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="PostConstructAdapterFactoryTest → DefaultTypeAdaptersTest · weight: 5 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="PostConstructAdapterFactoryTest → JsonReaderTest · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="PostConstructAdapterFactoryTest → ISO8601Utils · weight: 3 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="PostConstructAdapterFactoryTest → ReflectionAccessFilterTest · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="PostConstructAdapterFactoryTest → VersioningTest · weight: 3 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="PostConstructAdapterFactoryTest → JsonArrayTest · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="PostConstructAdapterFactoryTest → JsonObjectTest · weight: 5 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="PostConstructAdapterFactoryTest → TypeAdapter · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="PostConstructAdapterFactoryTest → TypeHierarchyAdapterTest · weight: 2 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="PostConstructAdapterFactoryTest → ISO8601UtilsTest · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="PostConstructAdapterFactoryTest → JsonIOException · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="PostConstructAdapterFactoryTest → InstanceCreatorTest · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="PostConstructAdapterFactoryTest → TypeVariableTest · weight: 3 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="PostConstructAdapterFactoryTest → JsonSerializer · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="PostConstructAdapterFactoryTest → TestTypes · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="gson/src/test/java/com/google/gson/common/TestTypes.java">TestTypes</th>
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="TestTypes → Gson · weight: 12 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="TestTypes → GsonBuilder · weight: 12 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="TestTypes → GsonTypes · weight: 9 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="TestTypes → DefaultTypeAdaptersTest · weight: 13 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="TestTypes → JsonReaderTest · weight: 10 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="TestTypes → ISO8601Utils · weight: 9 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="TestTypes → ReflectionAccessFilterTest · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="TestTypes → VersioningTest · weight: 9 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="TestTypes → JsonArrayTest · weight: 10 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="TestTypes → JsonObjectTest · weight: 13 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="TestTypes → TypeAdapter · weight: 12 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="TestTypes → TypeHierarchyAdapterTest · weight: 6 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="TestTypes → ISO8601UtilsTest · weight: 3 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="TestTypes → JsonIOException · weight: 3 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="TestTypes → InstanceCreatorTest · weight: 10 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="TestTypes → TypeVariableTest · weight: 7 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#fb3e4a" title="TestTypes → JsonSerializer · weight: 3 · cw: 1.0951 · INTERFACE, PARAMETERIZED_TYPE"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="TestTypes → PostConstructAdapterFactoryTest · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+        </tr>
+        
+      </tbody>
+    </table>
+  </div>
+</section>
+
+
+</body>
+</html>

@@ -1,4 +1,9 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><title>HyCPA — Help</title><style>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>HyCPA — Help</title>
+  <style>
 :root {
   --bg: #0d1117; --surface: #161b22; --surface2: #21262d;
   --border: #30363d; --text: #e6edf3; --text2: #8b949e;
@@ -21,4 +26,202 @@ h1 { color: var(--accent); font-size: 24px; margin-bottom: 8px; }
 .export-all { margin-top: 24px; text-align: center; }
 .export-all button { padding: 10px 28px; border-radius: 8px; border: 1px solid var(--border); background: var(--surface); color: var(--text); cursor: pointer; font-size: 14px; }
 .export-all button:hover { border-color: var(--accent); }
-h2{color:var(--accent);margin:24px 0 8px}h3{color:var(--text);margin:16px 0 6px}p,li{color:var(--text);line-height:1.7}ul{margin-left:24px;margin-bottom:12px}code{background:var(--surface);padding:2px 6px;border-radius:4px;color:var(--accent)}.card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:18px 22px;margin-bottom:14px}</style></head><body><div class="container"><a href="index.html" style="color:var(--text2)">← Back to index</a><h1>How to read this site</h1><p class="subtitle">Reference for the HyCPA change-propagation validation site.</p><div class="card"><h2>Concepts</h2><h3>Class (source / seed)</h3><p>The class being modified. Each class is analysed independently; its <b>code smell score</b> (0..1) summarises how many CK metrics fall in the "bad" zone (per Aniche et al. thresholds; primary metrics CBO/WMC/RFC/LCOM/DIT/NOC weighted 2×).</p><h3>Communities</h3><p>Propagation is restricted to the union of link-communities (Ahn et al., 2010) the seed belongs to. Showing them helps reason about the scope.</p><h3>Edge probability</h3><p>Each arc <code>u → v</code> carries a Noisy-OR (Pearl, 1988) of three signals:</p><ul><li><b>S</b> — structural coupling strength (Noisy-OR over typed couplings from CK / Briand et al.)</li><li><b>L</b> — logical / evolutionary co-change (Gall et al.; D'Ambros et al.)</li><li><b>F</b> — target code smell score (CK metrics in bad zone; Aniche et al. thresholds)</li></ul><p><code>p(u→v) = 1 − (1 − α·S)(1 − β·L)(1 − γ·F)</code></p></div><div class="card"><h2>Two cascades</h2><h3>Deterministic</h3><p>BFS within the source class's communities; an arc fires when <code>p(u→v) ≥ θ</code>. Reproducible and yields a single explanatory path (via_id chain) per target.</p><h3>Monte Carlo</h3><p>Independent-Cascade (Kempe, Kleinberg & Tardos, 2003) with <code>mc_runs</code> simulations. Each target gets an empirical probability and an average distance (in edges) across runs. We list only entries with <code>prob ≥ mc_threshold</code>. No causal path is recorded.</p></div><div class="card"><h2>Parameters in the header</h2><ul><li><code>α, β, γ</code> — weights on S, L, F (recommended α+β+γ ≈ 1.0)</li><li><code>θ</code> — deterministic firing threshold</li><li><code>combine</code> — how multiple coupling types on a single arc are aggregated (noisy_or / max / sum)</li><li><code>mc_runs</code> — number of Monte-Carlo simulations</li><li><code>mc_threshold</code> — minimum empirical probability surfaced</li></ul></div><div class="card"><h2>Per-card fields</h2><ul><li><b>Rank</b> — position in the ranked list of targets for the current tab.</li><li><b>Prob</b> — propagation probability (0..1). Coloured red ≥ 0.5, orange ≥ 0.3, green otherwise.</li><li><b>Distance</b> — number of edges from the source class to the target (deterministic) or <b>Avg Distance</b> across MC runs.</li><li><b>Health</b> — 1 − code smell score for the target class (CK-derived).</li><li><b>Path diagram</b> — only meaningful in the Deterministic tab; reconstructed by chaining <code>via_id</code> back to the source class. Each edge tag shows co-change weight and detected coupling types (when present in <code>featured_graph</code>).</li></ul></div><div class="card"><h2>Validation flow</h2><p>For each target, vote Correct / Incorrect / Unsure and (optionally) leave a comment. Hitting Submit posts the response to FormSubmit (change.vein@gmail.com) and caches it in <code>localStorage</code> for offline recovery. The repo page also has a Submit All button and a CSV export of the per-class analyses you entered.</p></div></div></body></html>
+
+h2 { color: var(--accent); margin: 24px 0 8px; }
+p, li { color: var(--text); line-height: 1.7; }
+ul { margin-left: 24px; margin-bottom: 12px; }
+code { background: var(--surface); padding: 2px 6px; border-radius: 4px; color: var(--accent); }
+table { width: 100%; border-collapse: collapse; margin-bottom: 8px; }
+th { text-align: left; color: var(--text2); font-size: 11px; text-transform: uppercase; letter-spacing: .5px; padding: 6px 10px; border-bottom: 1px solid var(--border); }
+td { padding: 8px 10px; border-bottom: 1px solid var(--border); color: var(--text); font-size: 13px; vertical-align: top; }
+td:first-child { white-space: nowrap; font-weight: 600; color: var(--accent); }
+.card { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 18px 22px; margin-bottom: 14px; }
+</style>
+</head>
+<body>
+<div class="container">
+  <a href="index.html" style="color:var(--text2)">← Back to index</a>
+  <h1>About HyCPA</h1>
+  <p class="subtitle">
+    HyCPA is a tool for analyzing the impact of change propagation in object-oriented
+    software systems. The results presented in this tool were generated by a model
+    developed in a PhD dissertation that considers the software system's change history
+    and its dependence analysis (Ferreira, 2026). The concepts used in this tool are
+    described below.
+  </p>
+
+  <h2>Concepts</h2>
+
+  <div class="card">
+    <h2>Change propagation</h2>
+    <p>
+      A change in a given class of an object-oriented software system may trigger
+      changes in other classes, which may in turn trigger further changes. This
+      effect is called <strong>change propagation</strong>. Manual evaluation of
+      change propagation can be infeasible. Ferreira's PhD dissertation introduces
+      a model for analyzing the propagation of change in object-oriented systems.
+    </p>
+  </div>
+
+  <div class="card">
+    <h2>Hybrid Change Propagation Analysis</h2>
+    <p>
+      The model developed in Ferreira's PhD dissertation considers both the
+      <strong>change history</strong>, which records past modifications to the
+      software, and the <strong>dependence analysis</strong>, which examines how
+      different parts of the software rely on each other. This is why it is called
+      "hybrid".
+    </p>
+  </div>
+
+  <div class="card">
+    <h2>Class (source)</h2>
+    <p>The class whose change impacts the developer needs to be analyzed.</p>
+  </div>
+
+  <div class="card">
+    <h2>Deterministic impact</h2>
+    <p>
+      The deterministic impact is the number of classes a change in a given class
+      may impact. It is calculated by a depth search algorithm in Ferreira's model.
+    </p>
+  </div>
+
+  <div class="card">
+    <h2>Probabilistic impact</h2>
+    <p>
+      The probabilistic impact is the number of classes a change in a given class
+      may impact. It is calculated by a probabilistic algorithm in Ferreira's model.
+    </p>
+  </div>
+
+  <div class="card">
+    <h2>Health score</h2>
+    <p>
+      The health score of a class is a metric generated by Ferreira's model that
+      indicates how well-constructed a class is. This metric ranges from 0 to 1;
+      the higher the health score, the better the class design.
+    </p>
+  </div>
+
+  <div class="card">
+    <h2>Community</h2>
+    <p>
+      A community is a group of classes whose changes interact with one another.
+      A class may belong to more than one community. The more communities a class
+      is involved in, the greater its impact on the system. The tool shows, for
+      each class, the communities it belongs to, along with the classes within
+      each community.
+    </p>
+  </div>
+
+  <div class="card">
+    <h2>Impact Probability (Prob)</h2>
+    <p>
+      It is the probability that a change in a given class A (source) will cause a
+      change in a class X (target). The impact probability lies in the range
+      (0, 1). The tool uses the following colors to indicate impact probability:
+    </p>
+    <table>
+      <thead><tr><th>Colour</th><th>Meaning</th></tr></thead>
+      <tbody>
+        <tr><td style="color:#ef4444">Red</td><td>Prob ≥ 0.5</td></tr>
+        <tr><td style="color:#f59e0b">Orange</td><td>Prob ≥ 0.3</td></tr>
+        <tr><td style="color:#22c55e">Green</td><td>Otherwise</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="card">
+    <h2>Rank</h2>
+    <p>
+      Ferreira's model ranks the classes impacted by a change in class A (source)
+      according to the impact probability (Prob) of each impacted class (target).
+    </p>
+  </div>
+
+  <div class="card">
+    <h2>Propagation path</h2>
+    <p>
+      A propagation path includes the source class (under analysis) and the target
+      class (impacted) involved in change propagation. For example, in
+      <code>A → B → C → D</code>, a change in A may reach D: A impacts B, B impacts
+      C, and C impacts D.
+    </p>
+  </div>
+
+  <div class="card">
+    <h2>Distance</h2>
+    <p>
+      The distance of a propagation path is defined as the number of edges between
+      the class under analysis and the impacted class; for example, in the path
+      <code>A → B → C → D</code>, the distance is 3.
+    </p>
+  </div>
+
+  <h2>Data shown for each propagation path</h2>
+
+  <div class="card">
+    <h2>The change propagation path diagram</h2>
+    <p>
+      The tool shows change propagation as a directed graph, where a circle
+      represents a class and an edge from A to B indicates that a change in A may
+      propagate to B.
+    </p>
+    <p>
+      In the diagram, the <strong style="color:#facc15">yellow circle</strong>
+      represents the class under analysis (source), the
+      <strong style="color:#22c55e">green circle</strong> represents the impacted
+      class (target), and the <strong>blank circles</strong> represent the classes
+      through which the change will propagate until it reaches the target class.
+    </p>
+    <p>For each class, its health score is shown.</p>
+    <p>
+      For each edge, the tool shows the co-change quantity and/or the coupling
+      types involved between the classes. In Ferreira's model, the co-change
+      quantity is based on the software system's change history, and coupling
+      types are identified by analyzing its structural dependencies. Those
+      concepts are described as follows.
+    </p>
+    <ul>
+      <li>
+        <strong>Co-change:</strong> A co-change is the event of changing a class
+        in the same change activity. In the change propagation path, when an edge
+        from class X to class Y corresponds to a co-change between X and Y, the
+        tool shows the number of times that co-change occurred between the
+        classes.
+      </li>
+      <li>
+        <strong>Coupling types:</strong> In a software system, a class may be
+        linked to other classes in several ways, such as method calls, inheritance,
+        attribute use, etc. In the change propagation path, when an edge from
+        class X to class Y represents a structural dependency of X on Y, the tool
+        lists the types of coupling involved in this dependency.
+      </li>
+    </ul>
+  </div>
+
+  <h2>How to use this tool to give feedback to the author</h2>
+
+  <div class="card">
+    <p>
+      You can provide feedback in the <strong>General Analysis</strong> text box:
+    </p>
+    <ul>
+      <li>Tell us how important you consider this type of tool or model for software change tasks.</li>
+      <li>Tell us how consistent you think the results presented by the tool are, both by the deterministic and the probabilistic results.</li>
+      <li>Tell us how consistent you think the list of classes per community is.</li>
+      <li>We will appreciate your suggestions to improve the presentation of the results.</li>
+    </ul>
+    <p>
+      You can also vote <strong>✅ Correct</strong> / <strong>❌ Incorrect</strong> /
+      <strong>❓ Unsure</strong> and leave a comment for each result presented by
+      the tool. Hitting <strong>Submit</strong> posts the response to FormSubmit
+      (change.vein@gmail.com) and caches it in localStorage for offline recovery
+      (by the author). The <strong>Submit All</strong> button and a CSV export of
+      the per-class analyses you entered are also available.
+    </p>
+  </div>
+</div>
+</body>
+</html>

@@ -1,4 +1,10 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>HyCPA — src/main/java/Main/ghostbits/RawSocketSender.java</title><style>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HyCPA — src/main/java/Main/ghostbits/RawSocketSender.java</title>
+  <style>
 :root {
   --bg: #0d1117; --surface: #161b22; --surface2: #21262d;
   --border: #30363d; --text: #e6edf3; --text2: #8b949e;
@@ -131,8 +137,52 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, Bl
 /* ── Tooltip fix: allow tooltips inside cards to escape the card border ── */
 .card { overflow: visible !important; }
 .card-header, .metrics-mini, .metric-pill { overflow: visible; }
-</style></head><body><div class="page-header"><a class="back-btn" href="repo_0x727_BypassPro.html">← Back</a><span class="src-label">Class:</span><span class="src-name-h">src/main/java/Main/ghostbits/RawSocketSender.java</span><span class="src-label" style="margin-left:12px">Code Smell Score: 0.423 · Communities: C0, C4</span><div class="header-email-wrap" style="margin-left:auto"><label>Email (required to submit)</label><input type="email" id="userEmail" class="header-email-input" placeholder="your@email.com" oninput="saveEmail(this.value)" /></div><a class="export-btn" href="help.html">❓ Help</a><a class="export-btn" href="repo_0x727_BypassPro.html">📁 Repo</a></div><div class="container"><div class="tabs"><button class="tab-btn active" data-tab="det" onclick="switchTab('det')">Deterministic (0)</button><button class="tab-btn" data-tab="mc" onclick="switchTab('mc')">Monte Carlo (0)</button></div><div class="filter-bar"><label>Min probability<input type="number" id="fMinProb" min="0" max="1" step="0.05" value="0" oninput="applyFilters()"></label><label>Max distance<input type="number" id="fMaxHop" min="1" step="1" placeholder="any" oninput="applyFilters()"></label><label style="flex:1">Search target label<input type="text" id="fSearch" placeholder="substring…" oninput="applyFilters()" style="width:100%"></label></div><div class="tab-pane active" data-tab="det"><p class="none-text">No deterministic targets above θ.</p></div><div class="tab-pane" data-tab="mc"><p class="none-text">No Monte-Carlo targets above mc_threshold.</p></div></div><script>const REPO = '0x727_BypassPro';
-const SOURCE_SAFE = 'src_main_java_Main_ghostbits_RawSocketSender_java';
+</style>
+</head>
+<body>
+<div class="page-header">
+  <a class="back-btn" href="repo_0x727_BypassPro.html">← Back</a>
+  <span class="src-label">Class:</span>
+  <span class="src-name-h">src/main/java/Main/ghostbits/RawSocketSender.java</span>
+  <span class="src-label" style="margin-left:12px">Code Smell Score: 0.500 · Communities: —</span>
+  <div class="header-email-wrap" style="margin-left:auto">
+    <label>Email (required to submit)</label>
+    <input type="email" id="userEmail" class="header-email-input"
+           placeholder="your@email.com" oninput="saveEmail(this.value)" />
+  </div>
+  <a class="export-btn" href="help.html">❓ Help</a>
+  <a class="export-btn" href="repo_0x727_BypassPro.html">📁 Repo</a>
+</div>
+
+<div class="container">
+  <div class="tabs">
+    <button class="tab-btn active" data-tab="det" onclick="switchTab('det')">Deterministic (0)</button>
+    <button class="tab-btn" data-tab="prob" onclick="switchTab('prob')">Probabilistic (0)</button>
+  </div>
+  <div class="filter-bar">
+    <label>Min probability
+      <input type="number" id="fMinProb" min="0" max="1" step="0.05" value="0" oninput="applyFilters()">
+    </label>
+    <label>Max distance
+      <input type="number" id="fMaxHop" min="1" step="1" placeholder="any" oninput="applyFilters()">
+    </label>
+    <label style="flex:1">Search target label
+      <input type="text" id="fSearch" placeholder="substring…" oninput="applyFilters()" style="width:100%">
+    </label>
+  </div>
+
+  <div class="tab-pane active" data-tab="det">
+    <p class="none-text">No deterministic targets above θ.</p>
+  </div>
+
+  <div class="tab-pane" data-tab="prob">
+    <p class="none-text">No probabilistic targets above threshold.</p>
+  </div>
+</div>
+
+<script>
+const REPO = "0x727_BypassPro";
+const SOURCE_SAFE = "src_main_java_Main_ghostbits_RawSocketSender_java";
 const STORAGE_PREFIX = 'ocpa_vote_' + REPO + '__' + SOURCE_SAFE + '__';
 const FORMSUBMIT_URL = 'https://formsubmit.co/ajax/change.vein@gmail.com';
 document.addEventListener('DOMContentLoaded', () => {
@@ -162,23 +212,28 @@ document.addEventListener('DOMContentLoaded', () => {
   });
   switchTab('det');
 });
+
 function saveEmail(v) {
   localStorage.setItem('email_' + REPO, v);
   document.getElementById('userEmail').classList.remove('invalid');
 }
+
 function saveComment(id, value) {
   localStorage.setItem(STORAGE_PREFIX + id + '__comment', value);
 }
+
 function selectVote(id, vote, btn) {
   btn.parentElement.querySelectorAll('.vote-btn').forEach(b => b.classList.remove('selected'));
   btn.classList.add('selected');
   document.getElementById('vote_' + id).value = vote;
   document.getElementById('submitBtn_' + id).disabled = false;
 }
+
 function switchTab(name) {
   document.querySelectorAll('.tab-btn').forEach(b => b.classList.toggle('active', b.dataset.tab === name));
   document.querySelectorAll('.tab-pane').forEach(p => p.classList.toggle('active', p.dataset.tab === name));
 }
+
 function applyFilters() {
   const minP = parseFloat(document.getElementById('fMinProb').value) || 0;
   const maxH = parseFloat(document.getElementById('fMaxHop').value);
@@ -194,6 +249,7 @@ function applyFilters() {
     card.style.display = show ? '' : 'none';
   });
 }
+
 async function submitVote(id) {
   const vote = document.getElementById('vote_' + id).value;
   if (!vote) return;
@@ -214,10 +270,10 @@ async function submitVote(id) {
   const statusEl  = document.getElementById('status_'    + id);
   const submitBtn = document.getElementById('submitBtn_' + id);
   submitBtn.disabled = true;
-  statusEl.textContent = 'Submitting…';
+  statusEl.textContent = 'Submitting\u2026';
   statusEl.className = 'submit-status';
   const payload = {
-    _subject: '[HyCPA Validation] ' + REPO + ' — ' + source + ' → ' + target + ': ' + vote.toUpperCase(),
+    _subject: '[HyCPA Validation] ' + REPO + ' \u2014 ' + source + ' \u2192 ' + target + ': ' + vote.toUpperCase(),
     Email: email, Repository: REPO,
     Source_Class: source, Affected_Class: target,
     Type: kind, Rank: rank, Prob: prob, Hop: hop,
@@ -226,15 +282,19 @@ async function submitVote(id) {
   localStorage.setItem(STORAGE_PREFIX + id, JSON.stringify(payload));
   try {
     const resp = await fetch(FORMSUBMIT_URL, {
-      method: 'POST', headers: {'Content-Type':'application/json','Accept':'application/json'},
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
       body: JSON.stringify(payload)
     });
-    if (resp.ok) { statusEl.textContent = '✓ Submitted'; }
-    else { statusEl.textContent = '⚠ Saved locally (server error)'; statusEl.classList.add('error'); }
+    if (resp.ok) { statusEl.textContent = '\u2713 Submitted'; }
+    else { statusEl.textContent = '\u26a0 Saved locally (server error)'; statusEl.classList.add('error'); }
   } catch (e) {
-    statusEl.textContent = '⚠ Saved locally (offline)';
+    statusEl.textContent = '\u26a0 Saved locally (offline)';
     statusEl.classList.add('error');
   }
   submitBtn.disabled = false;
 }
-</script></body></html>
+
+</script>
+</body>
+</html>

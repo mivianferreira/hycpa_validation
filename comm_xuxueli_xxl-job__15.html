@@ -1,0 +1,1559 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HyCPA — Community 15 · xuxueli/xxl-job</title>
+  <style>
+:root {
+  --bg: #0d1117; --surface: #161b22; --surface2: #21262d;
+  --border: #30363d; --text: #e6edf3; --text2: #8b949e;
+  --accent: #58a6ff; --green: #3fb950; --orange: #e3b341; --red: #f85149;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { background: var(--bg); color: var(--text); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif; padding-bottom: 48px; }
+
+/* ── Header ── */
+.page-header { background: var(--surface); border-bottom: 1px solid var(--border); padding: 12px 24px; display: flex; align-items: center; gap: 20px; }
+.back-btn { color: var(--text2); font-size: 12px; text-decoration: none; white-space: nowrap; }
+.back-btn:hover { color: var(--accent); }
+.header-title { font-size: 15px; color: var(--text); }
+.header-title strong { color: var(--accent); }
+
+/* ── Stats pills ── */
+.stats-row { display: flex; gap: 12px; padding: 16px 24px; background: var(--surface); border-bottom: 1px solid var(--border); flex-wrap: wrap; }
+.stat-pill { background: var(--surface2); border: 1px solid var(--border); border-radius: 8px; padding: 10px 20px; display: flex; flex-direction: column; align-items: center; gap: 2px; min-width: 90px; }
+.pill-val { font-size: 22px; font-weight: 700; color: var(--text); line-height: 1; }
+.pill-lbl { font-size: 10px; color: var(--text2); text-transform: uppercase; letter-spacing: 0.5px; margin-top: 2px; }
+
+/* ── Content sections ── */
+.content-section { padding: 24px; }
+.section-title { font-size: 11px; font-weight: 600; color: var(--text2); text-transform: uppercase; letter-spacing: 0.6px; margin-bottom: 14px; display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
+
+/* ── Node table ── */
+.node-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+.node-table th { background: var(--surface); color: var(--text2); font-weight: 600; font-size: 10px; text-transform: uppercase; letter-spacing: 0.5px; padding: 8px 12px; text-align: left; border-bottom: 2px solid var(--border); white-space: nowrap; }
+.node-table td { padding: 7px 12px; border-bottom: 1px solid var(--border); vertical-align: middle; }
+.node-table tbody tr:hover td { background: var(--surface); }
+.health-badge { display: inline-block; padding: 2px 9px; border-radius: 10px; font-size: 11px; font-weight: 700; color: #0d1117; white-space: nowrap; }
+.class-path { font-size: 11px; color: var(--text2); font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', monospace; word-break: break-all; }
+td.num { text-align: right; font-weight: 600; white-space: nowrap; }
+td.overlap { color: var(--accent); }
+
+/* ── Coupling matrix ── */
+.matrix-wrap { overflow: auto; }
+.matrix { border-collapse: collapse; }
+.matrix-corner { min-width: 16px; }
+.matrix-col-hdr { padding: 0 1px 4px 1px; vertical-align: bottom; }
+.matrix-col-hdr span { display: block; writing-mode: vertical-rl; transform: rotate(180deg); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-height: 140px; color: var(--text2); font-weight: 400; font-size: 10px; cursor: default; text-align: left; }
+.matrix-row-hdr { text-align: right; padding: 1px 6px 1px 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 200px; color: var(--text2); font-weight: 400; font-size: 10px; cursor: default; }
+.matrix-cell { width: 16px; height: 16px; min-width: 16px; min-height: 16px; border: 1px solid #1c2129; cursor: default; }
+.matrix-cell.empty { background: transparent; }
+.matrix-cell.self-cell { background: var(--surface2); }
+.matrix-cell.filled { }
+
+/* ── Legend inline ── */
+.legend-inline { display: inline-flex; align-items: center; gap: 6px; font-size: 10px; color: var(--text2); font-weight: 400; text-transform: none; letter-spacing: 0; }
+.li-cell { display: inline-block; width: 10px; height: 10px; border-radius: 2px; vertical-align: middle; flex-shrink: 0; }
+</style>
+</head>
+<body>
+
+<div class="page-header">
+  <a class="back-btn" href="repo_xuxueli_xxl-job.html">← Back to xuxueli/xxl-job</a>
+  <span class="header-title">Community <strong>C15</strong> — xuxueli/xxl-job</span>
+</div>
+
+<div class="stats-row">
+  <div class="stat-pill"><span class="pill-val">20</span><span class="pill-lbl">Nodes</span></div>
+  <div class="stat-pill"><span class="pill-val">380</span><span class="pill-lbl">Arcs</span></div>
+  <div class="stat-pill"><span class="pill-val">20</span><span class="pill-lbl">Overlapping</span></div>
+  <div class="stat-pill"><span class="pill-val">13</span><span class="pill-lbl">Coupled arcs</span></div>
+  <div class="stat-pill"><span class="pill-val">0</span><span class="pill-lbl">Co-change only</span></div>
+</div>
+
+<section class="content-section">
+  <h2 class="section-title">Nodes</h2>
+  <table class="node-table">
+    <thead>
+      <tr>
+        <th>Health</th>
+        <th>Class</th>
+        <th>Degree</th>
+        <th>Communities</th>
+      </tr>
+    </thead>
+    <tbody>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#e3b341">0.635</span></td>
+        <td class="class-path" title="xxl-job-admin/src/main/java/com/xxl/job/admin/scheduler/config/XxlJobAdminBootstrap.java">xxl-job-admin/src/main/java/com/xxl/job/admin/scheduler/config/XxlJobAdminBootstrap.java</td>
+        <td class="num">38</td>
+        <td class="num overlap">7</td>
+      </tr>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#e3b341">0.654</span></td>
+        <td class="class-path" title="xxl-job-admin/src/main/java/com/xxl/job/admin/controller/biz/JobLogController.java">xxl-job-admin/src/main/java/com/xxl/job/admin/controller/biz/JobLogController.java</td>
+        <td class="num">38</td>
+        <td class="num overlap">6</td>
+      </tr>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#e3b341">0.712</span></td>
+        <td class="class-path" title="xxl-job-core/src/main/java/com/xxl/job/core/thread/JobThread.java">xxl-job-core/src/main/java/com/xxl/job/core/thread/JobThread.java</td>
+        <td class="num">38</td>
+        <td class="num overlap">6</td>
+      </tr>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#e3b341">0.720</span></td>
+        <td class="class-path" title="xxl-job-admin/src/main/java/com/xxl/job/admin/scheduler/trigger/JobTrigger.java">xxl-job-admin/src/main/java/com/xxl/job/admin/scheduler/trigger/JobTrigger.java</td>
+        <td class="num">38</td>
+        <td class="num overlap">6</td>
+      </tr>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#3fb950">0.750</span></td>
+        <td class="class-path" title="xxl-job-admin/src/main/java/com/xxl/job/admin/controller/biz/JobGroupController.java">xxl-job-admin/src/main/java/com/xxl/job/admin/controller/biz/JobGroupController.java</td>
+        <td class="num">38</td>
+        <td class="num overlap">6</td>
+      </tr>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#3fb950">0.750</span></td>
+        <td class="class-path" title="xxl-job-admin/src/main/java/com/xxl/job/admin/controller/biz/JobInfoController.java">xxl-job-admin/src/main/java/com/xxl/job/admin/controller/biz/JobInfoController.java</td>
+        <td class="num">38</td>
+        <td class="num overlap">7</td>
+      </tr>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#3fb950">0.750</span></td>
+        <td class="class-path" title="xxl-job-admin/src/main/java/com/xxl/job/admin/scheduler/thread/JobScheduleHelper.java">xxl-job-admin/src/main/java/com/xxl/job/admin/scheduler/thread/JobScheduleHelper.java</td>
+        <td class="num">38</td>
+        <td class="num overlap">7</td>
+      </tr>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#3fb950">0.827</span></td>
+        <td class="class-path" title="xxl-job-admin/src/main/java/com/xxl/job/admin/controller/biz/JobUserController.java">xxl-job-admin/src/main/java/com/xxl/job/admin/controller/biz/JobUserController.java</td>
+        <td class="num">38</td>
+        <td class="num overlap">6</td>
+      </tr>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#3fb950">0.865</span></td>
+        <td class="class-path" title="xxl-job-admin/src/main/java/com/xxl/job/admin/controller/biz/JobCodeController.java">xxl-job-admin/src/main/java/com/xxl/job/admin/controller/biz/JobCodeController.java</td>
+        <td class="num">38</td>
+        <td class="num overlap">7</td>
+      </tr>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#3fb950">0.865</span></td>
+        <td class="class-path" title="xxl-job-admin/src/main/java/com/xxl/job/admin/scheduler/thread/JobTriggerPoolHelper.java">xxl-job-admin/src/main/java/com/xxl/job/admin/scheduler/thread/JobTriggerPoolHelper.java</td>
+        <td class="num">38</td>
+        <td class="num overlap">7</td>
+      </tr>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#3fb950">0.865</span></td>
+        <td class="class-path" title="xxl-job-admin/src/test/java/com/xxl/job/openapi/ExecutorBizTest.java">xxl-job-admin/src/test/java/com/xxl/job/openapi/ExecutorBizTest.java</td>
+        <td class="num">38</td>
+        <td class="num overlap">6</td>
+      </tr>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#3fb950">0.880</span></td>
+        <td class="class-path" title="xxl-job-admin/src/main/java/com/xxl/job/admin/scheduler/complete/JobCompleter.java">xxl-job-admin/src/main/java/com/xxl/job/admin/scheduler/complete/JobCompleter.java</td>
+        <td class="num">38</td>
+        <td class="num overlap">6</td>
+      </tr>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#3fb950">0.885</span></td>
+        <td class="class-path" title="xxl-job-admin/src/main/java/com/xxl/job/admin/scheduler/thread/JobRegistryHelper.java">xxl-job-admin/src/main/java/com/xxl/job/admin/scheduler/thread/JobRegistryHelper.java</td>
+        <td class="num">38</td>
+        <td class="num overlap">6</td>
+      </tr>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#3fb950">0.940</span></td>
+        <td class="class-path" title="xxl-job-executor-samples/xxl-job-executor-sample-springboot/src/main/java/com/xxl/job/executor/config/XxlJobConfig.java">xxl-job-executor-samples/xxl-job-executor-sample-springboot/src/main/java/com/xxl/job/executor/config/XxlJobConfig.java</td>
+        <td class="num">38</td>
+        <td class="num overlap">6</td>
+      </tr>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#3fb950">0.942</span></td>
+        <td class="class-path" title="xxl-job-admin/src/main/java/com/xxl/job/admin/scheduler/thread/JobFailAlarmMonitorHelper.java">xxl-job-admin/src/main/java/com/xxl/job/admin/scheduler/thread/JobFailAlarmMonitorHelper.java</td>
+        <td class="num">38</td>
+        <td class="num overlap">6</td>
+      </tr>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#3fb950">0.942</span></td>
+        <td class="class-path" title="xxl-job-admin/src/test/java/com/xxl/job/openapi/AdminBizTest.java">xxl-job-admin/src/test/java/com/xxl/job/openapi/AdminBizTest.java</td>
+        <td class="num">38</td>
+        <td class="num overlap">6</td>
+      </tr>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#3fb950">0.960</span></td>
+        <td class="class-path" title="xxl-job-admin/src/main/java/com/xxl/job/admin/scheduler/openapi/OpenApiController.java">xxl-job-admin/src/main/java/com/xxl/job/admin/scheduler/openapi/OpenApiController.java</td>
+        <td class="num">38</td>
+        <td class="num overlap">6</td>
+      </tr>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#3fb950">0.980</span></td>
+        <td class="class-path" title="xxl-job-admin/src/main/java/com/xxl/job/admin/web/error/WebHandlerExceptionResolver.java">xxl-job-admin/src/main/java/com/xxl/job/admin/web/error/WebHandlerExceptionResolver.java</td>
+        <td class="num">38</td>
+        <td class="num overlap">6</td>
+      </tr>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#8b949e">—</span></td>
+        <td class="class-path" title="xxl-job-core/src/main/java/com/xxl/job/core/handler/annotation/JobHandler.java">xxl-job-core/src/main/java/com/xxl/job/core/handler/annotation/JobHandler.java</td>
+        <td class="num">38</td>
+        <td class="num overlap">6</td>
+      </tr>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#8b949e">—</span></td>
+        <td class="class-path" title="xxl-job-executor-samples/xxl-job-executor-sample-springboot/src/main/java/com/xxl/job/executor/controller/IndexController.java">xxl-job-executor-samples/xxl-job-executor-sample-springboot/src/main/java/com/xxl/job/executor/controller/IndexController.java</td>
+        <td class="num">38</td>
+        <td class="num overlap">6</td>
+      </tr>
+      
+    </tbody>
+  </table>
+</section>
+
+
+<section class="content-section">
+  <h2 class="section-title">Coupling matrix
+    <span class="legend-inline">
+      <span class="li-cell" style="background:#30363d"></span>Co-change only
+      <span class="li-cell" style="background:#3fb950"></span>Weak
+      <span class="li-cell" style="background:#e3b341"></span>Moderate
+      <span class="li-cell" style="background:#f85149"></span>Strong
+    </span>
+  </h2>
+  <div class="matrix-wrap">
+    <table class="matrix">
+      <thead>
+        <tr>
+          <th class="matrix-corner"></th>
+          <th class="matrix-col-hdr" title="xxl-job-admin/src/main/java/com/xxl/job/admin/scheduler/config/XxlJobAdminBootstrap.java"><span>XxlJobAdminBootstrap</span></th><th class="matrix-col-hdr" title="xxl-job-admin/src/main/java/com/xxl/job/admin/controller/biz/JobLogController.java"><span>JobLogController</span></th><th class="matrix-col-hdr" title="xxl-job-core/src/main/java/com/xxl/job/core/thread/JobThread.java"><span>JobThread</span></th><th class="matrix-col-hdr" title="xxl-job-admin/src/main/java/com/xxl/job/admin/scheduler/trigger/JobTrigger.java"><span>JobTrigger</span></th><th class="matrix-col-hdr" title="xxl-job-admin/src/main/java/com/xxl/job/admin/controller/biz/JobGroupController.java"><span>JobGroupController</span></th><th class="matrix-col-hdr" title="xxl-job-admin/src/main/java/com/xxl/job/admin/controller/biz/JobInfoController.java"><span>JobInfoController</span></th><th class="matrix-col-hdr" title="xxl-job-admin/src/main/java/com/xxl/job/admin/scheduler/thread/JobScheduleHelper.java"><span>JobScheduleHelper</span></th><th class="matrix-col-hdr" title="xxl-job-admin/src/main/java/com/xxl/job/admin/controller/biz/JobUserController.java"><span>JobUserController</span></th><th class="matrix-col-hdr" title="xxl-job-admin/src/main/java/com/xxl/job/admin/controller/biz/JobCodeController.java"><span>JobCodeController</span></th><th class="matrix-col-hdr" title="xxl-job-admin/src/main/java/com/xxl/job/admin/scheduler/thread/JobTriggerPoolHelper.java"><span>JobTriggerPoolHelper</span></th><th class="matrix-col-hdr" title="xxl-job-admin/src/test/java/com/xxl/job/openapi/ExecutorBizTest.java"><span>ExecutorBizTest</span></th><th class="matrix-col-hdr" title="xxl-job-admin/src/main/java/com/xxl/job/admin/scheduler/complete/JobCompleter.java"><span>JobCompleter</span></th><th class="matrix-col-hdr" title="xxl-job-admin/src/main/java/com/xxl/job/admin/scheduler/thread/JobRegistryHelper.java"><span>JobRegistryHelper</span></th><th class="matrix-col-hdr" title="xxl-job-executor-samples/xxl-job-executor-sample-springboot/src/main/java/com/xxl/job/executor/config/XxlJobConfig.java"><span>XxlJobConfig</span></th><th class="matrix-col-hdr" title="xxl-job-admin/src/main/java/com/xxl/job/admin/scheduler/thread/JobFailAlarmMonitorHelper.java"><span>JobFailAlarmMonitorHelper</span></th><th class="matrix-col-hdr" title="xxl-job-admin/src/test/java/com/xxl/job/openapi/AdminBizTest.java"><span>AdminBizTest</span></th><th class="matrix-col-hdr" title="xxl-job-admin/src/main/java/com/xxl/job/admin/scheduler/openapi/OpenApiController.java"><span>OpenApiController</span></th><th class="matrix-col-hdr" title="xxl-job-admin/src/main/java/com/xxl/job/admin/web/error/WebHandlerExceptionResolver.java"><span>WebHandlerExceptionResolver</span></th><th class="matrix-col-hdr" title="xxl-job-core/src/main/java/com/xxl/job/core/handler/annotation/JobHandler.java"><span>JobHandler</span></th><th class="matrix-col-hdr" title="xxl-job-executor-samples/xxl-job-executor-sample-springboot/src/main/java/com/xxl/job/executor/controller/IndexController.java"><span>IndexController</span></th>
+        </tr>
+      </thead>
+      <tbody>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="xxl-job-admin/src/main/java/com/xxl/job/admin/scheduler/config/XxlJobAdminBootstrap.java">XxlJobAdminBootstrap</th>
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobAdminBootstrap → JobLogController · weight: 54 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobAdminBootstrap → JobThread · weight: 36 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#137-d661" title="XxlJobAdminBootstrap → JobTrigger · weight: 54 · cw: 2.5095 · DATA_ABSTRACTION_COUPLING, METHOD_RETURN_TYPE, VARIABLE_FIELD_DECLARATION, VARIABLE_RETURN_STATEMENT"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobAdminBootstrap → JobGroupController · weight: 42 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobAdminBootstrap → JobInfoController · weight: 54 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#14c-13a69" title="XxlJobAdminBootstrap → JobScheduleHelper · weight: 42 · cw: 3.0162 · ATOMIC_PARAMETER_COUPLING, DATA_ABSTRACTION_COUPLING, METHOD_INVOCATION_ATOMIC_PARAMETER, VARIABLE_CLASS_INSTANCE_CREATION, VARIABLE_FIELD_DECLARATION"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobAdminBootstrap → JobUserController · weight: 36 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobAdminBootstrap → JobCodeController · weight: 36 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#184-2407e" title="XxlJobAdminBootstrap → JobTriggerPoolHelper · weight: 36 · cw: 4.3558 · ATOMIC_PARAMETER_COUPLING, DATA_ABSTRACTION_COUPLING, METHOD_INVOCATION_ATOMIC_PARAMETER, METHOD_RETURN_TYPE, VARIABLE_CLASS_INSTANCE_CREATION, VARIABLE_FIELD_DECLARATION, VARIABLE_RETURN_STATEMENT"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobAdminBootstrap → ExecutorBizTest · weight: 42 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#137-d661" title="XxlJobAdminBootstrap → JobCompleter · weight: 30 · cw: 2.5095 · DATA_ABSTRACTION_COUPLING, METHOD_RETURN_TYPE, VARIABLE_FIELD_DECLARATION, VARIABLE_RETURN_STATEMENT"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#184-2407e" title="XxlJobAdminBootstrap → JobRegistryHelper · weight: 30 · cw: 4.3558 · ATOMIC_PARAMETER_COUPLING, DATA_ABSTRACTION_COUPLING, METHOD_INVOCATION_ATOMIC_PARAMETER, METHOD_RETURN_TYPE, VARIABLE_CLASS_INSTANCE_CREATION, VARIABLE_FIELD_DECLARATION, VARIABLE_RETURN_STATEMENT"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobAdminBootstrap → XxlJobConfig · weight: 42 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#14c-13a69" title="XxlJobAdminBootstrap → JobFailAlarmMonitorHelper · weight: 60 · cw: 3.0162 · ATOMIC_PARAMETER_COUPLING, DATA_ABSTRACTION_COUPLING, METHOD_INVOCATION_ATOMIC_PARAMETER, VARIABLE_CLASS_INSTANCE_CREATION, VARIABLE_FIELD_DECLARATION"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobAdminBootstrap → AdminBizTest · weight: 36 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobAdminBootstrap → OpenApiController · weight: 30 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobAdminBootstrap → WebHandlerExceptionResolver · weight: 30 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobAdminBootstrap → JobHandler · weight: 42 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobAdminBootstrap → IndexController · weight: 30 · cw: 0.0000 · co-change only"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="xxl-job-admin/src/main/java/com/xxl/job/admin/controller/biz/JobLogController.java">JobLogController</th>
+          
+            <td class="matrix-cell filled" style="background:#109-14f" title="JobLogController → XxlJobAdminBootstrap · weight: 54 · cw: 1.4187 · METHOD_INVOCATION_ATOMIC_PARAMETER, METHOD_INVOCATION_OBJECT_PARAMETER"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobLogController → JobThread · weight: 54 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobLogController → JobTrigger · weight: 81 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobLogController → JobGroupController · weight: 63 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobLogController → JobInfoController · weight: 81 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobLogController → JobScheduleHelper · weight: 63 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobLogController → JobUserController · weight: 54 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobLogController → JobCodeController · weight: 54 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobLogController → JobTriggerPoolHelper · weight: 54 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobLogController → ExecutorBizTest · weight: 63 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#eb8b44" title="JobLogController → JobCompleter · weight: 45 · cw: 0.7024 · METHOD_INVOCATION_OBJECT_PARAMETER"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobLogController → JobRegistryHelper · weight: 45 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobLogController → XxlJobConfig · weight: 63 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobLogController → JobFailAlarmMonitorHelper · weight: 90 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobLogController → AdminBizTest · weight: 54 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobLogController → OpenApiController · weight: 45 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobLogController → WebHandlerExceptionResolver · weight: 45 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobLogController → JobHandler · weight: 63 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobLogController → IndexController · weight: 45 · cw: 0.0000 · co-change only"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="xxl-job-core/src/main/java/com/xxl/job/core/thread/JobThread.java">JobThread</th>
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobThread → XxlJobAdminBootstrap · weight: 36 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobThread → JobLogController · weight: 54 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobThread → JobTrigger · weight: 55 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobThread → JobGroupController · weight: 42 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobThread → JobInfoController · weight: 54 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobThread → JobScheduleHelper · weight: 42 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobThread → JobUserController · weight: 36 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobThread → JobCodeController · weight: 36 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobThread → JobTriggerPoolHelper · weight: 36 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobThread → ExecutorBizTest · weight: 43 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobThread → JobCompleter · weight: 31 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobThread → JobRegistryHelper · weight: 30 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobThread → XxlJobConfig · weight: 42 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobThread → JobFailAlarmMonitorHelper · weight: 60 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobThread → AdminBizTest · weight: 37 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobThread → OpenApiController · weight: 30 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobThread → WebHandlerExceptionResolver · weight: 30 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobThread → JobHandler · weight: 42 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobThread → IndexController · weight: 30 · cw: 0.0000 · co-change only"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="xxl-job-admin/src/main/java/com/xxl/job/admin/scheduler/trigger/JobTrigger.java">JobTrigger</th>
+          
+            <td class="matrix-cell filled" style="background:#eb8b44" title="JobTrigger → XxlJobAdminBootstrap · weight: 54 · cw: 0.7024 · METHOD_INVOCATION_OBJECT_PARAMETER"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobTrigger → JobLogController · weight: 81 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobTrigger → JobThread · weight: 55 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobTrigger → JobGroupController · weight: 63 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobTrigger → JobInfoController · weight: 81 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobTrigger → JobScheduleHelper · weight: 63 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobTrigger → JobUserController · weight: 54 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobTrigger → JobCodeController · weight: 54 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobTrigger → JobTriggerPoolHelper · weight: 54 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobTrigger → ExecutorBizTest · weight: 64 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobTrigger → JobCompleter · weight: 45 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobTrigger → JobRegistryHelper · weight: 45 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobTrigger → XxlJobConfig · weight: 63 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobTrigger → JobFailAlarmMonitorHelper · weight: 90 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobTrigger → AdminBizTest · weight: 54 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobTrigger → OpenApiController · weight: 45 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobTrigger → WebHandlerExceptionResolver · weight: 45 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobTrigger → JobHandler · weight: 63 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobTrigger → IndexController · weight: 45 · cw: 0.0000 · co-change only"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="xxl-job-admin/src/main/java/com/xxl/job/admin/controller/biz/JobGroupController.java">JobGroupController</th>
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobGroupController → XxlJobAdminBootstrap · weight: 42 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobGroupController → JobLogController · weight: 63 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobGroupController → JobThread · weight: 42 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobGroupController → JobTrigger · weight: 63 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobGroupController → JobInfoController · weight: 63 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobGroupController → JobScheduleHelper · weight: 49 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobGroupController → JobUserController · weight: 42 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobGroupController → JobCodeController · weight: 42 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobGroupController → JobTriggerPoolHelper · weight: 42 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobGroupController → ExecutorBizTest · weight: 49 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobGroupController → JobCompleter · weight: 35 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobGroupController → JobRegistryHelper · weight: 35 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobGroupController → XxlJobConfig · weight: 49 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobGroupController → JobFailAlarmMonitorHelper · weight: 70 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobGroupController → AdminBizTest · weight: 42 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobGroupController → OpenApiController · weight: 35 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobGroupController → WebHandlerExceptionResolver · weight: 35 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobGroupController → JobHandler · weight: 49 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobGroupController → IndexController · weight: 35 · cw: 0.0000 · co-change only"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="xxl-job-admin/src/main/java/com/xxl/job/admin/controller/biz/JobInfoController.java">JobInfoController</th>
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobInfoController → XxlJobAdminBootstrap · weight: 54 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobInfoController → JobLogController · weight: 81 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobInfoController → JobThread · weight: 54 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobInfoController → JobTrigger · weight: 81 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobInfoController → JobGroupController · weight: 63 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobInfoController → JobScheduleHelper · weight: 63 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobInfoController → JobUserController · weight: 54 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobInfoController → JobCodeController · weight: 54 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobInfoController → JobTriggerPoolHelper · weight: 54 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobInfoController → ExecutorBizTest · weight: 63 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobInfoController → JobCompleter · weight: 45 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobInfoController → JobRegistryHelper · weight: 45 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobInfoController → XxlJobConfig · weight: 63 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobInfoController → JobFailAlarmMonitorHelper · weight: 90 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobInfoController → AdminBizTest · weight: 54 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobInfoController → OpenApiController · weight: 45 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobInfoController → WebHandlerExceptionResolver · weight: 45 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobInfoController → JobHandler · weight: 63 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobInfoController → IndexController · weight: 45 · cw: 0.0000 · co-change only"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="xxl-job-admin/src/main/java/com/xxl/job/admin/scheduler/thread/JobScheduleHelper.java">JobScheduleHelper</th>
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobScheduleHelper → XxlJobAdminBootstrap · weight: 42 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobScheduleHelper → JobLogController · weight: 63 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobScheduleHelper → JobThread · weight: 42 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobScheduleHelper → JobTrigger · weight: 63 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobScheduleHelper → JobGroupController · weight: 49 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobScheduleHelper → JobInfoController · weight: 63 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobScheduleHelper → JobUserController · weight: 42 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobScheduleHelper → JobCodeController · weight: 42 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobScheduleHelper → JobTriggerPoolHelper · weight: 42 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobScheduleHelper → ExecutorBizTest · weight: 49 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobScheduleHelper → JobCompleter · weight: 35 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobScheduleHelper → JobRegistryHelper · weight: 35 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobScheduleHelper → XxlJobConfig · weight: 49 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobScheduleHelper → JobFailAlarmMonitorHelper · weight: 70 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobScheduleHelper → AdminBizTest · weight: 42 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobScheduleHelper → OpenApiController · weight: 35 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobScheduleHelper → WebHandlerExceptionResolver · weight: 35 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobScheduleHelper → JobHandler · weight: 49 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobScheduleHelper → IndexController · weight: 35 · cw: 0.0000 · co-change only"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="xxl-job-admin/src/main/java/com/xxl/job/admin/controller/biz/JobUserController.java">JobUserController</th>
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobUserController → XxlJobAdminBootstrap · weight: 36 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobUserController → JobLogController · weight: 54 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobUserController → JobThread · weight: 36 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobUserController → JobTrigger · weight: 54 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobUserController → JobGroupController · weight: 42 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobUserController → JobInfoController · weight: 54 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobUserController → JobScheduleHelper · weight: 42 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobUserController → JobCodeController · weight: 36 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobUserController → JobTriggerPoolHelper · weight: 36 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobUserController → ExecutorBizTest · weight: 42 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobUserController → JobCompleter · weight: 30 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobUserController → JobRegistryHelper · weight: 30 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobUserController → XxlJobConfig · weight: 42 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobUserController → JobFailAlarmMonitorHelper · weight: 60 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobUserController → AdminBizTest · weight: 36 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobUserController → OpenApiController · weight: 30 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobUserController → WebHandlerExceptionResolver · weight: 30 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobUserController → JobHandler · weight: 42 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobUserController → IndexController · weight: 30 · cw: 0.0000 · co-change only"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="xxl-job-admin/src/main/java/com/xxl/job/admin/controller/biz/JobCodeController.java">JobCodeController</th>
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobCodeController → XxlJobAdminBootstrap · weight: 36 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobCodeController → JobLogController · weight: 54 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobCodeController → JobThread · weight: 36 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobCodeController → JobTrigger · weight: 54 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobCodeController → JobGroupController · weight: 42 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobCodeController → JobInfoController · weight: 54 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobCodeController → JobScheduleHelper · weight: 42 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobCodeController → JobUserController · weight: 36 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobCodeController → JobTriggerPoolHelper · weight: 36 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobCodeController → ExecutorBizTest · weight: 42 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobCodeController → JobCompleter · weight: 30 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobCodeController → JobRegistryHelper · weight: 30 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobCodeController → XxlJobConfig · weight: 42 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobCodeController → JobFailAlarmMonitorHelper · weight: 60 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobCodeController → AdminBizTest · weight: 36 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobCodeController → OpenApiController · weight: 30 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobCodeController → WebHandlerExceptionResolver · weight: 30 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobCodeController → JobHandler · weight: 42 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobCodeController → IndexController · weight: 30 · cw: 0.0000 · co-change only"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="xxl-job-admin/src/main/java/com/xxl/job/admin/scheduler/thread/JobTriggerPoolHelper.java">JobTriggerPoolHelper</th>
+          
+            <td class="matrix-cell filled" style="background:#ec8844" title="JobTriggerPoolHelper → XxlJobAdminBootstrap · weight: 36 · cw: 0.7163 · METHOD_INVOCATION_ATOMIC_PARAMETER"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobTriggerPoolHelper → JobLogController · weight: 54 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobTriggerPoolHelper → JobThread · weight: 36 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobTriggerPoolHelper → JobTrigger · weight: 54 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobTriggerPoolHelper → JobGroupController · weight: 42 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobTriggerPoolHelper → JobInfoController · weight: 54 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobTriggerPoolHelper → JobScheduleHelper · weight: 42 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobTriggerPoolHelper → JobUserController · weight: 36 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobTriggerPoolHelper → JobCodeController · weight: 36 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobTriggerPoolHelper → ExecutorBizTest · weight: 42 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobTriggerPoolHelper → JobCompleter · weight: 30 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobTriggerPoolHelper → JobRegistryHelper · weight: 30 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobTriggerPoolHelper → XxlJobConfig · weight: 42 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobTriggerPoolHelper → JobFailAlarmMonitorHelper · weight: 60 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobTriggerPoolHelper → AdminBizTest · weight: 36 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobTriggerPoolHelper → OpenApiController · weight: 30 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobTriggerPoolHelper → WebHandlerExceptionResolver · weight: 30 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobTriggerPoolHelper → JobHandler · weight: 42 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobTriggerPoolHelper → IndexController · weight: 30 · cw: 0.0000 · co-change only"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="xxl-job-admin/src/test/java/com/xxl/job/openapi/ExecutorBizTest.java">ExecutorBizTest</th>
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ExecutorBizTest → XxlJobAdminBootstrap · weight: 42 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ExecutorBizTest → JobLogController · weight: 63 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ExecutorBizTest → JobThread · weight: 43 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ExecutorBizTest → JobTrigger · weight: 64 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ExecutorBizTest → JobGroupController · weight: 49 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ExecutorBizTest → JobInfoController · weight: 63 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ExecutorBizTest → JobScheduleHelper · weight: 49 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ExecutorBizTest → JobUserController · weight: 42 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ExecutorBizTest → JobCodeController · weight: 42 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ExecutorBizTest → JobTriggerPoolHelper · weight: 42 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ExecutorBizTest → JobCompleter · weight: 35 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ExecutorBizTest → JobRegistryHelper · weight: 35 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ExecutorBizTest → XxlJobConfig · weight: 49 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ExecutorBizTest → JobFailAlarmMonitorHelper · weight: 70 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ExecutorBizTest → AdminBizTest · weight: 42 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ExecutorBizTest → OpenApiController · weight: 35 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ExecutorBizTest → WebHandlerExceptionResolver · weight: 35 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ExecutorBizTest → JobHandler · weight: 49 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ExecutorBizTest → IndexController · weight: 35 · cw: 0.0000 · co-change only"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="xxl-job-admin/src/main/java/com/xxl/job/admin/scheduler/complete/JobCompleter.java">JobCompleter</th>
+          
+            <td class="matrix-cell filled" style="background:#ec8844" title="JobCompleter → XxlJobAdminBootstrap · weight: 30 · cw: 0.7163 · METHOD_INVOCATION_ATOMIC_PARAMETER"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobCompleter → JobLogController · weight: 45 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobCompleter → JobThread · weight: 31 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobCompleter → JobTrigger · weight: 45 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobCompleter → JobGroupController · weight: 35 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobCompleter → JobInfoController · weight: 45 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobCompleter → JobScheduleHelper · weight: 35 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobCompleter → JobUserController · weight: 30 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobCompleter → JobCodeController · weight: 30 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#eb8b44" title="JobCompleter → JobTriggerPoolHelper · weight: 30 · cw: 0.7024 · METHOD_INVOCATION_OBJECT_PARAMETER"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobCompleter → ExecutorBizTest · weight: 35 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobCompleter → JobRegistryHelper · weight: 25 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobCompleter → XxlJobConfig · weight: 35 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobCompleter → JobFailAlarmMonitorHelper · weight: 50 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobCompleter → AdminBizTest · weight: 31 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobCompleter → OpenApiController · weight: 25 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobCompleter → WebHandlerExceptionResolver · weight: 25 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobCompleter → JobHandler · weight: 35 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobCompleter → IndexController · weight: 25 · cw: 0.0000 · co-change only"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="xxl-job-admin/src/main/java/com/xxl/job/admin/scheduler/thread/JobRegistryHelper.java">JobRegistryHelper</th>
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobRegistryHelper → XxlJobAdminBootstrap · weight: 30 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobRegistryHelper → JobLogController · weight: 45 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobRegistryHelper → JobThread · weight: 30 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobRegistryHelper → JobTrigger · weight: 45 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobRegistryHelper → JobGroupController · weight: 35 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobRegistryHelper → JobInfoController · weight: 45 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobRegistryHelper → JobScheduleHelper · weight: 35 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobRegistryHelper → JobUserController · weight: 30 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobRegistryHelper → JobCodeController · weight: 30 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobRegistryHelper → JobTriggerPoolHelper · weight: 30 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobRegistryHelper → ExecutorBizTest · weight: 35 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobRegistryHelper → JobCompleter · weight: 25 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobRegistryHelper → XxlJobConfig · weight: 35 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobRegistryHelper → JobFailAlarmMonitorHelper · weight: 50 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobRegistryHelper → AdminBizTest · weight: 30 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobRegistryHelper → OpenApiController · weight: 25 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobRegistryHelper → WebHandlerExceptionResolver · weight: 25 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobRegistryHelper → JobHandler · weight: 35 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobRegistryHelper → IndexController · weight: 25 · cw: 0.0000 · co-change only"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="xxl-job-executor-samples/xxl-job-executor-sample-springboot/src/main/java/com/xxl/job/executor/config/XxlJobConfig.java">XxlJobConfig</th>
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobConfig → XxlJobAdminBootstrap · weight: 42 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobConfig → JobLogController · weight: 63 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobConfig → JobThread · weight: 42 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobConfig → JobTrigger · weight: 63 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobConfig → JobGroupController · weight: 49 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobConfig → JobInfoController · weight: 63 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobConfig → JobScheduleHelper · weight: 49 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobConfig → JobUserController · weight: 42 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobConfig → JobCodeController · weight: 42 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobConfig → JobTriggerPoolHelper · weight: 42 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobConfig → ExecutorBizTest · weight: 49 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobConfig → JobCompleter · weight: 35 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobConfig → JobRegistryHelper · weight: 35 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobConfig → JobFailAlarmMonitorHelper · weight: 70 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobConfig → AdminBizTest · weight: 42 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobConfig → OpenApiController · weight: 35 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobConfig → WebHandlerExceptionResolver · weight: 35 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobConfig → JobHandler · weight: 49 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobConfig → IndexController · weight: 35 · cw: 0.0000 · co-change only"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="xxl-job-admin/src/main/java/com/xxl/job/admin/scheduler/thread/JobFailAlarmMonitorHelper.java">JobFailAlarmMonitorHelper</th>
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobFailAlarmMonitorHelper → XxlJobAdminBootstrap · weight: 60 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobFailAlarmMonitorHelper → JobLogController · weight: 90 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobFailAlarmMonitorHelper → JobThread · weight: 60 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobFailAlarmMonitorHelper → JobTrigger · weight: 90 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobFailAlarmMonitorHelper → JobGroupController · weight: 70 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobFailAlarmMonitorHelper → JobInfoController · weight: 90 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobFailAlarmMonitorHelper → JobScheduleHelper · weight: 70 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobFailAlarmMonitorHelper → JobUserController · weight: 60 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobFailAlarmMonitorHelper → JobCodeController · weight: 60 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobFailAlarmMonitorHelper → JobTriggerPoolHelper · weight: 60 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobFailAlarmMonitorHelper → ExecutorBizTest · weight: 70 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobFailAlarmMonitorHelper → JobCompleter · weight: 50 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobFailAlarmMonitorHelper → JobRegistryHelper · weight: 50 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobFailAlarmMonitorHelper → XxlJobConfig · weight: 70 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobFailAlarmMonitorHelper → AdminBizTest · weight: 60 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobFailAlarmMonitorHelper → OpenApiController · weight: 50 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobFailAlarmMonitorHelper → WebHandlerExceptionResolver · weight: 50 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobFailAlarmMonitorHelper → JobHandler · weight: 70 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobFailAlarmMonitorHelper → IndexController · weight: 50 · cw: 0.0000 · co-change only"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="xxl-job-admin/src/test/java/com/xxl/job/openapi/AdminBizTest.java">AdminBizTest</th>
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="AdminBizTest → XxlJobAdminBootstrap · weight: 36 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="AdminBizTest → JobLogController · weight: 54 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="AdminBizTest → JobThread · weight: 37 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="AdminBizTest → JobTrigger · weight: 54 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="AdminBizTest → JobGroupController · weight: 42 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="AdminBizTest → JobInfoController · weight: 54 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="AdminBizTest → JobScheduleHelper · weight: 42 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="AdminBizTest → JobUserController · weight: 36 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="AdminBizTest → JobCodeController · weight: 36 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="AdminBizTest → JobTriggerPoolHelper · weight: 36 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="AdminBizTest → ExecutorBizTest · weight: 42 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="AdminBizTest → JobCompleter · weight: 31 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="AdminBizTest → JobRegistryHelper · weight: 30 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="AdminBizTest → XxlJobConfig · weight: 42 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="AdminBizTest → JobFailAlarmMonitorHelper · weight: 60 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="AdminBizTest → OpenApiController · weight: 30 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="AdminBizTest → WebHandlerExceptionResolver · weight: 30 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="AdminBizTest → JobHandler · weight: 42 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="AdminBizTest → IndexController · weight: 30 · cw: 0.0000 · co-change only"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="xxl-job-admin/src/main/java/com/xxl/job/admin/scheduler/openapi/OpenApiController.java">OpenApiController</th>
+          
+            <td class="matrix-cell filled" style="background:#ec8844" title="OpenApiController → XxlJobAdminBootstrap · weight: 30 · cw: 0.7163 · METHOD_INVOCATION_ATOMIC_PARAMETER"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="OpenApiController → JobLogController · weight: 45 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="OpenApiController → JobThread · weight: 30 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="OpenApiController → JobTrigger · weight: 45 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="OpenApiController → JobGroupController · weight: 35 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="OpenApiController → JobInfoController · weight: 45 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="OpenApiController → JobScheduleHelper · weight: 35 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="OpenApiController → JobUserController · weight: 30 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="OpenApiController → JobCodeController · weight: 30 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="OpenApiController → JobTriggerPoolHelper · weight: 30 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="OpenApiController → ExecutorBizTest · weight: 35 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="OpenApiController → JobCompleter · weight: 25 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="OpenApiController → JobRegistryHelper · weight: 25 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="OpenApiController → XxlJobConfig · weight: 35 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="OpenApiController → JobFailAlarmMonitorHelper · weight: 50 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="OpenApiController → AdminBizTest · weight: 30 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="OpenApiController → WebHandlerExceptionResolver · weight: 25 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="OpenApiController → JobHandler · weight: 35 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="OpenApiController → IndexController · weight: 25 · cw: 0.0000 · co-change only"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="xxl-job-admin/src/main/java/com/xxl/job/admin/web/error/WebHandlerExceptionResolver.java">WebHandlerExceptionResolver</th>
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="WebHandlerExceptionResolver → XxlJobAdminBootstrap · weight: 30 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="WebHandlerExceptionResolver → JobLogController · weight: 45 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="WebHandlerExceptionResolver → JobThread · weight: 30 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="WebHandlerExceptionResolver → JobTrigger · weight: 45 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="WebHandlerExceptionResolver → JobGroupController · weight: 35 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="WebHandlerExceptionResolver → JobInfoController · weight: 45 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="WebHandlerExceptionResolver → JobScheduleHelper · weight: 35 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="WebHandlerExceptionResolver → JobUserController · weight: 30 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="WebHandlerExceptionResolver → JobCodeController · weight: 30 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="WebHandlerExceptionResolver → JobTriggerPoolHelper · weight: 30 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="WebHandlerExceptionResolver → ExecutorBizTest · weight: 35 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="WebHandlerExceptionResolver → JobCompleter · weight: 25 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="WebHandlerExceptionResolver → JobRegistryHelper · weight: 25 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="WebHandlerExceptionResolver → XxlJobConfig · weight: 35 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="WebHandlerExceptionResolver → JobFailAlarmMonitorHelper · weight: 50 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="WebHandlerExceptionResolver → AdminBizTest · weight: 30 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="WebHandlerExceptionResolver → OpenApiController · weight: 25 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="WebHandlerExceptionResolver → JobHandler · weight: 35 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="WebHandlerExceptionResolver → IndexController · weight: 25 · cw: 0.0000 · co-change only"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="xxl-job-core/src/main/java/com/xxl/job/core/handler/annotation/JobHandler.java">JobHandler</th>
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobHandler → XxlJobAdminBootstrap · weight: 42 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobHandler → JobLogController · weight: 63 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobHandler → JobThread · weight: 42 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobHandler → JobTrigger · weight: 63 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobHandler → JobGroupController · weight: 49 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobHandler → JobInfoController · weight: 63 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobHandler → JobScheduleHelper · weight: 49 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobHandler → JobUserController · weight: 42 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobHandler → JobCodeController · weight: 42 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobHandler → JobTriggerPoolHelper · weight: 42 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobHandler → ExecutorBizTest · weight: 49 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobHandler → JobCompleter · weight: 35 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobHandler → JobRegistryHelper · weight: 35 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobHandler → XxlJobConfig · weight: 49 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobHandler → JobFailAlarmMonitorHelper · weight: 70 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobHandler → AdminBizTest · weight: 42 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobHandler → OpenApiController · weight: 35 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobHandler → WebHandlerExceptionResolver · weight: 35 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobHandler → IndexController · weight: 35 · cw: 0.0000 · co-change only"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="xxl-job-executor-samples/xxl-job-executor-sample-springboot/src/main/java/com/xxl/job/executor/controller/IndexController.java">IndexController</th>
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="IndexController → XxlJobAdminBootstrap · weight: 30 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="IndexController → JobLogController · weight: 45 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="IndexController → JobThread · weight: 30 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="IndexController → JobTrigger · weight: 45 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="IndexController → JobGroupController · weight: 35 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="IndexController → JobInfoController · weight: 45 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="IndexController → JobScheduleHelper · weight: 35 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="IndexController → JobUserController · weight: 30 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="IndexController → JobCodeController · weight: 30 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="IndexController → JobTriggerPoolHelper · weight: 30 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="IndexController → ExecutorBizTest · weight: 35 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="IndexController → JobCompleter · weight: 25 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="IndexController → JobRegistryHelper · weight: 25 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="IndexController → XxlJobConfig · weight: 35 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="IndexController → JobFailAlarmMonitorHelper · weight: 50 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="IndexController → AdminBizTest · weight: 30 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="IndexController → OpenApiController · weight: 25 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="IndexController → WebHandlerExceptionResolver · weight: 25 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="IndexController → JobHandler · weight: 35 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+        </tr>
+        
+      </tbody>
+    </table>
+  </div>
+</section>
+
+
+</body>
+</html>

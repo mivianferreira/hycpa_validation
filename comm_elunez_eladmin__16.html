@@ -1,0 +1,2807 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HyCPA — Community 16 · elunez/eladmin</title>
+  <style>
+:root {
+  --bg: #0d1117; --surface: #161b22; --surface2: #21262d;
+  --border: #30363d; --text: #e6edf3; --text2: #8b949e;
+  --accent: #58a6ff; --green: #3fb950; --orange: #e3b341; --red: #f85149;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { background: var(--bg); color: var(--text); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif; padding-bottom: 48px; }
+
+/* ── Header ── */
+.page-header { background: var(--surface); border-bottom: 1px solid var(--border); padding: 12px 24px; display: flex; align-items: center; gap: 20px; }
+.back-btn { color: var(--text2); font-size: 12px; text-decoration: none; white-space: nowrap; }
+.back-btn:hover { color: var(--accent); }
+.header-title { font-size: 15px; color: var(--text); }
+.header-title strong { color: var(--accent); }
+
+/* ── Stats pills ── */
+.stats-row { display: flex; gap: 12px; padding: 16px 24px; background: var(--surface); border-bottom: 1px solid var(--border); flex-wrap: wrap; }
+.stat-pill { background: var(--surface2); border: 1px solid var(--border); border-radius: 8px; padding: 10px 20px; display: flex; flex-direction: column; align-items: center; gap: 2px; min-width: 90px; }
+.pill-val { font-size: 22px; font-weight: 700; color: var(--text); line-height: 1; }
+.pill-lbl { font-size: 10px; color: var(--text2); text-transform: uppercase; letter-spacing: 0.5px; margin-top: 2px; }
+
+/* ── Content sections ── */
+.content-section { padding: 24px; }
+.section-title { font-size: 11px; font-weight: 600; color: var(--text2); text-transform: uppercase; letter-spacing: 0.6px; margin-bottom: 14px; display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
+
+/* ── Node table ── */
+.node-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+.node-table th { background: var(--surface); color: var(--text2); font-weight: 600; font-size: 10px; text-transform: uppercase; letter-spacing: 0.5px; padding: 8px 12px; text-align: left; border-bottom: 2px solid var(--border); white-space: nowrap; }
+.node-table td { padding: 7px 12px; border-bottom: 1px solid var(--border); vertical-align: middle; }
+.node-table tbody tr:hover td { background: var(--surface); }
+.health-badge { display: inline-block; padding: 2px 9px; border-radius: 10px; font-size: 11px; font-weight: 700; color: #0d1117; white-space: nowrap; }
+.class-path { font-size: 11px; color: var(--text2); font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', monospace; word-break: break-all; }
+td.num { text-align: right; font-weight: 600; white-space: nowrap; }
+td.overlap { color: var(--accent); }
+
+/* ── Coupling matrix ── */
+.matrix-wrap { overflow: auto; }
+.matrix { border-collapse: collapse; }
+.matrix-corner { min-width: 16px; }
+.matrix-col-hdr { padding: 0 1px 4px 1px; vertical-align: bottom; }
+.matrix-col-hdr span { display: block; writing-mode: vertical-rl; transform: rotate(180deg); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-height: 140px; color: var(--text2); font-weight: 400; font-size: 10px; cursor: default; text-align: left; }
+.matrix-row-hdr { text-align: right; padding: 1px 6px 1px 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 200px; color: var(--text2); font-weight: 400; font-size: 10px; cursor: default; }
+.matrix-cell { width: 16px; height: 16px; min-width: 16px; min-height: 16px; border: 1px solid #1c2129; cursor: default; }
+.matrix-cell.empty { background: transparent; }
+.matrix-cell.self-cell { background: var(--surface2); }
+.matrix-cell.filled { }
+
+/* ── Legend inline ── */
+.legend-inline { display: inline-flex; align-items: center; gap: 6px; font-size: 10px; color: var(--text2); font-weight: 400; text-transform: none; letter-spacing: 0; }
+.li-cell { display: inline-block; width: 10px; height: 10px; border-radius: 2px; vertical-align: middle; flex-shrink: 0; }
+</style>
+</head>
+<body>
+
+<div class="page-header">
+  <a class="back-btn" href="repo_elunez_eladmin.html">← Back to elunez/eladmin</a>
+  <span class="header-title">Community <strong>C16</strong> — elunez/eladmin</span>
+</div>
+
+<div class="stats-row">
+  <div class="stat-pill"><span class="pill-val">28</span><span class="pill-lbl">Nodes</span></div>
+  <div class="stat-pill"><span class="pill-val">190</span><span class="pill-lbl">Arcs</span></div>
+  <div class="stat-pill"><span class="pill-val">22</span><span class="pill-lbl">Overlapping</span></div>
+  <div class="stat-pill"><span class="pill-val">64</span><span class="pill-lbl">Coupled arcs</span></div>
+  <div class="stat-pill"><span class="pill-val">0</span><span class="pill-lbl">Co-change only</span></div>
+</div>
+
+<section class="content-section">
+  <h2 class="section-title">Nodes</h2>
+  <table class="node-table">
+    <thead>
+      <tr>
+        <th>Health</th>
+        <th>Class</th>
+        <th>Degree</th>
+        <th>Communities</th>
+      </tr>
+    </thead>
+    <tbody>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#e3b341">0.500</span></td>
+        <td class="class-path" title="eladmin-system/src/main/java/me/zhengjie/modules/maint/service/impl/DeployServiceImpl.java">eladmin-system/src/main/java/me/zhengjie/modules/maint/service/impl/DeployServiceImpl.java</td>
+        <td class="num">32</td>
+        <td class="num overlap">4</td>
+      </tr>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#3fb950">0.846</span></td>
+        <td class="class-path" title="eladmin-system/src/main/java/me/zhengjie/modules/maint/rest/DeployController.java">eladmin-system/src/main/java/me/zhengjie/modules/maint/rest/DeployController.java</td>
+        <td class="num">25</td>
+        <td class="num overlap">2</td>
+      </tr>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#3fb950">0.880</span></td>
+        <td class="class-path" title="eladmin-common/src/main/java/me/zhengjie/base/BaseEntity.java">eladmin-common/src/main/java/me/zhengjie/base/BaseEntity.java</td>
+        <td class="num">25</td>
+        <td class="num overlap">7</td>
+      </tr>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#3fb950">0.885</span></td>
+        <td class="class-path" title="eladmin-system/src/main/java/me/zhengjie/modules/maint/domain/ServerDeploy.java">eladmin-system/src/main/java/me/zhengjie/modules/maint/domain/ServerDeploy.java</td>
+        <td class="num">8</td>
+        <td class="num overlap">3</td>
+      </tr>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#3fb950">0.885</span></td>
+        <td class="class-path" title="eladmin-system/src/main/java/me/zhengjie/modules/maint/service/dto/ServerDeployDto.java">eladmin-system/src/main/java/me/zhengjie/modules/maint/service/dto/ServerDeployDto.java</td>
+        <td class="num">7</td>
+        <td class="num overlap">3</td>
+      </tr>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#3fb950">0.900</span></td>
+        <td class="class-path" title="eladmin-common/src/main/java/me/zhengjie/base/BaseDTO.java">eladmin-common/src/main/java/me/zhengjie/base/BaseDTO.java</td>
+        <td class="num">25</td>
+        <td class="num overlap">6</td>
+      </tr>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#3fb950">0.904</span></td>
+        <td class="class-path" title="eladmin-system/src/main/java/me/zhengjie/modules/maint/service/DeployService.java">eladmin-system/src/main/java/me/zhengjie/modules/maint/service/DeployService.java</td>
+        <td class="num">25</td>
+        <td class="num overlap">2</td>
+      </tr>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#3fb950">0.904</span></td>
+        <td class="class-path" title="eladmin-system/src/main/java/me/zhengjie/modules/maint/service/dto/DeployDto.java">eladmin-system/src/main/java/me/zhengjie/modules/maint/service/dto/DeployDto.java</td>
+        <td class="num">7</td>
+        <td class="num overlap">2</td>
+      </tr>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#3fb950">0.920</span></td>
+        <td class="class-path" title="eladmin-system/src/main/java/me/zhengjie/modules/maint/domain/App.java">eladmin-system/src/main/java/me/zhengjie/modules/maint/domain/App.java</td>
+        <td class="num">7</td>
+        <td class="num overlap">3</td>
+      </tr>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#3fb950">0.923</span></td>
+        <td class="class-path" title="eladmin-system/src/main/java/me/zhengjie/modules/maint/rest/AppController.java">eladmin-system/src/main/java/me/zhengjie/modules/maint/rest/AppController.java</td>
+        <td class="num">25</td>
+        <td class="num overlap">2</td>
+      </tr>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#3fb950">0.923</span></td>
+        <td class="class-path" title="eladmin-system/src/main/java/me/zhengjie/modules/maint/rest/ServerDeployController.java">eladmin-system/src/main/java/me/zhengjie/modules/maint/rest/ServerDeployController.java</td>
+        <td class="num">25</td>
+        <td class="num overlap">2</td>
+      </tr>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#3fb950">0.923</span></td>
+        <td class="class-path" title="eladmin-system/src/main/java/me/zhengjie/modules/maint/service/AppService.java">eladmin-system/src/main/java/me/zhengjie/modules/maint/service/AppService.java</td>
+        <td class="num">25</td>
+        <td class="num overlap">2</td>
+      </tr>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#3fb950">0.923</span></td>
+        <td class="class-path" title="eladmin-system/src/main/java/me/zhengjie/modules/maint/service/ServerDeployService.java">eladmin-system/src/main/java/me/zhengjie/modules/maint/service/ServerDeployService.java</td>
+        <td class="num">25</td>
+        <td class="num overlap">2</td>
+      </tr>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#3fb950">0.923</span></td>
+        <td class="class-path" title="eladmin-system/src/main/java/me/zhengjie/modules/maint/service/impl/AppServiceImpl.java">eladmin-system/src/main/java/me/zhengjie/modules/maint/service/impl/AppServiceImpl.java</td>
+        <td class="num">27</td>
+        <td class="num overlap">4</td>
+      </tr>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#3fb950">0.942</span></td>
+        <td class="class-path" title="eladmin-system/src/main/java/me/zhengjie/modules/maint/service/dto/AppDto.java">eladmin-system/src/main/java/me/zhengjie/modules/maint/service/dto/AppDto.java</td>
+        <td class="num">7</td>
+        <td class="num overlap">3</td>
+      </tr>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#3fb950">0.942</span></td>
+        <td class="class-path" title="eladmin-system/src/main/java/me/zhengjie/modules/maint/websocket/WebSocketServer.java">eladmin-system/src/main/java/me/zhengjie/modules/maint/websocket/WebSocketServer.java</td>
+        <td class="num">23</td>
+        <td class="num overlap">2</td>
+      </tr>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#3fb950">0.962</span></td>
+        <td class="class-path" title="eladmin-system/src/main/java/me/zhengjie/modules/maint/service/impl/ServerDeployServiceImpl.java">eladmin-system/src/main/java/me/zhengjie/modules/maint/service/impl/ServerDeployServiceImpl.java</td>
+        <td class="num">27</td>
+        <td class="num overlap">3</td>
+      </tr>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#3fb950">0.980</span></td>
+        <td class="class-path" title="eladmin-system/src/main/java/me/zhengjie/modules/maint/domain/Deploy.java">eladmin-system/src/main/java/me/zhengjie/modules/maint/domain/Deploy.java</td>
+        <td class="num">7</td>
+        <td class="num overlap">2</td>
+      </tr>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#3fb950">0.980</span></td>
+        <td class="class-path" title="eladmin-system/src/main/java/me/zhengjie/modules/maint/repository/ServerDeployRepository.java">eladmin-system/src/main/java/me/zhengjie/modules/maint/repository/ServerDeployRepository.java</td>
+        <td class="num">2</td>
+        <td class="num overlap">2</td>
+      </tr>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#3fb950">0.980</span></td>
+        <td class="class-path" title="eladmin-system/src/main/java/me/zhengjie/modules/maint/websocket/SocketMsg.java">eladmin-system/src/main/java/me/zhengjie/modules/maint/websocket/SocketMsg.java</td>
+        <td class="num">2</td>
+        <td class="num">1</td>
+      </tr>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#3fb950">0.981</span></td>
+        <td class="class-path" title="eladmin-system/src/main/java/me/zhengjie/modules/maint/repository/AppRepository.java">eladmin-system/src/main/java/me/zhengjie/modules/maint/repository/AppRepository.java</td>
+        <td class="num">1</td>
+        <td class="num">1</td>
+      </tr>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#3fb950">0.981</span></td>
+        <td class="class-path" title="eladmin-system/src/main/java/me/zhengjie/modules/maint/repository/DeployRepository.java">eladmin-system/src/main/java/me/zhengjie/modules/maint/repository/DeployRepository.java</td>
+        <td class="num">1</td>
+        <td class="num">1</td>
+      </tr>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#3fb950">0.981</span></td>
+        <td class="class-path" title="eladmin-system/src/main/java/me/zhengjie/modules/maint/service/dto/AppQueryCriteria.java">eladmin-system/src/main/java/me/zhengjie/modules/maint/service/dto/AppQueryCriteria.java</td>
+        <td class="num">3</td>
+        <td class="num">1</td>
+      </tr>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#3fb950">0.981</span></td>
+        <td class="class-path" title="eladmin-system/src/main/java/me/zhengjie/modules/maint/service/dto/DeployQueryCriteria.java">eladmin-system/src/main/java/me/zhengjie/modules/maint/service/dto/DeployQueryCriteria.java</td>
+        <td class="num">3</td>
+        <td class="num">1</td>
+      </tr>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#3fb950">0.981</span></td>
+        <td class="class-path" title="eladmin-system/src/main/java/me/zhengjie/modules/maint/service/dto/ServerDeployQueryCriteria.java">eladmin-system/src/main/java/me/zhengjie/modules/maint/service/dto/ServerDeployQueryCriteria.java</td>
+        <td class="num">3</td>
+        <td class="num">1</td>
+      </tr>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#3fb950">0.981</span></td>
+        <td class="class-path" title="eladmin-system/src/main/java/me/zhengjie/modules/maint/service/mapstruct/AppMapper.java">eladmin-system/src/main/java/me/zhengjie/modules/maint/service/mapstruct/AppMapper.java</td>
+        <td class="num">4</td>
+        <td class="num overlap">3</td>
+      </tr>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#3fb950">0.981</span></td>
+        <td class="class-path" title="eladmin-system/src/main/java/me/zhengjie/modules/maint/service/mapstruct/DeployMapper.java">eladmin-system/src/main/java/me/zhengjie/modules/maint/service/mapstruct/DeployMapper.java</td>
+        <td class="num">5</td>
+        <td class="num overlap">4</td>
+      </tr>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#3fb950">0.981</span></td>
+        <td class="class-path" title="eladmin-system/src/main/java/me/zhengjie/modules/maint/service/mapstruct/ServerDeployMapper.java">eladmin-system/src/main/java/me/zhengjie/modules/maint/service/mapstruct/ServerDeployMapper.java</td>
+        <td class="num">4</td>
+        <td class="num overlap">3</td>
+      </tr>
+      
+    </tbody>
+  </table>
+</section>
+
+
+<section class="content-section">
+  <h2 class="section-title">Coupling matrix
+    <span class="legend-inline">
+      <span class="li-cell" style="background:#30363d"></span>Co-change only
+      <span class="li-cell" style="background:#3fb950"></span>Weak
+      <span class="li-cell" style="background:#e3b341"></span>Moderate
+      <span class="li-cell" style="background:#f85149"></span>Strong
+    </span>
+  </h2>
+  <div class="matrix-wrap">
+    <table class="matrix">
+      <thead>
+        <tr>
+          <th class="matrix-corner"></th>
+          <th class="matrix-col-hdr" title="eladmin-system/src/main/java/me/zhengjie/modules/maint/service/impl/DeployServiceImpl.java"><span>DeployServiceImpl</span></th><th class="matrix-col-hdr" title="eladmin-system/src/main/java/me/zhengjie/modules/maint/rest/DeployController.java"><span>DeployController</span></th><th class="matrix-col-hdr" title="eladmin-common/src/main/java/me/zhengjie/base/BaseEntity.java"><span>BaseEntity</span></th><th class="matrix-col-hdr" title="eladmin-system/src/main/java/me/zhengjie/modules/maint/domain/ServerDeploy.java"><span>ServerDeploy</span></th><th class="matrix-col-hdr" title="eladmin-system/src/main/java/me/zhengjie/modules/maint/service/dto/ServerDeployDto.java"><span>ServerDeployDto</span></th><th class="matrix-col-hdr" title="eladmin-common/src/main/java/me/zhengjie/base/BaseDTO.java"><span>BaseDTO</span></th><th class="matrix-col-hdr" title="eladmin-system/src/main/java/me/zhengjie/modules/maint/service/DeployService.java"><span>DeployService</span></th><th class="matrix-col-hdr" title="eladmin-system/src/main/java/me/zhengjie/modules/maint/service/dto/DeployDto.java"><span>DeployDto</span></th><th class="matrix-col-hdr" title="eladmin-system/src/main/java/me/zhengjie/modules/maint/domain/App.java"><span>App</span></th><th class="matrix-col-hdr" title="eladmin-system/src/main/java/me/zhengjie/modules/maint/rest/AppController.java"><span>AppController</span></th><th class="matrix-col-hdr" title="eladmin-system/src/main/java/me/zhengjie/modules/maint/rest/ServerDeployController.java"><span>ServerDeployController</span></th><th class="matrix-col-hdr" title="eladmin-system/src/main/java/me/zhengjie/modules/maint/service/AppService.java"><span>AppService</span></th><th class="matrix-col-hdr" title="eladmin-system/src/main/java/me/zhengjie/modules/maint/service/ServerDeployService.java"><span>ServerDeployService</span></th><th class="matrix-col-hdr" title="eladmin-system/src/main/java/me/zhengjie/modules/maint/service/impl/AppServiceImpl.java"><span>AppServiceImpl</span></th><th class="matrix-col-hdr" title="eladmin-system/src/main/java/me/zhengjie/modules/maint/service/dto/AppDto.java"><span>AppDto</span></th><th class="matrix-col-hdr" title="eladmin-system/src/main/java/me/zhengjie/modules/maint/websocket/WebSocketServer.java"><span>WebSocketServer</span></th><th class="matrix-col-hdr" title="eladmin-system/src/main/java/me/zhengjie/modules/maint/service/impl/ServerDeployServiceImpl.java"><span>ServerDeployServiceImpl</span></th><th class="matrix-col-hdr" title="eladmin-system/src/main/java/me/zhengjie/modules/maint/domain/Deploy.java"><span>Deploy</span></th><th class="matrix-col-hdr" title="eladmin-system/src/main/java/me/zhengjie/modules/maint/repository/ServerDeployRepository.java"><span>ServerDeployRepository</span></th><th class="matrix-col-hdr" title="eladmin-system/src/main/java/me/zhengjie/modules/maint/websocket/SocketMsg.java"><span>SocketMsg</span></th><th class="matrix-col-hdr" title="eladmin-system/src/main/java/me/zhengjie/modules/maint/repository/AppRepository.java"><span>AppRepository</span></th><th class="matrix-col-hdr" title="eladmin-system/src/main/java/me/zhengjie/modules/maint/repository/DeployRepository.java"><span>DeployRepository</span></th><th class="matrix-col-hdr" title="eladmin-system/src/main/java/me/zhengjie/modules/maint/service/dto/AppQueryCriteria.java"><span>AppQueryCriteria</span></th><th class="matrix-col-hdr" title="eladmin-system/src/main/java/me/zhengjie/modules/maint/service/dto/DeployQueryCriteria.java"><span>DeployQueryCriteria</span></th><th class="matrix-col-hdr" title="eladmin-system/src/main/java/me/zhengjie/modules/maint/service/dto/ServerDeployQueryCriteria.java"><span>ServerDeployQueryCriteria</span></th><th class="matrix-col-hdr" title="eladmin-system/src/main/java/me/zhengjie/modules/maint/service/mapstruct/AppMapper.java"><span>AppMapper</span></th><th class="matrix-col-hdr" title="eladmin-system/src/main/java/me/zhengjie/modules/maint/service/mapstruct/DeployMapper.java"><span>DeployMapper</span></th><th class="matrix-col-hdr" title="eladmin-system/src/main/java/me/zhengjie/modules/maint/service/mapstruct/ServerDeployMapper.java"><span>ServerDeployMapper</span></th>
+        </tr>
+      </thead>
+      <tbody>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="eladmin-system/src/main/java/me/zhengjie/modules/maint/service/impl/DeployServiceImpl.java">DeployServiceImpl</th>
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="DeployServiceImpl → DeployController · weight: 8 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="DeployServiceImpl → BaseEntity · weight: 8 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#ff304b" title="DeployServiceImpl → ServerDeploy · weight: 1 · cw: 1.1667 · PARAMETERIZED_TYPE, VARIABLE_SINGLE_DECLARATION"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#11a-5056" title="DeployServiceImpl → ServerDeployDto · weight: 1 · cw: 1.8246 · PARAMETERIZED_TYPE, VARIABLE_DECLARATION_STATEMENT, VARIABLE_SINGLE_DECLARATION"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="DeployServiceImpl → BaseDTO · weight: 8 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#dbb341" title="DeployServiceImpl → DeployService · weight: 4 · cw: 0.4784 · INTERFACE"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#170-1e377" title="DeployServiceImpl → DeployDto · weight: 1 · cw: 3.8805 · METHOD_INVOCATION_ATOMIC_PARAMETER, METHOD_RETURN_TYPE, PARAMETERIZED_TYPE, VARIABLE_DECLARATION_STATEMENT, VARIABLE_RETURN_STATEMENT, VARIABLE_SINGLE_DECLARATION"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#e99443" title="DeployServiceImpl → App · weight: 1 · cw: 0.6579 · VARIABLE_DECLARATION_STATEMENT"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="DeployServiceImpl → AppController · weight: 8 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="DeployServiceImpl → ServerDeployController · weight: 8 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="DeployServiceImpl → AppService · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#11c-5956" title="DeployServiceImpl → ServerDeployService · weight: 4 · cw: 1.8723 · DATA_ABSTRACTION_COUPLING, METHOD_INVOCATION_OBJECT_PARAMETER, VARIABLE_FIELD_DECLARATION"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="DeployServiceImpl → AppServiceImpl · weight: 5 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#120-6d58" title="DeployServiceImpl → AppDto · weight: 1 · cw: 1.9708 · METHOD_PARAMETER_TYPE, VARIABLE_DECLARATION_STATEMENT, VARIABLE_SINGLE_DECLARATION"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#eb8b44" title="DeployServiceImpl → WebSocketServer · weight: 8 · cw: 0.7024 · METHOD_INVOCATION_OBJECT_PARAMETER"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="DeployServiceImpl → ServerDeployServiceImpl · weight: 12 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#13e-f663" title="DeployServiceImpl → Deploy · weight: 1 · cw: 2.6732 · METHOD_INVOCATION_OBJECT_PARAMETER, METHOD_PARAMETER_TYPE, VARIABLE_DECLARATION_STATEMENT, VARIABLE_SINGLE_DECLARATION"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#e5a741" title="DeployServiceImpl → SocketMsg · weight: 1 · cw: 0.5607 · OBJECT_PARAMETER_COUPLING"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#ff2f4b" title="DeployServiceImpl → DeployRepository · weight: 1 · cw: 1.1699 · DATA_ABSTRACTION_COUPLING, VARIABLE_FIELD_DECLARATION"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#105134e" title="DeployServiceImpl → DeployQueryCriteria · weight: 1 · cw: 1.3129 · METHOD_PARAMETER_TYPE, VARIABLE_SINGLE_DECLARATION"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#ff2f4b" title="DeployServiceImpl → DeployMapper · weight: 1 · cw: 1.1699 · DATA_ABSTRACTION_COUPLING, VARIABLE_FIELD_DECLARATION"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="eladmin-system/src/main/java/me/zhengjie/modules/maint/rest/DeployController.java">DeployController</th>
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="DeployController → DeployServiceImpl · weight: 8 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="DeployController → BaseEntity · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="DeployController → BaseDTO · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#11c-5956" title="DeployController → DeployService · weight: 2 · cw: 1.8723 · DATA_ABSTRACTION_COUPLING, METHOD_INVOCATION_OBJECT_PARAMETER, VARIABLE_FIELD_DECLARATION"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#e79c42" title="DeployController → DeployDto · weight: 1 · cw: 0.6167 · PARAMETERIZED_TYPE"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="DeployController → AppController · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="DeployController → ServerDeployController · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="DeployController → AppService · weight: 2 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="DeployController → ServerDeployService · weight: 2 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="DeployController → AppServiceImpl · weight: 2 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="DeployController → WebSocketServer · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="DeployController → ServerDeployServiceImpl · weight: 6 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#105134e" title="DeployController → Deploy · weight: 1 · cw: 1.3129 · METHOD_PARAMETER_TYPE, VARIABLE_SINGLE_DECLARATION"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#105134e" title="DeployController → DeployQueryCriteria · weight: 1 · cw: 1.3129 · METHOD_PARAMETER_TYPE, VARIABLE_SINGLE_DECLARATION"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="eladmin-common/src/main/java/me/zhengjie/base/BaseEntity.java">BaseEntity</th>
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="BaseEntity → DeployServiceImpl · weight: 8 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="BaseEntity → DeployController · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="BaseEntity → BaseDTO · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="BaseEntity → DeployService · weight: 2 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="BaseEntity → AppController · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="BaseEntity → ServerDeployController · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="BaseEntity → AppService · weight: 2 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="BaseEntity → ServerDeployService · weight: 2 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="BaseEntity → AppServiceImpl · weight: 2 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="BaseEntity → WebSocketServer · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="BaseEntity → ServerDeployServiceImpl · weight: 6 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="eladmin-system/src/main/java/me/zhengjie/modules/maint/domain/ServerDeploy.java">ServerDeploy</th>
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#e4ab41" title="ServerDeploy → BaseEntity · weight: 1 · cw: 0.5373 · INHERITANCE"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="eladmin-system/src/main/java/me/zhengjie/modules/maint/service/dto/ServerDeployDto.java">ServerDeployDto</th>
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#e4ab41" title="ServerDeployDto → BaseDTO · weight: 1 · cw: 0.5373 · INHERITANCE"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="eladmin-common/src/main/java/me/zhengjie/base/BaseDTO.java">BaseDTO</th>
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="BaseDTO → DeployServiceImpl · weight: 8 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="BaseDTO → DeployController · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="BaseDTO → BaseEntity · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="BaseDTO → DeployService · weight: 2 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="BaseDTO → AppController · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="BaseDTO → ServerDeployController · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="BaseDTO → AppService · weight: 2 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="BaseDTO → ServerDeployService · weight: 2 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="BaseDTO → AppServiceImpl · weight: 2 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="BaseDTO → WebSocketServer · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="BaseDTO → ServerDeployServiceImpl · weight: 6 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="eladmin-system/src/main/java/me/zhengjie/modules/maint/service/DeployService.java">DeployService</th>
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="DeployService → DeployServiceImpl · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="DeployService → DeployController · weight: 2 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="DeployService → BaseEntity · weight: 2 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="DeployService → BaseDTO · weight: 2 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#105114e" title="DeployService → DeployDto · weight: 1 · cw: 1.3224 · METHOD_RETURN_TYPE, PARAMETERIZED_TYPE"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="DeployService → AppController · weight: 2 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="DeployService → ServerDeployController · weight: 2 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="DeployService → AppService · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="DeployService → ServerDeployService · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="DeployService → AppServiceImpl · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="DeployService → WebSocketServer · weight: 2 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="DeployService → ServerDeployServiceImpl · weight: 3 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#105134e" title="DeployService → Deploy · weight: 1 · cw: 1.3129 · METHOD_PARAMETER_TYPE, VARIABLE_SINGLE_DECLARATION"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#105134e" title="DeployService → DeployQueryCriteria · weight: 1 · cw: 1.3129 · METHOD_PARAMETER_TYPE, VARIABLE_SINGLE_DECLARATION"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="eladmin-system/src/main/java/me/zhengjie/modules/maint/service/dto/DeployDto.java">DeployDto</th>
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#e79c42" title="DeployDto → ServerDeployDto · weight: 1 · cw: 0.6167 · PARAMETERIZED_TYPE"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#e4ab41" title="DeployDto → BaseDTO · weight: 1 · cw: 0.5373 · INHERITANCE"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#ff2f4b" title="DeployDto → AppDto · weight: 1 · cw: 1.1699 · DATA_ABSTRACTION_COUPLING, VARIABLE_FIELD_DECLARATION"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="eladmin-system/src/main/java/me/zhengjie/modules/maint/domain/App.java">App</th>
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#e4ab41" title="App → BaseEntity · weight: 1 · cw: 0.5373 · INHERITANCE"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="eladmin-system/src/main/java/me/zhengjie/modules/maint/rest/AppController.java">AppController</th>
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="AppController → DeployServiceImpl · weight: 8 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="AppController → DeployController · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="AppController → BaseEntity · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="AppController → BaseDTO · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="AppController → DeployService · weight: 2 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#105134e" title="AppController → App · weight: 1 · cw: 1.3129 · METHOD_PARAMETER_TYPE, VARIABLE_SINGLE_DECLARATION"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="AppController → ServerDeployController · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#11c-5956" title="AppController → AppService · weight: 2 · cw: 1.8723 · DATA_ABSTRACTION_COUPLING, METHOD_INVOCATION_OBJECT_PARAMETER, VARIABLE_FIELD_DECLARATION"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="AppController → ServerDeployService · weight: 2 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="AppController → AppServiceImpl · weight: 2 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#e79c42" title="AppController → AppDto · weight: 1 · cw: 0.6167 · PARAMETERIZED_TYPE"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="AppController → WebSocketServer · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="AppController → ServerDeployServiceImpl · weight: 6 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#105134e" title="AppController → AppQueryCriteria · weight: 1 · cw: 1.3129 · METHOD_PARAMETER_TYPE, VARIABLE_SINGLE_DECLARATION"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="eladmin-system/src/main/java/me/zhengjie/modules/maint/rest/ServerDeployController.java">ServerDeployController</th>
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ServerDeployController → DeployServiceImpl · weight: 8 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ServerDeployController → DeployController · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ServerDeployController → BaseEntity · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#105134e" title="ServerDeployController → ServerDeploy · weight: 1 · cw: 1.3129 · METHOD_PARAMETER_TYPE, VARIABLE_SINGLE_DECLARATION"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#e79c42" title="ServerDeployController → ServerDeployDto · weight: 1 · cw: 0.6167 · PARAMETERIZED_TYPE"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ServerDeployController → BaseDTO · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ServerDeployController → DeployService · weight: 2 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ServerDeployController → AppController · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ServerDeployController → AppService · weight: 2 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#11c-5956" title="ServerDeployController → ServerDeployService · weight: 2 · cw: 1.8723 · DATA_ABSTRACTION_COUPLING, METHOD_INVOCATION_OBJECT_PARAMETER, VARIABLE_FIELD_DECLARATION"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ServerDeployController → AppServiceImpl · weight: 2 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ServerDeployController → WebSocketServer · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ServerDeployController → ServerDeployServiceImpl · weight: 6 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#105134e" title="ServerDeployController → ServerDeployQueryCriteria · weight: 1 · cw: 1.3129 · METHOD_PARAMETER_TYPE, VARIABLE_SINGLE_DECLARATION"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="eladmin-system/src/main/java/me/zhengjie/modules/maint/service/AppService.java">AppService</th>
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="AppService → DeployServiceImpl · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="AppService → DeployController · weight: 2 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="AppService → BaseEntity · weight: 2 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="AppService → BaseDTO · weight: 2 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="AppService → DeployService · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#105134e" title="AppService → App · weight: 1 · cw: 1.3129 · METHOD_PARAMETER_TYPE, VARIABLE_SINGLE_DECLARATION"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="AppService → AppController · weight: 2 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="AppService → ServerDeployController · weight: 2 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="AppService → ServerDeployService · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="AppService → AppServiceImpl · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#105114e" title="AppService → AppDto · weight: 1 · cw: 1.3224 · METHOD_RETURN_TYPE, PARAMETERIZED_TYPE"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="AppService → WebSocketServer · weight: 2 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="AppService → ServerDeployServiceImpl · weight: 3 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#105134e" title="AppService → AppQueryCriteria · weight: 1 · cw: 1.3129 · METHOD_PARAMETER_TYPE, VARIABLE_SINGLE_DECLARATION"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="eladmin-system/src/main/java/me/zhengjie/modules/maint/service/ServerDeployService.java">ServerDeployService</th>
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ServerDeployService → DeployServiceImpl · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ServerDeployService → DeployController · weight: 2 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ServerDeployService → BaseEntity · weight: 2 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#105134e" title="ServerDeployService → ServerDeploy · weight: 1 · cw: 1.3129 · METHOD_PARAMETER_TYPE, VARIABLE_SINGLE_DECLARATION"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#105114e" title="ServerDeployService → ServerDeployDto · weight: 1 · cw: 1.3224 · METHOD_RETURN_TYPE, PARAMETERIZED_TYPE"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ServerDeployService → BaseDTO · weight: 2 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ServerDeployService → DeployService · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ServerDeployService → AppController · weight: 2 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ServerDeployService → ServerDeployController · weight: 2 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ServerDeployService → AppService · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ServerDeployService → AppServiceImpl · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ServerDeployService → WebSocketServer · weight: 2 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ServerDeployService → ServerDeployServiceImpl · weight: 3 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#105134e" title="ServerDeployService → ServerDeployQueryCriteria · weight: 1 · cw: 1.3129 · METHOD_PARAMETER_TYPE, VARIABLE_SINGLE_DECLARATION"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="eladmin-system/src/main/java/me/zhengjie/modules/maint/service/impl/AppServiceImpl.java">AppServiceImpl</th>
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="AppServiceImpl → DeployServiceImpl · weight: 5 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="AppServiceImpl → DeployController · weight: 2 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="AppServiceImpl → BaseEntity · weight: 2 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="AppServiceImpl → BaseDTO · weight: 2 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="AppServiceImpl → DeployService · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#13e-f663" title="AppServiceImpl → App · weight: 1 · cw: 2.6732 · METHOD_INVOCATION_OBJECT_PARAMETER, METHOD_PARAMETER_TYPE, VARIABLE_DECLARATION_STATEMENT, VARIABLE_SINGLE_DECLARATION"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="AppServiceImpl → AppController · weight: 2 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="AppServiceImpl → ServerDeployController · weight: 2 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#dbb341" title="AppServiceImpl → AppService · weight: 1 · cw: 0.4784 · INTERFACE"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="AppServiceImpl → ServerDeployService · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#137-d661" title="AppServiceImpl → AppDto · weight: 1 · cw: 2.5063 · METHOD_RETURN_TYPE, PARAMETERIZED_TYPE, VARIABLE_RETURN_STATEMENT, VARIABLE_SINGLE_DECLARATION"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="AppServiceImpl → WebSocketServer · weight: 2 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="AppServiceImpl → ServerDeployServiceImpl · weight: 3 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#ff2f4b" title="AppServiceImpl → AppRepository · weight: 1 · cw: 1.1699 · DATA_ABSTRACTION_COUPLING, VARIABLE_FIELD_DECLARATION"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#105134e" title="AppServiceImpl → AppQueryCriteria · weight: 1 · cw: 1.3129 · METHOD_PARAMETER_TYPE, VARIABLE_SINGLE_DECLARATION"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#ff2f4b" title="AppServiceImpl → AppMapper · weight: 1 · cw: 1.1699 · DATA_ABSTRACTION_COUPLING, VARIABLE_FIELD_DECLARATION"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="eladmin-system/src/main/java/me/zhengjie/modules/maint/service/dto/AppDto.java">AppDto</th>
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#e4ab41" title="AppDto → BaseDTO · weight: 1 · cw: 0.5373 · INHERITANCE"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="eladmin-system/src/main/java/me/zhengjie/modules/maint/websocket/WebSocketServer.java">WebSocketServer</th>
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="WebSocketServer → DeployServiceImpl · weight: 8 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="WebSocketServer → DeployController · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="WebSocketServer → BaseEntity · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="WebSocketServer → BaseDTO · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="WebSocketServer → DeployService · weight: 2 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="WebSocketServer → AppController · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="WebSocketServer → ServerDeployController · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="WebSocketServer → AppService · weight: 2 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="WebSocketServer → ServerDeployService · weight: 2 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="WebSocketServer → AppServiceImpl · weight: 2 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="WebSocketServer → ServerDeployServiceImpl · weight: 6 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#105134e" title="WebSocketServer → SocketMsg · weight: 1 · cw: 1.3129 · METHOD_PARAMETER_TYPE, VARIABLE_SINGLE_DECLARATION"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="eladmin-system/src/main/java/me/zhengjie/modules/maint/service/impl/ServerDeployServiceImpl.java">ServerDeployServiceImpl</th>
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ServerDeployServiceImpl → DeployServiceImpl · weight: 12 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ServerDeployServiceImpl → DeployController · weight: 6 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ServerDeployServiceImpl → BaseEntity · weight: 6 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#13e-f663" title="ServerDeployServiceImpl → ServerDeploy · weight: 1 · cw: 2.6732 · METHOD_INVOCATION_OBJECT_PARAMETER, METHOD_PARAMETER_TYPE, VARIABLE_DECLARATION_STATEMENT, VARIABLE_SINGLE_DECLARATION"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#137-d661" title="ServerDeployServiceImpl → ServerDeployDto · weight: 1 · cw: 2.5063 · METHOD_RETURN_TYPE, PARAMETERIZED_TYPE, VARIABLE_RETURN_STATEMENT, VARIABLE_SINGLE_DECLARATION"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ServerDeployServiceImpl → BaseDTO · weight: 6 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ServerDeployServiceImpl → DeployService · weight: 3 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ServerDeployServiceImpl → AppController · weight: 6 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ServerDeployServiceImpl → ServerDeployController · weight: 6 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ServerDeployServiceImpl → AppService · weight: 3 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#dbb341" title="ServerDeployServiceImpl → ServerDeployService · weight: 3 · cw: 0.4784 · INTERFACE"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ServerDeployServiceImpl → AppServiceImpl · weight: 3 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ServerDeployServiceImpl → WebSocketServer · weight: 6 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#11c-5956" title="ServerDeployServiceImpl → ServerDeployRepository · weight: 1 · cw: 1.8723 · DATA_ABSTRACTION_COUPLING, METHOD_INVOCATION_OBJECT_PARAMETER, VARIABLE_FIELD_DECLARATION"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#105134e" title="ServerDeployServiceImpl → ServerDeployQueryCriteria · weight: 1 · cw: 1.3129 · METHOD_PARAMETER_TYPE, VARIABLE_SINGLE_DECLARATION"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#ff2f4b" title="ServerDeployServiceImpl → ServerDeployMapper · weight: 1 · cw: 1.1699 · DATA_ABSTRACTION_COUPLING, VARIABLE_FIELD_DECLARATION"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="eladmin-system/src/main/java/me/zhengjie/modules/maint/domain/Deploy.java">Deploy</th>
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#e4ab41" title="Deploy → BaseEntity · weight: 1 · cw: 0.5373 · INHERITANCE"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#e79c42" title="Deploy → ServerDeploy · weight: 1 · cw: 0.6167 · PARAMETERIZED_TYPE"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#ff2f4b" title="Deploy → App · weight: 1 · cw: 1.1699 · DATA_ABSTRACTION_COUPLING, VARIABLE_FIELD_DECLARATION"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="eladmin-system/src/main/java/me/zhengjie/modules/maint/repository/ServerDeployRepository.java">ServerDeployRepository</th>
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#eb8a44" title="ServerDeployRepository → ServerDeploy · weight: 1 · cw: 0.7057 · METHOD_RETURN_TYPE"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="eladmin-system/src/main/java/me/zhengjie/modules/maint/websocket/SocketMsg.java">SocketMsg</th>
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="eladmin-system/src/main/java/me/zhengjie/modules/maint/repository/AppRepository.java">AppRepository</th>
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="eladmin-system/src/main/java/me/zhengjie/modules/maint/repository/DeployRepository.java">DeployRepository</th>
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="eladmin-system/src/main/java/me/zhengjie/modules/maint/service/dto/AppQueryCriteria.java">AppQueryCriteria</th>
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="eladmin-system/src/main/java/me/zhengjie/modules/maint/service/dto/DeployQueryCriteria.java">DeployQueryCriteria</th>
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="eladmin-system/src/main/java/me/zhengjie/modules/maint/service/dto/ServerDeployQueryCriteria.java">ServerDeployQueryCriteria</th>
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="eladmin-system/src/main/java/me/zhengjie/modules/maint/service/mapstruct/AppMapper.java">AppMapper</th>
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#e79c42" title="AppMapper → App · weight: 1 · cw: 0.6167 · PARAMETERIZED_TYPE"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#e79c42" title="AppMapper → AppDto · weight: 1 · cw: 0.6167 · PARAMETERIZED_TYPE"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="eladmin-system/src/main/java/me/zhengjie/modules/maint/service/mapstruct/DeployMapper.java">DeployMapper</th>
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#e79c42" title="DeployMapper → DeployDto · weight: 1 · cw: 0.6167 · PARAMETERIZED_TYPE"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#e79c42" title="DeployMapper → Deploy · weight: 1 · cw: 0.6167 · PARAMETERIZED_TYPE"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="DeployMapper → AppMapper · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="DeployMapper → ServerDeployMapper · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="eladmin-system/src/main/java/me/zhengjie/modules/maint/service/mapstruct/ServerDeployMapper.java">ServerDeployMapper</th>
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#e79c42" title="ServerDeployMapper → ServerDeploy · weight: 1 · cw: 0.6167 · PARAMETERIZED_TYPE"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#e79c42" title="ServerDeployMapper → ServerDeployDto · weight: 1 · cw: 0.6167 · PARAMETERIZED_TYPE"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+        </tr>
+        
+      </tbody>
+    </table>
+  </div>
+</section>
+
+
+</body>
+</html>

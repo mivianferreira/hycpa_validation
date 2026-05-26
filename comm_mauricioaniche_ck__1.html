@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HyCPA — Community 1 · mauricioaniche/ck</title>
+  <style>
+:root {
+  --bg: #0d1117; --surface: #161b22; --surface2: #21262d;
+  --border: #30363d; --text: #e6edf3; --text2: #8b949e;
+  --accent: #58a6ff; --green: #3fb950; --orange: #e3b341; --red: #f85149;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { background: var(--bg); color: var(--text); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif; padding-bottom: 48px; }
+
+/* ── Header ── */
+.page-header { background: var(--surface); border-bottom: 1px solid var(--border); padding: 12px 24px; display: flex; align-items: center; gap: 20px; }
+.back-btn { color: var(--text2); font-size: 12px; text-decoration: none; white-space: nowrap; }
+.back-btn:hover { color: var(--accent); }
+.header-title { font-size: 15px; color: var(--text); }
+.header-title strong { color: var(--accent); }
+
+/* ── Stats pills ── */
+.stats-row { display: flex; gap: 12px; padding: 16px 24px; background: var(--surface); border-bottom: 1px solid var(--border); flex-wrap: wrap; }
+.stat-pill { background: var(--surface2); border: 1px solid var(--border); border-radius: 8px; padding: 10px 20px; display: flex; flex-direction: column; align-items: center; gap: 2px; min-width: 90px; }
+.pill-val { font-size: 22px; font-weight: 700; color: var(--text); line-height: 1; }
+.pill-lbl { font-size: 10px; color: var(--text2); text-transform: uppercase; letter-spacing: 0.5px; margin-top: 2px; }
+
+/* ── Content sections ── */
+.content-section { padding: 24px; }
+.section-title { font-size: 11px; font-weight: 600; color: var(--text2); text-transform: uppercase; letter-spacing: 0.6px; margin-bottom: 14px; display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
+
+/* ── Node table ── */
+.node-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+.node-table th { background: var(--surface); color: var(--text2); font-weight: 600; font-size: 10px; text-transform: uppercase; letter-spacing: 0.5px; padding: 8px 12px; text-align: left; border-bottom: 2px solid var(--border); white-space: nowrap; }
+.node-table td { padding: 7px 12px; border-bottom: 1px solid var(--border); vertical-align: middle; }
+.node-table tbody tr:hover td { background: var(--surface); }
+.health-badge { display: inline-block; padding: 2px 9px; border-radius: 10px; font-size: 11px; font-weight: 700; color: #0d1117; white-space: nowrap; }
+.class-path { font-size: 11px; color: var(--text2); font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', monospace; word-break: break-all; }
+td.num { text-align: right; font-weight: 600; white-space: nowrap; }
+td.overlap { color: var(--accent); }
+
+/* ── Coupling matrix ── */
+.matrix-wrap { overflow: auto; }
+.matrix { border-collapse: collapse; }
+.matrix-corner { min-width: 16px; }
+.matrix-col-hdr { padding: 0 1px 4px 1px; vertical-align: bottom; }
+.matrix-col-hdr span { display: block; writing-mode: vertical-rl; transform: rotate(180deg); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-height: 140px; color: var(--text2); font-weight: 400; font-size: 10px; cursor: default; text-align: left; }
+.matrix-row-hdr { text-align: right; padding: 1px 6px 1px 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 200px; color: var(--text2); font-weight: 400; font-size: 10px; cursor: default; }
+.matrix-cell { width: 16px; height: 16px; min-width: 16px; min-height: 16px; border: 1px solid #1c2129; cursor: default; }
+.matrix-cell.empty { background: transparent; }
+.matrix-cell.self-cell { background: var(--surface2); }
+.matrix-cell.filled { }
+
+/* ── Legend inline ── */
+.legend-inline { display: inline-flex; align-items: center; gap: 6px; font-size: 10px; color: var(--text2); font-weight: 400; text-transform: none; letter-spacing: 0; }
+.li-cell { display: inline-block; width: 10px; height: 10px; border-radius: 2px; vertical-align: middle; flex-shrink: 0; }
+</style>
+</head>
+<body>
+
+<div class="page-header">
+  <a class="back-btn" href="repo_mauricioaniche_ck.html">← Back to mauricioaniche/ck</a>
+  <span class="header-title">Community <strong>C1</strong> — mauricioaniche/ck</span>
+</div>
+
+<div class="stats-row">
+  <div class="stat-pill"><span class="pill-val">10</span><span class="pill-lbl">Nodes</span></div>
+  <div class="stat-pill"><span class="pill-val">90</span><span class="pill-lbl">Arcs</span></div>
+  <div class="stat-pill"><span class="pill-val">9</span><span class="pill-lbl">Overlapping</span></div>
+  <div class="stat-pill"><span class="pill-val">8</span><span class="pill-lbl">Coupled arcs</span></div>
+  <div class="stat-pill"><span class="pill-val">0</span><span class="pill-lbl">Co-change only</span></div>
+</div>
+
+<section class="content-section">
+  <h2 class="section-title">Nodes</h2>
+  <table class="node-table">
+    <thead>
+      <tr>
+        <th>Health</th>
+        <th>Class</th>
+        <th>Degree</th>
+        <th>Communities</th>
+      </tr>
+    </thead>
+    <tbody>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#e3b341">0.635</span></td>
+        <td class="class-path" title="src/main/java/com/github/mauricioaniche/ck/CKVisitor.java">src/main/java/com/github/mauricioaniche/ck/CKVisitor.java</td>
+        <td class="num">18</td>
+        <td class="num overlap">4</td>
+      </tr>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#e3b341">0.673</span></td>
+        <td class="class-path" title="src/main/java/com/github/mauricioaniche/ck/util/JDTUtils.java">src/main/java/com/github/mauricioaniche/ck/util/JDTUtils.java</td>
+        <td class="num">18</td>
+        <td class="num overlap">2</td>
+      </tr>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#e3b341">0.692</span></td>
+        <td class="class-path" title="src/main/java/com/github/mauricioaniche/ck/CKMethodResult.java">src/main/java/com/github/mauricioaniche/ck/CKMethodResult.java</td>
+        <td class="num">18</td>
+        <td class="num overlap">4</td>
+      </tr>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#3fb950">0.788</span></td>
+        <td class="class-path" title="src/test/java/com/github/mauricioaniche/ck/MethodInvocationsTest.java">src/test/java/com/github/mauricioaniche/ck/MethodInvocationsTest.java</td>
+        <td class="num">18</td>
+        <td class="num overlap">2</td>
+      </tr>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#3fb950">0.865</span></td>
+        <td class="class-path" title="fixtures/fieldusage/FieldUsage.java">fixtures/fieldusage/FieldUsage.java</td>
+        <td class="num">18</td>
+        <td class="num overlap">2</td>
+      </tr>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#3fb950">0.904</span></td>
+        <td class="class-path" title="fixtures/MethodInvocation/Complex1.java">fixtures/MethodInvocation/Complex1.java</td>
+        <td class="num">18</td>
+        <td class="num overlap">2</td>
+      </tr>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#3fb950">0.940</span></td>
+        <td class="class-path" title="src/main/java/com/github/mauricioaniche/ck/metric/MethodInvocationsLocal.java">src/main/java/com/github/mauricioaniche/ck/metric/MethodInvocationsLocal.java</td>
+        <td class="num">18</td>
+        <td class="num overlap">2</td>
+      </tr>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#3fb950">0.942</span></td>
+        <td class="class-path" title="fixtures/MethodInvocation/GO2.java">fixtures/MethodInvocation/GO2.java</td>
+        <td class="num">18</td>
+        <td class="num overlap">2</td>
+      </tr>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#3fb950">0.942</span></td>
+        <td class="class-path" title="fixtures/MethodInvocation/Simple2.java">fixtures/MethodInvocation/Simple2.java</td>
+        <td class="num">18</td>
+        <td class="num">1</td>
+      </tr>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#3fb950">0.942</span></td>
+        <td class="class-path" title="src/main/java/com/github/mauricioaniche/ck/metric/RFC.java">src/main/java/com/github/mauricioaniche/ck/metric/RFC.java</td>
+        <td class="num">18</td>
+        <td class="num overlap">2</td>
+      </tr>
+      
+    </tbody>
+  </table>
+</section>
+
+
+<section class="content-section">
+  <h2 class="section-title">Coupling matrix
+    <span class="legend-inline">
+      <span class="li-cell" style="background:#30363d"></span>Co-change only
+      <span class="li-cell" style="background:#3fb950"></span>Weak
+      <span class="li-cell" style="background:#e3b341"></span>Moderate
+      <span class="li-cell" style="background:#f85149"></span>Strong
+    </span>
+  </h2>
+  <div class="matrix-wrap">
+    <table class="matrix">
+      <thead>
+        <tr>
+          <th class="matrix-corner"></th>
+          <th class="matrix-col-hdr" title="src/main/java/com/github/mauricioaniche/ck/CKVisitor.java"><span>CKVisitor</span></th><th class="matrix-col-hdr" title="src/main/java/com/github/mauricioaniche/ck/util/JDTUtils.java"><span>JDTUtils</span></th><th class="matrix-col-hdr" title="src/main/java/com/github/mauricioaniche/ck/CKMethodResult.java"><span>CKMethodResult</span></th><th class="matrix-col-hdr" title="src/test/java/com/github/mauricioaniche/ck/MethodInvocationsTest.java"><span>MethodInvocationsTest</span></th><th class="matrix-col-hdr" title="fixtures/fieldusage/FieldUsage.java"><span>FieldUsage</span></th><th class="matrix-col-hdr" title="fixtures/MethodInvocation/Complex1.java"><span>Complex1</span></th><th class="matrix-col-hdr" title="src/main/java/com/github/mauricioaniche/ck/metric/MethodInvocationsLocal.java"><span>MethodInvocationsLocal</span></th><th class="matrix-col-hdr" title="fixtures/MethodInvocation/GO2.java"><span>GO2</span></th><th class="matrix-col-hdr" title="fixtures/MethodInvocation/Simple2.java"><span>Simple2</span></th><th class="matrix-col-hdr" title="src/main/java/com/github/mauricioaniche/ck/metric/RFC.java"><span>RFC</span></th>
+        </tr>
+      </thead>
+      <tbody>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="src/main/java/com/github/mauricioaniche/ck/CKVisitor.java">CKVisitor</th>
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#eb8b44" title="CKVisitor → JDTUtils · weight: 19 · cw: 0.7024 · METHOD_INVOCATION_OBJECT_PARAMETER"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#167-1b773" title="CKVisitor → CKMethodResult · weight: 32 · cw: 3.6548 · DATA_ABSTRACTION_COUPLING, METHOD_INVOCATION_ATOMIC_PARAMETER, OBJECT_PARAMETER_COUPLING, VARIABLE_CLASS_INSTANCE_CREATION, VARIABLE_DECLARATION_STATEMENT, VARIABLE_FIELD_DECLARATION"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="CKVisitor → MethodInvocationsTest · weight: 13 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="CKVisitor → FieldUsage · weight: 13 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="CKVisitor → Complex1 · weight: 7 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="CKVisitor → MethodInvocationsLocal · weight: 13 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="CKVisitor → GO2 · weight: 7 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="CKVisitor → Simple2 · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="CKVisitor → RFC · weight: 7 · cw: 0.0000 · co-change only"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="src/main/java/com/github/mauricioaniche/ck/util/JDTUtils.java">JDTUtils</th>
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JDTUtils → CKVisitor · weight: 19 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JDTUtils → CKMethodResult · weight: 16 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JDTUtils → MethodInvocationsTest · weight: 7 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JDTUtils → FieldUsage · weight: 7 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JDTUtils → Complex1 · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JDTUtils → MethodInvocationsLocal · weight: 7 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JDTUtils → GO2 · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JDTUtils → Simple2 · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JDTUtils → RFC · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="src/main/java/com/github/mauricioaniche/ck/CKMethodResult.java">CKMethodResult</th>
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="CKMethodResult → CKVisitor · weight: 32 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="CKMethodResult → JDTUtils · weight: 16 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="CKMethodResult → MethodInvocationsTest · weight: 11 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="CKMethodResult → FieldUsage · weight: 11 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="CKMethodResult → Complex1 · weight: 6 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="CKMethodResult → MethodInvocationsLocal · weight: 11 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="CKMethodResult → GO2 · weight: 6 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="CKMethodResult → Simple2 · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="CKMethodResult → RFC · weight: 6 · cw: 0.0000 · co-change only"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="src/test/java/com/github/mauricioaniche/ck/MethodInvocationsTest.java">MethodInvocationsTest</th>
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="MethodInvocationsTest → CKVisitor · weight: 13 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="MethodInvocationsTest → JDTUtils · weight: 7 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#107074e" title="MethodInvocationsTest → CKMethodResult · weight: 11 · cw: 1.3742 · METHOD_INVOCATION_ATOMIC_PARAMETER, VARIABLE_DECLARATION_STATEMENT"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="MethodInvocationsTest → FieldUsage · weight: 5 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="MethodInvocationsTest → Complex1 · weight: 3 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="MethodInvocationsTest → MethodInvocationsLocal · weight: 5 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="MethodInvocationsTest → GO2 · weight: 3 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="MethodInvocationsTest → Simple2 · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="MethodInvocationsTest → RFC · weight: 3 · cw: 0.0000 · co-change only"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="fixtures/fieldusage/FieldUsage.java">FieldUsage</th>
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="FieldUsage → CKVisitor · weight: 13 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="FieldUsage → JDTUtils · weight: 7 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="FieldUsage → CKMethodResult · weight: 11 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="FieldUsage → MethodInvocationsTest · weight: 5 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="FieldUsage → Complex1 · weight: 3 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="FieldUsage → MethodInvocationsLocal · weight: 5 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="FieldUsage → GO2 · weight: 3 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="FieldUsage → Simple2 · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="FieldUsage → RFC · weight: 3 · cw: 0.0000 · co-change only"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="fixtures/MethodInvocation/Complex1.java">Complex1</th>
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Complex1 → CKVisitor · weight: 7 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Complex1 → JDTUtils · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Complex1 → CKMethodResult · weight: 6 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Complex1 → MethodInvocationsTest · weight: 3 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Complex1 → FieldUsage · weight: 3 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Complex1 → MethodInvocationsLocal · weight: 3 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#1021f4d" title="Complex1 → GO2 · weight: 2 · cw: 1.2536 · INHERITANCE, METHOD_INVOCATION_ATOMIC_PARAMETER"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#137-d561" title="Complex1 → Simple2 · weight: 1 · cw: 2.5042 · ATOMIC_PARAMETER_COUPLING, METHOD_INVOCATION_ATOMIC_PARAMETER, VARIABLE_CLASS_INSTANCE_CREATION, VARIABLE_DECLARATION_STATEMENT"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Complex1 → RFC · weight: 2 · cw: 0.0000 · co-change only"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="src/main/java/com/github/mauricioaniche/ck/metric/MethodInvocationsLocal.java">MethodInvocationsLocal</th>
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="MethodInvocationsLocal → CKVisitor · weight: 13 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="MethodInvocationsLocal → JDTUtils · weight: 7 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#13a-e562" title="MethodInvocationsLocal → CKMethodResult · weight: 11 · cw: 2.5854 · METHOD_INVOCATION_ATOMIC_PARAMETER, METHOD_INVOCATION_OBJECT_PARAMETER, PARAMETERIZED_TYPE, VARIABLE_SINGLE_DECLARATION"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="MethodInvocationsLocal → MethodInvocationsTest · weight: 5 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="MethodInvocationsLocal → FieldUsage · weight: 5 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="MethodInvocationsLocal → Complex1 · weight: 3 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="MethodInvocationsLocal → GO2 · weight: 3 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="MethodInvocationsLocal → Simple2 · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="MethodInvocationsLocal → RFC · weight: 3 · cw: 0.0000 · co-change only"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="fixtures/MethodInvocation/GO2.java">GO2</th>
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GO2 → CKVisitor · weight: 7 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GO2 → JDTUtils · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GO2 → CKMethodResult · weight: 6 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GO2 → MethodInvocationsTest · weight: 3 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GO2 → FieldUsage · weight: 3 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GO2 → Complex1 · weight: 2 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GO2 → MethodInvocationsLocal · weight: 3 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GO2 → Simple2 · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GO2 → RFC · weight: 2 · cw: 0.0000 · co-change only"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="fixtures/MethodInvocation/Simple2.java">Simple2</th>
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Simple2 → CKVisitor · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Simple2 → JDTUtils · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Simple2 → CKMethodResult · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Simple2 → MethodInvocationsTest · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Simple2 → FieldUsage · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Simple2 → Complex1 · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Simple2 → MethodInvocationsLocal · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Simple2 → GO2 · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Simple2 → RFC · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="src/main/java/com/github/mauricioaniche/ck/metric/RFC.java">RFC</th>
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="RFC → CKVisitor · weight: 7 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#eb8b44" title="RFC → JDTUtils · weight: 4 · cw: 0.7024 · METHOD_INVOCATION_OBJECT_PARAMETER"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#140-10264" title="RFC → CKMethodResult · weight: 6 · cw: 2.7316 · METHOD_INVOCATION_ATOMIC_PARAMETER, METHOD_INVOCATION_OBJECT_PARAMETER, METHOD_PARAMETER_TYPE, VARIABLE_SINGLE_DECLARATION"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="RFC → MethodInvocationsTest · weight: 3 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="RFC → FieldUsage · weight: 3 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="RFC → Complex1 · weight: 2 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="RFC → MethodInvocationsLocal · weight: 3 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="RFC → GO2 · weight: 2 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="RFC → Simple2 · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+        </tr>
+        
+      </tbody>
+    </table>
+  </div>
+</section>
+
+
+</body>
+</html>

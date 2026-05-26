@@ -1,4 +1,10 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>HyCPA — alibaba/UltraViewPager</title><style>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HyCPA — alibaba/UltraViewPager</title>
+  <style>
 :root {
   --bg: #0d1117; --surface: #161b22; --surface2: #21262d;
   --border: #30363d; --text: #e6edf3; --text2: #8b949e;
@@ -36,21 +42,29 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, Bl
 .comm-chip .cdata { color: var(--text2); }
 
 /* ── Main container ── */
-.container { max-width: 1100px; margin: 0 auto; padding: 28px 32px; }
+.container { max-width: 1600px; margin: 0 auto; padding: 28px 32px; }
 .summary-bar { display: flex; gap: 20px; flex-wrap: wrap; margin-bottom: 24px; }
 .summary-card { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 12px 20px; text-align: center; flex: 1; min-width: 120px; }
 .summary-card .val { font-size: 22px; font-weight: 700; color: var(--accent); }
 .summary-card .lbl { font-size: 11px; color: var(--text2); margin-top: 2px; }
+
+/* ── Sort bar ── */
+.sort-bar { display: flex; align-items: center; gap: 10px; margin-bottom: 16px; flex-wrap: wrap; }
+.sort-bar label { font-size: 13px; color: var(--text2); }
+.sort-bar select { background: var(--surface); color: var(--text); border: 1px solid var(--border); border-radius: 6px; padding: 6px 10px; font-size: 13px; cursor: pointer; }
+.sort-bar select:hover { border-color: var(--accent); }
 
 /* ── Source class accordion ── */
 .src-block { margin-bottom: 10px; }
 .src-header { width: 100%; background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 14px 20px; display: flex; align-items: center; gap: 12px; cursor: pointer; text-align: left; color: var(--text); transition: border-color .2s; }
 .src-header:hover { border-color: var(--accent); }
 .src-header.open { border-bottom-left-radius: 0; border-bottom-right-radius: 0; border-color: var(--accent); }
-.src-name { font-size: 14px; font-weight: 600; flex: 1; word-break: break-all; }
+.src-left  { flex: 1; min-width: 0; display: flex; align-items: center; padding-right: 14px; }
+.src-right { flex: 1; min-width: 0; display: flex; align-items: center; gap: 8px; padding-left: 14px; }
+.src-name { font-size: 14px; font-weight: 600; word-break: break-all; }
 .src-meta { display: flex; gap: 8px; flex-wrap: wrap; }
 .badge { background: var(--surface2); border: 1px solid var(--border); border-radius: 4px; padding: 2px 8px; font-size: 11px; color: var(--text2); white-space: nowrap; }
-.chevron { color: var(--text2); font-size: 12px; transition: transform .2s; flex-shrink: 0; }
+.chevron { color: var(--text2); font-size: 12px; transition: transform .2s; flex-shrink: 0; margin-left: auto; }
 .chevron.open { transform: rotate(90deg); }
 .src-body { background: var(--surface); border: 1px solid var(--accent); border-top: none; border-bottom-left-radius: 10px; border-bottom-right-radius: 10px; padding: 16px 20px; }
 .analysis-row { margin-bottom: 14px; }
@@ -74,320 +88,528 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, Bl
   .container { padding: 16px; }
   .src-meta { display: none; }
 }
-</style></head><body><div class="page-header"><div class="header-title"><a class="back" href="index.html">← Back to repository list</a><h1>📊 alibaba/UltraViewPager</h1></div><div class="header-email"><label>Email <span>*</span> (required)</label><input type="email" id="userEmail" placeholder="your@email.com" oninput="saveEmail(this.value)" /></div><div class="header-actions"><a class="btn" href="help.html">❓ How to read this site</a><button class="btn" onclick="toggleCommunities()">🔗 Show Communities</button><button class="btn btn-primary" onclick="submitAll()">✅ Submit All</button></div></div><div class="communities-panel" id="commPanel"><h3>Communities in this repository</h3><div class="comm-grid" id="commGrid"></div></div><div class="container"><div class="summary-bar"><div class="summary-card"><div class="val">13</div><div class="lbl">Classes Analysed</div></div><div class="summary-card"><div class="val">35</div><div class="lbl">Deterministic Targets</div></div><div class="summary-card"><div class="val">64</div><div class="lbl">Monte-Carlo Targets</div></div><div class="summary-card"><div class="val">0.404</div><div class="lbl">Max Class Code Smell Score</div></div></div>  <div class="src-block" id="src_0">
+</style>
+</head>
+<body>
+<div class="page-header">
+  <div class="header-title">
+    <a class="back" href="index.html">← Back to repository list</a>
+    <h1>📊 alibaba/UltraViewPager</h1>
+  </div>
+  <div class="header-email">
+    <label>Email <span>*</span> (required)</label>
+    <input type="email" id="userEmail" placeholder="your@email.com"
+           oninput="saveEmail(this.value)" />
+  </div>
+  <div class="header-actions">
+    <a class="btn" href="help.html">❓ How to read this site</a>
+    <button class="btn" onclick="toggleCommunities()">🔗 Show Communities</button>
+    <button class="btn btn-primary" onclick="submitAll()">✅ Submit All</button>
+  </div>
+</div>
+
+<div class="communities-panel" id="commPanel">
+  <h3>Communities in this repository</h3>
+  <div class="comm-grid" id="commGrid"></div>
+</div>
+
+<div class="container">
+  <div class="summary-bar">
+    <div class="summary-card">
+      <div class="val">13</div>
+      <div class="lbl">Classes Analysed</div>
+    </div>
+    <div class="summary-card">
+      <div class="val">35</div>
+      <div class="lbl">Deterministic Targets</div>
+    </div>
+    <div class="summary-card">
+      <div class="val">64</div>
+      <div class="lbl">Probabilistic Targets</div>
+    </div>
+    <div class="summary-card">
+      <div class="val">0.500</div>
+      <div class="lbl">Max Class Health Score</div>
+    </div>
+  </div>
+
+  <div class="sort-bar">
+    <label for="sortBy">Sort classes by:</label>
+    <select id="sortBy" onchange="sortSeedBlocks()">
+      <option value="default">Default (Det+Prob, then max prob)</option>
+      <option value="det">Deterministic targets</option>
+      <option value="prob">Probabilistic targets</option>
+      <option value="comms">Number of communities</option>
+      <option value="frag">Health score</option>
+      <option value="name">Class name (A→Z)</option>
+    </select>
+    <select id="sortDir" onchange="sortSeedBlocks()">
+      <option value="desc">Descending</option>
+      <option value="asc">Ascending</option>
+    </select>
+  </div>
+
+  <div id="seedList">
+  <div class="src-block" id="src_0"
+       data-det="7"
+       data-prob="11"
+       data-comms="10"
+       data-frag="0.500000"
+       data-name="sample/src/main/java/com/tmall/ultraviewpager/sample/PagerActivity.java"
+       data-default="0">
     <button class="src-header" onclick="toggleBlock(0)">
-      <span class="src-name">sample/src/main/java/com/tmall/ultraviewpager/sample/PagerActivity.java</span>
-      <span class="src-meta">
-        <span class="badge">Det 7</span>
-        <span class="badge">MC 11</span>
-        <span class="badge">Code Smell 0.269</span>
-        <span class="badge">C0, C1, C2, C3 +7</span>
+      <span class="src-left">
+        <span class="src-name">sample/src/main/java/com/tmall/ultraviewpager/sample/PagerActivity.java</span>
       </span>
-      <span class="chevron" id="chev_0">▶</span>
+      <span class="src-right">
+        <span class="src-meta">
+          <span class="badge">Det 7</span>
+          <span class="badge">Prob 11</span>
+          <span class="badge">Health 0.500</span>
+          <span class="badge">C0, C1, C2, C3 +6</span>
+        </span>
+        <span class="chevron" id="chev_0">▶</span>
+      </span>
     </button>
     <div class="src-body" id="body_0" style="display:none">
       <div class="analysis-row">
         <label>Analysis of <strong>sample/src/main/java/com/tmall/ultraviewpager/sample/PagerActivity.java</strong></label>
         <textarea class="analysis-field" id="analysis_0" rows="3"
-          placeholder="Enter your analysis for this class…"
-          oninput="saveAnalysis('sample/src/main/java/com/tmall/ultraviewpager/sample/PagerActivity.java', this.value)"></textarea>
+                  placeholder="Enter your analysis for this class…"
+                  oninput="saveAnalysis('sample/src/main/java/com/tmall/ultraviewpager/sample/PagerActivity.java', this.value)"></textarea>
       </div>
       <div class="progress-note" id="prog_sample_src_main_java_com_tmall_ultraviewpager_sample_PagerActivity_java"></div>
       <a class="detail-link" href="repo_alibaba_UltraViewPager__sample_src_main_java_com_tmall_ultraviewpager_sample_PagerActivity.java.html">
-        📋 View 7 deterministic / 11 MC targets →
+        📋 View 7 deterministic / 11 probabilistic targets →
       </a>
     </div>
   </div>
-  <div class="src-block" id="src_1">
+  <div class="src-block" id="src_1"
+       data-det="6"
+       data-prob="8"
+       data-comms="7"
+       data-frag="0.000000"
+       data-name="ultraviewpager/src/main/java/com/tmall/ultraviewpager/UltraViewPager.java"
+       data-default="1">
     <button class="src-header" onclick="toggleBlock(1)">
-      <span class="src-name">ultraviewpager/src/main/java/com/tmall/ultraviewpager/UltraViewPager.java</span>
-      <span class="src-meta">
-        <span class="badge">Det 6</span>
-        <span class="badge">MC 8</span>
-        <span class="badge">Code Smell 0.019</span>
-        <span class="badge">C5, C13, C19, C23 +4</span>
+      <span class="src-left">
+        <span class="src-name">ultraviewpager/src/main/java/com/tmall/ultraviewpager/UltraViewPager.java</span>
       </span>
-      <span class="chevron" id="chev_1">▶</span>
+      <span class="src-right">
+        <span class="src-meta">
+          <span class="badge">Det 6</span>
+          <span class="badge">Prob 8</span>
+          <span class="badge">Health 0.000</span>
+          <span class="badge">C5, C12, C18, C21 +3</span>
+        </span>
+        <span class="chevron" id="chev_1">▶</span>
+      </span>
     </button>
     <div class="src-body" id="body_1" style="display:none">
       <div class="analysis-row">
         <label>Analysis of <strong>ultraviewpager/src/main/java/com/tmall/ultraviewpager/UltraViewPager.java</strong></label>
         <textarea class="analysis-field" id="analysis_1" rows="3"
-          placeholder="Enter your analysis for this class…"
-          oninput="saveAnalysis('ultraviewpager/src/main/java/com/tmall/ultraviewpager/UltraViewPager.java', this.value)"></textarea>
+                  placeholder="Enter your analysis for this class…"
+                  oninput="saveAnalysis('ultraviewpager/src/main/java/com/tmall/ultraviewpager/UltraViewPager.java', this.value)"></textarea>
       </div>
       <div class="progress-note" id="prog_ultraviewpager_src_main_java_com_tmall_ultraviewpager_UltraViewPager_java"></div>
       <a class="detail-link" href="repo_alibaba_UltraViewPager__ultraviewpager_src_main_java_com_tmall_ultraviewpager_UltraViewPager.java.html">
-        📋 View 6 deterministic / 8 MC targets →
+        📋 View 6 deterministic / 8 probabilistic targets →
       </a>
     </div>
   </div>
-  <div class="src-block" id="src_2">
+  <div class="src-block" id="src_2"
+       data-det="6"
+       data-prob="8"
+       data-comms="8"
+       data-frag="0.000000"
+       data-name="ultraviewpager/src/main/java/com/tmall/ultraviewpager/UltraViewPagerIndicator.java"
+       data-default="2">
     <button class="src-header" onclick="toggleBlock(2)">
-      <span class="src-name">ultraviewpager/src/main/java/com/tmall/ultraviewpager/UltraViewPagerIndicator.java</span>
-      <span class="src-meta">
-        <span class="badge">Det 6</span>
-        <span class="badge">MC 8</span>
-        <span class="badge">Code Smell 0.019</span>
-        <span class="badge">C7, C15, C21, C25 +4</span>
+      <span class="src-left">
+        <span class="src-name">ultraviewpager/src/main/java/com/tmall/ultraviewpager/UltraViewPagerIndicator.java</span>
       </span>
-      <span class="chevron" id="chev_2">▶</span>
+      <span class="src-right">
+        <span class="src-meta">
+          <span class="badge">Det 6</span>
+          <span class="badge">Prob 8</span>
+          <span class="badge">Health 0.000</span>
+          <span class="badge">C0, C10, C11, C12 +4</span>
+        </span>
+        <span class="chevron" id="chev_2">▶</span>
+      </span>
     </button>
     <div class="src-body" id="body_2" style="display:none">
       <div class="analysis-row">
         <label>Analysis of <strong>ultraviewpager/src/main/java/com/tmall/ultraviewpager/UltraViewPagerIndicator.java</strong></label>
         <textarea class="analysis-field" id="analysis_2" rows="3"
-          placeholder="Enter your analysis for this class…"
-          oninput="saveAnalysis('ultraviewpager/src/main/java/com/tmall/ultraviewpager/UltraViewPagerIndicator.java', this.value)"></textarea>
+                  placeholder="Enter your analysis for this class…"
+                  oninput="saveAnalysis('ultraviewpager/src/main/java/com/tmall/ultraviewpager/UltraViewPagerIndicator.java', this.value)"></textarea>
       </div>
       <div class="progress-note" id="prog_ultraviewpager_src_main_java_com_tmall_ultraviewpager_UltraViewPagerIndicator_java"></div>
       <a class="detail-link" href="repo_alibaba_UltraViewPager__ultraviewpager_src_main_java_com_tmall_ultraviewpager_UltraViewPagerIndicator.java.html">
-        📋 View 6 deterministic / 8 MC targets →
+        📋 View 6 deterministic / 8 probabilistic targets →
       </a>
     </div>
   </div>
-  <div class="src-block" id="src_3">
+  <div class="src-block" id="src_3"
+       data-det="5"
+       data-prob="8"
+       data-comms="7"
+       data-frag="0.500000"
+       data-name="ultraviewpager/src/main/java/com/tmall/ultraviewpager/UltraViewPagerView.java"
+       data-default="3">
     <button class="src-header" onclick="toggleBlock(3)">
-      <span class="src-name">ultraviewpager/src/main/java/com/tmall/ultraviewpager/UltraViewPagerView.java</span>
-      <span class="src-meta">
-        <span class="badge">Det 5</span>
-        <span class="badge">MC 8</span>
-        <span class="badge">Code Smell 0.404</span>
-        <span class="badge">C8, C16, C22, C26 +4</span>
+      <span class="src-left">
+        <span class="src-name">ultraviewpager/src/main/java/com/tmall/ultraviewpager/UltraViewPagerView.java</span>
       </span>
-      <span class="chevron" id="chev_3">▶</span>
+      <span class="src-right">
+        <span class="src-meta">
+          <span class="badge">Det 5</span>
+          <span class="badge">Prob 8</span>
+          <span class="badge">Health 0.500</span>
+          <span class="badge">C7, C15, C20, C23 +3</span>
+        </span>
+        <span class="chevron" id="chev_3">▶</span>
+      </span>
     </button>
     <div class="src-body" id="body_3" style="display:none">
       <div class="analysis-row">
         <label>Analysis of <strong>ultraviewpager/src/main/java/com/tmall/ultraviewpager/UltraViewPagerView.java</strong></label>
         <textarea class="analysis-field" id="analysis_3" rows="3"
-          placeholder="Enter your analysis for this class…"
-          oninput="saveAnalysis('ultraviewpager/src/main/java/com/tmall/ultraviewpager/UltraViewPagerView.java', this.value)"></textarea>
+                  placeholder="Enter your analysis for this class…"
+                  oninput="saveAnalysis('ultraviewpager/src/main/java/com/tmall/ultraviewpager/UltraViewPagerView.java', this.value)"></textarea>
       </div>
       <div class="progress-note" id="prog_ultraviewpager_src_main_java_com_tmall_ultraviewpager_UltraViewPagerView_java"></div>
       <a class="detail-link" href="repo_alibaba_UltraViewPager__ultraviewpager_src_main_java_com_tmall_ultraviewpager_UltraViewPagerView.java.html">
-        📋 View 5 deterministic / 8 MC targets →
+        📋 View 5 deterministic / 8 probabilistic targets →
       </a>
     </div>
   </div>
-  <div class="src-block" id="src_4">
+  <div class="src-block" id="src_4"
+       data-det="5"
+       data-prob="7"
+       data-comms="6"
+       data-frag="0.166667"
+       data-name="ultraviewpager/src/main/java/com/tmall/ultraviewpager/TimerHandler.java"
+       data-default="4">
     <button class="src-header" onclick="toggleBlock(4)">
-      <span class="src-name">ultraviewpager/src/main/java/com/tmall/ultraviewpager/TimerHandler.java</span>
-      <span class="src-meta">
-        <span class="badge">Det 5</span>
-        <span class="badge">MC 7</span>
-        <span class="badge">Code Smell 0.096</span>
-        <span class="badge">C4, C12, C18, C23 +3</span>
+      <span class="src-left">
+        <span class="src-name">ultraviewpager/src/main/java/com/tmall/ultraviewpager/TimerHandler.java</span>
       </span>
-      <span class="chevron" id="chev_4">▶</span>
+      <span class="src-right">
+        <span class="src-meta">
+          <span class="badge">Det 5</span>
+          <span class="badge">Prob 7</span>
+          <span class="badge">Health 0.167</span>
+          <span class="badge">C4, C11, C17, C21 +2</span>
+        </span>
+        <span class="chevron" id="chev_4">▶</span>
+      </span>
     </button>
     <div class="src-body" id="body_4" style="display:none">
       <div class="analysis-row">
         <label>Analysis of <strong>ultraviewpager/src/main/java/com/tmall/ultraviewpager/TimerHandler.java</strong></label>
         <textarea class="analysis-field" id="analysis_4" rows="3"
-          placeholder="Enter your analysis for this class…"
-          oninput="saveAnalysis('ultraviewpager/src/main/java/com/tmall/ultraviewpager/TimerHandler.java', this.value)"></textarea>
+                  placeholder="Enter your analysis for this class…"
+                  oninput="saveAnalysis('ultraviewpager/src/main/java/com/tmall/ultraviewpager/TimerHandler.java', this.value)"></textarea>
       </div>
       <div class="progress-note" id="prog_ultraviewpager_src_main_java_com_tmall_ultraviewpager_TimerHandler_java"></div>
       <a class="detail-link" href="repo_alibaba_UltraViewPager__ultraviewpager_src_main_java_com_tmall_ultraviewpager_TimerHandler.java.html">
-        📋 View 5 deterministic / 7 MC targets →
+        📋 View 5 deterministic / 7 probabilistic targets →
       </a>
     </div>
   </div>
-  <div class="src-block" id="src_5">
+  <div class="src-block" id="src_5"
+       data-det="5"
+       data-prob="7"
+       data-comms="6"
+       data-frag="0.166667"
+       data-name="ultraviewpager/src/main/java/com/tmall/ultraviewpager/UltraViewPagerAdapter.java"
+       data-default="5">
     <button class="src-header" onclick="toggleBlock(5)">
-      <span class="src-name">ultraviewpager/src/main/java/com/tmall/ultraviewpager/UltraViewPagerAdapter.java</span>
-      <span class="src-meta">
-        <span class="badge">Det 5</span>
-        <span class="badge">MC 7</span>
-        <span class="badge">Code Smell 0.058</span>
-        <span class="badge">C6, C14, C20, C24 +3</span>
+      <span class="src-left">
+        <span class="src-name">ultraviewpager/src/main/java/com/tmall/ultraviewpager/UltraViewPagerAdapter.java</span>
       </span>
-      <span class="chevron" id="chev_5">▶</span>
+      <span class="src-right">
+        <span class="src-meta">
+          <span class="badge">Det 5</span>
+          <span class="badge">Prob 7</span>
+          <span class="badge">Health 0.167</span>
+          <span class="badge">C6, C13, C19, C22 +2</span>
+        </span>
+        <span class="chevron" id="chev_5">▶</span>
+      </span>
     </button>
     <div class="src-body" id="body_5" style="display:none">
       <div class="analysis-row">
         <label>Analysis of <strong>ultraviewpager/src/main/java/com/tmall/ultraviewpager/UltraViewPagerAdapter.java</strong></label>
         <textarea class="analysis-field" id="analysis_5" rows="3"
-          placeholder="Enter your analysis for this class…"
-          oninput="saveAnalysis('ultraviewpager/src/main/java/com/tmall/ultraviewpager/UltraViewPagerAdapter.java', this.value)"></textarea>
+                  placeholder="Enter your analysis for this class…"
+                  oninput="saveAnalysis('ultraviewpager/src/main/java/com/tmall/ultraviewpager/UltraViewPagerAdapter.java', this.value)"></textarea>
       </div>
       <div class="progress-note" id="prog_ultraviewpager_src_main_java_com_tmall_ultraviewpager_UltraViewPagerAdapter_java"></div>
       <a class="detail-link" href="repo_alibaba_UltraViewPager__ultraviewpager_src_main_java_com_tmall_ultraviewpager_UltraViewPagerAdapter.java.html">
-        📋 View 5 deterministic / 7 MC targets →
+        📋 View 5 deterministic / 7 probabilistic targets →
       </a>
     </div>
   </div>
-  <div class="src-block" id="src_6">
+  <div class="src-block" id="src_6"
+       data-det="1"
+       data-prob="8"
+       data-comms="7"
+       data-frag="0.333333"
+       data-name="ultraviewpager/src/main/java/com/tmall/ultraviewpager/IUltraViewPagerFeature.java"
+       data-default="6">
     <button class="src-header" onclick="toggleBlock(6)">
-      <span class="src-name">ultraviewpager/src/main/java/com/tmall/ultraviewpager/IUltraViewPagerFeature.java</span>
-      <span class="src-meta">
-        <span class="badge">Det 1</span>
-        <span class="badge">MC 8</span>
-        <span class="badge">Code Smell 0.154</span>
-        <span class="badge">C3, C11, C17, C18 +4</span>
+      <span class="src-left">
+        <span class="src-name">ultraviewpager/src/main/java/com/tmall/ultraviewpager/IUltraViewPagerFeature.java</span>
       </span>
-      <span class="chevron" id="chev_6">▶</span>
+      <span class="src-right">
+        <span class="src-meta">
+          <span class="badge">Det 1</span>
+          <span class="badge">Prob 8</span>
+          <span class="badge">Health 0.333</span>
+          <span class="badge">C3, C10, C16, C17 +3</span>
+        </span>
+        <span class="chevron" id="chev_6">▶</span>
+      </span>
     </button>
     <div class="src-body" id="body_6" style="display:none">
       <div class="analysis-row">
         <label>Analysis of <strong>ultraviewpager/src/main/java/com/tmall/ultraviewpager/IUltraViewPagerFeature.java</strong></label>
         <textarea class="analysis-field" id="analysis_6" rows="3"
-          placeholder="Enter your analysis for this class…"
-          oninput="saveAnalysis('ultraviewpager/src/main/java/com/tmall/ultraviewpager/IUltraViewPagerFeature.java', this.value)"></textarea>
+                  placeholder="Enter your analysis for this class…"
+                  oninput="saveAnalysis('ultraviewpager/src/main/java/com/tmall/ultraviewpager/IUltraViewPagerFeature.java', this.value)"></textarea>
       </div>
       <div class="progress-note" id="prog_ultraviewpager_src_main_java_com_tmall_ultraviewpager_IUltraViewPagerFeature_java"></div>
       <a class="detail-link" href="repo_alibaba_UltraViewPager__ultraviewpager_src_main_java_com_tmall_ultraviewpager_IUltraViewPagerFeature.java.html">
-        📋 View 1 deterministic / 8 MC targets →
+        📋 View 1 deterministic / 8 probabilistic targets →
       </a>
     </div>
   </div>
-  <div class="src-block" id="src_7">
+  <div class="src-block" id="src_7"
+       data-det="0"
+       data-prob="7"
+       data-comms="7"
+       data-frag="0.166667"
+       data-name="sample/src/main/java/com/tmall/ultraviewpager/sample/UPVDemoActivity.java"
+       data-default="7">
     <button class="src-header" onclick="toggleBlock(7)">
-      <span class="src-name">sample/src/main/java/com/tmall/ultraviewpager/sample/UPVDemoActivity.java</span>
-      <span class="src-meta">
-        <span class="badge">Det 0</span>
-        <span class="badge">MC 7</span>
-        <span class="badge">Code Smell 0.077</span>
-        <span class="badge">C0, C11, C12, C13 +3</span>
+      <span class="src-left">
+        <span class="src-name">sample/src/main/java/com/tmall/ultraviewpager/sample/UPVDemoActivity.java</span>
       </span>
-      <span class="chevron" id="chev_7">▶</span>
+      <span class="src-right">
+        <span class="src-meta">
+          <span class="badge">Det 0</span>
+          <span class="badge">Prob 7</span>
+          <span class="badge">Health 0.167</span>
+          <span class="badge">C0, C10, C11, C12 +3</span>
+        </span>
+        <span class="chevron" id="chev_7">▶</span>
+      </span>
     </button>
     <div class="src-body" id="body_7" style="display:none">
       <div class="analysis-row">
         <label>Analysis of <strong>sample/src/main/java/com/tmall/ultraviewpager/sample/UPVDemoActivity.java</strong></label>
         <textarea class="analysis-field" id="analysis_7" rows="3"
-          placeholder="Enter your analysis for this class…"
-          oninput="saveAnalysis('sample/src/main/java/com/tmall/ultraviewpager/sample/UPVDemoActivity.java', this.value)"></textarea>
+                  placeholder="Enter your analysis for this class…"
+                  oninput="saveAnalysis('sample/src/main/java/com/tmall/ultraviewpager/sample/UPVDemoActivity.java', this.value)"></textarea>
       </div>
       <div class="progress-note" id="prog_sample_src_main_java_com_tmall_ultraviewpager_sample_UPVDemoActivity_java"></div>
       <a class="detail-link" href="repo_alibaba_UltraViewPager__sample_src_main_java_com_tmall_ultraviewpager_sample_UPVDemoActivity.java.html">
-        📋 View 0 deterministic / 7 MC targets →
+        📋 View 0 deterministic / 7 probabilistic targets →
       </a>
     </div>
   </div>
-  <div class="src-block" id="src_8">
+  <div class="src-block" id="src_8"
+       data-det="0"
+       data-prob="0"
+       data-comms="1"
+       data-frag="0.166667"
+       data-name="sample/src/main/java/com/tmall/ultraviewpager/sample/UltraPagerAdapter.java"
+       data-default="8">
     <button class="src-header" onclick="toggleBlock(8)">
-      <span class="src-name">sample/src/main/java/com/tmall/ultraviewpager/sample/UltraPagerAdapter.java</span>
-      <span class="src-meta">
-        <span class="badge">Det 0</span>
-        <span class="badge">MC 0</span>
-        <span class="badge">Code Smell 0.058</span>
-        <span class="badge">C1</span>
+      <span class="src-left">
+        <span class="src-name">sample/src/main/java/com/tmall/ultraviewpager/sample/UltraPagerAdapter.java</span>
       </span>
-      <span class="chevron" id="chev_8">▶</span>
+      <span class="src-right">
+        <span class="src-meta">
+          <span class="badge">Det 0</span>
+          <span class="badge">Prob 0</span>
+          <span class="badge">Health 0.167</span>
+          <span class="badge">C1</span>
+        </span>
+        <span class="chevron" id="chev_8">▶</span>
+      </span>
     </button>
     <div class="src-body" id="body_8" style="display:none">
       <div class="analysis-row">
         <label>Analysis of <strong>sample/src/main/java/com/tmall/ultraviewpager/sample/UltraPagerAdapter.java</strong></label>
         <textarea class="analysis-field" id="analysis_8" rows="3"
-          placeholder="Enter your analysis for this class…"
-          oninput="saveAnalysis('sample/src/main/java/com/tmall/ultraviewpager/sample/UltraPagerAdapter.java', this.value)"></textarea>
+                  placeholder="Enter your analysis for this class…"
+                  oninput="saveAnalysis('sample/src/main/java/com/tmall/ultraviewpager/sample/UltraPagerAdapter.java', this.value)"></textarea>
       </div>
       <div class="progress-note" id="prog_sample_src_main_java_com_tmall_ultraviewpager_sample_UltraPagerAdapter_java"></div>
       <a class="detail-link" href="repo_alibaba_UltraViewPager__sample_src_main_java_com_tmall_ultraviewpager_sample_UltraPagerAdapter.java.html">
-        📋 View 0 deterministic / 0 MC targets →
+        📋 View 0 deterministic / 0 probabilistic targets →
       </a>
     </div>
   </div>
-  <div class="src-block" id="src_9">
+  <div class="src-block" id="src_9"
+       data-det="0"
+       data-prob="0"
+       data-comms="4"
+       data-frag="0.166667"
+       data-name="ultraviewpager/src/main/java/com/tmall/ultraviewpager/IUltraIndicatorBuilder.java"
+       data-default="9">
     <button class="src-header" onclick="toggleBlock(9)">
-      <span class="src-name">ultraviewpager/src/main/java/com/tmall/ultraviewpager/IUltraIndicatorBuilder.java</span>
-      <span class="src-meta">
-        <span class="badge">Det 0</span>
-        <span class="badge">MC 0</span>
-        <span class="badge">Code Smell 0.096</span>
-        <span class="badge">C2, C17, C27, C33</span>
+      <span class="src-left">
+        <span class="src-name">ultraviewpager/src/main/java/com/tmall/ultraviewpager/IUltraIndicatorBuilder.java</span>
       </span>
-      <span class="chevron" id="chev_9">▶</span>
+      <span class="src-right">
+        <span class="src-meta">
+          <span class="badge">Det 0</span>
+          <span class="badge">Prob 0</span>
+          <span class="badge">Health 0.167</span>
+          <span class="badge">C2, C16, C24, C28</span>
+        </span>
+        <span class="chevron" id="chev_9">▶</span>
+      </span>
     </button>
     <div class="src-body" id="body_9" style="display:none">
       <div class="analysis-row">
         <label>Analysis of <strong>ultraviewpager/src/main/java/com/tmall/ultraviewpager/IUltraIndicatorBuilder.java</strong></label>
         <textarea class="analysis-field" id="analysis_9" rows="3"
-          placeholder="Enter your analysis for this class…"
-          oninput="saveAnalysis('ultraviewpager/src/main/java/com/tmall/ultraviewpager/IUltraIndicatorBuilder.java', this.value)"></textarea>
+                  placeholder="Enter your analysis for this class…"
+                  oninput="saveAnalysis('ultraviewpager/src/main/java/com/tmall/ultraviewpager/IUltraIndicatorBuilder.java', this.value)"></textarea>
       </div>
       <div class="progress-note" id="prog_ultraviewpager_src_main_java_com_tmall_ultraviewpager_IUltraIndicatorBuilder_java"></div>
       <a class="detail-link" href="repo_alibaba_UltraViewPager__ultraviewpager_src_main_java_com_tmall_ultraviewpager_IUltraIndicatorBuilder.java.html">
-        📋 View 0 deterministic / 0 MC targets →
+        📋 View 0 deterministic / 0 probabilistic targets →
       </a>
     </div>
   </div>
-  <div class="src-block" id="src_10">
+  <div class="src-block" id="src_10"
+       data-det="0"
+       data-prob="0"
+       data-comms="1"
+       data-frag="0.000000"
+       data-name="ultraviewpager/src/main/java/com/tmall/ultraviewpager/transformer/UltraDepthScaleTransformer.java"
+       data-default="10">
     <button class="src-header" onclick="toggleBlock(10)">
-      <span class="src-name">ultraviewpager/src/main/java/com/tmall/ultraviewpager/transformer/UltraDepthScaleTransformer.java</span>
-      <span class="src-meta">
-        <span class="badge">Det 0</span>
-        <span class="badge">MC 0</span>
-        <span class="badge">Code Smell 0.058</span>
-        <span class="badge">C9</span>
+      <span class="src-left">
+        <span class="src-name">ultraviewpager/src/main/java/com/tmall/ultraviewpager/transformer/UltraDepthScaleTransformer.java</span>
       </span>
-      <span class="chevron" id="chev_10">▶</span>
+      <span class="src-right">
+        <span class="src-meta">
+          <span class="badge">Det 0</span>
+          <span class="badge">Prob 0</span>
+          <span class="badge">Health 0.000</span>
+          <span class="badge">C8</span>
+        </span>
+        <span class="chevron" id="chev_10">▶</span>
+      </span>
     </button>
     <div class="src-body" id="body_10" style="display:none">
       <div class="analysis-row">
         <label>Analysis of <strong>ultraviewpager/src/main/java/com/tmall/ultraviewpager/transformer/UltraDepthScaleTransformer.java</strong></label>
         <textarea class="analysis-field" id="analysis_10" rows="3"
-          placeholder="Enter your analysis for this class…"
-          oninput="saveAnalysis('ultraviewpager/src/main/java/com/tmall/ultraviewpager/transformer/UltraDepthScaleTransformer.java', this.value)"></textarea>
+                  placeholder="Enter your analysis for this class…"
+                  oninput="saveAnalysis('ultraviewpager/src/main/java/com/tmall/ultraviewpager/transformer/UltraDepthScaleTransformer.java', this.value)"></textarea>
       </div>
       <div class="progress-note" id="prog_ultraviewpager_src_main_java_com_tmall_ultraviewpager_transformer_UltraDepthScaleTransformer_java"></div>
       <a class="detail-link" href="repo_alibaba_UltraViewPager__ultraviewpager_src_main_java_com_tmall_ultraviewpager_transformer_UltraDepthScaleTransformer.java.html">
-        📋 View 0 deterministic / 0 MC targets →
+        📋 View 0 deterministic / 0 probabilistic targets →
       </a>
     </div>
   </div>
-  <div class="src-block" id="src_11">
+  <div class="src-block" id="src_11"
+       data-det="0"
+       data-prob="0"
+       data-comms="1"
+       data-frag="0.000000"
+       data-name="ultraviewpager/src/main/java/com/tmall/ultraviewpager/transformer/UltraScaleTransformer.java"
+       data-default="11">
     <button class="src-header" onclick="toggleBlock(11)">
-      <span class="src-name">ultraviewpager/src/main/java/com/tmall/ultraviewpager/transformer/UltraScaleTransformer.java</span>
-      <span class="src-meta">
-        <span class="badge">Det 0</span>
-        <span class="badge">MC 0</span>
-        <span class="badge">Code Smell 0.038</span>
-        <span class="badge">C10</span>
+      <span class="src-left">
+        <span class="src-name">ultraviewpager/src/main/java/com/tmall/ultraviewpager/transformer/UltraScaleTransformer.java</span>
       </span>
-      <span class="chevron" id="chev_11">▶</span>
+      <span class="src-right">
+        <span class="src-meta">
+          <span class="badge">Det 0</span>
+          <span class="badge">Prob 0</span>
+          <span class="badge">Health 0.000</span>
+          <span class="badge">C9</span>
+        </span>
+        <span class="chevron" id="chev_11">▶</span>
+      </span>
     </button>
     <div class="src-body" id="body_11" style="display:none">
       <div class="analysis-row">
         <label>Analysis of <strong>ultraviewpager/src/main/java/com/tmall/ultraviewpager/transformer/UltraScaleTransformer.java</strong></label>
         <textarea class="analysis-field" id="analysis_11" rows="3"
-          placeholder="Enter your analysis for this class…"
-          oninput="saveAnalysis('ultraviewpager/src/main/java/com/tmall/ultraviewpager/transformer/UltraScaleTransformer.java', this.value)"></textarea>
+                  placeholder="Enter your analysis for this class…"
+                  oninput="saveAnalysis('ultraviewpager/src/main/java/com/tmall/ultraviewpager/transformer/UltraScaleTransformer.java', this.value)"></textarea>
       </div>
       <div class="progress-note" id="prog_ultraviewpager_src_main_java_com_tmall_ultraviewpager_transformer_UltraScaleTransformer_java"></div>
       <a class="detail-link" href="repo_alibaba_UltraViewPager__ultraviewpager_src_main_java_com_tmall_ultraviewpager_transformer_UltraScaleTransformer.java.html">
-        📋 View 0 deterministic / 0 MC targets →
+        📋 View 0 deterministic / 0 probabilistic targets →
       </a>
     </div>
   </div>
-  <div class="src-block" id="src_12">
+  <div class="src-block" id="src_12"
+       data-det="0"
+       data-prob="0"
+       data-comms="1"
+       data-frag="0.000000"
+       data-name="ultraviewpager/src/main/java/com/tmall/ultraviewpager/transformer/UltraVerticalTransformer.java"
+       data-default="12">
     <button class="src-header" onclick="toggleBlock(12)">
-      <span class="src-name">ultraviewpager/src/main/java/com/tmall/ultraviewpager/transformer/UltraVerticalTransformer.java</span>
-      <span class="src-meta">
-        <span class="badge">Det 0</span>
-        <span class="badge">MC 0</span>
-        <span class="badge">Code Smell 0.058</span>
-        <span class="badge">C35</span>
+      <span class="src-left">
+        <span class="src-name">ultraviewpager/src/main/java/com/tmall/ultraviewpager/transformer/UltraVerticalTransformer.java</span>
       </span>
-      <span class="chevron" id="chev_12">▶</span>
+      <span class="src-right">
+        <span class="src-meta">
+          <span class="badge">Det 0</span>
+          <span class="badge">Prob 0</span>
+          <span class="badge">Health 0.000</span>
+          <span class="badge">C29</span>
+        </span>
+        <span class="chevron" id="chev_12">▶</span>
+      </span>
     </button>
     <div class="src-body" id="body_12" style="display:none">
       <div class="analysis-row">
         <label>Analysis of <strong>ultraviewpager/src/main/java/com/tmall/ultraviewpager/transformer/UltraVerticalTransformer.java</strong></label>
         <textarea class="analysis-field" id="analysis_12" rows="3"
-          placeholder="Enter your analysis for this class…"
-          oninput="saveAnalysis('ultraviewpager/src/main/java/com/tmall/ultraviewpager/transformer/UltraVerticalTransformer.java', this.value)"></textarea>
+                  placeholder="Enter your analysis for this class…"
+                  oninput="saveAnalysis('ultraviewpager/src/main/java/com/tmall/ultraviewpager/transformer/UltraVerticalTransformer.java', this.value)"></textarea>
       </div>
       <div class="progress-note" id="prog_ultraviewpager_src_main_java_com_tmall_ultraviewpager_transformer_UltraVerticalTransformer_java"></div>
       <a class="detail-link" href="repo_alibaba_UltraViewPager__ultraviewpager_src_main_java_com_tmall_ultraviewpager_transformer_UltraVerticalTransformer.java.html">
-        📋 View 0 deterministic / 0 MC targets →
+        📋 View 0 deterministic / 0 probabilistic targets →
       </a>
     </div>
   </div>
-<div class="general-section"><h2>📝 General Analysis</h2><textarea id="generalAnalysis" placeholder="Enter your overall analysis and observations for this repository…" oninput="localStorage.setItem('general_' + REPO, this.value)"></textarea><div class="submit-row"><button class="btn" onclick="exportCSV()">📥 Export CSV</button><button class="btn btn-primary" onclick="submitAll()">✅ Submit All</button><span class="submit-status-msg" id="submitStatus" style="display:none"></span></div></div></div><script>const REPO = 'alibaba_UltraViewPager';
-const COMMUNITIES = [{"id": 0, "total": 3, "touched": 3}, {"id": 1, "total": 2, "touched": 2}, {"id": 2, "total": 2, "touched": 2}, {"id": 3, "total": 2, "touched": 2}, {"id": 4, "total": 2, "touched": 2}, {"id": 5, "total": 2, "touched": 2}, {"id": 6, "total": 2, "touched": 2}, {"id": 7, "total": 2, "touched": 2}, {"id": 8, "total": 2, "touched": 2}, {"id": 9, "total": 2, "touched": 2}, {"id": 10, "total": 3, "touched": 3}, {"id": 11, "total": 3, "touched": 3}, {"id": 12, "total": 3, "touched": 3}, {"id": 13, "total": 3, "touched": 3}, {"id": 14, "total": 2, "touched": 2}, {"id": 15, "total": 3, "touched": 3}, {"id": 16, "total": 2, "touched": 2}, {"id": 17, "total": 2, "touched": 2}, {"id": 18, "total": 2, "touched": 2}, {"id": 19, "total": 2, "touched": 2}, {"id": 20, "total": 2, "touched": 2}, {"id": 21, "total": 2, "touched": 2}, {"id": 22, "total": 2, "touched": 2}, {"id": 23, "total": 2, "touched": 2}, {"id": 24, "total": 2, "touched": 2}, {"id": 25, "total": 2, "touched": 2}, {"id": 26, "total": 2, "touched": 2}, {"id": 27, "total": 2, "touched": 2}, {"id": 28, "total": 2, "touched": 2}, {"id": 29, "total": 2, "touched": 2}];
+  </div>
+
+  <div class="general-section">
+    <h2>📝 General Analysis</h2>
+    <textarea id="generalAnalysis"
+              placeholder="Enter your overall analysis and observations for this repository…"
+              oninput="localStorage.setItem('general_' + REPO, this.value)"></textarea>
+    <div class="submit-row">
+      <button class="btn" onclick="exportCSV()">📥 Export CSV</button>
+      <button class="btn btn-primary" onclick="submitAll()">✅ Submit All</button>
+      <span class="submit-status-msg" id="submitStatus" style="display:none"></span>
+    </div>
+  </div>
+</div>
+
+<script>
+const REPO = "alibaba_UltraViewPager";
+const COMMUNITIES = [];
 document.addEventListener('DOMContentLoaded', () => {
   const email = localStorage.getItem('email_' + REPO) || '';
   if (email) document.getElementById('userEmail').value = email;
@@ -414,13 +636,38 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 });
+
 function saveEmail(v) {
   localStorage.setItem('email_' + REPO, v);
   document.getElementById('userEmail').classList.remove('invalid');
 }
+
 function saveAnalysis(srcKey, value) {
   localStorage.setItem('cls_analysis_' + REPO + '__' + srcKey, value);
 }
+
+function sortSeedBlocks() {
+  const list = document.getElementById('seedList');
+  if (!list) return;
+  const key = document.getElementById('sortBy').value;
+  const dir = document.getElementById('sortDir').value === 'asc' ? 1 : -1;
+  const blocks = Array.from(list.querySelectorAll('.src-block'));
+  const numericKeys = { det: 'det', prob: 'prob', comms: 'comms', frag: 'frag' };
+  blocks.sort((a, b) => {
+    if (key === 'default') {
+      return (parseInt(a.dataset.default, 10) - parseInt(b.dataset.default, 10)) * dir;
+    }
+    if (key === 'name') {
+      return a.dataset.name.localeCompare(b.dataset.name) * dir;
+    }
+    const attr = numericKeys[key];
+    const av = parseFloat(a.dataset[attr]) || 0;
+    const bv = parseFloat(b.dataset[attr]) || 0;
+    return (av - bv) * dir;
+  });
+  blocks.forEach(b => list.appendChild(b));
+}
+
 function toggleBlock(idx) {
   const body = document.getElementById('body_' + idx);
   const chev = document.getElementById('chev_' + idx);
@@ -430,6 +677,7 @@ function toggleBlock(idx) {
   chev.classList.toggle('open', !open);
   hdr.classList.toggle('open', !open);
 }
+
 function toggleCommunities() {
   const panel = document.getElementById('commPanel');
   panel.classList.toggle('open');
@@ -437,6 +685,7 @@ function toggleCommunities() {
     renderCommunities();
   }
 }
+
 function renderCommunities() {
   const grid = document.getElementById('commGrid');
   if (!COMMUNITIES.length) {
@@ -450,6 +699,7 @@ function renderCommunities() {
     grid.appendChild(chip);
   });
 }
+
 function submitAll() {
   const email = document.getElementById('userEmail').value.trim();
   if (!email || !email.includes('@')) {
@@ -479,9 +729,10 @@ function submitAll() {
   status.style.display = 'inline';
   setTimeout(() => { status.style.display = 'none'; }, 3000);
 }
+
 function exportCSV() {
   const email = document.getElementById('userEmail').value.trim();
-  const rows = [['Repository','Email','Source_Class','Analysis','Timestamp']];
+  const rows = [['Repository', 'Email', 'Source_Class', 'Analysis', 'Timestamp']];
   document.querySelectorAll('.src-block').forEach((block, idx) => {
     const srcName = block.querySelector('.src-name').textContent;
     const analysis = document.getElementById('analysis_' + idx)?.value || '';
@@ -496,4 +747,7 @@ function exportCSV() {
   a.download = 'analysis_' + REPO + '.csv';
   a.click();
 }
-</script></body></html>
+
+</script>
+</body>
+</html>

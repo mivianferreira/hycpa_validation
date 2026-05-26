@@ -1,0 +1,2630 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HyCPA — Community 7 · google/gson</title>
+  <style>
+:root {
+  --bg: #0d1117; --surface: #161b22; --surface2: #21262d;
+  --border: #30363d; --text: #e6edf3; --text2: #8b949e;
+  --accent: #58a6ff; --green: #3fb950; --orange: #e3b341; --red: #f85149;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { background: var(--bg); color: var(--text); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif; padding-bottom: 48px; }
+
+/* ── Header ── */
+.page-header { background: var(--surface); border-bottom: 1px solid var(--border); padding: 12px 24px; display: flex; align-items: center; gap: 20px; }
+.back-btn { color: var(--text2); font-size: 12px; text-decoration: none; white-space: nowrap; }
+.back-btn:hover { color: var(--accent); }
+.header-title { font-size: 15px; color: var(--text); }
+.header-title strong { color: var(--accent); }
+
+/* ── Stats pills ── */
+.stats-row { display: flex; gap: 12px; padding: 16px 24px; background: var(--surface); border-bottom: 1px solid var(--border); flex-wrap: wrap; }
+.stat-pill { background: var(--surface2); border: 1px solid var(--border); border-radius: 8px; padding: 10px 20px; display: flex; flex-direction: column; align-items: center; gap: 2px; min-width: 90px; }
+.pill-val { font-size: 22px; font-weight: 700; color: var(--text); line-height: 1; }
+.pill-lbl { font-size: 10px; color: var(--text2); text-transform: uppercase; letter-spacing: 0.5px; margin-top: 2px; }
+
+/* ── Content sections ── */
+.content-section { padding: 24px; }
+.section-title { font-size: 11px; font-weight: 600; color: var(--text2); text-transform: uppercase; letter-spacing: 0.6px; margin-bottom: 14px; display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
+
+/* ── Node table ── */
+.node-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+.node-table th { background: var(--surface); color: var(--text2); font-weight: 600; font-size: 10px; text-transform: uppercase; letter-spacing: 0.5px; padding: 8px 12px; text-align: left; border-bottom: 2px solid var(--border); white-space: nowrap; }
+.node-table td { padding: 7px 12px; border-bottom: 1px solid var(--border); vertical-align: middle; }
+.node-table tbody tr:hover td { background: var(--surface); }
+.health-badge { display: inline-block; padding: 2px 9px; border-radius: 10px; font-size: 11px; font-weight: 700; color: #0d1117; white-space: nowrap; }
+.class-path { font-size: 11px; color: var(--text2); font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', monospace; word-break: break-all; }
+td.num { text-align: right; font-weight: 600; white-space: nowrap; }
+td.overlap { color: var(--accent); }
+
+/* ── Coupling matrix ── */
+.matrix-wrap { overflow: auto; }
+.matrix { border-collapse: collapse; }
+.matrix-corner { min-width: 16px; }
+.matrix-col-hdr { padding: 0 1px 4px 1px; vertical-align: bottom; }
+.matrix-col-hdr span { display: block; writing-mode: vertical-rl; transform: rotate(180deg); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-height: 140px; color: var(--text2); font-weight: 400; font-size: 10px; cursor: default; text-align: left; }
+.matrix-row-hdr { text-align: right; padding: 1px 6px 1px 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 200px; color: var(--text2); font-weight: 400; font-size: 10px; cursor: default; }
+.matrix-cell { width: 16px; height: 16px; min-width: 16px; min-height: 16px; border: 1px solid #1c2129; cursor: default; }
+.matrix-cell.empty { background: transparent; }
+.matrix-cell.self-cell { background: var(--surface2); }
+.matrix-cell.filled { }
+
+/* ── Legend inline ── */
+.legend-inline { display: inline-flex; align-items: center; gap: 6px; font-size: 10px; color: var(--text2); font-weight: 400; text-transform: none; letter-spacing: 0; }
+.li-cell { display: inline-block; width: 10px; height: 10px; border-radius: 2px; vertical-align: middle; flex-shrink: 0; }
+</style>
+</head>
+<body>
+
+<div class="page-header">
+  <a class="back-btn" href="repo_google_gson.html">← Back to google/gson</a>
+  <span class="header-title">Community <strong>C7</strong> — google/gson</span>
+</div>
+
+<div class="stats-row">
+  <div class="stat-pill"><span class="pill-val">27</span><span class="pill-lbl">Nodes</span></div>
+  <div class="stat-pill"><span class="pill-val">693</span><span class="pill-lbl">Arcs</span></div>
+  <div class="stat-pill"><span class="pill-val">27</span><span class="pill-lbl">Overlapping</span></div>
+  <div class="stat-pill"><span class="pill-val">93</span><span class="pill-lbl">Coupled arcs</span></div>
+  <div class="stat-pill"><span class="pill-val">0</span><span class="pill-lbl">Co-change only</span></div>
+</div>
+
+<section class="content-section">
+  <h2 class="section-title">Nodes</h2>
+  <table class="node-table">
+    <thead>
+      <tr>
+        <th>Health</th>
+        <th>Class</th>
+        <th>Degree</th>
+        <th>Communities</th>
+      </tr>
+    </thead>
+    <tbody>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#f85149">0.423</span></td>
+        <td class="class-path" title="gson/src/main/java/com/google/gson/Gson.java">gson/src/main/java/com/google/gson/Gson.java</td>
+        <td class="num">52</td>
+        <td class="num overlap">33</td>
+      </tr>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#f85149">0.462</span></td>
+        <td class="class-path" title="gson/src/main/java/com/google/gson/internal/bind/ReflectiveTypeAdapterFactory.java">gson/src/main/java/com/google/gson/internal/bind/ReflectiveTypeAdapterFactory.java</td>
+        <td class="num">52</td>
+        <td class="num overlap">9</td>
+      </tr>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#f85149">0.481</span></td>
+        <td class="class-path" title="gson/src/main/java/com/google/gson/GsonBuilder.java">gson/src/main/java/com/google/gson/GsonBuilder.java</td>
+        <td class="num">51</td>
+        <td class="num overlap">22</td>
+      </tr>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#e3b341">0.558</span></td>
+        <td class="class-path" title="gson/src/main/java/com/google/gson/internal/ConstructorConstructor.java">gson/src/main/java/com/google/gson/internal/ConstructorConstructor.java</td>
+        <td class="num">51</td>
+        <td class="num overlap">8</td>
+      </tr>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#e3b341">0.577</span></td>
+        <td class="class-path" title="gson/src/test/java/com/google/gson/GsonTest.java">gson/src/test/java/com/google/gson/GsonTest.java</td>
+        <td class="num">52</td>
+        <td class="num overlap">8</td>
+      </tr>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#e3b341">0.596</span></td>
+        <td class="class-path" title="gson/src/test/java/com/google/gson/functional/MapTest.java">gson/src/test/java/com/google/gson/functional/MapTest.java</td>
+        <td class="num">51</td>
+        <td class="num overlap">2</td>
+      </tr>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#e3b341">0.596</span></td>
+        <td class="class-path" title="gson/src/test/java/com/google/gson/functional/ObjectTest.java">gson/src/test/java/com/google/gson/functional/ObjectTest.java</td>
+        <td class="num">51</td>
+        <td class="num overlap">7</td>
+      </tr>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#e3b341">0.615</span></td>
+        <td class="class-path" title="gson/src/test/java/com/google/gson/functional/CustomTypeAdaptersTest.java">gson/src/test/java/com/google/gson/functional/CustomTypeAdaptersTest.java</td>
+        <td class="num">51</td>
+        <td class="num overlap">2</td>
+      </tr>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#e3b341">0.615</span></td>
+        <td class="class-path" title="gson/src/test/java/com/google/gson/functional/JsonAdapterAnnotationOnFieldsTest.java">gson/src/test/java/com/google/gson/functional/JsonAdapterAnnotationOnFieldsTest.java</td>
+        <td class="num">52</td>
+        <td class="num overlap">2</td>
+      </tr>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#e3b341">0.635</span></td>
+        <td class="class-path" title="gson/src/test/java/com/google/gson/functional/JsonAdapterAnnotationOnClassesTest.java">gson/src/test/java/com/google/gson/functional/JsonAdapterAnnotationOnClassesTest.java</td>
+        <td class="num">52</td>
+        <td class="num overlap">2</td>
+      </tr>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#e3b341">0.654</span></td>
+        <td class="class-path" title="gson/src/test/java/com/google/gson/GsonBuilderTest.java">gson/src/test/java/com/google/gson/GsonBuilderTest.java</td>
+        <td class="num">51</td>
+        <td class="num overlap">3</td>
+      </tr>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#e3b341">0.692</span></td>
+        <td class="class-path" title="gson/src/test/java/com/google/gson/functional/CollectionTest.java">gson/src/test/java/com/google/gson/functional/CollectionTest.java</td>
+        <td class="num">51</td>
+        <td class="num overlap">2</td>
+      </tr>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#3fb950">0.769</span></td>
+        <td class="class-path" title="gson/src/main/java/com/google/gson/internal/bind/JsonAdapterAnnotationTypeAdapterFactory.java">gson/src/main/java/com/google/gson/internal/bind/JsonAdapterAnnotationTypeAdapterFactory.java</td>
+        <td class="num">52</td>
+        <td class="num overlap">3</td>
+      </tr>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#3fb950">0.788</span></td>
+        <td class="class-path" title="gson/src/main/java/com/google/gson/internal/bind/TreeTypeAdapter.java">gson/src/main/java/com/google/gson/internal/bind/TreeTypeAdapter.java</td>
+        <td class="num">52</td>
+        <td class="num overlap">5</td>
+      </tr>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#3fb950">0.865</span></td>
+        <td class="class-path" title="gson/src/test/java/com/google/gson/functional/JsonAdapterSerializerDeserializerTest.java">gson/src/test/java/com/google/gson/functional/JsonAdapterSerializerDeserializerTest.java</td>
+        <td class="num">52</td>
+        <td class="num overlap">2</td>
+      </tr>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#3fb950">0.885</span></td>
+        <td class="class-path" title="gson/src/test/java/com/google/gson/functional/InstanceCreatorTest.java">gson/src/test/java/com/google/gson/functional/InstanceCreatorTest.java</td>
+        <td class="num">52</td>
+        <td class="num overlap">3</td>
+      </tr>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#3fb950">0.904</span></td>
+        <td class="class-path" title="gson/src/main/java/com/google/gson/JsonSerializationContext.java">gson/src/main/java/com/google/gson/JsonSerializationContext.java</td>
+        <td class="num">52</td>
+        <td class="num overlap">5</td>
+      </tr>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#3fb950">0.920</span></td>
+        <td class="class-path" title="gson/src/main/java/com/google/gson/InstanceCreator.java">gson/src/main/java/com/google/gson/InstanceCreator.java</td>
+        <td class="num">43</td>
+        <td class="num overlap">5</td>
+      </tr>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#3fb950">0.920</span></td>
+        <td class="class-path" title="gson/src/main/java/com/google/gson/JsonDeserializer.java">gson/src/main/java/com/google/gson/JsonDeserializer.java</td>
+        <td class="num">52</td>
+        <td class="num overlap">7</td>
+      </tr>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#3fb950">0.920</span></td>
+        <td class="class-path" title="gson/src/main/java/com/google/gson/JsonSerializer.java">gson/src/main/java/com/google/gson/JsonSerializer.java</td>
+        <td class="num">52</td>
+        <td class="num overlap">7</td>
+      </tr>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#3fb950">0.923</span></td>
+        <td class="class-path" title="gson/src/main/java/com/google/gson/ExclusionStrategy.java">gson/src/main/java/com/google/gson/ExclusionStrategy.java</td>
+        <td class="num">52</td>
+        <td class="num overlap">5</td>
+      </tr>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#3fb950">0.923</span></td>
+        <td class="class-path" title="gson/src/main/java/com/google/gson/FieldNamingStrategy.java">gson/src/main/java/com/google/gson/FieldNamingStrategy.java</td>
+        <td class="num">52</td>
+        <td class="num overlap">4</td>
+      </tr>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#3fb950">0.940</span></td>
+        <td class="class-path" title="gson/src/main/java/com/google/gson/JsonDeserializationContext.java">gson/src/main/java/com/google/gson/JsonDeserializationContext.java</td>
+        <td class="num">52</td>
+        <td class="num overlap">6</td>
+      </tr>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#3fb950">0.981</span></td>
+        <td class="class-path" title="gson/src/test/java/com/google/gson/ParameterizedTypeFixtures.java">gson/src/test/java/com/google/gson/ParameterizedTypeFixtures.java</td>
+        <td class="num">51</td>
+        <td class="num overlap">3</td>
+      </tr>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#3fb950">0.981</span></td>
+        <td class="class-path" title="gson/src/test/java/com/google/gson/functional/ExposeFieldsTest.java">gson/src/test/java/com/google/gson/functional/ExposeFieldsTest.java</td>
+        <td class="num">51</td>
+        <td class="num overlap">3</td>
+      </tr>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#8b949e">—</span></td>
+        <td class="class-path" title="gson/src/main/java/com/google/gson/annotations/Expose.java">gson/src/main/java/com/google/gson/annotations/Expose.java</td>
+        <td class="num">52</td>
+        <td class="num overlap">4</td>
+      </tr>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#8b949e">—</span></td>
+        <td class="class-path" title="gson/src/main/java/com/google/gson/annotations/JsonAdapter.java">gson/src/main/java/com/google/gson/annotations/JsonAdapter.java</td>
+        <td class="num">52</td>
+        <td class="num overlap">2</td>
+      </tr>
+      
+    </tbody>
+  </table>
+</section>
+
+
+<section class="content-section">
+  <h2 class="section-title">Coupling matrix
+    <span class="legend-inline">
+      <span class="li-cell" style="background:#30363d"></span>Co-change only
+      <span class="li-cell" style="background:#3fb950"></span>Weak
+      <span class="li-cell" style="background:#e3b341"></span>Moderate
+      <span class="li-cell" style="background:#f85149"></span>Strong
+    </span>
+  </h2>
+  <div class="matrix-wrap">
+    <table class="matrix">
+      <thead>
+        <tr>
+          <th class="matrix-corner"></th>
+          <th class="matrix-col-hdr" title="gson/src/main/java/com/google/gson/Gson.java"><span>Gson</span></th><th class="matrix-col-hdr" title="gson/src/main/java/com/google/gson/internal/bind/ReflectiveTypeAdapterFactory.java"><span>ReflectiveTypeAdapterFactory</span></th><th class="matrix-col-hdr" title="gson/src/main/java/com/google/gson/GsonBuilder.java"><span>GsonBuilder</span></th><th class="matrix-col-hdr" title="gson/src/main/java/com/google/gson/internal/ConstructorConstructor.java"><span>ConstructorConstructor</span></th><th class="matrix-col-hdr" title="gson/src/test/java/com/google/gson/GsonTest.java"><span>GsonTest</span></th><th class="matrix-col-hdr" title="gson/src/test/java/com/google/gson/functional/MapTest.java"><span>MapTest</span></th><th class="matrix-col-hdr" title="gson/src/test/java/com/google/gson/functional/ObjectTest.java"><span>ObjectTest</span></th><th class="matrix-col-hdr" title="gson/src/test/java/com/google/gson/functional/CustomTypeAdaptersTest.java"><span>CustomTypeAdaptersTest</span></th><th class="matrix-col-hdr" title="gson/src/test/java/com/google/gson/functional/JsonAdapterAnnotationOnFieldsTest.java"><span>JsonAdapterAnnotationOnFieldsTest</span></th><th class="matrix-col-hdr" title="gson/src/test/java/com/google/gson/functional/JsonAdapterAnnotationOnClassesTest.java"><span>JsonAdapterAnnotationOnClassesTest</span></th><th class="matrix-col-hdr" title="gson/src/test/java/com/google/gson/GsonBuilderTest.java"><span>GsonBuilderTest</span></th><th class="matrix-col-hdr" title="gson/src/test/java/com/google/gson/functional/CollectionTest.java"><span>CollectionTest</span></th><th class="matrix-col-hdr" title="gson/src/main/java/com/google/gson/internal/bind/JsonAdapterAnnotationTypeAdapterFactory.java"><span>JsonAdapterAnnotationTypeAdapterFactory</span></th><th class="matrix-col-hdr" title="gson/src/main/java/com/google/gson/internal/bind/TreeTypeAdapter.java"><span>TreeTypeAdapter</span></th><th class="matrix-col-hdr" title="gson/src/test/java/com/google/gson/functional/JsonAdapterSerializerDeserializerTest.java"><span>JsonAdapterSerializerDeserializerTest</span></th><th class="matrix-col-hdr" title="gson/src/test/java/com/google/gson/functional/InstanceCreatorTest.java"><span>InstanceCreatorTest</span></th><th class="matrix-col-hdr" title="gson/src/main/java/com/google/gson/JsonSerializationContext.java"><span>JsonSerializationContext</span></th><th class="matrix-col-hdr" title="gson/src/main/java/com/google/gson/InstanceCreator.java"><span>InstanceCreator</span></th><th class="matrix-col-hdr" title="gson/src/main/java/com/google/gson/JsonDeserializer.java"><span>JsonDeserializer</span></th><th class="matrix-col-hdr" title="gson/src/main/java/com/google/gson/JsonSerializer.java"><span>JsonSerializer</span></th><th class="matrix-col-hdr" title="gson/src/main/java/com/google/gson/ExclusionStrategy.java"><span>ExclusionStrategy</span></th><th class="matrix-col-hdr" title="gson/src/main/java/com/google/gson/FieldNamingStrategy.java"><span>FieldNamingStrategy</span></th><th class="matrix-col-hdr" title="gson/src/main/java/com/google/gson/JsonDeserializationContext.java"><span>JsonDeserializationContext</span></th><th class="matrix-col-hdr" title="gson/src/test/java/com/google/gson/ParameterizedTypeFixtures.java"><span>ParameterizedTypeFixtures</span></th><th class="matrix-col-hdr" title="gson/src/test/java/com/google/gson/functional/ExposeFieldsTest.java"><span>ExposeFieldsTest</span></th><th class="matrix-col-hdr" title="gson/src/main/java/com/google/gson/annotations/Expose.java"><span>Expose</span></th><th class="matrix-col-hdr" title="gson/src/main/java/com/google/gson/annotations/JsonAdapter.java"><span>JsonAdapter</span></th>
+        </tr>
+      </thead>
+      <tbody>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="gson/src/main/java/com/google/gson/Gson.java">Gson</th>
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Gson → ReflectiveTypeAdapterFactory · weight: 15 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#191-27d83" title="Gson → GsonBuilder · weight: 30 · cw: 4.6656 · CONSTANT, METHOD_INVOCATION_OBJECT_PARAMETER, METHOD_PARAMETER_TYPE, METHOD_RETURN_TYPE, OBJECT_PARAMETER_COUPLING, VARIABLE_CLASS_INSTANCE_CREATION, VARIABLE_RETURN_STATEMENT, VARIABLE_SINGLE_DECLARATION"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#145-11766" title="Gson → ConstructorConstructor · weight: 13 · cw: 2.8406 · DATA_ABSTRACTION_COUPLING, OBJECT_PARAMETER_CLASS, OBJECT_PARAMETER_COUPLING, VARIABLE_CLASS_INSTANCE_CREATION, VARIABLE_FIELD_DECLARATION"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Gson → GsonTest · weight: 15 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Gson → MapTest · weight: 12 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Gson → ObjectTest · weight: 16 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Gson → CustomTypeAdaptersTest · weight: 12 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Gson → JsonAdapterAnnotationOnFieldsTest · weight: 14 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Gson → JsonAdapterAnnotationOnClassesTest · weight: 17 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Gson → GsonBuilderTest · weight: 14 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Gson → CollectionTest · weight: 13 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#14b-13368" title="Gson → JsonAdapterAnnotationTypeAdapterFactory · weight: 18 · cw: 2.9830 · DATA_ABSTRACTION_COUPLING, METHOD_INVOCATION_OBJECT_PARAMETER, OBJECT_PARAMETER_COUPLING, VARIABLE_CLASS_INSTANCE_CREATION, VARIABLE_FIELD_DECLARATION"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Gson → TreeTypeAdapter · weight: 24 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Gson → JsonAdapterSerializerDeserializerTest · weight: 9 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Gson → InstanceCreatorTest · weight: 13 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Gson → JsonSerializationContext · weight: 8 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#e79c42" title="Gson → InstanceCreator · weight: 1 · cw: 0.6167 · PARAMETERIZED_TYPE"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Gson → JsonDeserializer · weight: 9 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Gson → JsonSerializer · weight: 6 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Gson → ExclusionStrategy · weight: 8 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#137-d661" title="Gson → FieldNamingStrategy · weight: 8 · cw: 2.5095 · DATA_ABSTRACTION_COUPLING, METHOD_RETURN_TYPE, VARIABLE_FIELD_DECLARATION, VARIABLE_RETURN_STATEMENT"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Gson → JsonDeserializationContext · weight: 12 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Gson → ParameterizedTypeFixtures · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Gson → ExposeFieldsTest · weight: 12 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Gson → Expose · weight: 9 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Gson → JsonAdapter · weight: 12 · cw: 0.0000 · co-change only"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="gson/src/main/java/com/google/gson/internal/bind/ReflectiveTypeAdapterFactory.java">ReflectiveTypeAdapterFactory</th>
+          
+            <td class="matrix-cell filled" style="background:#13a-e362" title="ReflectiveTypeAdapterFactory → Gson · weight: 15 · cw: 2.5753 · METHOD_INVOCATION_OBJECT_PARAMETER, METHOD_PARAMETER_TYPE, OBJECT_PARAMETER_CLASS, VARIABLE_SINGLE_DECLARATION"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ReflectiveTypeAdapterFactory → GsonBuilder · weight: 12 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#153-15b6b" title="ReflectiveTypeAdapterFactory → ConstructorConstructor · weight: 10 · cw: 3.1852 · DATA_ABSTRACTION_COUPLING, METHOD_INVOCATION_OBJECT_PARAMETER, METHOD_PARAMETER_TYPE, VARIABLE_FIELD_DECLARATION, VARIABLE_SINGLE_DECLARATION"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ReflectiveTypeAdapterFactory → GsonTest · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ReflectiveTypeAdapterFactory → MapTest · weight: 9 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ReflectiveTypeAdapterFactory → ObjectTest · weight: 15 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ReflectiveTypeAdapterFactory → CustomTypeAdaptersTest · weight: 9 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ReflectiveTypeAdapterFactory → JsonAdapterAnnotationOnFieldsTest · weight: 12 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ReflectiveTypeAdapterFactory → JsonAdapterAnnotationOnClassesTest · weight: 13 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ReflectiveTypeAdapterFactory → GsonBuilderTest · weight: 9 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ReflectiveTypeAdapterFactory → CollectionTest · weight: 9 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#153-15b6b" title="ReflectiveTypeAdapterFactory → JsonAdapterAnnotationTypeAdapterFactory · weight: 14 · cw: 3.1852 · DATA_ABSTRACTION_COUPLING, METHOD_INVOCATION_OBJECT_PARAMETER, METHOD_PARAMETER_TYPE, VARIABLE_FIELD_DECLARATION, VARIABLE_SINGLE_DECLARATION"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ReflectiveTypeAdapterFactory → TreeTypeAdapter · weight: 16 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ReflectiveTypeAdapterFactory → JsonAdapterSerializerDeserializerTest · weight: 7 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ReflectiveTypeAdapterFactory → InstanceCreatorTest · weight: 10 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ReflectiveTypeAdapterFactory → JsonSerializationContext · weight: 6 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ReflectiveTypeAdapterFactory → InstanceCreator · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ReflectiveTypeAdapterFactory → JsonDeserializer · weight: 6 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ReflectiveTypeAdapterFactory → JsonSerializer · weight: 3 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ReflectiveTypeAdapterFactory → ExclusionStrategy · weight: 6 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#153-15b6b" title="ReflectiveTypeAdapterFactory → FieldNamingStrategy · weight: 7 · cw: 3.1852 · DATA_ABSTRACTION_COUPLING, METHOD_INVOCATION_OBJECT_PARAMETER, METHOD_PARAMETER_TYPE, VARIABLE_FIELD_DECLARATION, VARIABLE_SINGLE_DECLARATION"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ReflectiveTypeAdapterFactory → JsonDeserializationContext · weight: 9 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ReflectiveTypeAdapterFactory → ParameterizedTypeFixtures · weight: 3 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ReflectiveTypeAdapterFactory → ExposeFieldsTest · weight: 9 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ReflectiveTypeAdapterFactory → Expose · weight: 6 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ReflectiveTypeAdapterFactory → JsonAdapter · weight: 9 · cw: 0.0000 · co-change only"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="gson/src/main/java/com/google/gson/GsonBuilder.java">GsonBuilder</th>
+          
+            <td class="matrix-cell filled" style="background:#16c-1cc75" title="GsonBuilder → Gson · weight: 30 · cw: 3.7632 · METHOD_PARAMETER_TYPE, METHOD_RETURN_TYPE, OBJECT_PARAMETER_COUPLING, VARIABLE_CLASS_INSTANCE_CREATION, VARIABLE_RETURN_STATEMENT, VARIABLE_SINGLE_DECLARATION"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#e5a741" title="GsonBuilder → ReflectiveTypeAdapterFactory · weight: 12 · cw: 0.5607 · OBJECT_PARAMETER_COUPLING"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#167-1b573" title="GsonBuilder → ConstructorConstructor · weight: 13 · cw: 3.6435 · METHOD_PARAMETER_TYPE, OBJECT_PARAMETER_CLASS, OBJECT_PARAMETER_COUPLING, VARIABLE_CLASS_INSTANCE_CREATION, VARIABLE_FIELD_DECLARATION, VARIABLE_SINGLE_DECLARATION"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GsonBuilder → GsonTest · weight: 11 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GsonBuilder → MapTest · weight: 12 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GsonBuilder → ObjectTest · weight: 16 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GsonBuilder → CustomTypeAdaptersTest · weight: 12 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GsonBuilder → JsonAdapterAnnotationOnFieldsTest · weight: 12 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GsonBuilder → JsonAdapterAnnotationOnClassesTest · weight: 16 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GsonBuilder → GsonBuilderTest · weight: 19 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GsonBuilder → CollectionTest · weight: 12 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#167-1b573" title="GsonBuilder → JsonAdapterAnnotationTypeAdapterFactory · weight: 16 · cw: 3.6435 · METHOD_PARAMETER_TYPE, OBJECT_PARAMETER_CLASS, OBJECT_PARAMETER_COUPLING, VARIABLE_CLASS_INSTANCE_CREATION, VARIABLE_FIELD_DECLARATION, VARIABLE_SINGLE_DECLARATION"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#eb8b44" title="GsonBuilder → TreeTypeAdapter · weight: 23 · cw: 0.7024 · METHOD_INVOCATION_OBJECT_PARAMETER"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GsonBuilder → JsonAdapterSerializerDeserializerTest · weight: 8 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GsonBuilder → InstanceCreatorTest · weight: 12 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GsonBuilder → JsonSerializationContext · weight: 8 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#e79c42" title="GsonBuilder → InstanceCreator · weight: 1 · cw: 0.6167 · PARAMETERIZED_TYPE"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#e79c42" title="GsonBuilder → JsonDeserializer · weight: 8 · cw: 0.6167 · PARAMETERIZED_TYPE"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#e79c42" title="GsonBuilder → JsonSerializer · weight: 5 · cw: 0.6167 · PARAMETERIZED_TYPE"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#105134e" title="GsonBuilder → ExclusionStrategy · weight: 8 · cw: 1.3129 · METHOD_PARAMETER_TYPE, VARIABLE_SINGLE_DECLARATION"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#14d-13f69" title="GsonBuilder → FieldNamingStrategy · weight: 8 · cw: 3.0428 · DATA_ABSTRACTION_COUPLING, METHOD_PARAMETER_TYPE, OBJECT_PARAMETER_CLASS, VARIABLE_FIELD_DECLARATION, VARIABLE_SINGLE_DECLARATION"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GsonBuilder → JsonDeserializationContext · weight: 12 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GsonBuilder → ParameterizedTypeFixtures · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GsonBuilder → ExposeFieldsTest · weight: 12 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GsonBuilder → Expose · weight: 9 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GsonBuilder → JsonAdapter · weight: 13 · cw: 0.0000 · co-change only"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="gson/src/main/java/com/google/gson/internal/ConstructorConstructor.java">ConstructorConstructor</th>
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ConstructorConstructor → Gson · weight: 13 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ConstructorConstructor → ReflectiveTypeAdapterFactory · weight: 10 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ConstructorConstructor → GsonBuilder · weight: 13 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ConstructorConstructor → GsonTest · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ConstructorConstructor → MapTest · weight: 10 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ConstructorConstructor → ObjectTest · weight: 12 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ConstructorConstructor → CustomTypeAdaptersTest · weight: 9 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ConstructorConstructor → JsonAdapterAnnotationOnFieldsTest · weight: 9 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ConstructorConstructor → JsonAdapterAnnotationOnClassesTest · weight: 12 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ConstructorConstructor → GsonBuilderTest · weight: 10 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ConstructorConstructor → CollectionTest · weight: 9 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ConstructorConstructor → JsonAdapterAnnotationTypeAdapterFactory · weight: 12 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ConstructorConstructor → TreeTypeAdapter · weight: 15 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ConstructorConstructor → JsonAdapterSerializerDeserializerTest · weight: 6 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ConstructorConstructor → InstanceCreatorTest · weight: 9 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ConstructorConstructor → JsonSerializationContext · weight: 6 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#1a0-2c289" title="ConstructorConstructor → InstanceCreator · weight: 2 · cw: 5.0198 · DATA_ABSTRACTION_COUPLING, METHOD_INVOCATION_OBJECT_PARAMETER, METHOD_PARAMETER_TYPE, OBJECT_PARAMETER_CLASS, PARAMETERIZED_TYPE, VARIABLE_DECLARATION_STATEMENT, VARIABLE_FIELD_DECLARATION, VARIABLE_SINGLE_DECLARATION"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ConstructorConstructor → JsonDeserializer · weight: 6 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ConstructorConstructor → JsonSerializer · weight: 3 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ConstructorConstructor → ExclusionStrategy · weight: 6 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ConstructorConstructor → FieldNamingStrategy · weight: 6 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ConstructorConstructor → JsonDeserializationContext · weight: 9 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ConstructorConstructor → ParameterizedTypeFixtures · weight: 3 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ConstructorConstructor → ExposeFieldsTest · weight: 9 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ConstructorConstructor → Expose · weight: 6 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ConstructorConstructor → JsonAdapter · weight: 9 · cw: 0.0000 · co-change only"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="gson/src/test/java/com/google/gson/GsonTest.java">GsonTest</th>
+          
+            <td class="matrix-cell filled" style="background:#1c4-36796" title="GsonTest → Gson · weight: 15 · cw: 5.8591 · ATOMIC_PARAMETER_COUPLING, METHOD_INVOCATION_ATOMIC_PARAMETER, METHOD_INVOCATION_OBJECT_PARAMETER, METHOD_PARAMETER_TYPE, METHOD_RETURN_TYPE, VARIABLE_CLASS_INSTANCE_CREATION, VARIABLE_DECLARATION_STATEMENT, VARIABLE_RETURN_STATEMENT, VARIABLE_SINGLE_DECLARATION"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GsonTest → ReflectiveTypeAdapterFactory · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#154-15f6c" title="GsonTest → GsonBuilder · weight: 11 · cw: 3.2066 · ATOMIC_PARAMETER_COUPLING, METHOD_INVOCATION_ATOMIC_PARAMETER, METHOD_INVOCATION_OBJECT_PARAMETER, VARIABLE_CLASS_INSTANCE_CREATION, VARIABLE_DECLARATION_STATEMENT"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GsonTest → ConstructorConstructor · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GsonTest → MapTest · weight: 3 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GsonTest → ObjectTest · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GsonTest → CustomTypeAdaptersTest · weight: 3 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GsonTest → JsonAdapterAnnotationOnFieldsTest · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GsonTest → JsonAdapterAnnotationOnClassesTest · weight: 5 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GsonTest → GsonBuilderTest · weight: 6 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GsonTest → CollectionTest · weight: 3 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GsonTest → JsonAdapterAnnotationTypeAdapterFactory · weight: 5 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GsonTest → TreeTypeAdapter · weight: 6 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GsonTest → JsonAdapterSerializerDeserializerTest · weight: 2 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GsonTest → InstanceCreatorTest · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GsonTest → JsonSerializationContext · weight: 2 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#e79c42" title="GsonTest → InstanceCreator · weight: 1 · cw: 0.6167 · PARAMETERIZED_TYPE"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GsonTest → JsonDeserializer · weight: 3 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#e79c42" title="GsonTest → JsonSerializer · weight: 2 · cw: 0.6167 · PARAMETERIZED_TYPE"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GsonTest → ExclusionStrategy · weight: 2 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#e99343" title="GsonTest → FieldNamingStrategy · weight: 2 · cw: 0.6599 · VARIABLE_FIELD_DECLARATION"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GsonTest → JsonDeserializationContext · weight: 3 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GsonTest → ParameterizedTypeFixtures · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GsonTest → ExposeFieldsTest · weight: 3 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GsonTest → Expose · weight: 2 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GsonTest → JsonAdapter · weight: 3 · cw: 0.0000 · co-change only"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="gson/src/test/java/com/google/gson/functional/MapTest.java">MapTest</th>
+          
+            <td class="matrix-cell filled" style="background:#167-1b873" title="MapTest → Gson · weight: 12 · cw: 3.6602 · ATOMIC_PARAMETER_COUPLING, DATA_ABSTRACTION_COUPLING, METHOD_INVOCATION_OBJECT_PARAMETER, VARIABLE_CLASS_INSTANCE_CREATION, VARIABLE_DECLARATION_STATEMENT, VARIABLE_FIELD_DECLARATION"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="MapTest → ReflectiveTypeAdapterFactory · weight: 9 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#121-7258" title="MapTest → GsonBuilder · weight: 12 · cw: 1.9987 · ATOMIC_PARAMETER_COUPLING, METHOD_INVOCATION_ATOMIC_PARAMETER, METHOD_INVOCATION_OBJECT_PARAMETER"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="MapTest → ConstructorConstructor · weight: 10 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="MapTest → GsonTest · weight: 3 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="MapTest → ObjectTest · weight: 12 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="MapTest → CustomTypeAdaptersTest · weight: 10 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="MapTest → JsonAdapterAnnotationOnFieldsTest · weight: 9 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="MapTest → JsonAdapterAnnotationOnClassesTest · weight: 12 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="MapTest → GsonBuilderTest · weight: 10 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="MapTest → CollectionTest · weight: 9 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="MapTest → JsonAdapterAnnotationTypeAdapterFactory · weight: 12 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="MapTest → TreeTypeAdapter · weight: 16 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="MapTest → JsonAdapterSerializerDeserializerTest · weight: 6 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="MapTest → InstanceCreatorTest · weight: 9 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="MapTest → JsonSerializationContext · weight: 6 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#e79c42" title="MapTest → InstanceCreator · weight: 2 · cw: 0.6167 · PARAMETERIZED_TYPE"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="MapTest → JsonDeserializer · weight: 6 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#1031b4d" title="MapTest → JsonSerializer · weight: 3 · cw: 1.2746 · PARAMETERIZED_TYPE, VARIABLE_DECLARATION_STATEMENT"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="MapTest → ExclusionStrategy · weight: 6 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="MapTest → FieldNamingStrategy · weight: 6 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="MapTest → JsonDeserializationContext · weight: 9 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="MapTest → ParameterizedTypeFixtures · weight: 3 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="MapTest → ExposeFieldsTest · weight: 9 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="MapTest → Expose · weight: 6 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="MapTest → JsonAdapter · weight: 9 · cw: 0.0000 · co-change only"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="gson/src/test/java/com/google/gson/functional/ObjectTest.java">ObjectTest</th>
+          
+            <td class="matrix-cell filled" style="background:#167-1b873" title="ObjectTest → Gson · weight: 16 · cw: 3.6602 · ATOMIC_PARAMETER_COUPLING, DATA_ABSTRACTION_COUPLING, METHOD_INVOCATION_OBJECT_PARAMETER, VARIABLE_CLASS_INSTANCE_CREATION, VARIABLE_DECLARATION_STATEMENT, VARIABLE_FIELD_DECLARATION"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ObjectTest → ReflectiveTypeAdapterFactory · weight: 15 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#121-7258" title="ObjectTest → GsonBuilder · weight: 16 · cw: 1.9987 · ATOMIC_PARAMETER_COUPLING, METHOD_INVOCATION_ATOMIC_PARAMETER, METHOD_INVOCATION_OBJECT_PARAMETER"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ObjectTest → ConstructorConstructor · weight: 12 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ObjectTest → GsonTest · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ObjectTest → MapTest · weight: 12 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ObjectTest → CustomTypeAdaptersTest · weight: 12 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ObjectTest → JsonAdapterAnnotationOnFieldsTest · weight: 12 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ObjectTest → JsonAdapterAnnotationOnClassesTest · weight: 16 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ObjectTest → GsonBuilderTest · weight: 12 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ObjectTest → CollectionTest · weight: 12 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ObjectTest → JsonAdapterAnnotationTypeAdapterFactory · weight: 16 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ObjectTest → TreeTypeAdapter · weight: 20 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ObjectTest → JsonAdapterSerializerDeserializerTest · weight: 8 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ObjectTest → InstanceCreatorTest · weight: 12 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ObjectTest → JsonSerializationContext · weight: 8 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#1002a4c" title="ObjectTest → InstanceCreator · weight: 1 · cw: 1.1967 · ATOMIC_PARAMETER_COUPLING, PARAMETERIZED_TYPE"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#e79c42" title="ObjectTest → JsonDeserializer · weight: 8 · cw: 0.6167 · PARAMETERIZED_TYPE"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#e79c42" title="ObjectTest → JsonSerializer · weight: 4 · cw: 0.6167 · PARAMETERIZED_TYPE"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#e6a342" title="ObjectTest → ExclusionStrategy · weight: 8 · cw: 0.5800 · ATOMIC_PARAMETER_COUPLING"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ObjectTest → FieldNamingStrategy · weight: 8 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ObjectTest → JsonDeserializationContext · weight: 12 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ObjectTest → ParameterizedTypeFixtures · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ObjectTest → ExposeFieldsTest · weight: 12 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ObjectTest → Expose · weight: 8 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ObjectTest → JsonAdapter · weight: 12 · cw: 0.0000 · co-change only"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="gson/src/test/java/com/google/gson/functional/CustomTypeAdaptersTest.java">CustomTypeAdaptersTest</th>
+          
+            <td class="matrix-cell filled" style="background:#16e-1d976" title="CustomTypeAdaptersTest → Gson · weight: 12 · cw: 3.8299 · ATOMIC_PARAMETER_COUPLING, METHOD_INVOCATION_OBJECT_PARAMETER, METHOD_RETURN_TYPE, VARIABLE_CLASS_INSTANCE_CREATION, VARIABLE_DECLARATION_STATEMENT, VARIABLE_RETURN_STATEMENT"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="CustomTypeAdaptersTest → ReflectiveTypeAdapterFactory · weight: 9 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#185-2447f" title="CustomTypeAdaptersTest → GsonBuilder · weight: 12 · cw: 4.3765 · ATOMIC_PARAMETER_COUPLING, DATA_ABSTRACTION_COUPLING, METHOD_INVOCATION_ATOMIC_PARAMETER, METHOD_INVOCATION_OBJECT_PARAMETER, VARIABLE_CLASS_INSTANCE_CREATION, VARIABLE_DECLARATION_STATEMENT, VARIABLE_FIELD_DECLARATION"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="CustomTypeAdaptersTest → ConstructorConstructor · weight: 9 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="CustomTypeAdaptersTest → GsonTest · weight: 3 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="CustomTypeAdaptersTest → MapTest · weight: 10 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="CustomTypeAdaptersTest → ObjectTest · weight: 12 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="CustomTypeAdaptersTest → JsonAdapterAnnotationOnFieldsTest · weight: 9 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="CustomTypeAdaptersTest → JsonAdapterAnnotationOnClassesTest · weight: 12 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="CustomTypeAdaptersTest → GsonBuilderTest · weight: 9 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="CustomTypeAdaptersTest → CollectionTest · weight: 9 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="CustomTypeAdaptersTest → JsonAdapterAnnotationTypeAdapterFactory · weight: 12 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="CustomTypeAdaptersTest → TreeTypeAdapter · weight: 15 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="CustomTypeAdaptersTest → JsonAdapterSerializerDeserializerTest · weight: 6 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="CustomTypeAdaptersTest → InstanceCreatorTest · weight: 9 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#122-7559" title="CustomTypeAdaptersTest → JsonSerializationContext · weight: 6 · cw: 2.0153 · METHOD_INVOCATION_OBJECT_PARAMETER, METHOD_PARAMETER_TYPE, VARIABLE_SINGLE_DECLARATION"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#fb3e4a" title="CustomTypeAdaptersTest → InstanceCreator · weight: 1 · cw: 1.0951 · INTERFACE, PARAMETERIZED_TYPE"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#fb3e4a" title="CustomTypeAdaptersTest → JsonDeserializer · weight: 6 · cw: 1.0951 · INTERFACE, PARAMETERIZED_TYPE"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#fb3e4a" title="CustomTypeAdaptersTest → JsonSerializer · weight: 3 · cw: 1.0951 · INTERFACE, PARAMETERIZED_TYPE"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="CustomTypeAdaptersTest → ExclusionStrategy · weight: 6 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="CustomTypeAdaptersTest → FieldNamingStrategy · weight: 6 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#122-7559" title="CustomTypeAdaptersTest → JsonDeserializationContext · weight: 9 · cw: 2.0153 · METHOD_INVOCATION_OBJECT_PARAMETER, METHOD_PARAMETER_TYPE, VARIABLE_SINGLE_DECLARATION"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="CustomTypeAdaptersTest → ParameterizedTypeFixtures · weight: 3 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="CustomTypeAdaptersTest → ExposeFieldsTest · weight: 9 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="CustomTypeAdaptersTest → Expose · weight: 6 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="CustomTypeAdaptersTest → JsonAdapter · weight: 9 · cw: 0.0000 · co-change only"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="gson/src/test/java/com/google/gson/functional/JsonAdapterAnnotationOnFieldsTest.java">JsonAdapterAnnotationOnFieldsTest</th>
+          
+            <td class="matrix-cell filled" style="background:#16d-1d475" title="JsonAdapterAnnotationOnFieldsTest → Gson · weight: 14 · cw: 3.8032 · ATOMIC_PARAMETER_COUPLING, METHOD_INVOCATION_OBJECT_PARAMETER, METHOD_PARAMETER_TYPE, VARIABLE_CLASS_INSTANCE_CREATION, VARIABLE_DECLARATION_STATEMENT, VARIABLE_SINGLE_DECLARATION"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonAdapterAnnotationOnFieldsTest → ReflectiveTypeAdapterFactory · weight: 12 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#121-7258" title="JsonAdapterAnnotationOnFieldsTest → GsonBuilder · weight: 12 · cw: 1.9987 · ATOMIC_PARAMETER_COUPLING, METHOD_INVOCATION_ATOMIC_PARAMETER, METHOD_INVOCATION_OBJECT_PARAMETER"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonAdapterAnnotationOnFieldsTest → ConstructorConstructor · weight: 9 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonAdapterAnnotationOnFieldsTest → GsonTest · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonAdapterAnnotationOnFieldsTest → MapTest · weight: 9 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonAdapterAnnotationOnFieldsTest → ObjectTest · weight: 12 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonAdapterAnnotationOnFieldsTest → CustomTypeAdaptersTest · weight: 9 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonAdapterAnnotationOnFieldsTest → JsonAdapterAnnotationOnClassesTest · weight: 14 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonAdapterAnnotationOnFieldsTest → GsonBuilderTest · weight: 9 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonAdapterAnnotationOnFieldsTest → CollectionTest · weight: 9 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonAdapterAnnotationOnFieldsTest → JsonAdapterAnnotationTypeAdapterFactory · weight: 15 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonAdapterAnnotationOnFieldsTest → TreeTypeAdapter · weight: 16 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonAdapterAnnotationOnFieldsTest → JsonAdapterSerializerDeserializerTest · weight: 7 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonAdapterAnnotationOnFieldsTest → InstanceCreatorTest · weight: 10 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#105134e" title="JsonAdapterAnnotationOnFieldsTest → JsonSerializationContext · weight: 6 · cw: 1.3129 · METHOD_PARAMETER_TYPE, VARIABLE_SINGLE_DECLARATION"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonAdapterAnnotationOnFieldsTest → InstanceCreator · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#fb3e4a" title="JsonAdapterAnnotationOnFieldsTest → JsonDeserializer · weight: 6 · cw: 1.0951 · INTERFACE, PARAMETERIZED_TYPE"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#fb3e4a" title="JsonAdapterAnnotationOnFieldsTest → JsonSerializer · weight: 3 · cw: 1.0951 · INTERFACE, PARAMETERIZED_TYPE"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#e6a342" title="JsonAdapterAnnotationOnFieldsTest → ExclusionStrategy · weight: 6 · cw: 0.5800 · ATOMIC_PARAMETER_COUPLING"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonAdapterAnnotationOnFieldsTest → FieldNamingStrategy · weight: 6 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#105134e" title="JsonAdapterAnnotationOnFieldsTest → JsonDeserializationContext · weight: 9 · cw: 1.3129 · METHOD_PARAMETER_TYPE, VARIABLE_SINGLE_DECLARATION"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonAdapterAnnotationOnFieldsTest → ParameterizedTypeFixtures · weight: 3 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonAdapterAnnotationOnFieldsTest → ExposeFieldsTest · weight: 9 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonAdapterAnnotationOnFieldsTest → Expose · weight: 6 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonAdapterAnnotationOnFieldsTest → JsonAdapter · weight: 9 · cw: 0.0000 · co-change only"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="gson/src/test/java/com/google/gson/functional/JsonAdapterAnnotationOnClassesTest.java">JsonAdapterAnnotationOnClassesTest</th>
+          
+            <td class="matrix-cell filled" style="background:#16d-1d475" title="JsonAdapterAnnotationOnClassesTest → Gson · weight: 17 · cw: 3.8032 · ATOMIC_PARAMETER_COUPLING, METHOD_INVOCATION_OBJECT_PARAMETER, METHOD_PARAMETER_TYPE, VARIABLE_CLASS_INSTANCE_CREATION, VARIABLE_DECLARATION_STATEMENT, VARIABLE_SINGLE_DECLARATION"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonAdapterAnnotationOnClassesTest → ReflectiveTypeAdapterFactory · weight: 13 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#121-7258" title="JsonAdapterAnnotationOnClassesTest → GsonBuilder · weight: 16 · cw: 1.9987 · ATOMIC_PARAMETER_COUPLING, METHOD_INVOCATION_ATOMIC_PARAMETER, METHOD_INVOCATION_OBJECT_PARAMETER"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonAdapterAnnotationOnClassesTest → ConstructorConstructor · weight: 12 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonAdapterAnnotationOnClassesTest → GsonTest · weight: 5 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonAdapterAnnotationOnClassesTest → MapTest · weight: 12 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonAdapterAnnotationOnClassesTest → ObjectTest · weight: 16 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonAdapterAnnotationOnClassesTest → CustomTypeAdaptersTest · weight: 12 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonAdapterAnnotationOnClassesTest → JsonAdapterAnnotationOnFieldsTest · weight: 14 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonAdapterAnnotationOnClassesTest → GsonBuilderTest · weight: 12 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonAdapterAnnotationOnClassesTest → CollectionTest · weight: 12 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonAdapterAnnotationOnClassesTest → JsonAdapterAnnotationTypeAdapterFactory · weight: 20 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonAdapterAnnotationOnClassesTest → TreeTypeAdapter · weight: 21 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonAdapterAnnotationOnClassesTest → JsonAdapterSerializerDeserializerTest · weight: 9 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonAdapterAnnotationOnClassesTest → InstanceCreatorTest · weight: 13 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#105134e" title="JsonAdapterAnnotationOnClassesTest → JsonSerializationContext · weight: 8 · cw: 1.3129 · METHOD_PARAMETER_TYPE, VARIABLE_SINGLE_DECLARATION"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#e79c42" title="JsonAdapterAnnotationOnClassesTest → InstanceCreator · weight: 2 · cw: 0.6167 · PARAMETERIZED_TYPE"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#117-4255" title="JsonAdapterAnnotationOnClassesTest → JsonDeserializer · weight: 8 · cw: 1.7530 · INTERFACE, PARAMETERIZED_TYPE, VARIABLE_DECLARATION_STATEMENT"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#117-4255" title="JsonAdapterAnnotationOnClassesTest → JsonSerializer · weight: 4 · cw: 1.7530 · INTERFACE, PARAMETERIZED_TYPE, VARIABLE_DECLARATION_STATEMENT"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonAdapterAnnotationOnClassesTest → ExclusionStrategy · weight: 8 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonAdapterAnnotationOnClassesTest → FieldNamingStrategy · weight: 8 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#105134e" title="JsonAdapterAnnotationOnClassesTest → JsonDeserializationContext · weight: 12 · cw: 1.3129 · METHOD_PARAMETER_TYPE, VARIABLE_SINGLE_DECLARATION"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonAdapterAnnotationOnClassesTest → ParameterizedTypeFixtures · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonAdapterAnnotationOnClassesTest → ExposeFieldsTest · weight: 12 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonAdapterAnnotationOnClassesTest → Expose · weight: 8 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonAdapterAnnotationOnClassesTest → JsonAdapter · weight: 13 · cw: 0.0000 · co-change only"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="gson/src/test/java/com/google/gson/GsonBuilderTest.java">GsonBuilderTest</th>
+          
+            <td class="matrix-cell filled" style="background:#15c-1836f" title="GsonBuilderTest → Gson · weight: 14 · cw: 3.3895 · METHOD_INVOCATION_ATOMIC_PARAMETER, METHOD_INVOCATION_OBJECT_PARAMETER, METHOD_PARAMETER_TYPE, VARIABLE_DECLARATION_STATEMENT, VARIABLE_SINGLE_DECLARATION"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GsonBuilderTest → ReflectiveTypeAdapterFactory · weight: 9 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#154-15f6c" title="GsonBuilderTest → GsonBuilder · weight: 19 · cw: 3.2066 · ATOMIC_PARAMETER_COUPLING, METHOD_INVOCATION_ATOMIC_PARAMETER, METHOD_INVOCATION_OBJECT_PARAMETER, VARIABLE_CLASS_INSTANCE_CREATION, VARIABLE_DECLARATION_STATEMENT"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GsonBuilderTest → ConstructorConstructor · weight: 10 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GsonBuilderTest → GsonTest · weight: 6 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GsonBuilderTest → MapTest · weight: 10 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GsonBuilderTest → ObjectTest · weight: 12 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GsonBuilderTest → CustomTypeAdaptersTest · weight: 9 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GsonBuilderTest → JsonAdapterAnnotationOnFieldsTest · weight: 9 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GsonBuilderTest → JsonAdapterAnnotationOnClassesTest · weight: 12 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GsonBuilderTest → CollectionTest · weight: 9 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GsonBuilderTest → JsonAdapterAnnotationTypeAdapterFactory · weight: 12 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GsonBuilderTest → TreeTypeAdapter · weight: 16 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GsonBuilderTest → JsonAdapterSerializerDeserializerTest · weight: 6 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GsonBuilderTest → InstanceCreatorTest · weight: 9 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GsonBuilderTest → JsonSerializationContext · weight: 6 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#e79c42" title="GsonBuilderTest → InstanceCreator · weight: 1 · cw: 0.6167 · PARAMETERIZED_TYPE"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GsonBuilderTest → JsonDeserializer · weight: 6 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#e79c42" title="GsonBuilderTest → JsonSerializer · weight: 3 · cw: 0.6167 · PARAMETERIZED_TYPE"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GsonBuilderTest → ExclusionStrategy · weight: 6 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GsonBuilderTest → FieldNamingStrategy · weight: 6 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GsonBuilderTest → JsonDeserializationContext · weight: 9 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GsonBuilderTest → ParameterizedTypeFixtures · weight: 3 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GsonBuilderTest → ExposeFieldsTest · weight: 9 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GsonBuilderTest → Expose · weight: 6 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GsonBuilderTest → JsonAdapter · weight: 9 · cw: 0.0000 · co-change only"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="gson/src/test/java/com/google/gson/functional/CollectionTest.java">CollectionTest</th>
+          
+            <td class="matrix-cell filled" style="background:#167-1b873" title="CollectionTest → Gson · weight: 13 · cw: 3.6602 · ATOMIC_PARAMETER_COUPLING, DATA_ABSTRACTION_COUPLING, METHOD_INVOCATION_OBJECT_PARAMETER, VARIABLE_CLASS_INSTANCE_CREATION, VARIABLE_DECLARATION_STATEMENT, VARIABLE_FIELD_DECLARATION"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="CollectionTest → ReflectiveTypeAdapterFactory · weight: 9 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#121-7258" title="CollectionTest → GsonBuilder · weight: 12 · cw: 1.9987 · ATOMIC_PARAMETER_COUPLING, METHOD_INVOCATION_ATOMIC_PARAMETER, METHOD_INVOCATION_OBJECT_PARAMETER"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="CollectionTest → ConstructorConstructor · weight: 9 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="CollectionTest → GsonTest · weight: 3 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="CollectionTest → MapTest · weight: 9 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="CollectionTest → ObjectTest · weight: 12 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="CollectionTest → CustomTypeAdaptersTest · weight: 9 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="CollectionTest → JsonAdapterAnnotationOnFieldsTest · weight: 9 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="CollectionTest → JsonAdapterAnnotationOnClassesTest · weight: 12 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="CollectionTest → GsonBuilderTest · weight: 9 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="CollectionTest → JsonAdapterAnnotationTypeAdapterFactory · weight: 12 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="CollectionTest → TreeTypeAdapter · weight: 15 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="CollectionTest → JsonAdapterSerializerDeserializerTest · weight: 6 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="CollectionTest → InstanceCreatorTest · weight: 9 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="CollectionTest → JsonSerializationContext · weight: 6 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#e79c42" title="CollectionTest → InstanceCreator · weight: 1 · cw: 0.6167 · PARAMETERIZED_TYPE"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="CollectionTest → JsonDeserializer · weight: 6 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#117-4154" title="CollectionTest → JsonSerializer · weight: 3 · cw: 1.7467 · ATOMIC_PARAMETER_COUPLING, PARAMETERIZED_TYPE, VARIABLE_CLASS_INSTANCE_CREATION"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="CollectionTest → ExclusionStrategy · weight: 6 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="CollectionTest → FieldNamingStrategy · weight: 6 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="CollectionTest → JsonDeserializationContext · weight: 9 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="CollectionTest → ParameterizedTypeFixtures · weight: 3 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="CollectionTest → ExposeFieldsTest · weight: 9 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="CollectionTest → Expose · weight: 6 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="CollectionTest → JsonAdapter · weight: 9 · cw: 0.0000 · co-change only"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="gson/src/main/java/com/google/gson/internal/bind/JsonAdapterAnnotationTypeAdapterFactory.java">JsonAdapterAnnotationTypeAdapterFactory</th>
+          
+            <td class="matrix-cell filled" style="background:#11c-5a56" title="JsonAdapterAnnotationTypeAdapterFactory → Gson · weight: 18 · cw: 1.8729 · METHOD_PARAMETER_TYPE, OBJECT_PARAMETER_CLASS, VARIABLE_SINGLE_DECLARATION"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonAdapterAnnotationTypeAdapterFactory → ReflectiveTypeAdapterFactory · weight: 14 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonAdapterAnnotationTypeAdapterFactory → GsonBuilder · weight: 16 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#153-15b6b" title="JsonAdapterAnnotationTypeAdapterFactory → ConstructorConstructor · weight: 12 · cw: 3.1852 · DATA_ABSTRACTION_COUPLING, METHOD_INVOCATION_OBJECT_PARAMETER, METHOD_PARAMETER_TYPE, VARIABLE_FIELD_DECLARATION, VARIABLE_SINGLE_DECLARATION"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonAdapterAnnotationTypeAdapterFactory → GsonTest · weight: 5 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonAdapterAnnotationTypeAdapterFactory → MapTest · weight: 12 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonAdapterAnnotationTypeAdapterFactory → ObjectTest · weight: 16 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonAdapterAnnotationTypeAdapterFactory → CustomTypeAdaptersTest · weight: 12 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonAdapterAnnotationTypeAdapterFactory → JsonAdapterAnnotationOnFieldsTest · weight: 15 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonAdapterAnnotationTypeAdapterFactory → JsonAdapterAnnotationOnClassesTest · weight: 20 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonAdapterAnnotationTypeAdapterFactory → GsonBuilderTest · weight: 12 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonAdapterAnnotationTypeAdapterFactory → CollectionTest · weight: 12 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#fc3b4a" title="JsonAdapterAnnotationTypeAdapterFactory → TreeTypeAdapter · weight: 22 · cw: 1.1107 · OBJECT_PARAMETER_COUPLING, VARIABLE_CLASS_INSTANCE_CREATION"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonAdapterAnnotationTypeAdapterFactory → JsonAdapterSerializerDeserializerTest · weight: 11 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonAdapterAnnotationTypeAdapterFactory → InstanceCreatorTest · weight: 13 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonAdapterAnnotationTypeAdapterFactory → JsonSerializationContext · weight: 8 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonAdapterAnnotationTypeAdapterFactory → InstanceCreator · weight: 2 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#11b-5256" title="JsonAdapterAnnotationTypeAdapterFactory → JsonDeserializer · weight: 8 · cw: 1.8346 · OBJECT_PARAMETER_CLASS, PARAMETERIZED_TYPE, VARIABLE_DECLARATION_STATEMENT"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#11b-5256" title="JsonAdapterAnnotationTypeAdapterFactory → JsonSerializer · weight: 4 · cw: 1.8346 · OBJECT_PARAMETER_CLASS, PARAMETERIZED_TYPE, VARIABLE_DECLARATION_STATEMENT"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonAdapterAnnotationTypeAdapterFactory → ExclusionStrategy · weight: 8 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonAdapterAnnotationTypeAdapterFactory → FieldNamingStrategy · weight: 8 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonAdapterAnnotationTypeAdapterFactory → JsonDeserializationContext · weight: 12 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonAdapterAnnotationTypeAdapterFactory → ParameterizedTypeFixtures · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonAdapterAnnotationTypeAdapterFactory → ExposeFieldsTest · weight: 12 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonAdapterAnnotationTypeAdapterFactory → Expose · weight: 8 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonAdapterAnnotationTypeAdapterFactory → JsonAdapter · weight: 14 · cw: 0.0000 · co-change only"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="gson/src/main/java/com/google/gson/internal/bind/TreeTypeAdapter.java">TreeTypeAdapter</th>
+          
+            <td class="matrix-cell filled" style="background:#16b-1c974" title="TreeTypeAdapter → Gson · weight: 24 · cw: 3.7452 · DATA_ABSTRACTION_COUPLING, METHOD_INVOCATION_OBJECT_PARAMETER, METHOD_PARAMETER_TYPE, OBJECT_PARAMETER_CLASS, VARIABLE_FIELD_DECLARATION, VARIABLE_SINGLE_DECLARATION"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="TreeTypeAdapter → ReflectiveTypeAdapterFactory · weight: 16 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="TreeTypeAdapter → GsonBuilder · weight: 23 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="TreeTypeAdapter → ConstructorConstructor · weight: 15 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="TreeTypeAdapter → GsonTest · weight: 6 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="TreeTypeAdapter → MapTest · weight: 16 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="TreeTypeAdapter → ObjectTest · weight: 20 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="TreeTypeAdapter → CustomTypeAdaptersTest · weight: 15 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="TreeTypeAdapter → JsonAdapterAnnotationOnFieldsTest · weight: 16 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="TreeTypeAdapter → JsonAdapterAnnotationOnClassesTest · weight: 21 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="TreeTypeAdapter → GsonBuilderTest · weight: 16 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="TreeTypeAdapter → CollectionTest · weight: 15 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="TreeTypeAdapter → JsonAdapterAnnotationTypeAdapterFactory · weight: 22 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="TreeTypeAdapter → JsonAdapterSerializerDeserializerTest · weight: 11 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="TreeTypeAdapter → InstanceCreatorTest · weight: 16 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#dbb341" title="TreeTypeAdapter → JsonSerializationContext · weight: 10 · cw: 0.4784 · INTERFACE"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="TreeTypeAdapter → InstanceCreator · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#185-2417e" title="TreeTypeAdapter → JsonDeserializer · weight: 10 · cw: 4.3619 · DATA_ABSTRACTION_COUPLING, METHOD_INVOCATION_OBJECT_PARAMETER, METHOD_PARAMETER_TYPE, OBJECT_PARAMETER_CLASS, PARAMETERIZED_TYPE, VARIABLE_FIELD_DECLARATION, VARIABLE_SINGLE_DECLARATION"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#185-2417e" title="TreeTypeAdapter → JsonSerializer · weight: 5 · cw: 4.3619 · DATA_ABSTRACTION_COUPLING, METHOD_INVOCATION_OBJECT_PARAMETER, METHOD_PARAMETER_TYPE, OBJECT_PARAMETER_CLASS, PARAMETERIZED_TYPE, VARIABLE_FIELD_DECLARATION, VARIABLE_SINGLE_DECLARATION"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="TreeTypeAdapter → ExclusionStrategy · weight: 10 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="TreeTypeAdapter → FieldNamingStrategy · weight: 10 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#dbb341" title="TreeTypeAdapter → JsonDeserializationContext · weight: 15 · cw: 0.4784 · INTERFACE"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="TreeTypeAdapter → ParameterizedTypeFixtures · weight: 5 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="TreeTypeAdapter → ExposeFieldsTest · weight: 15 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="TreeTypeAdapter → Expose · weight: 10 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="TreeTypeAdapter → JsonAdapter · weight: 15 · cw: 0.0000 · co-change only"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="gson/src/test/java/com/google/gson/functional/JsonAdapterSerializerDeserializerTest.java">JsonAdapterSerializerDeserializerTest</th>
+          
+            <td class="matrix-cell filled" style="background:#136-d360" title="JsonAdapterSerializerDeserializerTest → Gson · weight: 9 · cw: 2.4903 · ATOMIC_PARAMETER_COUPLING, METHOD_INVOCATION_OBJECT_PARAMETER, VARIABLE_CLASS_INSTANCE_CREATION, VARIABLE_DECLARATION_STATEMENT"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonAdapterSerializerDeserializerTest → ReflectiveTypeAdapterFactory · weight: 7 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#121-7258" title="JsonAdapterSerializerDeserializerTest → GsonBuilder · weight: 8 · cw: 1.9987 · ATOMIC_PARAMETER_COUPLING, METHOD_INVOCATION_ATOMIC_PARAMETER, METHOD_INVOCATION_OBJECT_PARAMETER"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonAdapterSerializerDeserializerTest → ConstructorConstructor · weight: 6 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonAdapterSerializerDeserializerTest → GsonTest · weight: 2 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonAdapterSerializerDeserializerTest → MapTest · weight: 6 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonAdapterSerializerDeserializerTest → ObjectTest · weight: 8 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonAdapterSerializerDeserializerTest → CustomTypeAdaptersTest · weight: 6 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonAdapterSerializerDeserializerTest → JsonAdapterAnnotationOnFieldsTest · weight: 7 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonAdapterSerializerDeserializerTest → JsonAdapterAnnotationOnClassesTest · weight: 9 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonAdapterSerializerDeserializerTest → GsonBuilderTest · weight: 6 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonAdapterSerializerDeserializerTest → CollectionTest · weight: 6 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonAdapterSerializerDeserializerTest → JsonAdapterAnnotationTypeAdapterFactory · weight: 11 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonAdapterSerializerDeserializerTest → TreeTypeAdapter · weight: 11 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonAdapterSerializerDeserializerTest → InstanceCreatorTest · weight: 6 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#105134e" title="JsonAdapterSerializerDeserializerTest → JsonSerializationContext · weight: 4 · cw: 1.3129 · METHOD_PARAMETER_TYPE, VARIABLE_SINGLE_DECLARATION"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonAdapterSerializerDeserializerTest → InstanceCreator · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#fb3e4a" title="JsonAdapterSerializerDeserializerTest → JsonDeserializer · weight: 4 · cw: 1.0951 · INTERFACE, PARAMETERIZED_TYPE"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#fb3e4a" title="JsonAdapterSerializerDeserializerTest → JsonSerializer · weight: 2 · cw: 1.0951 · INTERFACE, PARAMETERIZED_TYPE"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonAdapterSerializerDeserializerTest → ExclusionStrategy · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonAdapterSerializerDeserializerTest → FieldNamingStrategy · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#105134e" title="JsonAdapterSerializerDeserializerTest → JsonDeserializationContext · weight: 6 · cw: 1.3129 · METHOD_PARAMETER_TYPE, VARIABLE_SINGLE_DECLARATION"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonAdapterSerializerDeserializerTest → ParameterizedTypeFixtures · weight: 2 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonAdapterSerializerDeserializerTest → ExposeFieldsTest · weight: 6 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonAdapterSerializerDeserializerTest → Expose · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonAdapterSerializerDeserializerTest → JsonAdapter · weight: 7 · cw: 0.0000 · co-change only"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="gson/src/test/java/com/google/gson/functional/InstanceCreatorTest.java">InstanceCreatorTest</th>
+          
+            <td class="matrix-cell filled" style="background:#1070a4e" title="InstanceCreatorTest → Gson · weight: 13 · cw: 1.3603 · METHOD_INVOCATION_OBJECT_PARAMETER, VARIABLE_DECLARATION_STATEMENT"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="InstanceCreatorTest → ReflectiveTypeAdapterFactory · weight: 10 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#121-7258" title="InstanceCreatorTest → GsonBuilder · weight: 12 · cw: 1.9987 · ATOMIC_PARAMETER_COUPLING, METHOD_INVOCATION_ATOMIC_PARAMETER, METHOD_INVOCATION_OBJECT_PARAMETER"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="InstanceCreatorTest → ConstructorConstructor · weight: 9 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="InstanceCreatorTest → GsonTest · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="InstanceCreatorTest → MapTest · weight: 9 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="InstanceCreatorTest → ObjectTest · weight: 12 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="InstanceCreatorTest → CustomTypeAdaptersTest · weight: 9 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="InstanceCreatorTest → JsonAdapterAnnotationOnFieldsTest · weight: 10 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="InstanceCreatorTest → JsonAdapterAnnotationOnClassesTest · weight: 13 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="InstanceCreatorTest → GsonBuilderTest · weight: 9 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="InstanceCreatorTest → CollectionTest · weight: 9 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="InstanceCreatorTest → JsonAdapterAnnotationTypeAdapterFactory · weight: 13 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="InstanceCreatorTest → TreeTypeAdapter · weight: 16 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="InstanceCreatorTest → JsonAdapterSerializerDeserializerTest · weight: 6 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="InstanceCreatorTest → JsonSerializationContext · weight: 6 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#1031b4d" title="InstanceCreatorTest → InstanceCreator · weight: 1 · cw: 1.2746 · PARAMETERIZED_TYPE, VARIABLE_DECLARATION_STATEMENT"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="InstanceCreatorTest → JsonDeserializer · weight: 6 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="InstanceCreatorTest → JsonSerializer · weight: 3 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="InstanceCreatorTest → ExclusionStrategy · weight: 6 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="InstanceCreatorTest → FieldNamingStrategy · weight: 6 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="InstanceCreatorTest → JsonDeserializationContext · weight: 9 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="InstanceCreatorTest → ParameterizedTypeFixtures · weight: 3 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="InstanceCreatorTest → ExposeFieldsTest · weight: 9 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="InstanceCreatorTest → Expose · weight: 6 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="InstanceCreatorTest → JsonAdapter · weight: 9 · cw: 0.0000 · co-change only"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="gson/src/main/java/com/google/gson/JsonSerializationContext.java">JsonSerializationContext</th>
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonSerializationContext → Gson · weight: 8 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonSerializationContext → ReflectiveTypeAdapterFactory · weight: 6 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonSerializationContext → GsonBuilder · weight: 8 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonSerializationContext → ConstructorConstructor · weight: 6 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonSerializationContext → GsonTest · weight: 2 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonSerializationContext → MapTest · weight: 6 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonSerializationContext → ObjectTest · weight: 8 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonSerializationContext → CustomTypeAdaptersTest · weight: 6 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonSerializationContext → JsonAdapterAnnotationOnFieldsTest · weight: 6 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonSerializationContext → JsonAdapterAnnotationOnClassesTest · weight: 8 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonSerializationContext → GsonBuilderTest · weight: 6 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonSerializationContext → CollectionTest · weight: 6 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonSerializationContext → JsonAdapterAnnotationTypeAdapterFactory · weight: 8 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonSerializationContext → TreeTypeAdapter · weight: 10 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonSerializationContext → JsonAdapterSerializerDeserializerTest · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonSerializationContext → InstanceCreatorTest · weight: 6 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonSerializationContext → InstanceCreator · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonSerializationContext → JsonDeserializer · weight: 5 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonSerializationContext → JsonSerializer · weight: 3 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonSerializationContext → ExclusionStrategy · weight: 5 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonSerializationContext → FieldNamingStrategy · weight: 5 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonSerializationContext → JsonDeserializationContext · weight: 7 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonSerializationContext → ParameterizedTypeFixtures · weight: 2 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonSerializationContext → ExposeFieldsTest · weight: 6 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonSerializationContext → Expose · weight: 5 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonSerializationContext → JsonAdapter · weight: 6 · cw: 0.0000 · co-change only"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="gson/src/main/java/com/google/gson/InstanceCreator.java">InstanceCreator</th>
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="InstanceCreator → Gson · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="InstanceCreator → ReflectiveTypeAdapterFactory · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="InstanceCreator → GsonTest · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="InstanceCreator → JsonAdapterAnnotationOnFieldsTest · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="InstanceCreator → JsonAdapterAnnotationOnClassesTest · weight: 2 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="InstanceCreator → JsonAdapterAnnotationTypeAdapterFactory · weight: 2 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="InstanceCreator → TreeTypeAdapter · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="InstanceCreator → JsonAdapterSerializerDeserializerTest · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="InstanceCreator → InstanceCreatorTest · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="InstanceCreator → JsonSerializationContext · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="InstanceCreator → JsonDeserializer · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="InstanceCreator → JsonSerializer · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="InstanceCreator → ExclusionStrategy · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="InstanceCreator → FieldNamingStrategy · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="InstanceCreator → JsonDeserializationContext · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="InstanceCreator → Expose · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="InstanceCreator → JsonAdapter · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="gson/src/main/java/com/google/gson/JsonDeserializer.java">JsonDeserializer</th>
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonDeserializer → Gson · weight: 9 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonDeserializer → ReflectiveTypeAdapterFactory · weight: 6 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonDeserializer → GsonBuilder · weight: 8 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonDeserializer → ConstructorConstructor · weight: 6 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonDeserializer → GsonTest · weight: 3 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonDeserializer → MapTest · weight: 6 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonDeserializer → ObjectTest · weight: 8 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonDeserializer → CustomTypeAdaptersTest · weight: 6 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonDeserializer → JsonAdapterAnnotationOnFieldsTest · weight: 6 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonDeserializer → JsonAdapterAnnotationOnClassesTest · weight: 8 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonDeserializer → GsonBuilderTest · weight: 6 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonDeserializer → CollectionTest · weight: 6 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonDeserializer → JsonAdapterAnnotationTypeAdapterFactory · weight: 8 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonDeserializer → TreeTypeAdapter · weight: 10 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonDeserializer → JsonAdapterSerializerDeserializerTest · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonDeserializer → InstanceCreatorTest · weight: 6 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonDeserializer → JsonSerializationContext · weight: 5 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonDeserializer → InstanceCreator · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonDeserializer → JsonSerializer · weight: 5 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonDeserializer → ExclusionStrategy · weight: 6 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonDeserializer → FieldNamingStrategy · weight: 5 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#105134e" title="JsonDeserializer → JsonDeserializationContext · weight: 7 · cw: 1.3129 · METHOD_PARAMETER_TYPE, VARIABLE_SINGLE_DECLARATION"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonDeserializer → ParameterizedTypeFixtures · weight: 2 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonDeserializer → ExposeFieldsTest · weight: 6 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonDeserializer → Expose · weight: 5 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonDeserializer → JsonAdapter · weight: 6 · cw: 0.0000 · co-change only"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="gson/src/main/java/com/google/gson/JsonSerializer.java">JsonSerializer</th>
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonSerializer → Gson · weight: 6 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonSerializer → ReflectiveTypeAdapterFactory · weight: 3 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonSerializer → GsonBuilder · weight: 5 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonSerializer → ConstructorConstructor · weight: 3 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonSerializer → GsonTest · weight: 2 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonSerializer → MapTest · weight: 3 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonSerializer → ObjectTest · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonSerializer → CustomTypeAdaptersTest · weight: 3 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonSerializer → JsonAdapterAnnotationOnFieldsTest · weight: 3 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonSerializer → JsonAdapterAnnotationOnClassesTest · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonSerializer → GsonBuilderTest · weight: 3 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonSerializer → CollectionTest · weight: 3 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonSerializer → JsonAdapterAnnotationTypeAdapterFactory · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonSerializer → TreeTypeAdapter · weight: 5 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonSerializer → JsonAdapterSerializerDeserializerTest · weight: 2 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonSerializer → InstanceCreatorTest · weight: 3 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#105134e" title="JsonSerializer → JsonSerializationContext · weight: 3 · cw: 1.3129 · METHOD_PARAMETER_TYPE, VARIABLE_SINGLE_DECLARATION"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonSerializer → InstanceCreator · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonSerializer → JsonDeserializer · weight: 5 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonSerializer → ExclusionStrategy · weight: 3 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonSerializer → FieldNamingStrategy · weight: 3 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonSerializer → JsonDeserializationContext · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonSerializer → ParameterizedTypeFixtures · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonSerializer → ExposeFieldsTest · weight: 3 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonSerializer → Expose · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonSerializer → JsonAdapter · weight: 3 · cw: 0.0000 · co-change only"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="gson/src/main/java/com/google/gson/ExclusionStrategy.java">ExclusionStrategy</th>
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ExclusionStrategy → Gson · weight: 8 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ExclusionStrategy → ReflectiveTypeAdapterFactory · weight: 6 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ExclusionStrategy → GsonBuilder · weight: 8 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ExclusionStrategy → ConstructorConstructor · weight: 6 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ExclusionStrategy → GsonTest · weight: 2 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ExclusionStrategy → MapTest · weight: 6 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ExclusionStrategy → ObjectTest · weight: 8 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ExclusionStrategy → CustomTypeAdaptersTest · weight: 6 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ExclusionStrategy → JsonAdapterAnnotationOnFieldsTest · weight: 6 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ExclusionStrategy → JsonAdapterAnnotationOnClassesTest · weight: 8 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ExclusionStrategy → GsonBuilderTest · weight: 6 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ExclusionStrategy → CollectionTest · weight: 6 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ExclusionStrategy → JsonAdapterAnnotationTypeAdapterFactory · weight: 8 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ExclusionStrategy → TreeTypeAdapter · weight: 10 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ExclusionStrategy → JsonAdapterSerializerDeserializerTest · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ExclusionStrategy → InstanceCreatorTest · weight: 6 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ExclusionStrategy → JsonSerializationContext · weight: 5 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ExclusionStrategy → InstanceCreator · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ExclusionStrategy → JsonDeserializer · weight: 6 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ExclusionStrategy → JsonSerializer · weight: 3 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ExclusionStrategy → FieldNamingStrategy · weight: 5 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ExclusionStrategy → JsonDeserializationContext · weight: 7 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ExclusionStrategy → ParameterizedTypeFixtures · weight: 2 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ExclusionStrategy → ExposeFieldsTest · weight: 6 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ExclusionStrategy → Expose · weight: 6 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ExclusionStrategy → JsonAdapter · weight: 7 · cw: 0.0000 · co-change only"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="gson/src/main/java/com/google/gson/FieldNamingStrategy.java">FieldNamingStrategy</th>
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="FieldNamingStrategy → Gson · weight: 8 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="FieldNamingStrategy → ReflectiveTypeAdapterFactory · weight: 7 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="FieldNamingStrategy → GsonBuilder · weight: 8 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="FieldNamingStrategy → ConstructorConstructor · weight: 6 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="FieldNamingStrategy → GsonTest · weight: 2 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="FieldNamingStrategy → MapTest · weight: 6 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="FieldNamingStrategy → ObjectTest · weight: 8 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="FieldNamingStrategy → CustomTypeAdaptersTest · weight: 6 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="FieldNamingStrategy → JsonAdapterAnnotationOnFieldsTest · weight: 6 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="FieldNamingStrategy → JsonAdapterAnnotationOnClassesTest · weight: 8 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="FieldNamingStrategy → GsonBuilderTest · weight: 6 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="FieldNamingStrategy → CollectionTest · weight: 6 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="FieldNamingStrategy → JsonAdapterAnnotationTypeAdapterFactory · weight: 8 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="FieldNamingStrategy → TreeTypeAdapter · weight: 10 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="FieldNamingStrategy → JsonAdapterSerializerDeserializerTest · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="FieldNamingStrategy → InstanceCreatorTest · weight: 6 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="FieldNamingStrategy → JsonSerializationContext · weight: 5 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="FieldNamingStrategy → InstanceCreator · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="FieldNamingStrategy → JsonDeserializer · weight: 5 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="FieldNamingStrategy → JsonSerializer · weight: 3 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="FieldNamingStrategy → ExclusionStrategy · weight: 5 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="FieldNamingStrategy → JsonDeserializationContext · weight: 7 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="FieldNamingStrategy → ParameterizedTypeFixtures · weight: 2 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="FieldNamingStrategy → ExposeFieldsTest · weight: 6 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="FieldNamingStrategy → Expose · weight: 5 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="FieldNamingStrategy → JsonAdapter · weight: 6 · cw: 0.0000 · co-change only"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="gson/src/main/java/com/google/gson/JsonDeserializationContext.java">JsonDeserializationContext</th>
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonDeserializationContext → Gson · weight: 12 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonDeserializationContext → ReflectiveTypeAdapterFactory · weight: 9 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonDeserializationContext → GsonBuilder · weight: 12 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonDeserializationContext → ConstructorConstructor · weight: 9 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonDeserializationContext → GsonTest · weight: 3 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonDeserializationContext → MapTest · weight: 9 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonDeserializationContext → ObjectTest · weight: 12 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonDeserializationContext → CustomTypeAdaptersTest · weight: 9 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonDeserializationContext → JsonAdapterAnnotationOnFieldsTest · weight: 9 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonDeserializationContext → JsonAdapterAnnotationOnClassesTest · weight: 12 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonDeserializationContext → GsonBuilderTest · weight: 9 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonDeserializationContext → CollectionTest · weight: 9 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonDeserializationContext → JsonAdapterAnnotationTypeAdapterFactory · weight: 12 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonDeserializationContext → TreeTypeAdapter · weight: 15 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonDeserializationContext → JsonAdapterSerializerDeserializerTest · weight: 6 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonDeserializationContext → InstanceCreatorTest · weight: 9 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonDeserializationContext → JsonSerializationContext · weight: 7 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonDeserializationContext → InstanceCreator · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonDeserializationContext → JsonDeserializer · weight: 7 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonDeserializationContext → JsonSerializer · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonDeserializationContext → ExclusionStrategy · weight: 7 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonDeserializationContext → FieldNamingStrategy · weight: 7 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonDeserializationContext → ParameterizedTypeFixtures · weight: 3 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonDeserializationContext → ExposeFieldsTest · weight: 9 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonDeserializationContext → Expose · weight: 7 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonDeserializationContext → JsonAdapter · weight: 9 · cw: 0.0000 · co-change only"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="gson/src/test/java/com/google/gson/ParameterizedTypeFixtures.java">ParameterizedTypeFixtures</th>
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ParameterizedTypeFixtures → Gson · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ParameterizedTypeFixtures → ReflectiveTypeAdapterFactory · weight: 3 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ParameterizedTypeFixtures → GsonBuilder · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ParameterizedTypeFixtures → ConstructorConstructor · weight: 3 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ParameterizedTypeFixtures → GsonTest · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ParameterizedTypeFixtures → MapTest · weight: 3 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ParameterizedTypeFixtures → ObjectTest · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ParameterizedTypeFixtures → CustomTypeAdaptersTest · weight: 3 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ParameterizedTypeFixtures → JsonAdapterAnnotationOnFieldsTest · weight: 3 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ParameterizedTypeFixtures → JsonAdapterAnnotationOnClassesTest · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ParameterizedTypeFixtures → GsonBuilderTest · weight: 3 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ParameterizedTypeFixtures → CollectionTest · weight: 3 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ParameterizedTypeFixtures → JsonAdapterAnnotationTypeAdapterFactory · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ParameterizedTypeFixtures → TreeTypeAdapter · weight: 5 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ParameterizedTypeFixtures → JsonAdapterSerializerDeserializerTest · weight: 2 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ParameterizedTypeFixtures → InstanceCreatorTest · weight: 3 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#122-7559" title="ParameterizedTypeFixtures → JsonSerializationContext · weight: 2 · cw: 2.0153 · METHOD_INVOCATION_OBJECT_PARAMETER, METHOD_PARAMETER_TYPE, VARIABLE_SINGLE_DECLARATION"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#fb3e4a" title="ParameterizedTypeFixtures → InstanceCreator · weight: 1 · cw: 1.0951 · INTERFACE, PARAMETERIZED_TYPE"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#fb3e4a" title="ParameterizedTypeFixtures → JsonDeserializer · weight: 2 · cw: 1.0951 · INTERFACE, PARAMETERIZED_TYPE"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#fb3e4a" title="ParameterizedTypeFixtures → JsonSerializer · weight: 1 · cw: 1.0951 · INTERFACE, PARAMETERIZED_TYPE"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ParameterizedTypeFixtures → ExclusionStrategy · weight: 2 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ParameterizedTypeFixtures → FieldNamingStrategy · weight: 2 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#105134e" title="ParameterizedTypeFixtures → JsonDeserializationContext · weight: 3 · cw: 1.3129 · METHOD_PARAMETER_TYPE, VARIABLE_SINGLE_DECLARATION"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ParameterizedTypeFixtures → ExposeFieldsTest · weight: 3 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ParameterizedTypeFixtures → Expose · weight: 2 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ParameterizedTypeFixtures → JsonAdapter · weight: 3 · cw: 0.0000 · co-change only"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="gson/src/test/java/com/google/gson/functional/ExposeFieldsTest.java">ExposeFieldsTest</th>
+          
+            <td class="matrix-cell filled" style="background:#11c-5956" title="ExposeFieldsTest → Gson · weight: 12 · cw: 1.8723 · DATA_ABSTRACTION_COUPLING, METHOD_INVOCATION_OBJECT_PARAMETER, VARIABLE_FIELD_DECLARATION"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ExposeFieldsTest → ReflectiveTypeAdapterFactory · weight: 9 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#121-7258" title="ExposeFieldsTest → GsonBuilder · weight: 12 · cw: 1.9987 · ATOMIC_PARAMETER_COUPLING, METHOD_INVOCATION_ATOMIC_PARAMETER, METHOD_INVOCATION_OBJECT_PARAMETER"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ExposeFieldsTest → ConstructorConstructor · weight: 9 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ExposeFieldsTest → GsonTest · weight: 3 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ExposeFieldsTest → MapTest · weight: 9 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ExposeFieldsTest → ObjectTest · weight: 12 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ExposeFieldsTest → CustomTypeAdaptersTest · weight: 9 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ExposeFieldsTest → JsonAdapterAnnotationOnFieldsTest · weight: 9 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ExposeFieldsTest → JsonAdapterAnnotationOnClassesTest · weight: 12 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ExposeFieldsTest → GsonBuilderTest · weight: 9 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ExposeFieldsTest → CollectionTest · weight: 9 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ExposeFieldsTest → JsonAdapterAnnotationTypeAdapterFactory · weight: 12 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ExposeFieldsTest → TreeTypeAdapter · weight: 15 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ExposeFieldsTest → JsonAdapterSerializerDeserializerTest · weight: 6 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ExposeFieldsTest → InstanceCreatorTest · weight: 9 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ExposeFieldsTest → JsonSerializationContext · weight: 6 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#fb3e4a" title="ExposeFieldsTest → InstanceCreator · weight: 1 · cw: 1.0951 · INTERFACE, PARAMETERIZED_TYPE"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ExposeFieldsTest → JsonDeserializer · weight: 6 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ExposeFieldsTest → JsonSerializer · weight: 3 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ExposeFieldsTest → ExclusionStrategy · weight: 6 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ExposeFieldsTest → FieldNamingStrategy · weight: 6 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ExposeFieldsTest → JsonDeserializationContext · weight: 9 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ExposeFieldsTest → ParameterizedTypeFixtures · weight: 3 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ExposeFieldsTest → Expose · weight: 6 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ExposeFieldsTest → JsonAdapter · weight: 9 · cw: 0.0000 · co-change only"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="gson/src/main/java/com/google/gson/annotations/Expose.java">Expose</th>
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Expose → Gson · weight: 9 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Expose → ReflectiveTypeAdapterFactory · weight: 6 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Expose → GsonBuilder · weight: 9 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Expose → ConstructorConstructor · weight: 6 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Expose → GsonTest · weight: 2 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Expose → MapTest · weight: 6 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Expose → ObjectTest · weight: 8 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Expose → CustomTypeAdaptersTest · weight: 6 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Expose → JsonAdapterAnnotationOnFieldsTest · weight: 6 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Expose → JsonAdapterAnnotationOnClassesTest · weight: 8 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Expose → GsonBuilderTest · weight: 6 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Expose → CollectionTest · weight: 6 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Expose → JsonAdapterAnnotationTypeAdapterFactory · weight: 8 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Expose → TreeTypeAdapter · weight: 10 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Expose → JsonAdapterSerializerDeserializerTest · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Expose → InstanceCreatorTest · weight: 6 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Expose → JsonSerializationContext · weight: 5 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Expose → InstanceCreator · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Expose → JsonDeserializer · weight: 5 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Expose → JsonSerializer · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Expose → ExclusionStrategy · weight: 6 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Expose → FieldNamingStrategy · weight: 5 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Expose → JsonDeserializationContext · weight: 7 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Expose → ParameterizedTypeFixtures · weight: 2 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Expose → ExposeFieldsTest · weight: 6 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Expose → JsonAdapter · weight: 7 · cw: 0.0000 · co-change only"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="gson/src/main/java/com/google/gson/annotations/JsonAdapter.java">JsonAdapter</th>
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonAdapter → Gson · weight: 12 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonAdapter → ReflectiveTypeAdapterFactory · weight: 9 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonAdapter → GsonBuilder · weight: 13 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonAdapter → ConstructorConstructor · weight: 9 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonAdapter → GsonTest · weight: 3 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonAdapter → MapTest · weight: 9 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonAdapter → ObjectTest · weight: 12 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonAdapter → CustomTypeAdaptersTest · weight: 9 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonAdapter → JsonAdapterAnnotationOnFieldsTest · weight: 9 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonAdapter → JsonAdapterAnnotationOnClassesTest · weight: 13 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonAdapter → GsonBuilderTest · weight: 9 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonAdapter → CollectionTest · weight: 9 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonAdapter → JsonAdapterAnnotationTypeAdapterFactory · weight: 14 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonAdapter → TreeTypeAdapter · weight: 15 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonAdapter → JsonAdapterSerializerDeserializerTest · weight: 7 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonAdapter → InstanceCreatorTest · weight: 9 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonAdapter → JsonSerializationContext · weight: 6 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonAdapter → InstanceCreator · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonAdapter → JsonDeserializer · weight: 6 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonAdapter → JsonSerializer · weight: 3 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonAdapter → ExclusionStrategy · weight: 7 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonAdapter → FieldNamingStrategy · weight: 6 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonAdapter → JsonDeserializationContext · weight: 9 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonAdapter → ParameterizedTypeFixtures · weight: 3 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonAdapter → ExposeFieldsTest · weight: 9 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonAdapter → Expose · weight: 7 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+        </tr>
+        
+      </tbody>
+    </table>
+  </div>
+</section>
+
+
+</body>
+</html>

@@ -1,4 +1,10 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>HyCPA — src/test/java/Main/ghostbits/RawSocketSenderTest.java</title><style>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HyCPA — src/test/java/Main/ghostbits/RawSocketSenderTest.java</title>
+  <style>
 :root {
   --bg: #0d1117; --surface: #161b22; --surface2: #21262d;
   --border: #30363d; --text: #e6edf3; --text2: #8b949e;
@@ -131,134 +137,52 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, Bl
 /* ── Tooltip fix: allow tooltips inside cards to escape the card border ── */
 .card { overflow: visible !important; }
 .card-header, .metrics-mini, .metric-pill { overflow: visible; }
-</style></head><body><div class="page-header"><a class="back-btn" href="repo_0x727_BypassPro.html">← Back</a><span class="src-label">Class:</span><span class="src-name-h">src/test/java/Main/ghostbits/RawSocketSenderTest.java</span><span class="src-label" style="margin-left:12px">Code Smell Score: 0.212 · Communities: C4</span><div class="header-email-wrap" style="margin-left:auto"><label>Email (required to submit)</label><input type="email" id="userEmail" class="header-email-input" placeholder="your@email.com" oninput="saveEmail(this.value)" /></div><a class="export-btn" href="help.html">❓ Help</a><a class="export-btn" href="repo_0x727_BypassPro.html">📁 Repo</a></div><div class="container"><div class="tabs"><button class="tab-btn active" data-tab="det" onclick="switchTab('det')">Deterministic (1)</button><button class="tab-btn" data-tab="mc" onclick="switchTab('mc')">Monte Carlo (1)</button></div><div class="filter-bar"><label>Min probability<input type="number" id="fMinProb" min="0" max="1" step="0.05" value="0" oninput="applyFilters()"></label><label>Max distance<input type="number" id="fMaxHop" min="1" step="1" placeholder="any" oninput="applyFilters()"></label><label style="flex:1">Search target label<input type="text" id="fSearch" placeholder="substring…" oninput="applyFilters()" style="width:100%"></label></div><div class="tab-pane active" data-tab="det"><div class="card"
-     data-source="src/test/java/Main/ghostbits/RawSocketSenderTest.java" data-target="src/main/java/Main/ghostbits/RawSocketSender.java"
-     data-prob="0.4803035726918893" data-hop="1" data-rank="1">
-  <div class="card-header" onclick="this.parentElement.classList.toggle('open')">
-    <div class="source-target">
-      <span class="class-badge source" title="src/test/java/Main/ghostbits/RawSocketSenderTest.java">RawSocketSenderTest</span>
-      <span class="arrow-icon">→</span>
-      <span class="class-badge target" title="src/main/java/Main/ghostbits/RawSocketSender.java">RawSocketSender</span>
-    </div>
-    <div class="metrics-mini">
-      <div class="metric-pill rank-m" data-tooltip="Rank in the DET list."><span class="val">#1</span><span class="lbl">Rank</span></div>
-      <div class="metric-pill prob" style="color:var(--orange)" data-tooltip="HyCPA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility."><span class="val" style="color:var(--orange)">0.4803</span><span class="lbl">Prob</span></div>
-      <div class="metric-pill hop" data-tooltip="Number of edges (distance) in the propagation path from the source class to this target."><span class="val">1</span><span class="lbl">Distance</span></div>
-      <div class="metric-pill health" data-tooltip="Target health = 1 − code smell score (computed from CK metrics)."><span class="val">0.58</span><span class="lbl">Health</span></div>
-    </div>
-    <span class="toggle-icon">▼</span>
+</style>
+</head>
+<body>
+<div class="page-header">
+  <a class="back-btn" href="repo_0x727_BypassPro.html">← Back</a>
+  <span class="src-label">Class:</span>
+  <span class="src-name-h">src/test/java/Main/ghostbits/RawSocketSenderTest.java</span>
+  <span class="src-label" style="margin-left:12px">Code Smell Score: 0.167 · Communities: —</span>
+  <div class="header-email-wrap" style="margin-left:auto">
+    <label>Email (required to submit)</label>
+    <input type="email" id="userEmail" class="header-email-input"
+           placeholder="your@email.com" oninput="saveEmail(this.value)" />
   </div>
-  <div class="card-body">
-    <h4 style="color:var(--text2);font-size:12px;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:8px;">Propagation Path</h4>
-    <div class="path-diagram">
-      <div class="path-node first">
-        <div class="node-circle" title="src/test/java/Main/ghostbits/RawSocketSenderTest.java">RA</div>
-        <div class="node-label" title="src/test/java/Main/ghostbits/RawSocketSenderTest.java">RawSocketSenderTest</div>
-        <div class="node-health" style="color:var(--green)" data-tooltip="Structural health (1 − code smell score from CK metrics). 1.00 (green) = healthy; 0.00 (red) = many CK metrics in the bad zone.">⚕ 0.79</div>
-      </div>
-      <div class="path-edge">
-        <div class="edge-arrow"><span class="line"></span><span class="tip">&#9658;</span></div>
-        <div class="edge-tags">
-          <span class="edge-tag cochange" data-tooltip="Co-change weight: number of times these two classes were committed together in the project history.">co-change: 1</span>
-          <span class="edge-tag coupling" data-tooltip="ATOMIC_PARAMETER_COUPLING" title="ATOMIC_PARAMETER_COUPLING">Atomic Parameter Coupling</span>
-          <span class="edge-tag coupling" data-tooltip="METHOD_INVOCATION_OBJECT_PARAMETER" title="METHOD_INVOCATION_OBJECT_PARAMETER">Method Invocation Object Parameter</span>
-          <span class="edge-tag coupling" data-tooltip="VARIABLE_DECLARATION_STATEMENT" title="VARIABLE_DECLARATION_STATEMENT">Variable Declaration Statement</span>
-        </div>
-      </div>
-      <div class="path-node last">
-        <div class="node-circle" title="src/main/java/Main/ghostbits/RawSocketSender.java">RA</div>
-        <div class="node-label" title="src/main/java/Main/ghostbits/RawSocketSender.java">RawSocketSender</div>
-        <div class="node-health" style="color:var(--orange)" data-tooltip="Structural health (1 − code smell score from CK metrics). 1.00 (green) = healthy; 0.00 (red) = many CK metrics in the bad zone.">⚕ 0.58</div>
-      </div>
-    </div>
-    <div style="margin-top:10px;font-size:11px;color:var(--text2)">      <strong>Via:</strong> <code>src/test/java/Main/ghostbits/RawSocketSenderTest.java</code>    </div>
-    <div style="margin-top:16px; font-size:11px; color:var(--text2);"><div><strong>Source:</strong> <code>src/test/java/Main/ghostbits/RawSocketSenderTest.java</code></div><div><strong>Target:</strong> <code>src/main/java/Main/ghostbits/RawSocketSender.java</code></div></div>    <div class="validation-section" id="validation_det_0">
-      <h4>📋 Validation — Is this propagation correct?</h4>
-      <div class="vote-buttons">
-        <button class="vote-btn correct"   onclick="selectVote('det_0','correct',this)">✅ Correct</button>
-        <button class="vote-btn incorrect" onclick="selectVote('det_0','incorrect',this)">❌ Incorrect</button>
-        <button class="vote-btn unsure"    onclick="selectVote('det_0','unsure',this)">❓ Unsure</button>
-      </div>
-      <textarea class="validation-comment" id="comment_det_0" placeholder="Optional comment (e.g., why you think it is incorrect)…" oninput="saveComment('det_0', this.value)"></textarea>
-      <div class="submit-row">
-        <button class="submit-btn" id="submitBtn_det_0" onclick="submitVote('det_0')" disabled>Submit</button>
-        <span class="submit-status" id="status_det_0"></span>
-      </div>
-      <input type="hidden" id="vote_det_0" value="">
-      <input type="hidden" id="meta_kind_det_0" value="det">
-      <input type="hidden" id="meta_source_det_0" value="src/test/java/Main/ghostbits/RawSocketSenderTest.java">
-      <input type="hidden" id="meta_target_det_0" value="src/main/java/Main/ghostbits/RawSocketSender.java">
-      <input type="hidden" id="meta_rank_det_0" value="1">
-      <input type="hidden" id="meta_prob_det_0" value="0.4803035726918893">
-      <input type="hidden" id="meta_hop_det_0" value="1">
-    </div>
+  <a class="export-btn" href="help.html">❓ Help</a>
+  <a class="export-btn" href="repo_0x727_BypassPro.html">📁 Repo</a>
+</div>
+
+<div class="container">
+  <div class="tabs">
+    <button class="tab-btn active" data-tab="det" onclick="switchTab('det')">Deterministic (0)</button>
+    <button class="tab-btn" data-tab="prob" onclick="switchTab('prob')">Probabilistic (0)</button>
+  </div>
+  <div class="filter-bar">
+    <label>Min probability
+      <input type="number" id="fMinProb" min="0" max="1" step="0.05" value="0" oninput="applyFilters()">
+    </label>
+    <label>Max distance
+      <input type="number" id="fMaxHop" min="1" step="1" placeholder="any" oninput="applyFilters()">
+    </label>
+    <label style="flex:1">Search target label
+      <input type="text" id="fSearch" placeholder="substring…" oninput="applyFilters()" style="width:100%">
+    </label>
+  </div>
+
+  <div class="tab-pane active" data-tab="det">
+    <p class="none-text">No deterministic targets above θ.</p>
+  </div>
+
+  <div class="tab-pane" data-tab="prob">
+    <p class="none-text">No probabilistic targets above threshold.</p>
   </div>
 </div>
-</div><div class="tab-pane" data-tab="mc"><div class="card"
-     data-source="src/test/java/Main/ghostbits/RawSocketSenderTest.java" data-target="src/main/java/Main/ghostbits/RawSocketSender.java"
-     data-prob="0.461" data-hop="1.0" data-rank="1">
-  <div class="card-header" onclick="this.parentElement.classList.toggle('open')">
-    <div class="source-target">
-      <span class="class-badge source" title="src/test/java/Main/ghostbits/RawSocketSenderTest.java">RawSocketSenderTest</span>
-      <span class="arrow-icon">→</span>
-      <span class="class-badge target" title="src/main/java/Main/ghostbits/RawSocketSender.java">RawSocketSender</span>
-    </div>
-    <div class="metrics-mini">
-      <div class="metric-pill rank-m" data-tooltip="Rank in the MC list."><span class="val">#1</span><span class="lbl">Rank</span></div>
-      <div class="metric-pill prob" style="color:var(--orange)" data-tooltip="HyCPA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility."><span class="val" style="color:var(--orange)">0.4610</span><span class="lbl">Prob</span></div>
-      <div class="metric-pill hop" data-tooltip="Number of edges (distance) in the propagation path from the source class to this target."><span class="val">1.00</span><span class="lbl">Avg Distance</span></div>
-      <div class="metric-pill health" data-tooltip="Target health = 1 − code smell score (computed from CK metrics)."><span class="val">0.58</span><span class="lbl">Health</span></div>
-    </div>
-    <span class="toggle-icon">▼</span>
-  </div>
-  <div class="card-body">
-    <h4 style="color:var(--text2);font-size:12px;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:8px;">Propagation Path</h4>
-    <div class="path-diagram">
-      <div class="path-node first">
-        <div class="node-circle" title="src/test/java/Main/ghostbits/RawSocketSenderTest.java">RA</div>
-        <div class="node-label" title="src/test/java/Main/ghostbits/RawSocketSenderTest.java">RawSocketSenderTest</div>
-        <div class="node-health" style="color:var(--green)" data-tooltip="Structural health (1 − code smell score from CK metrics). 1.00 (green) = healthy; 0.00 (red) = many CK metrics in the bad zone.">⚕ 0.79</div>
-      </div>
-      <div class="path-edge">
-        <div class="edge-arrow"><span class="line"></span><span class="tip">&#9658;</span></div>
-        <div class="edge-tags">
-          <span class="edge-tag cochange" data-tooltip="Co-change weight: number of times these two classes were committed together in the project history.">co-change: 1</span>
-          <span class="edge-tag coupling" data-tooltip="ATOMIC_PARAMETER_COUPLING" title="ATOMIC_PARAMETER_COUPLING">Atomic Parameter Coupling</span>
-          <span class="edge-tag coupling" data-tooltip="METHOD_INVOCATION_OBJECT_PARAMETER" title="METHOD_INVOCATION_OBJECT_PARAMETER">Method Invocation Object Parameter</span>
-          <span class="edge-tag coupling" data-tooltip="VARIABLE_DECLARATION_STATEMENT" title="VARIABLE_DECLARATION_STATEMENT">Variable Declaration Statement</span>
-        </div>
-      </div>
-      <div class="path-node last">
-        <div class="node-circle" title="src/main/java/Main/ghostbits/RawSocketSender.java">RA</div>
-        <div class="node-label" title="src/main/java/Main/ghostbits/RawSocketSender.java">RawSocketSender</div>
-        <div class="node-health" style="color:var(--orange)" data-tooltip="Structural health (1 − code smell score from CK metrics). 1.00 (green) = healthy; 0.00 (red) = many CK metrics in the bad zone.">⚕ 0.58</div>
-      </div>
-    </div>
-    <div style="margin-top:10px;font-size:11px;color:var(--text2);font-style:italic">      Monte Carlo entry — no causal path is available; avg_hop = 1.00 aggregates across runs.    </div>
-    <div style="margin-top:16px; font-size:11px; color:var(--text2);"><div><strong>Source:</strong> <code>src/test/java/Main/ghostbits/RawSocketSenderTest.java</code></div><div><strong>Target:</strong> <code>src/main/java/Main/ghostbits/RawSocketSender.java</code></div></div>    <div class="validation-section" id="validation_mc_0">
-      <h4>📋 Validation — Is this propagation correct?</h4>
-      <div class="vote-buttons">
-        <button class="vote-btn correct"   onclick="selectVote('mc_0','correct',this)">✅ Correct</button>
-        <button class="vote-btn incorrect" onclick="selectVote('mc_0','incorrect',this)">❌ Incorrect</button>
-        <button class="vote-btn unsure"    onclick="selectVote('mc_0','unsure',this)">❓ Unsure</button>
-      </div>
-      <textarea class="validation-comment" id="comment_mc_0" placeholder="Optional comment (e.g., why you think it is incorrect)…" oninput="saveComment('mc_0', this.value)"></textarea>
-      <div class="submit-row">
-        <button class="submit-btn" id="submitBtn_mc_0" onclick="submitVote('mc_0')" disabled>Submit</button>
-        <span class="submit-status" id="status_mc_0"></span>
-      </div>
-      <input type="hidden" id="vote_mc_0" value="">
-      <input type="hidden" id="meta_kind_mc_0" value="mc">
-      <input type="hidden" id="meta_source_mc_0" value="src/test/java/Main/ghostbits/RawSocketSenderTest.java">
-      <input type="hidden" id="meta_target_mc_0" value="src/main/java/Main/ghostbits/RawSocketSender.java">
-      <input type="hidden" id="meta_rank_mc_0" value="1">
-      <input type="hidden" id="meta_prob_mc_0" value="0.461">
-      <input type="hidden" id="meta_hop_mc_0" value="1.0">
-    </div>
-  </div>
-</div>
-</div></div><script>const REPO = '0x727_BypassPro';
-const SOURCE_SAFE = 'src_test_java_Main_ghostbits_RawSocketSenderTest_java';
+
+<script>
+const REPO = "0x727_BypassPro";
+const SOURCE_SAFE = "src_test_java_Main_ghostbits_RawSocketSenderTest_java";
 const STORAGE_PREFIX = 'ocpa_vote_' + REPO + '__' + SOURCE_SAFE + '__';
 const FORMSUBMIT_URL = 'https://formsubmit.co/ajax/change.vein@gmail.com';
 document.addEventListener('DOMContentLoaded', () => {
@@ -288,23 +212,28 @@ document.addEventListener('DOMContentLoaded', () => {
   });
   switchTab('det');
 });
+
 function saveEmail(v) {
   localStorage.setItem('email_' + REPO, v);
   document.getElementById('userEmail').classList.remove('invalid');
 }
+
 function saveComment(id, value) {
   localStorage.setItem(STORAGE_PREFIX + id + '__comment', value);
 }
+
 function selectVote(id, vote, btn) {
   btn.parentElement.querySelectorAll('.vote-btn').forEach(b => b.classList.remove('selected'));
   btn.classList.add('selected');
   document.getElementById('vote_' + id).value = vote;
   document.getElementById('submitBtn_' + id).disabled = false;
 }
+
 function switchTab(name) {
   document.querySelectorAll('.tab-btn').forEach(b => b.classList.toggle('active', b.dataset.tab === name));
   document.querySelectorAll('.tab-pane').forEach(p => p.classList.toggle('active', p.dataset.tab === name));
 }
+
 function applyFilters() {
   const minP = parseFloat(document.getElementById('fMinProb').value) || 0;
   const maxH = parseFloat(document.getElementById('fMaxHop').value);
@@ -320,6 +249,7 @@ function applyFilters() {
     card.style.display = show ? '' : 'none';
   });
 }
+
 async function submitVote(id) {
   const vote = document.getElementById('vote_' + id).value;
   if (!vote) return;
@@ -340,10 +270,10 @@ async function submitVote(id) {
   const statusEl  = document.getElementById('status_'    + id);
   const submitBtn = document.getElementById('submitBtn_' + id);
   submitBtn.disabled = true;
-  statusEl.textContent = 'Submitting…';
+  statusEl.textContent = 'Submitting\u2026';
   statusEl.className = 'submit-status';
   const payload = {
-    _subject: '[HyCPA Validation] ' + REPO + ' — ' + source + ' → ' + target + ': ' + vote.toUpperCase(),
+    _subject: '[HyCPA Validation] ' + REPO + ' \u2014 ' + source + ' \u2192 ' + target + ': ' + vote.toUpperCase(),
     Email: email, Repository: REPO,
     Source_Class: source, Affected_Class: target,
     Type: kind, Rank: rank, Prob: prob, Hop: hop,
@@ -352,15 +282,19 @@ async function submitVote(id) {
   localStorage.setItem(STORAGE_PREFIX + id, JSON.stringify(payload));
   try {
     const resp = await fetch(FORMSUBMIT_URL, {
-      method: 'POST', headers: {'Content-Type':'application/json','Accept':'application/json'},
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
       body: JSON.stringify(payload)
     });
-    if (resp.ok) { statusEl.textContent = '✓ Submitted'; }
-    else { statusEl.textContent = '⚠ Saved locally (server error)'; statusEl.classList.add('error'); }
+    if (resp.ok) { statusEl.textContent = '\u2713 Submitted'; }
+    else { statusEl.textContent = '\u26a0 Saved locally (server error)'; statusEl.classList.add('error'); }
   } catch (e) {
-    statusEl.textContent = '⚠ Saved locally (offline)';
+    statusEl.textContent = '\u26a0 Saved locally (offline)';
     statusEl.classList.add('error');
   }
   submitBtn.disabled = false;
 }
-</script></body></html>
+
+</script>
+</body>
+</html>

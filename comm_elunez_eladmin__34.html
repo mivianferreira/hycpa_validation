@@ -1,0 +1,782 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HyCPA — Community 34 · elunez/eladmin</title>
+  <style>
+:root {
+  --bg: #0d1117; --surface: #161b22; --surface2: #21262d;
+  --border: #30363d; --text: #e6edf3; --text2: #8b949e;
+  --accent: #58a6ff; --green: #3fb950; --orange: #e3b341; --red: #f85149;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { background: var(--bg); color: var(--text); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif; padding-bottom: 48px; }
+
+/* ── Header ── */
+.page-header { background: var(--surface); border-bottom: 1px solid var(--border); padding: 12px 24px; display: flex; align-items: center; gap: 20px; }
+.back-btn { color: var(--text2); font-size: 12px; text-decoration: none; white-space: nowrap; }
+.back-btn:hover { color: var(--accent); }
+.header-title { font-size: 15px; color: var(--text); }
+.header-title strong { color: var(--accent); }
+
+/* ── Stats pills ── */
+.stats-row { display: flex; gap: 12px; padding: 16px 24px; background: var(--surface); border-bottom: 1px solid var(--border); flex-wrap: wrap; }
+.stat-pill { background: var(--surface2); border: 1px solid var(--border); border-radius: 8px; padding: 10px 20px; display: flex; flex-direction: column; align-items: center; gap: 2px; min-width: 90px; }
+.pill-val { font-size: 22px; font-weight: 700; color: var(--text); line-height: 1; }
+.pill-lbl { font-size: 10px; color: var(--text2); text-transform: uppercase; letter-spacing: 0.5px; margin-top: 2px; }
+
+/* ── Content sections ── */
+.content-section { padding: 24px; }
+.section-title { font-size: 11px; font-weight: 600; color: var(--text2); text-transform: uppercase; letter-spacing: 0.6px; margin-bottom: 14px; display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
+
+/* ── Node table ── */
+.node-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+.node-table th { background: var(--surface); color: var(--text2); font-weight: 600; font-size: 10px; text-transform: uppercase; letter-spacing: 0.5px; padding: 8px 12px; text-align: left; border-bottom: 2px solid var(--border); white-space: nowrap; }
+.node-table td { padding: 7px 12px; border-bottom: 1px solid var(--border); vertical-align: middle; }
+.node-table tbody tr:hover td { background: var(--surface); }
+.health-badge { display: inline-block; padding: 2px 9px; border-radius: 10px; font-size: 11px; font-weight: 700; color: #0d1117; white-space: nowrap; }
+.class-path { font-size: 11px; color: var(--text2); font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', monospace; word-break: break-all; }
+td.num { text-align: right; font-weight: 600; white-space: nowrap; }
+td.overlap { color: var(--accent); }
+
+/* ── Coupling matrix ── */
+.matrix-wrap { overflow: auto; }
+.matrix { border-collapse: collapse; }
+.matrix-corner { min-width: 16px; }
+.matrix-col-hdr { padding: 0 1px 4px 1px; vertical-align: bottom; }
+.matrix-col-hdr span { display: block; writing-mode: vertical-rl; transform: rotate(180deg); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-height: 140px; color: var(--text2); font-weight: 400; font-size: 10px; cursor: default; text-align: left; }
+.matrix-row-hdr { text-align: right; padding: 1px 6px 1px 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 200px; color: var(--text2); font-weight: 400; font-size: 10px; cursor: default; }
+.matrix-cell { width: 16px; height: 16px; min-width: 16px; min-height: 16px; border: 1px solid #1c2129; cursor: default; }
+.matrix-cell.empty { background: transparent; }
+.matrix-cell.self-cell { background: var(--surface2); }
+.matrix-cell.filled { }
+
+/* ── Legend inline ── */
+.legend-inline { display: inline-flex; align-items: center; gap: 6px; font-size: 10px; color: var(--text2); font-weight: 400; text-transform: none; letter-spacing: 0; }
+.li-cell { display: inline-block; width: 10px; height: 10px; border-radius: 2px; vertical-align: middle; flex-shrink: 0; }
+</style>
+</head>
+<body>
+
+<div class="page-header">
+  <a class="back-btn" href="repo_elunez_eladmin.html">← Back to elunez/eladmin</a>
+  <span class="header-title">Community <strong>C34</strong> — elunez/eladmin</span>
+</div>
+
+<div class="stats-row">
+  <div class="stat-pill"><span class="pill-val">13</span><span class="pill-lbl">Nodes</span></div>
+  <div class="stat-pill"><span class="pill-val">87</span><span class="pill-lbl">Arcs</span></div>
+  <div class="stat-pill"><span class="pill-val">12</span><span class="pill-lbl">Overlapping</span></div>
+  <div class="stat-pill"><span class="pill-val">30</span><span class="pill-lbl">Coupled arcs</span></div>
+  <div class="stat-pill"><span class="pill-val">0</span><span class="pill-lbl">Co-change only</span></div>
+</div>
+
+<section class="content-section">
+  <h2 class="section-title">Nodes</h2>
+  <table class="node-table">
+    <thead>
+      <tr>
+        <th>Health</th>
+        <th>Class</th>
+        <th>Degree</th>
+        <th>Communities</th>
+      </tr>
+    </thead>
+    <tbody>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#e3b341">0.538</span></td>
+        <td class="class-path" title="eladmin-system/src/main/java/me/zhengjie/modules/system/service/impl/MenuServiceImpl.java">eladmin-system/src/main/java/me/zhengjie/modules/system/service/impl/MenuServiceImpl.java</td>
+        <td class="num">17</td>
+        <td class="num overlap">7</td>
+      </tr>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#e3b341">0.673</span></td>
+        <td class="class-path" title="eladmin-system/src/main/java/me/zhengjie/modules/system/service/impl/RoleServiceImpl.java">eladmin-system/src/main/java/me/zhengjie/modules/system/service/impl/RoleServiceImpl.java</td>
+        <td class="num">19</td>
+        <td class="num overlap">5</td>
+      </tr>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#e3b341">0.692</span></td>
+        <td class="class-path" title="eladmin-system/src/main/java/me/zhengjie/modules/system/rest/UserController.java">eladmin-system/src/main/java/me/zhengjie/modules/system/rest/UserController.java</td>
+        <td class="num">17</td>
+        <td class="num overlap">6</td>
+      </tr>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#3fb950">0.865</span></td>
+        <td class="class-path" title="eladmin-system/src/main/java/me/zhengjie/modules/system/domain/Role.java">eladmin-system/src/main/java/me/zhengjie/modules/system/domain/Role.java</td>
+        <td class="num">18</td>
+        <td class="num overlap">2</td>
+      </tr>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#3fb950">0.904</span></td>
+        <td class="class-path" title="eladmin-system/src/main/java/me/zhengjie/modules/system/service/RoleService.java">eladmin-system/src/main/java/me/zhengjie/modules/system/service/RoleService.java</td>
+        <td class="num">17</td>
+        <td class="num overlap">2</td>
+      </tr>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#3fb950">0.904</span></td>
+        <td class="class-path" title="eladmin-system/src/main/java/me/zhengjie/modules/system/service/dto/RoleDto.java">eladmin-system/src/main/java/me/zhengjie/modules/system/service/dto/RoleDto.java</td>
+        <td class="num">17</td>
+        <td class="num overlap">2</td>
+      </tr>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#3fb950">0.904</span></td>
+        <td class="class-path" title="eladmin-system/src/main/java/me/zhengjie/modules/system/service/dto/UserDto.java">eladmin-system/src/main/java/me/zhengjie/modules/system/service/dto/UserDto.java</td>
+        <td class="num">18</td>
+        <td class="num overlap">4</td>
+      </tr>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#3fb950">0.904</span></td>
+        <td class="class-path" title="eladmin-system/src/main/java/me/zhengjie/modules/system/service/impl/DataServiceImpl.java">eladmin-system/src/main/java/me/zhengjie/modules/system/service/impl/DataServiceImpl.java</td>
+        <td class="num">18</td>
+        <td class="num overlap">3</td>
+      </tr>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#3fb950">0.920</span></td>
+        <td class="class-path" title="eladmin-system/src/main/java/me/zhengjie/modules/security/service/UserDetailsServiceImpl.java">eladmin-system/src/main/java/me/zhengjie/modules/security/service/UserDetailsServiceImpl.java</td>
+        <td class="num">17</td>
+        <td class="num overlap">3</td>
+      </tr>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#3fb950">0.962</span></td>
+        <td class="class-path" title="eladmin-system/src/main/java/me/zhengjie/modules/system/service/dto/RoleSmallDto.java">eladmin-system/src/main/java/me/zhengjie/modules/system/service/dto/RoleSmallDto.java</td>
+        <td class="num">6</td>
+        <td class="num overlap">2</td>
+      </tr>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#3fb950">0.980</span></td>
+        <td class="class-path" title="eladmin-system/src/main/java/me/zhengjie/modules/system/service/DataService.java">eladmin-system/src/main/java/me/zhengjie/modules/system/service/DataService.java</td>
+        <td class="num">4</td>
+        <td class="num">1</td>
+      </tr>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#3fb950">0.981</span></td>
+        <td class="class-path" title="eladmin-system/src/main/java/me/zhengjie/modules/system/service/mapstruct/RoleMapper.java">eladmin-system/src/main/java/me/zhengjie/modules/system/service/mapstruct/RoleMapper.java</td>
+        <td class="num">3</td>
+        <td class="num overlap">4</td>
+      </tr>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#3fb950">0.981</span></td>
+        <td class="class-path" title="eladmin-system/src/main/java/me/zhengjie/modules/system/service/mapstruct/RoleSmallMapper.java">eladmin-system/src/main/java/me/zhengjie/modules/system/service/mapstruct/RoleSmallMapper.java</td>
+        <td class="num">3</td>
+        <td class="num overlap">3</td>
+      </tr>
+      
+    </tbody>
+  </table>
+</section>
+
+
+<section class="content-section">
+  <h2 class="section-title">Coupling matrix
+    <span class="legend-inline">
+      <span class="li-cell" style="background:#30363d"></span>Co-change only
+      <span class="li-cell" style="background:#3fb950"></span>Weak
+      <span class="li-cell" style="background:#e3b341"></span>Moderate
+      <span class="li-cell" style="background:#f85149"></span>Strong
+    </span>
+  </h2>
+  <div class="matrix-wrap">
+    <table class="matrix">
+      <thead>
+        <tr>
+          <th class="matrix-corner"></th>
+          <th class="matrix-col-hdr" title="eladmin-system/src/main/java/me/zhengjie/modules/system/service/impl/MenuServiceImpl.java"><span>MenuServiceImpl</span></th><th class="matrix-col-hdr" title="eladmin-system/src/main/java/me/zhengjie/modules/system/service/impl/RoleServiceImpl.java"><span>RoleServiceImpl</span></th><th class="matrix-col-hdr" title="eladmin-system/src/main/java/me/zhengjie/modules/system/rest/UserController.java"><span>UserController</span></th><th class="matrix-col-hdr" title="eladmin-system/src/main/java/me/zhengjie/modules/system/domain/Role.java"><span>Role</span></th><th class="matrix-col-hdr" title="eladmin-system/src/main/java/me/zhengjie/modules/system/service/RoleService.java"><span>RoleService</span></th><th class="matrix-col-hdr" title="eladmin-system/src/main/java/me/zhengjie/modules/system/service/dto/RoleDto.java"><span>RoleDto</span></th><th class="matrix-col-hdr" title="eladmin-system/src/main/java/me/zhengjie/modules/system/service/dto/UserDto.java"><span>UserDto</span></th><th class="matrix-col-hdr" title="eladmin-system/src/main/java/me/zhengjie/modules/system/service/impl/DataServiceImpl.java"><span>DataServiceImpl</span></th><th class="matrix-col-hdr" title="eladmin-system/src/main/java/me/zhengjie/modules/security/service/UserDetailsServiceImpl.java"><span>UserDetailsServiceImpl</span></th><th class="matrix-col-hdr" title="eladmin-system/src/main/java/me/zhengjie/modules/system/service/dto/RoleSmallDto.java"><span>RoleSmallDto</span></th><th class="matrix-col-hdr" title="eladmin-system/src/main/java/me/zhengjie/modules/system/service/DataService.java"><span>DataService</span></th><th class="matrix-col-hdr" title="eladmin-system/src/main/java/me/zhengjie/modules/system/service/mapstruct/RoleMapper.java"><span>RoleMapper</span></th><th class="matrix-col-hdr" title="eladmin-system/src/main/java/me/zhengjie/modules/system/service/mapstruct/RoleSmallMapper.java"><span>RoleSmallMapper</span></th>
+        </tr>
+      </thead>
+      <tbody>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="eladmin-system/src/main/java/me/zhengjie/modules/system/service/impl/MenuServiceImpl.java">MenuServiceImpl</th>
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="MenuServiceImpl → RoleServiceImpl · weight: 22 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="MenuServiceImpl → UserController · weight: 20 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#e79c42" title="MenuServiceImpl → Role · weight: 15 · cw: 0.6167 · PARAMETERIZED_TYPE"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#13a-e662" title="MenuServiceImpl → RoleService · weight: 5 · cw: 2.5886 · DATA_ABSTRACTION_COUPLING, METHOD_INVOCATION_ATOMIC_PARAMETER, METHOD_INVOCATION_OBJECT_PARAMETER, VARIABLE_FIELD_DECLARATION"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="MenuServiceImpl → RoleDto · weight: 5 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="MenuServiceImpl → UserDto · weight: 15 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="MenuServiceImpl → DataServiceImpl · weight: 10 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="MenuServiceImpl → UserDetailsServiceImpl · weight: 30 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#e79c42" title="MenuServiceImpl → RoleSmallDto · weight: 1 · cw: 0.6167 · PARAMETERIZED_TYPE"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="eladmin-system/src/main/java/me/zhengjie/modules/system/service/impl/RoleServiceImpl.java">RoleServiceImpl</th>
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="RoleServiceImpl → MenuServiceImpl · weight: 22 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="RoleServiceImpl → UserController · weight: 16 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#13a-e662" title="RoleServiceImpl → Role · weight: 12 · cw: 2.5875 · METHOD_PARAMETER_TYPE, PARAMETERIZED_TYPE, VARIABLE_DECLARATION_STATEMENT, VARIABLE_SINGLE_DECLARATION"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#dbb341" title="RoleServiceImpl → RoleService · weight: 4 · cw: 0.4784 · INTERFACE"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#157-16b6d" title="RoleServiceImpl → RoleDto · weight: 4 · cw: 3.2692 · METHOD_PARAMETER_TYPE, METHOD_RETURN_TYPE, PARAMETERIZED_TYPE, VARIABLE_RETURN_STATEMENT, VARIABLE_SINGLE_DECLARATION"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#105134e" title="RoleServiceImpl → UserDto · weight: 12 · cw: 1.3129 · METHOD_PARAMETER_TYPE, VARIABLE_SINGLE_DECLARATION"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="RoleServiceImpl → DataServiceImpl · weight: 8 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="RoleServiceImpl → UserDetailsServiceImpl · weight: 24 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#e79c42" title="RoleServiceImpl → RoleSmallDto · weight: 1 · cw: 0.6167 · PARAMETERIZED_TYPE"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#ff2f4b" title="RoleServiceImpl → RoleMapper · weight: 1 · cw: 1.1699 · DATA_ABSTRACTION_COUPLING, VARIABLE_FIELD_DECLARATION"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#ff2f4b" title="RoleServiceImpl → RoleSmallMapper · weight: 1 · cw: 1.1699 · DATA_ABSTRACTION_COUPLING, VARIABLE_FIELD_DECLARATION"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="eladmin-system/src/main/java/me/zhengjie/modules/system/rest/UserController.java">UserController</th>
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="UserController → MenuServiceImpl · weight: 20 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="UserController → RoleServiceImpl · weight: 16 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="UserController → Role · weight: 12 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#13a-e662" title="UserController → RoleService · weight: 4 · cw: 2.5886 · DATA_ABSTRACTION_COUPLING, METHOD_INVOCATION_ATOMIC_PARAMETER, METHOD_INVOCATION_OBJECT_PARAMETER, VARIABLE_FIELD_DECLARATION"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="UserController → RoleDto · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#1031b4d" title="UserController → UserDto · weight: 12 · cw: 1.2746 · PARAMETERIZED_TYPE, VARIABLE_DECLARATION_STATEMENT"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="UserController → DataServiceImpl · weight: 9 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="UserController → UserDetailsServiceImpl · weight: 24 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#11c-5956" title="UserController → DataService · weight: 1 · cw: 1.8723 · DATA_ABSTRACTION_COUPLING, METHOD_INVOCATION_OBJECT_PARAMETER, VARIABLE_FIELD_DECLARATION"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="eladmin-system/src/main/java/me/zhengjie/modules/system/domain/Role.java">Role</th>
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Role → MenuServiceImpl · weight: 15 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Role → RoleServiceImpl · weight: 12 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Role → UserController · weight: 12 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Role → RoleService · weight: 3 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Role → RoleDto · weight: 3 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Role → UserDto · weight: 9 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Role → DataServiceImpl · weight: 6 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Role → UserDetailsServiceImpl · weight: 18 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="eladmin-system/src/main/java/me/zhengjie/modules/system/service/RoleService.java">RoleService</th>
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="RoleService → MenuServiceImpl · weight: 5 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="RoleService → RoleServiceImpl · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="RoleService → UserController · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#11f-6557" title="RoleService → Role · weight: 3 · cw: 1.9296 · METHOD_PARAMETER_TYPE, PARAMETERIZED_TYPE, VARIABLE_SINGLE_DECLARATION"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#13c-ef63" title="RoleService → RoleDto · weight: 1 · cw: 2.6353 · METHOD_PARAMETER_TYPE, METHOD_RETURN_TYPE, PARAMETERIZED_TYPE, VARIABLE_SINGLE_DECLARATION"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#105134e" title="RoleService → UserDto · weight: 3 · cw: 1.3129 · METHOD_PARAMETER_TYPE, VARIABLE_SINGLE_DECLARATION"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="RoleService → DataServiceImpl · weight: 2 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="RoleService → UserDetailsServiceImpl · weight: 6 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#e79c42" title="RoleService → RoleSmallDto · weight: 1 · cw: 0.6167 · PARAMETERIZED_TYPE"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="eladmin-system/src/main/java/me/zhengjie/modules/system/service/dto/RoleDto.java">RoleDto</th>
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="RoleDto → MenuServiceImpl · weight: 5 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="RoleDto → RoleServiceImpl · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="RoleDto → UserController · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="RoleDto → Role · weight: 3 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="RoleDto → RoleService · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="RoleDto → UserDto · weight: 3 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="RoleDto → DataServiceImpl · weight: 2 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="RoleDto → UserDetailsServiceImpl · weight: 6 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="eladmin-system/src/main/java/me/zhengjie/modules/system/service/dto/UserDto.java">UserDto</th>
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="UserDto → MenuServiceImpl · weight: 15 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="UserDto → RoleServiceImpl · weight: 12 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="UserDto → UserController · weight: 12 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="UserDto → Role · weight: 9 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="UserDto → RoleService · weight: 3 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="UserDto → RoleDto · weight: 3 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="UserDto → DataServiceImpl · weight: 6 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="UserDto → UserDetailsServiceImpl · weight: 18 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#e79c42" title="UserDto → RoleSmallDto · weight: 1 · cw: 0.6167 · PARAMETERIZED_TYPE"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="eladmin-system/src/main/java/me/zhengjie/modules/system/service/impl/DataServiceImpl.java">DataServiceImpl</th>
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="DataServiceImpl → MenuServiceImpl · weight: 10 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="DataServiceImpl → RoleServiceImpl · weight: 8 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="DataServiceImpl → UserController · weight: 9 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="DataServiceImpl → Role · weight: 6 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#11d-5c57" title="DataServiceImpl → RoleService · weight: 2 · cw: 1.8862 · DATA_ABSTRACTION_COUPLING, METHOD_INVOCATION_ATOMIC_PARAMETER, VARIABLE_FIELD_DECLARATION"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="DataServiceImpl → RoleDto · weight: 2 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#105134e" title="DataServiceImpl → UserDto · weight: 6 · cw: 1.3129 · METHOD_PARAMETER_TYPE, VARIABLE_SINGLE_DECLARATION"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="DataServiceImpl → UserDetailsServiceImpl · weight: 12 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#11f-6557" title="DataServiceImpl → RoleSmallDto · weight: 1 · cw: 1.9296 · METHOD_PARAMETER_TYPE, PARAMETERIZED_TYPE, VARIABLE_SINGLE_DECLARATION"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#dbb341" title="DataServiceImpl → DataService · weight: 1 · cw: 0.4784 · INTERFACE"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="eladmin-system/src/main/java/me/zhengjie/modules/security/service/UserDetailsServiceImpl.java">UserDetailsServiceImpl</th>
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="UserDetailsServiceImpl → MenuServiceImpl · weight: 30 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="UserDetailsServiceImpl → RoleServiceImpl · weight: 24 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="UserDetailsServiceImpl → UserController · weight: 24 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="UserDetailsServiceImpl → Role · weight: 18 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#11c-5956" title="UserDetailsServiceImpl → RoleService · weight: 6 · cw: 1.8723 · DATA_ABSTRACTION_COUPLING, METHOD_INVOCATION_OBJECT_PARAMETER, VARIABLE_FIELD_DECLARATION"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="UserDetailsServiceImpl → RoleDto · weight: 6 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#101264c" title="UserDetailsServiceImpl → UserDto · weight: 18 · cw: 1.2179 · OBJECT_PARAMETER_CLASS, VARIABLE_DECLARATION_STATEMENT"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="UserDetailsServiceImpl → DataServiceImpl · weight: 12 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#11c-5956" title="UserDetailsServiceImpl → DataService · weight: 1 · cw: 1.8723 · DATA_ABSTRACTION_COUPLING, METHOD_INVOCATION_OBJECT_PARAMETER, VARIABLE_FIELD_DECLARATION"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="eladmin-system/src/main/java/me/zhengjie/modules/system/service/dto/RoleSmallDto.java">RoleSmallDto</th>
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="eladmin-system/src/main/java/me/zhengjie/modules/system/service/DataService.java">DataService</th>
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#105134e" title="DataService → UserDto · weight: 1 · cw: 1.3129 · METHOD_PARAMETER_TYPE, VARIABLE_SINGLE_DECLARATION"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="eladmin-system/src/main/java/me/zhengjie/modules/system/service/mapstruct/RoleMapper.java">RoleMapper</th>
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#e79c42" title="RoleMapper → Role · weight: 1 · cw: 0.6167 · PARAMETERIZED_TYPE"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#e79c42" title="RoleMapper → RoleDto · weight: 1 · cw: 0.6167 · PARAMETERIZED_TYPE"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="eladmin-system/src/main/java/me/zhengjie/modules/system/service/mapstruct/RoleSmallMapper.java">RoleSmallMapper</th>
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#e79c42" title="RoleSmallMapper → Role · weight: 1 · cw: 0.6167 · PARAMETERIZED_TYPE"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#e79c42" title="RoleSmallMapper → RoleSmallDto · weight: 1 · cw: 0.6167 · PARAMETERIZED_TYPE"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+        </tr>
+        
+      </tbody>
+    </table>
+  </div>
+</section>
+
+
+</body>
+</html>

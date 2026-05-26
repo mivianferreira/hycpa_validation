@@ -1,0 +1,614 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HyCPA — Community 20 · elunez/eladmin</title>
+  <style>
+:root {
+  --bg: #0d1117; --surface: #161b22; --surface2: #21262d;
+  --border: #30363d; --text: #e6edf3; --text2: #8b949e;
+  --accent: #58a6ff; --green: #3fb950; --orange: #e3b341; --red: #f85149;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { background: var(--bg); color: var(--text); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif; padding-bottom: 48px; }
+
+/* ── Header ── */
+.page-header { background: var(--surface); border-bottom: 1px solid var(--border); padding: 12px 24px; display: flex; align-items: center; gap: 20px; }
+.back-btn { color: var(--text2); font-size: 12px; text-decoration: none; white-space: nowrap; }
+.back-btn:hover { color: var(--accent); }
+.header-title { font-size: 15px; color: var(--text); }
+.header-title strong { color: var(--accent); }
+
+/* ── Stats pills ── */
+.stats-row { display: flex; gap: 12px; padding: 16px 24px; background: var(--surface); border-bottom: 1px solid var(--border); flex-wrap: wrap; }
+.stat-pill { background: var(--surface2); border: 1px solid var(--border); border-radius: 8px; padding: 10px 20px; display: flex; flex-direction: column; align-items: center; gap: 2px; min-width: 90px; }
+.pill-val { font-size: 22px; font-weight: 700; color: var(--text); line-height: 1; }
+.pill-lbl { font-size: 10px; color: var(--text2); text-transform: uppercase; letter-spacing: 0.5px; margin-top: 2px; }
+
+/* ── Content sections ── */
+.content-section { padding: 24px; }
+.section-title { font-size: 11px; font-weight: 600; color: var(--text2); text-transform: uppercase; letter-spacing: 0.6px; margin-bottom: 14px; display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
+
+/* ── Node table ── */
+.node-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+.node-table th { background: var(--surface); color: var(--text2); font-weight: 600; font-size: 10px; text-transform: uppercase; letter-spacing: 0.5px; padding: 8px 12px; text-align: left; border-bottom: 2px solid var(--border); white-space: nowrap; }
+.node-table td { padding: 7px 12px; border-bottom: 1px solid var(--border); vertical-align: middle; }
+.node-table tbody tr:hover td { background: var(--surface); }
+.health-badge { display: inline-block; padding: 2px 9px; border-radius: 10px; font-size: 11px; font-weight: 700; color: #0d1117; white-space: nowrap; }
+.class-path { font-size: 11px; color: var(--text2); font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', monospace; word-break: break-all; }
+td.num { text-align: right; font-weight: 600; white-space: nowrap; }
+td.overlap { color: var(--accent); }
+
+/* ── Coupling matrix ── */
+.matrix-wrap { overflow: auto; }
+.matrix { border-collapse: collapse; }
+.matrix-corner { min-width: 16px; }
+.matrix-col-hdr { padding: 0 1px 4px 1px; vertical-align: bottom; }
+.matrix-col-hdr span { display: block; writing-mode: vertical-rl; transform: rotate(180deg); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-height: 140px; color: var(--text2); font-weight: 400; font-size: 10px; cursor: default; text-align: left; }
+.matrix-row-hdr { text-align: right; padding: 1px 6px 1px 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 200px; color: var(--text2); font-weight: 400; font-size: 10px; cursor: default; }
+.matrix-cell { width: 16px; height: 16px; min-width: 16px; min-height: 16px; border: 1px solid #1c2129; cursor: default; }
+.matrix-cell.empty { background: transparent; }
+.matrix-cell.self-cell { background: var(--surface2); }
+.matrix-cell.filled { }
+
+/* ── Legend inline ── */
+.legend-inline { display: inline-flex; align-items: center; gap: 6px; font-size: 10px; color: var(--text2); font-weight: 400; text-transform: none; letter-spacing: 0; }
+.li-cell { display: inline-block; width: 10px; height: 10px; border-radius: 2px; vertical-align: middle; flex-shrink: 0; }
+</style>
+</head>
+<body>
+
+<div class="page-header">
+  <a class="back-btn" href="repo_elunez_eladmin.html">← Back to elunez/eladmin</a>
+  <span class="header-title">Community <strong>C20</strong> — elunez/eladmin</span>
+</div>
+
+<div class="stats-row">
+  <div class="stat-pill"><span class="pill-val">11</span><span class="pill-lbl">Nodes</span></div>
+  <div class="stat-pill"><span class="pill-val">69</span><span class="pill-lbl">Arcs</span></div>
+  <div class="stat-pill"><span class="pill-val">11</span><span class="pill-lbl">Overlapping</span></div>
+  <div class="stat-pill"><span class="pill-val">20</span><span class="pill-lbl">Coupled arcs</span></div>
+  <div class="stat-pill"><span class="pill-val">0</span><span class="pill-lbl">Co-change only</span></div>
+</div>
+
+<section class="content-section">
+  <h2 class="section-title">Nodes</h2>
+  <table class="node-table">
+    <thead>
+      <tr>
+        <th>Health</th>
+        <th>Class</th>
+        <th>Degree</th>
+        <th>Communities</th>
+      </tr>
+    </thead>
+    <tbody>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#f85149">0.462</span></td>
+        <td class="class-path" title="eladmin-common/src/main/java/me/zhengjie/utils/FileUtil.java">eladmin-common/src/main/java/me/zhengjie/utils/FileUtil.java</td>
+        <td class="num">15</td>
+        <td class="num overlap">4</td>
+      </tr>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#3fb950">0.904</span></td>
+        <td class="class-path" title="eladmin-common/src/main/java/me/zhengjie/utils/PageUtil.java">eladmin-common/src/main/java/me/zhengjie/utils/PageUtil.java</td>
+        <td class="num">15</td>
+        <td class="num overlap">3</td>
+      </tr>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#3fb950">0.904</span></td>
+        <td class="class-path" title="eladmin-common/src/main/java/me/zhengjie/utils/ValidationUtil.java">eladmin-common/src/main/java/me/zhengjie/utils/ValidationUtil.java</td>
+        <td class="num">15</td>
+        <td class="num overlap">3</td>
+      </tr>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#3fb950">0.920</span></td>
+        <td class="class-path" title="eladmin-system/src/main/java/me/zhengjie/modules/maint/domain/DeployHistory.java">eladmin-system/src/main/java/me/zhengjie/modules/maint/domain/DeployHistory.java</td>
+        <td class="num">16</td>
+        <td class="num overlap">2</td>
+      </tr>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#3fb950">0.923</span></td>
+        <td class="class-path" title="eladmin-system/src/main/java/me/zhengjie/modules/maint/service/DeployHistoryService.java">eladmin-system/src/main/java/me/zhengjie/modules/maint/service/DeployHistoryService.java</td>
+        <td class="num">16</td>
+        <td class="num overlap">2</td>
+      </tr>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#3fb950">0.942</span></td>
+        <td class="class-path" title="eladmin-common/src/main/java/me/zhengjie/utils/PageResult.java">eladmin-common/src/main/java/me/zhengjie/utils/PageResult.java</td>
+        <td class="num">15</td>
+        <td class="num overlap">5</td>
+      </tr>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#3fb950">0.942</span></td>
+        <td class="class-path" title="eladmin-system/src/main/java/me/zhengjie/modules/maint/rest/DeployHistoryController.java">eladmin-system/src/main/java/me/zhengjie/modules/maint/rest/DeployHistoryController.java</td>
+        <td class="num">15</td>
+        <td class="num overlap">2</td>
+      </tr>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#3fb950">0.942</span></td>
+        <td class="class-path" title="eladmin-system/src/main/java/me/zhengjie/modules/maint/service/dto/DeployHistoryDto.java">eladmin-system/src/main/java/me/zhengjie/modules/maint/service/dto/DeployHistoryDto.java</td>
+        <td class="num">4</td>
+        <td class="num overlap">2</td>
+      </tr>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#3fb950">0.981</span></td>
+        <td class="class-path" title="eladmin-system/src/main/java/me/zhengjie/modules/maint/service/dto/DeployHistoryQueryCriteria.java">eladmin-system/src/main/java/me/zhengjie/modules/maint/service/dto/DeployHistoryQueryCriteria.java</td>
+        <td class="num">15</td>
+        <td class="num overlap">2</td>
+      </tr>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#3fb950">0.981</span></td>
+        <td class="class-path" title="eladmin-system/src/main/java/me/zhengjie/modules/maint/service/impl/DeployHistoryServiceImpl.java">eladmin-system/src/main/java/me/zhengjie/modules/maint/service/impl/DeployHistoryServiceImpl.java</td>
+        <td class="num">9</td>
+        <td class="num overlap">4</td>
+      </tr>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#3fb950">0.981</span></td>
+        <td class="class-path" title="eladmin-system/src/main/java/me/zhengjie/modules/maint/service/mapstruct/DeployHistoryMapper.java">eladmin-system/src/main/java/me/zhengjie/modules/maint/service/mapstruct/DeployHistoryMapper.java</td>
+        <td class="num">3</td>
+        <td class="num overlap">3</td>
+      </tr>
+      
+    </tbody>
+  </table>
+</section>
+
+
+<section class="content-section">
+  <h2 class="section-title">Coupling matrix
+    <span class="legend-inline">
+      <span class="li-cell" style="background:#30363d"></span>Co-change only
+      <span class="li-cell" style="background:#3fb950"></span>Weak
+      <span class="li-cell" style="background:#e3b341"></span>Moderate
+      <span class="li-cell" style="background:#f85149"></span>Strong
+    </span>
+  </h2>
+  <div class="matrix-wrap">
+    <table class="matrix">
+      <thead>
+        <tr>
+          <th class="matrix-corner"></th>
+          <th class="matrix-col-hdr" title="eladmin-common/src/main/java/me/zhengjie/utils/FileUtil.java"><span>FileUtil</span></th><th class="matrix-col-hdr" title="eladmin-common/src/main/java/me/zhengjie/utils/PageUtil.java"><span>PageUtil</span></th><th class="matrix-col-hdr" title="eladmin-common/src/main/java/me/zhengjie/utils/ValidationUtil.java"><span>ValidationUtil</span></th><th class="matrix-col-hdr" title="eladmin-system/src/main/java/me/zhengjie/modules/maint/domain/DeployHistory.java"><span>DeployHistory</span></th><th class="matrix-col-hdr" title="eladmin-system/src/main/java/me/zhengjie/modules/maint/service/DeployHistoryService.java"><span>DeployHistoryService</span></th><th class="matrix-col-hdr" title="eladmin-common/src/main/java/me/zhengjie/utils/PageResult.java"><span>PageResult</span></th><th class="matrix-col-hdr" title="eladmin-system/src/main/java/me/zhengjie/modules/maint/rest/DeployHistoryController.java"><span>DeployHistoryController</span></th><th class="matrix-col-hdr" title="eladmin-system/src/main/java/me/zhengjie/modules/maint/service/dto/DeployHistoryDto.java"><span>DeployHistoryDto</span></th><th class="matrix-col-hdr" title="eladmin-system/src/main/java/me/zhengjie/modules/maint/service/dto/DeployHistoryQueryCriteria.java"><span>DeployHistoryQueryCriteria</span></th><th class="matrix-col-hdr" title="eladmin-system/src/main/java/me/zhengjie/modules/maint/service/impl/DeployHistoryServiceImpl.java"><span>DeployHistoryServiceImpl</span></th><th class="matrix-col-hdr" title="eladmin-system/src/main/java/me/zhengjie/modules/maint/service/mapstruct/DeployHistoryMapper.java"><span>DeployHistoryMapper</span></th>
+        </tr>
+      </thead>
+      <tbody>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="eladmin-common/src/main/java/me/zhengjie/utils/FileUtil.java">FileUtil</th>
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="FileUtil → PageUtil · weight: 3 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="FileUtil → ValidationUtil · weight: 3 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="FileUtil → DeployHistory · weight: 3 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="FileUtil → DeployHistoryService · weight: 3 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="FileUtil → PageResult · weight: 3 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="FileUtil → DeployHistoryController · weight: 3 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="FileUtil → DeployHistoryQueryCriteria · weight: 3 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="eladmin-common/src/main/java/me/zhengjie/utils/PageUtil.java">PageUtil</th>
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="PageUtil → FileUtil · weight: 3 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="PageUtil → ValidationUtil · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="PageUtil → DeployHistory · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="PageUtil → DeployHistoryService · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#167-1b573" title="PageUtil → PageResult · weight: 1 · cw: 3.6470 · ATOMIC_PARAMETER_COUPLING, METHOD_RETURN_TYPE, OBJECT_PARAMETER_COUPLING, PARAMETERIZED_TYPE, VARIABLE_CLASS_INSTANCE_CREATION, VARIABLE_RETURN_STATEMENT"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="PageUtil → DeployHistoryController · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="PageUtil → DeployHistoryQueryCriteria · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="eladmin-common/src/main/java/me/zhengjie/utils/ValidationUtil.java">ValidationUtil</th>
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ValidationUtil → FileUtil · weight: 3 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ValidationUtil → PageUtil · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ValidationUtil → DeployHistory · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ValidationUtil → DeployHistoryService · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ValidationUtil → PageResult · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ValidationUtil → DeployHistoryController · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ValidationUtil → DeployHistoryQueryCriteria · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="eladmin-system/src/main/java/me/zhengjie/modules/maint/domain/DeployHistory.java">DeployHistory</th>
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="DeployHistory → FileUtil · weight: 3 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="DeployHistory → PageUtil · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="DeployHistory → ValidationUtil · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="DeployHistory → DeployHistoryService · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="DeployHistory → PageResult · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="DeployHistory → DeployHistoryController · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="DeployHistory → DeployHistoryQueryCriteria · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="eladmin-system/src/main/java/me/zhengjie/modules/maint/service/DeployHistoryService.java">DeployHistoryService</th>
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="DeployHistoryService → FileUtil · weight: 3 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="DeployHistoryService → PageUtil · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="DeployHistoryService → ValidationUtil · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#105134e" title="DeployHistoryService → DeployHistory · weight: 1 · cw: 1.3129 · METHOD_PARAMETER_TYPE, VARIABLE_SINGLE_DECLARATION"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#105114e" title="DeployHistoryService → PageResult · weight: 1 · cw: 1.3224 · METHOD_RETURN_TYPE, PARAMETERIZED_TYPE"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="DeployHistoryService → DeployHistoryController · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#105114e" title="DeployHistoryService → DeployHistoryDto · weight: 1 · cw: 1.3224 · METHOD_RETURN_TYPE, PARAMETERIZED_TYPE"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#105134e" title="DeployHistoryService → DeployHistoryQueryCriteria · weight: 1 · cw: 1.3129 · METHOD_PARAMETER_TYPE, VARIABLE_SINGLE_DECLARATION"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="eladmin-common/src/main/java/me/zhengjie/utils/PageResult.java">PageResult</th>
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="PageResult → FileUtil · weight: 3 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="PageResult → PageUtil · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="PageResult → ValidationUtil · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="PageResult → DeployHistory · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="PageResult → DeployHistoryService · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="PageResult → DeployHistoryController · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="PageResult → DeployHistoryQueryCriteria · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="eladmin-system/src/main/java/me/zhengjie/modules/maint/rest/DeployHistoryController.java">DeployHistoryController</th>
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="DeployHistoryController → FileUtil · weight: 3 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="DeployHistoryController → PageUtil · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="DeployHistoryController → ValidationUtil · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="DeployHistoryController → DeployHistory · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#11c-5956" title="DeployHistoryController → DeployHistoryService · weight: 1 · cw: 1.8723 · DATA_ABSTRACTION_COUPLING, METHOD_INVOCATION_OBJECT_PARAMETER, VARIABLE_FIELD_DECLARATION"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#e79c42" title="DeployHistoryController → PageResult · weight: 1 · cw: 0.6167 · PARAMETERIZED_TYPE"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#e79c42" title="DeployHistoryController → DeployHistoryDto · weight: 1 · cw: 0.6167 · PARAMETERIZED_TYPE"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#105134e" title="DeployHistoryController → DeployHistoryQueryCriteria · weight: 1 · cw: 1.3129 · METHOD_PARAMETER_TYPE, VARIABLE_SINGLE_DECLARATION"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="eladmin-system/src/main/java/me/zhengjie/modules/maint/service/dto/DeployHistoryDto.java">DeployHistoryDto</th>
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="eladmin-system/src/main/java/me/zhengjie/modules/maint/service/dto/DeployHistoryQueryCriteria.java">DeployHistoryQueryCriteria</th>
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="DeployHistoryQueryCriteria → FileUtil · weight: 3 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="DeployHistoryQueryCriteria → PageUtil · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="DeployHistoryQueryCriteria → ValidationUtil · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="DeployHistoryQueryCriteria → DeployHistory · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="DeployHistoryQueryCriteria → DeployHistoryService · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="DeployHistoryQueryCriteria → PageResult · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="DeployHistoryQueryCriteria → DeployHistoryController · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="eladmin-system/src/main/java/me/zhengjie/modules/maint/service/impl/DeployHistoryServiceImpl.java">DeployHistoryServiceImpl</th>
+          
+            <td class="matrix-cell filled" style="background:#eb8b44" title="DeployHistoryServiceImpl → FileUtil · weight: 1 · cw: 0.7024 · METHOD_INVOCATION_OBJECT_PARAMETER"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#ec8844" title="DeployHistoryServiceImpl → PageUtil · weight: 1 · cw: 0.7163 · METHOD_INVOCATION_ATOMIC_PARAMETER"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#eb8b44" title="DeployHistoryServiceImpl → ValidationUtil · weight: 1 · cw: 0.7024 · METHOD_INVOCATION_OBJECT_PARAMETER"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#120-6d58" title="DeployHistoryServiceImpl → DeployHistory · weight: 1 · cw: 1.9708 · METHOD_PARAMETER_TYPE, VARIABLE_DECLARATION_STATEMENT, VARIABLE_SINGLE_DECLARATION"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#dbb341" title="DeployHistoryServiceImpl → DeployHistoryService · weight: 1 · cw: 0.4784 · INTERFACE"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#105114e" title="DeployHistoryServiceImpl → PageResult · weight: 1 · cw: 1.3224 · METHOD_RETURN_TYPE, PARAMETERIZED_TYPE"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#137-d661" title="DeployHistoryServiceImpl → DeployHistoryDto · weight: 1 · cw: 2.5063 · METHOD_RETURN_TYPE, PARAMETERIZED_TYPE, VARIABLE_RETURN_STATEMENT, VARIABLE_SINGLE_DECLARATION"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#105134e" title="DeployHistoryServiceImpl → DeployHistoryQueryCriteria · weight: 1 · cw: 1.3129 · METHOD_PARAMETER_TYPE, VARIABLE_SINGLE_DECLARATION"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#ff2f4b" title="DeployHistoryServiceImpl → DeployHistoryMapper · weight: 1 · cw: 1.1699 · DATA_ABSTRACTION_COUPLING, VARIABLE_FIELD_DECLARATION"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="eladmin-system/src/main/java/me/zhengjie/modules/maint/service/mapstruct/DeployHistoryMapper.java">DeployHistoryMapper</th>
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#e79c42" title="DeployHistoryMapper → DeployHistory · weight: 1 · cw: 0.6167 · PARAMETERIZED_TYPE"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#e79c42" title="DeployHistoryMapper → DeployHistoryDto · weight: 1 · cw: 0.6167 · PARAMETERIZED_TYPE"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+        </tr>
+        
+      </tbody>
+    </table>
+  </div>
+</section>
+
+
+</body>
+</html>

@@ -1,0 +1,1694 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HyCPA — Community 2 · CarGuo/GSYVideoPlayer</title>
+  <style>
+:root {
+  --bg: #0d1117; --surface: #161b22; --surface2: #21262d;
+  --border: #30363d; --text: #e6edf3; --text2: #8b949e;
+  --accent: #58a6ff; --green: #3fb950; --orange: #e3b341; --red: #f85149;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { background: var(--bg); color: var(--text); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif; padding-bottom: 48px; }
+
+/* ── Header ── */
+.page-header { background: var(--surface); border-bottom: 1px solid var(--border); padding: 12px 24px; display: flex; align-items: center; gap: 20px; }
+.back-btn { color: var(--text2); font-size: 12px; text-decoration: none; white-space: nowrap; }
+.back-btn:hover { color: var(--accent); }
+.header-title { font-size: 15px; color: var(--text); }
+.header-title strong { color: var(--accent); }
+
+/* ── Stats pills ── */
+.stats-row { display: flex; gap: 12px; padding: 16px 24px; background: var(--surface); border-bottom: 1px solid var(--border); flex-wrap: wrap; }
+.stat-pill { background: var(--surface2); border: 1px solid var(--border); border-radius: 8px; padding: 10px 20px; display: flex; flex-direction: column; align-items: center; gap: 2px; min-width: 90px; }
+.pill-val { font-size: 22px; font-weight: 700; color: var(--text); line-height: 1; }
+.pill-lbl { font-size: 10px; color: var(--text2); text-transform: uppercase; letter-spacing: 0.5px; margin-top: 2px; }
+
+/* ── Content sections ── */
+.content-section { padding: 24px; }
+.section-title { font-size: 11px; font-weight: 600; color: var(--text2); text-transform: uppercase; letter-spacing: 0.6px; margin-bottom: 14px; display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
+
+/* ── Node table ── */
+.node-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+.node-table th { background: var(--surface); color: var(--text2); font-weight: 600; font-size: 10px; text-transform: uppercase; letter-spacing: 0.5px; padding: 8px 12px; text-align: left; border-bottom: 2px solid var(--border); white-space: nowrap; }
+.node-table td { padding: 7px 12px; border-bottom: 1px solid var(--border); vertical-align: middle; }
+.node-table tbody tr:hover td { background: var(--surface); }
+.health-badge { display: inline-block; padding: 2px 9px; border-radius: 10px; font-size: 11px; font-weight: 700; color: #0d1117; white-space: nowrap; }
+.class-path { font-size: 11px; color: var(--text2); font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', monospace; word-break: break-all; }
+td.num { text-align: right; font-weight: 600; white-space: nowrap; }
+td.overlap { color: var(--accent); }
+
+/* ── Coupling matrix ── */
+.matrix-wrap { overflow: auto; }
+.matrix { border-collapse: collapse; }
+.matrix-corner { min-width: 16px; }
+.matrix-col-hdr { padding: 0 1px 4px 1px; vertical-align: bottom; }
+.matrix-col-hdr span { display: block; writing-mode: vertical-rl; transform: rotate(180deg); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-height: 140px; color: var(--text2); font-weight: 400; font-size: 10px; cursor: default; text-align: left; }
+.matrix-row-hdr { text-align: right; padding: 1px 6px 1px 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 200px; color: var(--text2); font-weight: 400; font-size: 10px; cursor: default; }
+.matrix-cell { width: 16px; height: 16px; min-width: 16px; min-height: 16px; border: 1px solid #1c2129; cursor: default; }
+.matrix-cell.empty { background: transparent; }
+.matrix-cell.self-cell { background: var(--surface2); }
+.matrix-cell.filled { }
+
+/* ── Legend inline ── */
+.legend-inline { display: inline-flex; align-items: center; gap: 6px; font-size: 10px; color: var(--text2); font-weight: 400; text-transform: none; letter-spacing: 0; }
+.li-cell { display: inline-block; width: 10px; height: 10px; border-radius: 2px; vertical-align: middle; flex-shrink: 0; }
+</style>
+</head>
+<body>
+
+<div class="page-header">
+  <a class="back-btn" href="repo_CarGuo_GSYVideoPlayer.html">← Back to CarGuo/GSYVideoPlayer</a>
+  <span class="header-title">Community <strong>C2</strong> — CarGuo/GSYVideoPlayer</span>
+</div>
+
+<div class="stats-row">
+  <div class="stat-pill"><span class="pill-val">21</span><span class="pill-lbl">Nodes</span></div>
+  <div class="stat-pill"><span class="pill-val">20</span><span class="pill-lbl">Arcs</span></div>
+  <div class="stat-pill"><span class="pill-val">1</span><span class="pill-lbl">Overlapping</span></div>
+  <div class="stat-pill"><span class="pill-val">20</span><span class="pill-lbl">Coupled arcs</span></div>
+  <div class="stat-pill"><span class="pill-val">0</span><span class="pill-lbl">Co-change only</span></div>
+</div>
+
+<section class="content-section">
+  <h2 class="section-title">Nodes</h2>
+  <table class="node-table">
+    <thead>
+      <tr>
+        <th>Health</th>
+        <th>Class</th>
+        <th>Degree</th>
+        <th>Communities</th>
+      </tr>
+    </thead>
+    <tbody>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#e3b341">0.538</span></td>
+        <td class="class-path" title="app/src/main/java/com/example/gsyvideoplayer/DetailFilterActivity.java">app/src/main/java/com/example/gsyvideoplayer/DetailFilterActivity.java</td>
+        <td class="num">20</td>
+        <td class="num overlap">3</td>
+      </tr>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#3fb950">0.846</span></td>
+        <td class="class-path" title="gsyVideoPlayer-java/src/main/java/com/shuyu/gsyvideoplayer/render/effect/GrainEffect.java">gsyVideoPlayer-java/src/main/java/com/shuyu/gsyvideoplayer/render/effect/GrainEffect.java</td>
+        <td class="num">1</td>
+        <td class="num">1</td>
+      </tr>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#3fb950">0.846</span></td>
+        <td class="class-path" title="gsyVideoPlayer-java/src/main/java/com/shuyu/gsyvideoplayer/render/effect/LamoishEffect.java">gsyVideoPlayer-java/src/main/java/com/shuyu/gsyvideoplayer/render/effect/LamoishEffect.java</td>
+        <td class="num">1</td>
+        <td class="num">1</td>
+      </tr>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#3fb950">0.846</span></td>
+        <td class="class-path" title="gsyVideoPlayer-java/src/main/java/com/shuyu/gsyvideoplayer/render/effect/VignetteEffect.java">gsyVideoPlayer-java/src/main/java/com/shuyu/gsyvideoplayer/render/effect/VignetteEffect.java</td>
+        <td class="num">1</td>
+        <td class="num">1</td>
+      </tr>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#3fb950">0.865</span></td>
+        <td class="class-path" title="gsyVideoPlayer-java/src/main/java/com/shuyu/gsyvideoplayer/render/effect/SaturationEffect.java">gsyVideoPlayer-java/src/main/java/com/shuyu/gsyvideoplayer/render/effect/SaturationEffect.java</td>
+        <td class="num">1</td>
+        <td class="num">1</td>
+      </tr>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#3fb950">0.885</span></td>
+        <td class="class-path" title="gsyVideoPlayer-java/src/main/java/com/shuyu/gsyvideoplayer/render/effect/DocumentaryEffect.java">gsyVideoPlayer-java/src/main/java/com/shuyu/gsyvideoplayer/render/effect/DocumentaryEffect.java</td>
+        <td class="num">1</td>
+        <td class="num">1</td>
+      </tr>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#3fb950">0.885</span></td>
+        <td class="class-path" title="gsyVideoPlayer-java/src/main/java/com/shuyu/gsyvideoplayer/render/effect/DuotoneEffect.java">gsyVideoPlayer-java/src/main/java/com/shuyu/gsyvideoplayer/render/effect/DuotoneEffect.java</td>
+        <td class="num">1</td>
+        <td class="num">1</td>
+      </tr>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#3fb950">0.885</span></td>
+        <td class="class-path" title="gsyVideoPlayer-java/src/main/java/com/shuyu/gsyvideoplayer/render/effect/FillLightEffect.java">gsyVideoPlayer-java/src/main/java/com/shuyu/gsyvideoplayer/render/effect/FillLightEffect.java</td>
+        <td class="num">1</td>
+        <td class="num">1</td>
+      </tr>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#3fb950">0.885</span></td>
+        <td class="class-path" title="gsyVideoPlayer-java/src/main/java/com/shuyu/gsyvideoplayer/render/effect/SepiaEffect.java">gsyVideoPlayer-java/src/main/java/com/shuyu/gsyvideoplayer/render/effect/SepiaEffect.java</td>
+        <td class="num">1</td>
+        <td class="num">1</td>
+      </tr>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#3fb950">0.885</span></td>
+        <td class="class-path" title="gsyVideoPlayer-java/src/main/java/com/shuyu/gsyvideoplayer/render/effect/TintEffect.java">gsyVideoPlayer-java/src/main/java/com/shuyu/gsyvideoplayer/render/effect/TintEffect.java</td>
+        <td class="num">1</td>
+        <td class="num">1</td>
+      </tr>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#3fb950">0.923</span></td>
+        <td class="class-path" title="gsyVideoPlayer-java/src/main/java/com/shuyu/gsyvideoplayer/render/effect/CrossProcessEffect.java">gsyVideoPlayer-java/src/main/java/com/shuyu/gsyvideoplayer/render/effect/CrossProcessEffect.java</td>
+        <td class="num">1</td>
+        <td class="num">1</td>
+      </tr>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#3fb950">0.923</span></td>
+        <td class="class-path" title="gsyVideoPlayer-java/src/main/java/com/shuyu/gsyvideoplayer/render/effect/HueEffect.java">gsyVideoPlayer-java/src/main/java/com/shuyu/gsyvideoplayer/render/effect/HueEffect.java</td>
+        <td class="num">1</td>
+        <td class="num">1</td>
+      </tr>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#3fb950">0.923</span></td>
+        <td class="class-path" title="gsyVideoPlayer-java/src/main/java/com/shuyu/gsyvideoplayer/render/effect/SharpnessEffect.java">gsyVideoPlayer-java/src/main/java/com/shuyu/gsyvideoplayer/render/effect/SharpnessEffect.java</td>
+        <td class="num">1</td>
+        <td class="num">1</td>
+      </tr>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#3fb950">0.923</span></td>
+        <td class="class-path" title="gsyVideoPlayer-java/src/main/java/com/shuyu/gsyvideoplayer/render/effect/TemperatureEffect.java">gsyVideoPlayer-java/src/main/java/com/shuyu/gsyvideoplayer/render/effect/TemperatureEffect.java</td>
+        <td class="num">1</td>
+        <td class="num">1</td>
+      </tr>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#3fb950">0.942</span></td>
+        <td class="class-path" title="gsyVideoPlayer-java/src/main/java/com/shuyu/gsyvideoplayer/render/effect/AutoFixEffect.java">gsyVideoPlayer-java/src/main/java/com/shuyu/gsyvideoplayer/render/effect/AutoFixEffect.java</td>
+        <td class="num">1</td>
+        <td class="num">1</td>
+      </tr>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#3fb950">0.942</span></td>
+        <td class="class-path" title="gsyVideoPlayer-java/src/main/java/com/shuyu/gsyvideoplayer/render/effect/BlackAndWhiteEffect.java">gsyVideoPlayer-java/src/main/java/com/shuyu/gsyvideoplayer/render/effect/BlackAndWhiteEffect.java</td>
+        <td class="num">1</td>
+        <td class="num">1</td>
+      </tr>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#3fb950">0.942</span></td>
+        <td class="class-path" title="gsyVideoPlayer-java/src/main/java/com/shuyu/gsyvideoplayer/render/effect/BrightnessEffect.java">gsyVideoPlayer-java/src/main/java/com/shuyu/gsyvideoplayer/render/effect/BrightnessEffect.java</td>
+        <td class="num">1</td>
+        <td class="num">1</td>
+      </tr>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#3fb950">0.942</span></td>
+        <td class="class-path" title="gsyVideoPlayer-java/src/main/java/com/shuyu/gsyvideoplayer/render/effect/ContrastEffect.java">gsyVideoPlayer-java/src/main/java/com/shuyu/gsyvideoplayer/render/effect/ContrastEffect.java</td>
+        <td class="num">1</td>
+        <td class="num">1</td>
+      </tr>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#3fb950">0.942</span></td>
+        <td class="class-path" title="gsyVideoPlayer-java/src/main/java/com/shuyu/gsyvideoplayer/render/effect/GammaEffect.java">gsyVideoPlayer-java/src/main/java/com/shuyu/gsyvideoplayer/render/effect/GammaEffect.java</td>
+        <td class="num">1</td>
+        <td class="num">1</td>
+      </tr>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#3fb950">0.942</span></td>
+        <td class="class-path" title="gsyVideoPlayer-java/src/main/java/com/shuyu/gsyvideoplayer/render/effect/InvertColorsEffect.java">gsyVideoPlayer-java/src/main/java/com/shuyu/gsyvideoplayer/render/effect/InvertColorsEffect.java</td>
+        <td class="num">1</td>
+        <td class="num">1</td>
+      </tr>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#3fb950">0.942</span></td>
+        <td class="class-path" title="gsyVideoPlayer-java/src/main/java/com/shuyu/gsyvideoplayer/render/effect/PosterizeEffect.java">gsyVideoPlayer-java/src/main/java/com/shuyu/gsyvideoplayer/render/effect/PosterizeEffect.java</td>
+        <td class="num">1</td>
+        <td class="num">1</td>
+      </tr>
+      
+    </tbody>
+  </table>
+</section>
+
+
+<section class="content-section">
+  <h2 class="section-title">Coupling matrix
+    <span class="legend-inline">
+      <span class="li-cell" style="background:#30363d"></span>Co-change only
+      <span class="li-cell" style="background:#3fb950"></span>Weak
+      <span class="li-cell" style="background:#e3b341"></span>Moderate
+      <span class="li-cell" style="background:#f85149"></span>Strong
+    </span>
+  </h2>
+  <div class="matrix-wrap">
+    <table class="matrix">
+      <thead>
+        <tr>
+          <th class="matrix-corner"></th>
+          <th class="matrix-col-hdr" title="app/src/main/java/com/example/gsyvideoplayer/DetailFilterActivity.java"><span>DetailFilterActivity</span></th><th class="matrix-col-hdr" title="gsyVideoPlayer-java/src/main/java/com/shuyu/gsyvideoplayer/render/effect/GrainEffect.java"><span>GrainEffect</span></th><th class="matrix-col-hdr" title="gsyVideoPlayer-java/src/main/java/com/shuyu/gsyvideoplayer/render/effect/LamoishEffect.java"><span>LamoishEffect</span></th><th class="matrix-col-hdr" title="gsyVideoPlayer-java/src/main/java/com/shuyu/gsyvideoplayer/render/effect/VignetteEffect.java"><span>VignetteEffect</span></th><th class="matrix-col-hdr" title="gsyVideoPlayer-java/src/main/java/com/shuyu/gsyvideoplayer/render/effect/SaturationEffect.java"><span>SaturationEffect</span></th><th class="matrix-col-hdr" title="gsyVideoPlayer-java/src/main/java/com/shuyu/gsyvideoplayer/render/effect/DocumentaryEffect.java"><span>DocumentaryEffect</span></th><th class="matrix-col-hdr" title="gsyVideoPlayer-java/src/main/java/com/shuyu/gsyvideoplayer/render/effect/DuotoneEffect.java"><span>DuotoneEffect</span></th><th class="matrix-col-hdr" title="gsyVideoPlayer-java/src/main/java/com/shuyu/gsyvideoplayer/render/effect/FillLightEffect.java"><span>FillLightEffect</span></th><th class="matrix-col-hdr" title="gsyVideoPlayer-java/src/main/java/com/shuyu/gsyvideoplayer/render/effect/SepiaEffect.java"><span>SepiaEffect</span></th><th class="matrix-col-hdr" title="gsyVideoPlayer-java/src/main/java/com/shuyu/gsyvideoplayer/render/effect/TintEffect.java"><span>TintEffect</span></th><th class="matrix-col-hdr" title="gsyVideoPlayer-java/src/main/java/com/shuyu/gsyvideoplayer/render/effect/CrossProcessEffect.java"><span>CrossProcessEffect</span></th><th class="matrix-col-hdr" title="gsyVideoPlayer-java/src/main/java/com/shuyu/gsyvideoplayer/render/effect/HueEffect.java"><span>HueEffect</span></th><th class="matrix-col-hdr" title="gsyVideoPlayer-java/src/main/java/com/shuyu/gsyvideoplayer/render/effect/SharpnessEffect.java"><span>SharpnessEffect</span></th><th class="matrix-col-hdr" title="gsyVideoPlayer-java/src/main/java/com/shuyu/gsyvideoplayer/render/effect/TemperatureEffect.java"><span>TemperatureEffect</span></th><th class="matrix-col-hdr" title="gsyVideoPlayer-java/src/main/java/com/shuyu/gsyvideoplayer/render/effect/AutoFixEffect.java"><span>AutoFixEffect</span></th><th class="matrix-col-hdr" title="gsyVideoPlayer-java/src/main/java/com/shuyu/gsyvideoplayer/render/effect/BlackAndWhiteEffect.java"><span>BlackAndWhiteEffect</span></th><th class="matrix-col-hdr" title="gsyVideoPlayer-java/src/main/java/com/shuyu/gsyvideoplayer/render/effect/BrightnessEffect.java"><span>BrightnessEffect</span></th><th class="matrix-col-hdr" title="gsyVideoPlayer-java/src/main/java/com/shuyu/gsyvideoplayer/render/effect/ContrastEffect.java"><span>ContrastEffect</span></th><th class="matrix-col-hdr" title="gsyVideoPlayer-java/src/main/java/com/shuyu/gsyvideoplayer/render/effect/GammaEffect.java"><span>GammaEffect</span></th><th class="matrix-col-hdr" title="gsyVideoPlayer-java/src/main/java/com/shuyu/gsyvideoplayer/render/effect/InvertColorsEffect.java"><span>InvertColorsEffect</span></th><th class="matrix-col-hdr" title="gsyVideoPlayer-java/src/main/java/com/shuyu/gsyvideoplayer/render/effect/PosterizeEffect.java"><span>PosterizeEffect</span></th>
+        </tr>
+      </thead>
+      <tbody>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="app/src/main/java/com/example/gsyvideoplayer/DetailFilterActivity.java">DetailFilterActivity</th>
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#fd374b" title="DetailFilterActivity → GrainEffect · weight: 1 · cw: 1.1300 · ATOMIC_PARAMETER_COUPLING, VARIABLE_CLASS_INSTANCE_CREATION"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#fd374b" title="DetailFilterActivity → LamoishEffect · weight: 1 · cw: 1.1300 · ATOMIC_PARAMETER_COUPLING, VARIABLE_CLASS_INSTANCE_CREATION"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#fd374b" title="DetailFilterActivity → VignetteEffect · weight: 1 · cw: 1.1300 · ATOMIC_PARAMETER_COUPLING, VARIABLE_CLASS_INSTANCE_CREATION"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#fd374b" title="DetailFilterActivity → SaturationEffect · weight: 1 · cw: 1.1300 · ATOMIC_PARAMETER_COUPLING, VARIABLE_CLASS_INSTANCE_CREATION"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#fd374b" title="DetailFilterActivity → DocumentaryEffect · weight: 1 · cw: 1.1300 · ATOMIC_PARAMETER_COUPLING, VARIABLE_CLASS_INSTANCE_CREATION"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#fd374b" title="DetailFilterActivity → DuotoneEffect · weight: 1 · cw: 1.1300 · ATOMIC_PARAMETER_COUPLING, VARIABLE_CLASS_INSTANCE_CREATION"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#fd374b" title="DetailFilterActivity → FillLightEffect · weight: 1 · cw: 1.1300 · ATOMIC_PARAMETER_COUPLING, VARIABLE_CLASS_INSTANCE_CREATION"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#fd374b" title="DetailFilterActivity → SepiaEffect · weight: 1 · cw: 1.1300 · ATOMIC_PARAMETER_COUPLING, VARIABLE_CLASS_INSTANCE_CREATION"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#fd374b" title="DetailFilterActivity → TintEffect · weight: 1 · cw: 1.1300 · ATOMIC_PARAMETER_COUPLING, VARIABLE_CLASS_INSTANCE_CREATION"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#fd374b" title="DetailFilterActivity → CrossProcessEffect · weight: 1 · cw: 1.1300 · ATOMIC_PARAMETER_COUPLING, VARIABLE_CLASS_INSTANCE_CREATION"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#fd374b" title="DetailFilterActivity → HueEffect · weight: 1 · cw: 1.1300 · ATOMIC_PARAMETER_COUPLING, VARIABLE_CLASS_INSTANCE_CREATION"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#fd374b" title="DetailFilterActivity → SharpnessEffect · weight: 1 · cw: 1.1300 · ATOMIC_PARAMETER_COUPLING, VARIABLE_CLASS_INSTANCE_CREATION"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#fd374b" title="DetailFilterActivity → TemperatureEffect · weight: 1 · cw: 1.1300 · ATOMIC_PARAMETER_COUPLING, VARIABLE_CLASS_INSTANCE_CREATION"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#fd374b" title="DetailFilterActivity → AutoFixEffect · weight: 1 · cw: 1.1300 · ATOMIC_PARAMETER_COUPLING, VARIABLE_CLASS_INSTANCE_CREATION"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#fd374b" title="DetailFilterActivity → BlackAndWhiteEffect · weight: 1 · cw: 1.1300 · ATOMIC_PARAMETER_COUPLING, VARIABLE_CLASS_INSTANCE_CREATION"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#fd374b" title="DetailFilterActivity → BrightnessEffect · weight: 1 · cw: 1.1300 · ATOMIC_PARAMETER_COUPLING, VARIABLE_CLASS_INSTANCE_CREATION"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#fd374b" title="DetailFilterActivity → ContrastEffect · weight: 1 · cw: 1.1300 · ATOMIC_PARAMETER_COUPLING, VARIABLE_CLASS_INSTANCE_CREATION"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#fd374b" title="DetailFilterActivity → GammaEffect · weight: 1 · cw: 1.1300 · ATOMIC_PARAMETER_COUPLING, VARIABLE_CLASS_INSTANCE_CREATION"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#fd374b" title="DetailFilterActivity → InvertColorsEffect · weight: 1 · cw: 1.1300 · ATOMIC_PARAMETER_COUPLING, VARIABLE_CLASS_INSTANCE_CREATION"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#fd374b" title="DetailFilterActivity → PosterizeEffect · weight: 1 · cw: 1.1300 · ATOMIC_PARAMETER_COUPLING, VARIABLE_CLASS_INSTANCE_CREATION"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="gsyVideoPlayer-java/src/main/java/com/shuyu/gsyvideoplayer/render/effect/GrainEffect.java">GrainEffect</th>
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="gsyVideoPlayer-java/src/main/java/com/shuyu/gsyvideoplayer/render/effect/LamoishEffect.java">LamoishEffect</th>
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="gsyVideoPlayer-java/src/main/java/com/shuyu/gsyvideoplayer/render/effect/VignetteEffect.java">VignetteEffect</th>
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="gsyVideoPlayer-java/src/main/java/com/shuyu/gsyvideoplayer/render/effect/SaturationEffect.java">SaturationEffect</th>
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="gsyVideoPlayer-java/src/main/java/com/shuyu/gsyvideoplayer/render/effect/DocumentaryEffect.java">DocumentaryEffect</th>
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="gsyVideoPlayer-java/src/main/java/com/shuyu/gsyvideoplayer/render/effect/DuotoneEffect.java">DuotoneEffect</th>
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="gsyVideoPlayer-java/src/main/java/com/shuyu/gsyvideoplayer/render/effect/FillLightEffect.java">FillLightEffect</th>
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="gsyVideoPlayer-java/src/main/java/com/shuyu/gsyvideoplayer/render/effect/SepiaEffect.java">SepiaEffect</th>
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="gsyVideoPlayer-java/src/main/java/com/shuyu/gsyvideoplayer/render/effect/TintEffect.java">TintEffect</th>
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="gsyVideoPlayer-java/src/main/java/com/shuyu/gsyvideoplayer/render/effect/CrossProcessEffect.java">CrossProcessEffect</th>
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="gsyVideoPlayer-java/src/main/java/com/shuyu/gsyvideoplayer/render/effect/HueEffect.java">HueEffect</th>
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="gsyVideoPlayer-java/src/main/java/com/shuyu/gsyvideoplayer/render/effect/SharpnessEffect.java">SharpnessEffect</th>
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="gsyVideoPlayer-java/src/main/java/com/shuyu/gsyvideoplayer/render/effect/TemperatureEffect.java">TemperatureEffect</th>
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="gsyVideoPlayer-java/src/main/java/com/shuyu/gsyvideoplayer/render/effect/AutoFixEffect.java">AutoFixEffect</th>
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="gsyVideoPlayer-java/src/main/java/com/shuyu/gsyvideoplayer/render/effect/BlackAndWhiteEffect.java">BlackAndWhiteEffect</th>
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="gsyVideoPlayer-java/src/main/java/com/shuyu/gsyvideoplayer/render/effect/BrightnessEffect.java">BrightnessEffect</th>
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="gsyVideoPlayer-java/src/main/java/com/shuyu/gsyvideoplayer/render/effect/ContrastEffect.java">ContrastEffect</th>
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="gsyVideoPlayer-java/src/main/java/com/shuyu/gsyvideoplayer/render/effect/GammaEffect.java">GammaEffect</th>
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="gsyVideoPlayer-java/src/main/java/com/shuyu/gsyvideoplayer/render/effect/InvertColorsEffect.java">InvertColorsEffect</th>
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="gsyVideoPlayer-java/src/main/java/com/shuyu/gsyvideoplayer/render/effect/PosterizeEffect.java">PosterizeEffect</th>
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+        </tr>
+        
+      </tbody>
+    </table>
+  </div>
+</section>
+
+
+</body>
+</html>

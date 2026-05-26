@@ -1,0 +1,974 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HyCPA — Community 13 · xuxueli/xxl-job</title>
+  <style>
+:root {
+  --bg: #0d1117; --surface: #161b22; --surface2: #21262d;
+  --border: #30363d; --text: #e6edf3; --text2: #8b949e;
+  --accent: #58a6ff; --green: #3fb950; --orange: #e3b341; --red: #f85149;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { background: var(--bg); color: var(--text); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif; padding-bottom: 48px; }
+
+/* ── Header ── */
+.page-header { background: var(--surface); border-bottom: 1px solid var(--border); padding: 12px 24px; display: flex; align-items: center; gap: 20px; }
+.back-btn { color: var(--text2); font-size: 12px; text-decoration: none; white-space: nowrap; }
+.back-btn:hover { color: var(--accent); }
+.header-title { font-size: 15px; color: var(--text); }
+.header-title strong { color: var(--accent); }
+
+/* ── Stats pills ── */
+.stats-row { display: flex; gap: 12px; padding: 16px 24px; background: var(--surface); border-bottom: 1px solid var(--border); flex-wrap: wrap; }
+.stat-pill { background: var(--surface2); border: 1px solid var(--border); border-radius: 8px; padding: 10px 20px; display: flex; flex-direction: column; align-items: center; gap: 2px; min-width: 90px; }
+.pill-val { font-size: 22px; font-weight: 700; color: var(--text); line-height: 1; }
+.pill-lbl { font-size: 10px; color: var(--text2); text-transform: uppercase; letter-spacing: 0.5px; margin-top: 2px; }
+
+/* ── Content sections ── */
+.content-section { padding: 24px; }
+.section-title { font-size: 11px; font-weight: 600; color: var(--text2); text-transform: uppercase; letter-spacing: 0.6px; margin-bottom: 14px; display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
+
+/* ── Node table ── */
+.node-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+.node-table th { background: var(--surface); color: var(--text2); font-weight: 600; font-size: 10px; text-transform: uppercase; letter-spacing: 0.5px; padding: 8px 12px; text-align: left; border-bottom: 2px solid var(--border); white-space: nowrap; }
+.node-table td { padding: 7px 12px; border-bottom: 1px solid var(--border); vertical-align: middle; }
+.node-table tbody tr:hover td { background: var(--surface); }
+.health-badge { display: inline-block; padding: 2px 9px; border-radius: 10px; font-size: 11px; font-weight: 700; color: #0d1117; white-space: nowrap; }
+.class-path { font-size: 11px; color: var(--text2); font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', monospace; word-break: break-all; }
+td.num { text-align: right; font-weight: 600; white-space: nowrap; }
+td.overlap { color: var(--accent); }
+
+/* ── Coupling matrix ── */
+.matrix-wrap { overflow: auto; }
+.matrix { border-collapse: collapse; }
+.matrix-corner { min-width: 16px; }
+.matrix-col-hdr { padding: 0 1px 4px 1px; vertical-align: bottom; }
+.matrix-col-hdr span { display: block; writing-mode: vertical-rl; transform: rotate(180deg); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-height: 140px; color: var(--text2); font-weight: 400; font-size: 10px; cursor: default; text-align: left; }
+.matrix-row-hdr { text-align: right; padding: 1px 6px 1px 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 200px; color: var(--text2); font-weight: 400; font-size: 10px; cursor: default; }
+.matrix-cell { width: 16px; height: 16px; min-width: 16px; min-height: 16px; border: 1px solid #1c2129; cursor: default; }
+.matrix-cell.empty { background: transparent; }
+.matrix-cell.self-cell { background: var(--surface2); }
+.matrix-cell.filled { }
+
+/* ── Legend inline ── */
+.legend-inline { display: inline-flex; align-items: center; gap: 6px; font-size: 10px; color: var(--text2); font-weight: 400; text-transform: none; letter-spacing: 0; }
+.li-cell { display: inline-block; width: 10px; height: 10px; border-radius: 2px; vertical-align: middle; flex-shrink: 0; }
+</style>
+</head>
+<body>
+
+<div class="page-header">
+  <a class="back-btn" href="repo_xuxueli_xxl-job.html">← Back to xuxueli/xxl-job</a>
+  <span class="header-title">Community <strong>C13</strong> — xuxueli/xxl-job</span>
+</div>
+
+<div class="stats-row">
+  <div class="stat-pill"><span class="pill-val">15</span><span class="pill-lbl">Nodes</span></div>
+  <div class="stat-pill"><span class="pill-val">210</span><span class="pill-lbl">Arcs</span></div>
+  <div class="stat-pill"><span class="pill-val">15</span><span class="pill-lbl">Overlapping</span></div>
+  <div class="stat-pill"><span class="pill-val">12</span><span class="pill-lbl">Coupled arcs</span></div>
+  <div class="stat-pill"><span class="pill-val">0</span><span class="pill-lbl">Co-change only</span></div>
+</div>
+
+<section class="content-section">
+  <h2 class="section-title">Nodes</h2>
+  <table class="node-table">
+    <thead>
+      <tr>
+        <th>Health</th>
+        <th>Class</th>
+        <th>Degree</th>
+        <th>Communities</th>
+      </tr>
+    </thead>
+    <tbody>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#e3b341">0.577</span></td>
+        <td class="class-path" title="xxl-job-admin/src/main/java/com/xxl/job/admin/service/impl/XxlJobServiceImpl.java">xxl-job-admin/src/main/java/com/xxl/job/admin/service/impl/XxlJobServiceImpl.java</td>
+        <td class="num">28</td>
+        <td class="num overlap">8</td>
+      </tr>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#e3b341">0.577</span></td>
+        <td class="class-path" title="xxl-job-core/src/main/java/com/xxl/job/core/executor/XxlJobExecutor.java">xxl-job-core/src/main/java/com/xxl/job/core/executor/XxlJobExecutor.java</td>
+        <td class="num">28</td>
+        <td class="num overlap">6</td>
+      </tr>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#3fb950">0.750</span></td>
+        <td class="class-path" title="xxl-job-core/src/main/java/com/xxl/job/core/thread/TriggerCallbackThread.java">xxl-job-core/src/main/java/com/xxl/job/core/thread/TriggerCallbackThread.java</td>
+        <td class="num">28</td>
+        <td class="num overlap">6</td>
+      </tr>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#3fb950">0.769</span></td>
+        <td class="class-path" title="xxl-job-core/src/main/java/com/xxl/job/core/openapi/impl/ExecutorBizImpl.java">xxl-job-core/src/main/java/com/xxl/job/core/openapi/impl/ExecutorBizImpl.java</td>
+        <td class="num">28</td>
+        <td class="num overlap">6</td>
+      </tr>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#3fb950">0.865</span></td>
+        <td class="class-path" title="xxl-job-admin/src/main/java/com/xxl/job/admin/util/I18nUtil.java">xxl-job-admin/src/main/java/com/xxl/job/admin/util/I18nUtil.java</td>
+        <td class="num">28</td>
+        <td class="num overlap">7</td>
+      </tr>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#3fb950">0.865</span></td>
+        <td class="class-path" title="xxl-job-admin/src/test/java/com/xxl/job/admin/mapper/XxlJobInfoMapperTest.java">xxl-job-admin/src/test/java/com/xxl/job/admin/mapper/XxlJobInfoMapperTest.java</td>
+        <td class="num">28</td>
+        <td class="num overlap">6</td>
+      </tr>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#3fb950">0.885</span></td>
+        <td class="class-path" title="xxl-job-admin/src/main/java/com/xxl/job/admin/controller/base/LoginController.java">xxl-job-admin/src/main/java/com/xxl/job/admin/controller/base/LoginController.java</td>
+        <td class="num">28</td>
+        <td class="num overlap">6</td>
+      </tr>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#3fb950">0.885</span></td>
+        <td class="class-path" title="xxl-job-core/src/main/java/com/xxl/job/core/executor/impl/XxlJobSpringExecutor.java">xxl-job-core/src/main/java/com/xxl/job/core/executor/impl/XxlJobSpringExecutor.java</td>
+        <td class="num">28</td>
+        <td class="num overlap">7</td>
+      </tr>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#3fb950">0.923</span></td>
+        <td class="class-path" title="xxl-job-admin/src/main/java/com/xxl/job/admin/scheduler/route/strategy/ExecutorRouteConsistentHash.java">xxl-job-admin/src/main/java/com/xxl/job/admin/scheduler/route/strategy/ExecutorRouteConsistentHash.java</td>
+        <td class="num">28</td>
+        <td class="num overlap">6</td>
+      </tr>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#3fb950">0.923</span></td>
+        <td class="class-path" title="xxl-job-core/src/main/java/com/xxl/job/core/glue/GlueFactory.java">xxl-job-core/src/main/java/com/xxl/job/core/glue/GlueFactory.java</td>
+        <td class="num">28</td>
+        <td class="num overlap">7</td>
+      </tr>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#3fb950">0.942</span></td>
+        <td class="class-path" title="xxl-job-admin/src/main/java/com/xxl/job/admin/scheduler/route/strategy/ExecutorRouteLRU.java">xxl-job-admin/src/main/java/com/xxl/job/admin/scheduler/route/strategy/ExecutorRouteLRU.java</td>
+        <td class="num">28</td>
+        <td class="num overlap">6</td>
+      </tr>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#3fb950">0.942</span></td>
+        <td class="class-path" title="xxl-job-admin/src/main/java/com/xxl/job/admin/scheduler/thread/JobLogReportHelper.java">xxl-job-admin/src/main/java/com/xxl/job/admin/scheduler/thread/JobLogReportHelper.java</td>
+        <td class="num">28</td>
+        <td class="num overlap">6</td>
+      </tr>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#3fb950">0.942</span></td>
+        <td class="class-path" title="xxl-job-core/src/main/java/com/xxl/job/core/openapi/AdminBiz.java">xxl-job-core/src/main/java/com/xxl/job/core/openapi/AdminBiz.java</td>
+        <td class="num">28</td>
+        <td class="num overlap">6</td>
+      </tr>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#3fb950">0.962</span></td>
+        <td class="class-path" title="xxl-job-core/src/main/java/com/xxl/job/core/thread/ExecutorRegistryThread.java">xxl-job-core/src/main/java/com/xxl/job/core/thread/ExecutorRegistryThread.java</td>
+        <td class="num">28</td>
+        <td class="num overlap">6</td>
+      </tr>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#3fb950">0.981</span></td>
+        <td class="class-path" title="xxl-job-executor-samples/xxl-job-executor-sample-frameless/src/main/java/com/xxl/job/executor/sample/frameless/config/FrameLessXxlJobConfig.java">xxl-job-executor-samples/xxl-job-executor-sample-frameless/src/main/java/com/xxl/job/executor/sample/frameless/config/FrameLessXxlJobConfig.java</td>
+        <td class="num">28</td>
+        <td class="num overlap">6</td>
+      </tr>
+      
+    </tbody>
+  </table>
+</section>
+
+
+<section class="content-section">
+  <h2 class="section-title">Coupling matrix
+    <span class="legend-inline">
+      <span class="li-cell" style="background:#30363d"></span>Co-change only
+      <span class="li-cell" style="background:#3fb950"></span>Weak
+      <span class="li-cell" style="background:#e3b341"></span>Moderate
+      <span class="li-cell" style="background:#f85149"></span>Strong
+    </span>
+  </h2>
+  <div class="matrix-wrap">
+    <table class="matrix">
+      <thead>
+        <tr>
+          <th class="matrix-corner"></th>
+          <th class="matrix-col-hdr" title="xxl-job-admin/src/main/java/com/xxl/job/admin/service/impl/XxlJobServiceImpl.java"><span>XxlJobServiceImpl</span></th><th class="matrix-col-hdr" title="xxl-job-core/src/main/java/com/xxl/job/core/executor/XxlJobExecutor.java"><span>XxlJobExecutor</span></th><th class="matrix-col-hdr" title="xxl-job-core/src/main/java/com/xxl/job/core/thread/TriggerCallbackThread.java"><span>TriggerCallbackThread</span></th><th class="matrix-col-hdr" title="xxl-job-core/src/main/java/com/xxl/job/core/openapi/impl/ExecutorBizImpl.java"><span>ExecutorBizImpl</span></th><th class="matrix-col-hdr" title="xxl-job-admin/src/main/java/com/xxl/job/admin/util/I18nUtil.java"><span>I18nUtil</span></th><th class="matrix-col-hdr" title="xxl-job-admin/src/test/java/com/xxl/job/admin/mapper/XxlJobInfoMapperTest.java"><span>XxlJobInfoMapperTest</span></th><th class="matrix-col-hdr" title="xxl-job-admin/src/main/java/com/xxl/job/admin/controller/base/LoginController.java"><span>LoginController</span></th><th class="matrix-col-hdr" title="xxl-job-core/src/main/java/com/xxl/job/core/executor/impl/XxlJobSpringExecutor.java"><span>XxlJobSpringExecutor</span></th><th class="matrix-col-hdr" title="xxl-job-admin/src/main/java/com/xxl/job/admin/scheduler/route/strategy/ExecutorRouteConsistentHash.java"><span>ExecutorRouteConsistentHash</span></th><th class="matrix-col-hdr" title="xxl-job-core/src/main/java/com/xxl/job/core/glue/GlueFactory.java"><span>GlueFactory</span></th><th class="matrix-col-hdr" title="xxl-job-admin/src/main/java/com/xxl/job/admin/scheduler/route/strategy/ExecutorRouteLRU.java"><span>ExecutorRouteLRU</span></th><th class="matrix-col-hdr" title="xxl-job-admin/src/main/java/com/xxl/job/admin/scheduler/thread/JobLogReportHelper.java"><span>JobLogReportHelper</span></th><th class="matrix-col-hdr" title="xxl-job-core/src/main/java/com/xxl/job/core/openapi/AdminBiz.java"><span>AdminBiz</span></th><th class="matrix-col-hdr" title="xxl-job-core/src/main/java/com/xxl/job/core/thread/ExecutorRegistryThread.java"><span>ExecutorRegistryThread</span></th><th class="matrix-col-hdr" title="xxl-job-executor-samples/xxl-job-executor-sample-frameless/src/main/java/com/xxl/job/executor/sample/frameless/config/FrameLessXxlJobConfig.java"><span>FrameLessXxlJobConfig</span></th>
+        </tr>
+      </thead>
+      <tbody>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="xxl-job-admin/src/main/java/com/xxl/job/admin/service/impl/XxlJobServiceImpl.java">XxlJobServiceImpl</th>
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobServiceImpl → XxlJobExecutor · weight: 16 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobServiceImpl → TriggerCallbackThread · weight: 16 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobServiceImpl → ExecutorBizImpl · weight: 16 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#eb8b44" title="XxlJobServiceImpl → I18nUtil · weight: 16 · cw: 0.7024 · METHOD_INVOCATION_OBJECT_PARAMETER"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobServiceImpl → XxlJobInfoMapperTest · weight: 16 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobServiceImpl → LoginController · weight: 16 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobServiceImpl → XxlJobSpringExecutor · weight: 16 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobServiceImpl → ExecutorRouteConsistentHash · weight: 16 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobServiceImpl → GlueFactory · weight: 16 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobServiceImpl → ExecutorRouteLRU · weight: 16 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobServiceImpl → JobLogReportHelper · weight: 16 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobServiceImpl → AdminBiz · weight: 16 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobServiceImpl → ExecutorRegistryThread · weight: 16 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobServiceImpl → FrameLessXxlJobConfig · weight: 16 · cw: 0.0000 · co-change only"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="xxl-job-core/src/main/java/com/xxl/job/core/executor/XxlJobExecutor.java">XxlJobExecutor</th>
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobExecutor → XxlJobServiceImpl · weight: 16 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#ec8844" title="XxlJobExecutor → TriggerCallbackThread · weight: 16 · cw: 0.7163 · METHOD_INVOCATION_ATOMIC_PARAMETER"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobExecutor → ExecutorBizImpl · weight: 16 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobExecutor → I18nUtil · weight: 16 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobExecutor → XxlJobInfoMapperTest · weight: 16 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobExecutor → LoginController · weight: 16 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobExecutor → XxlJobSpringExecutor · weight: 17 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobExecutor → ExecutorRouteConsistentHash · weight: 16 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobExecutor → GlueFactory · weight: 16 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobExecutor → ExecutorRouteLRU · weight: 16 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobExecutor → JobLogReportHelper · weight: 16 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#1031b4d" title="XxlJobExecutor → AdminBiz · weight: 16 · cw: 1.2746 · PARAMETERIZED_TYPE, VARIABLE_DECLARATION_STATEMENT"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobExecutor → ExecutorRegistryThread · weight: 16 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobExecutor → FrameLessXxlJobConfig · weight: 16 · cw: 0.0000 · co-change only"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="xxl-job-core/src/main/java/com/xxl/job/core/thread/TriggerCallbackThread.java">TriggerCallbackThread</th>
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="TriggerCallbackThread → XxlJobServiceImpl · weight: 16 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#ec8844" title="TriggerCallbackThread → XxlJobExecutor · weight: 16 · cw: 0.7163 · METHOD_INVOCATION_ATOMIC_PARAMETER"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="TriggerCallbackThread → ExecutorBizImpl · weight: 16 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="TriggerCallbackThread → I18nUtil · weight: 16 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="TriggerCallbackThread → XxlJobInfoMapperTest · weight: 16 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="TriggerCallbackThread → LoginController · weight: 16 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="TriggerCallbackThread → XxlJobSpringExecutor · weight: 16 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="TriggerCallbackThread → ExecutorRouteConsistentHash · weight: 16 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="TriggerCallbackThread → GlueFactory · weight: 16 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="TriggerCallbackThread → ExecutorRouteLRU · weight: 16 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="TriggerCallbackThread → JobLogReportHelper · weight: 16 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#1021f4d" title="TriggerCallbackThread → AdminBiz · weight: 16 · cw: 1.2524 · METHOD_INVOCATION_OBJECT_PARAMETER, VARIABLE_SINGLE_DECLARATION"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="TriggerCallbackThread → ExecutorRegistryThread · weight: 16 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="TriggerCallbackThread → FrameLessXxlJobConfig · weight: 16 · cw: 0.0000 · co-change only"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="xxl-job-core/src/main/java/com/xxl/job/core/openapi/impl/ExecutorBizImpl.java">ExecutorBizImpl</th>
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ExecutorBizImpl → XxlJobServiceImpl · weight: 16 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#109-14f" title="ExecutorBizImpl → XxlJobExecutor · weight: 16 · cw: 1.4187 · METHOD_INVOCATION_ATOMIC_PARAMETER, METHOD_INVOCATION_OBJECT_PARAMETER"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ExecutorBizImpl → TriggerCallbackThread · weight: 16 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ExecutorBizImpl → I18nUtil · weight: 16 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ExecutorBizImpl → XxlJobInfoMapperTest · weight: 16 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ExecutorBizImpl → LoginController · weight: 16 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ExecutorBizImpl → XxlJobSpringExecutor · weight: 16 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ExecutorBizImpl → ExecutorRouteConsistentHash · weight: 16 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#109-14f" title="ExecutorBizImpl → GlueFactory · weight: 17 · cw: 1.4187 · METHOD_INVOCATION_ATOMIC_PARAMETER, METHOD_INVOCATION_OBJECT_PARAMETER"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ExecutorBizImpl → ExecutorRouteLRU · weight: 16 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ExecutorBizImpl → JobLogReportHelper · weight: 16 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ExecutorBizImpl → AdminBiz · weight: 16 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ExecutorBizImpl → ExecutorRegistryThread · weight: 16 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ExecutorBizImpl → FrameLessXxlJobConfig · weight: 16 · cw: 0.0000 · co-change only"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="xxl-job-admin/src/main/java/com/xxl/job/admin/util/I18nUtil.java">I18nUtil</th>
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="I18nUtil → XxlJobServiceImpl · weight: 16 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="I18nUtil → XxlJobExecutor · weight: 16 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="I18nUtil → TriggerCallbackThread · weight: 16 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="I18nUtil → ExecutorBizImpl · weight: 16 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="I18nUtil → XxlJobInfoMapperTest · weight: 16 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="I18nUtil → LoginController · weight: 16 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="I18nUtil → XxlJobSpringExecutor · weight: 16 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="I18nUtil → ExecutorRouteConsistentHash · weight: 16 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="I18nUtil → GlueFactory · weight: 16 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="I18nUtil → ExecutorRouteLRU · weight: 16 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="I18nUtil → JobLogReportHelper · weight: 16 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="I18nUtil → AdminBiz · weight: 16 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="I18nUtil → ExecutorRegistryThread · weight: 16 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="I18nUtil → FrameLessXxlJobConfig · weight: 16 · cw: 0.0000 · co-change only"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="xxl-job-admin/src/test/java/com/xxl/job/admin/mapper/XxlJobInfoMapperTest.java">XxlJobInfoMapperTest</th>
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobInfoMapperTest → XxlJobServiceImpl · weight: 16 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobInfoMapperTest → XxlJobExecutor · weight: 16 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobInfoMapperTest → TriggerCallbackThread · weight: 16 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobInfoMapperTest → ExecutorBizImpl · weight: 16 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobInfoMapperTest → I18nUtil · weight: 16 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobInfoMapperTest → LoginController · weight: 16 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobInfoMapperTest → XxlJobSpringExecutor · weight: 16 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobInfoMapperTest → ExecutorRouteConsistentHash · weight: 16 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobInfoMapperTest → GlueFactory · weight: 16 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobInfoMapperTest → ExecutorRouteLRU · weight: 16 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobInfoMapperTest → JobLogReportHelper · weight: 16 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobInfoMapperTest → AdminBiz · weight: 16 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobInfoMapperTest → ExecutorRegistryThread · weight: 16 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobInfoMapperTest → FrameLessXxlJobConfig · weight: 16 · cw: 0.0000 · co-change only"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="xxl-job-admin/src/main/java/com/xxl/job/admin/controller/base/LoginController.java">LoginController</th>
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="LoginController → XxlJobServiceImpl · weight: 16 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="LoginController → XxlJobExecutor · weight: 16 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="LoginController → TriggerCallbackThread · weight: 16 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="LoginController → ExecutorBizImpl · weight: 16 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#eb8b44" title="LoginController → I18nUtil · weight: 16 · cw: 0.7024 · METHOD_INVOCATION_OBJECT_PARAMETER"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="LoginController → XxlJobInfoMapperTest · weight: 16 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="LoginController → XxlJobSpringExecutor · weight: 16 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="LoginController → ExecutorRouteConsistentHash · weight: 16 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="LoginController → GlueFactory · weight: 16 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="LoginController → ExecutorRouteLRU · weight: 16 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="LoginController → JobLogReportHelper · weight: 16 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="LoginController → AdminBiz · weight: 16 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="LoginController → ExecutorRegistryThread · weight: 16 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="LoginController → FrameLessXxlJobConfig · weight: 16 · cw: 0.0000 · co-change only"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="xxl-job-core/src/main/java/com/xxl/job/core/executor/impl/XxlJobSpringExecutor.java">XxlJobSpringExecutor</th>
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobSpringExecutor → XxlJobServiceImpl · weight: 16 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#102224c" title="XxlJobSpringExecutor → XxlJobExecutor · weight: 17 · cw: 1.2397 · INHERITANCE, METHOD_INVOCATION_OBJECT_PARAMETER"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobSpringExecutor → TriggerCallbackThread · weight: 16 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobSpringExecutor → ExecutorBizImpl · weight: 16 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobSpringExecutor → I18nUtil · weight: 16 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobSpringExecutor → XxlJobInfoMapperTest · weight: 16 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobSpringExecutor → LoginController · weight: 16 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobSpringExecutor → ExecutorRouteConsistentHash · weight: 16 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#ec8844" title="XxlJobSpringExecutor → GlueFactory · weight: 16 · cw: 0.7163 · METHOD_INVOCATION_ATOMIC_PARAMETER"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobSpringExecutor → ExecutorRouteLRU · weight: 16 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobSpringExecutor → JobLogReportHelper · weight: 16 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobSpringExecutor → AdminBiz · weight: 16 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobSpringExecutor → ExecutorRegistryThread · weight: 16 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobSpringExecutor → FrameLessXxlJobConfig · weight: 16 · cw: 0.0000 · co-change only"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="xxl-job-admin/src/main/java/com/xxl/job/admin/scheduler/route/strategy/ExecutorRouteConsistentHash.java">ExecutorRouteConsistentHash</th>
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ExecutorRouteConsistentHash → XxlJobServiceImpl · weight: 16 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ExecutorRouteConsistentHash → XxlJobExecutor · weight: 16 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ExecutorRouteConsistentHash → TriggerCallbackThread · weight: 16 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ExecutorRouteConsistentHash → ExecutorBizImpl · weight: 16 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ExecutorRouteConsistentHash → I18nUtil · weight: 16 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ExecutorRouteConsistentHash → XxlJobInfoMapperTest · weight: 16 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ExecutorRouteConsistentHash → LoginController · weight: 16 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ExecutorRouteConsistentHash → XxlJobSpringExecutor · weight: 16 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ExecutorRouteConsistentHash → GlueFactory · weight: 16 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ExecutorRouteConsistentHash → ExecutorRouteLRU · weight: 16 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ExecutorRouteConsistentHash → JobLogReportHelper · weight: 16 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ExecutorRouteConsistentHash → AdminBiz · weight: 16 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ExecutorRouteConsistentHash → ExecutorRegistryThread · weight: 16 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ExecutorRouteConsistentHash → FrameLessXxlJobConfig · weight: 16 · cw: 0.0000 · co-change only"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="xxl-job-core/src/main/java/com/xxl/job/core/glue/GlueFactory.java">GlueFactory</th>
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GlueFactory → XxlJobServiceImpl · weight: 16 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GlueFactory → XxlJobExecutor · weight: 16 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GlueFactory → TriggerCallbackThread · weight: 16 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GlueFactory → ExecutorBizImpl · weight: 17 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GlueFactory → I18nUtil · weight: 16 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GlueFactory → XxlJobInfoMapperTest · weight: 16 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GlueFactory → LoginController · weight: 16 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GlueFactory → XxlJobSpringExecutor · weight: 16 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GlueFactory → ExecutorRouteConsistentHash · weight: 16 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GlueFactory → ExecutorRouteLRU · weight: 16 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GlueFactory → JobLogReportHelper · weight: 16 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GlueFactory → AdminBiz · weight: 16 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GlueFactory → ExecutorRegistryThread · weight: 16 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GlueFactory → FrameLessXxlJobConfig · weight: 16 · cw: 0.0000 · co-change only"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="xxl-job-admin/src/main/java/com/xxl/job/admin/scheduler/route/strategy/ExecutorRouteLRU.java">ExecutorRouteLRU</th>
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ExecutorRouteLRU → XxlJobServiceImpl · weight: 16 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ExecutorRouteLRU → XxlJobExecutor · weight: 16 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ExecutorRouteLRU → TriggerCallbackThread · weight: 16 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ExecutorRouteLRU → ExecutorBizImpl · weight: 16 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ExecutorRouteLRU → I18nUtil · weight: 16 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ExecutorRouteLRU → XxlJobInfoMapperTest · weight: 16 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ExecutorRouteLRU → LoginController · weight: 16 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ExecutorRouteLRU → XxlJobSpringExecutor · weight: 16 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ExecutorRouteLRU → ExecutorRouteConsistentHash · weight: 16 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ExecutorRouteLRU → GlueFactory · weight: 16 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ExecutorRouteLRU → JobLogReportHelper · weight: 16 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ExecutorRouteLRU → AdminBiz · weight: 16 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ExecutorRouteLRU → ExecutorRegistryThread · weight: 16 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ExecutorRouteLRU → FrameLessXxlJobConfig · weight: 16 · cw: 0.0000 · co-change only"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="xxl-job-admin/src/main/java/com/xxl/job/admin/scheduler/thread/JobLogReportHelper.java">JobLogReportHelper</th>
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobLogReportHelper → XxlJobServiceImpl · weight: 16 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobLogReportHelper → XxlJobExecutor · weight: 16 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobLogReportHelper → TriggerCallbackThread · weight: 16 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobLogReportHelper → ExecutorBizImpl · weight: 16 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobLogReportHelper → I18nUtil · weight: 16 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobLogReportHelper → XxlJobInfoMapperTest · weight: 16 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobLogReportHelper → LoginController · weight: 16 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobLogReportHelper → XxlJobSpringExecutor · weight: 16 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobLogReportHelper → ExecutorRouteConsistentHash · weight: 16 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobLogReportHelper → GlueFactory · weight: 16 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobLogReportHelper → ExecutorRouteLRU · weight: 16 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobLogReportHelper → AdminBiz · weight: 16 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobLogReportHelper → ExecutorRegistryThread · weight: 16 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobLogReportHelper → FrameLessXxlJobConfig · weight: 16 · cw: 0.0000 · co-change only"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="xxl-job-core/src/main/java/com/xxl/job/core/openapi/AdminBiz.java">AdminBiz</th>
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="AdminBiz → XxlJobServiceImpl · weight: 16 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="AdminBiz → XxlJobExecutor · weight: 16 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="AdminBiz → TriggerCallbackThread · weight: 16 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="AdminBiz → ExecutorBizImpl · weight: 16 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="AdminBiz → I18nUtil · weight: 16 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="AdminBiz → XxlJobInfoMapperTest · weight: 16 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="AdminBiz → LoginController · weight: 16 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="AdminBiz → XxlJobSpringExecutor · weight: 16 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="AdminBiz → ExecutorRouteConsistentHash · weight: 16 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="AdminBiz → GlueFactory · weight: 16 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="AdminBiz → ExecutorRouteLRU · weight: 16 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="AdminBiz → JobLogReportHelper · weight: 16 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="AdminBiz → ExecutorRegistryThread · weight: 16 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="AdminBiz → FrameLessXxlJobConfig · weight: 16 · cw: 0.0000 · co-change only"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="xxl-job-core/src/main/java/com/xxl/job/core/thread/ExecutorRegistryThread.java">ExecutorRegistryThread</th>
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ExecutorRegistryThread → XxlJobServiceImpl · weight: 16 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#ec8844" title="ExecutorRegistryThread → XxlJobExecutor · weight: 16 · cw: 0.7163 · METHOD_INVOCATION_ATOMIC_PARAMETER"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ExecutorRegistryThread → TriggerCallbackThread · weight: 16 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ExecutorRegistryThread → ExecutorBizImpl · weight: 16 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ExecutorRegistryThread → I18nUtil · weight: 16 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ExecutorRegistryThread → XxlJobInfoMapperTest · weight: 16 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ExecutorRegistryThread → LoginController · weight: 16 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ExecutorRegistryThread → XxlJobSpringExecutor · weight: 16 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ExecutorRegistryThread → ExecutorRouteConsistentHash · weight: 16 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ExecutorRegistryThread → GlueFactory · weight: 16 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ExecutorRegistryThread → ExecutorRouteLRU · weight: 16 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ExecutorRegistryThread → JobLogReportHelper · weight: 16 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ExecutorRegistryThread → AdminBiz · weight: 16 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ExecutorRegistryThread → FrameLessXxlJobConfig · weight: 16 · cw: 0.0000 · co-change only"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="xxl-job-executor-samples/xxl-job-executor-sample-frameless/src/main/java/com/xxl/job/executor/sample/frameless/config/FrameLessXxlJobConfig.java">FrameLessXxlJobConfig</th>
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="FrameLessXxlJobConfig → XxlJobServiceImpl · weight: 16 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#109-14f" title="FrameLessXxlJobConfig → XxlJobExecutor · weight: 16 · cw: 1.4187 · METHOD_INVOCATION_ATOMIC_PARAMETER, METHOD_INVOCATION_OBJECT_PARAMETER"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="FrameLessXxlJobConfig → TriggerCallbackThread · weight: 16 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="FrameLessXxlJobConfig → ExecutorBizImpl · weight: 16 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="FrameLessXxlJobConfig → I18nUtil · weight: 16 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="FrameLessXxlJobConfig → XxlJobInfoMapperTest · weight: 16 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="FrameLessXxlJobConfig → LoginController · weight: 16 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="FrameLessXxlJobConfig → XxlJobSpringExecutor · weight: 16 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="FrameLessXxlJobConfig → ExecutorRouteConsistentHash · weight: 16 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="FrameLessXxlJobConfig → GlueFactory · weight: 16 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="FrameLessXxlJobConfig → ExecutorRouteLRU · weight: 16 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="FrameLessXxlJobConfig → JobLogReportHelper · weight: 16 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="FrameLessXxlJobConfig → AdminBiz · weight: 16 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="FrameLessXxlJobConfig → ExecutorRegistryThread · weight: 16 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+        </tr>
+        
+      </tbody>
+    </table>
+  </div>
+</section>
+
+
+</body>
+</html>

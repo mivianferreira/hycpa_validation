@@ -1,0 +1,875 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HyCPA — Community 8 · google/gson</title>
+  <style>
+:root {
+  --bg: #0d1117; --surface: #161b22; --surface2: #21262d;
+  --border: #30363d; --text: #e6edf3; --text2: #8b949e;
+  --accent: #58a6ff; --green: #3fb950; --orange: #e3b341; --red: #f85149;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { background: var(--bg); color: var(--text); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif; padding-bottom: 48px; }
+
+/* ── Header ── */
+.page-header { background: var(--surface); border-bottom: 1px solid var(--border); padding: 12px 24px; display: flex; align-items: center; gap: 20px; }
+.back-btn { color: var(--text2); font-size: 12px; text-decoration: none; white-space: nowrap; }
+.back-btn:hover { color: var(--accent); }
+.header-title { font-size: 15px; color: var(--text); }
+.header-title strong { color: var(--accent); }
+
+/* ── Stats pills ── */
+.stats-row { display: flex; gap: 12px; padding: 16px 24px; background: var(--surface); border-bottom: 1px solid var(--border); flex-wrap: wrap; }
+.stat-pill { background: var(--surface2); border: 1px solid var(--border); border-radius: 8px; padding: 10px 20px; display: flex; flex-direction: column; align-items: center; gap: 2px; min-width: 90px; }
+.pill-val { font-size: 22px; font-weight: 700; color: var(--text); line-height: 1; }
+.pill-lbl { font-size: 10px; color: var(--text2); text-transform: uppercase; letter-spacing: 0.5px; margin-top: 2px; }
+
+/* ── Content sections ── */
+.content-section { padding: 24px; }
+.section-title { font-size: 11px; font-weight: 600; color: var(--text2); text-transform: uppercase; letter-spacing: 0.6px; margin-bottom: 14px; display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
+
+/* ── Node table ── */
+.node-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+.node-table th { background: var(--surface); color: var(--text2); font-weight: 600; font-size: 10px; text-transform: uppercase; letter-spacing: 0.5px; padding: 8px 12px; text-align: left; border-bottom: 2px solid var(--border); white-space: nowrap; }
+.node-table td { padding: 7px 12px; border-bottom: 1px solid var(--border); vertical-align: middle; }
+.node-table tbody tr:hover td { background: var(--surface); }
+.health-badge { display: inline-block; padding: 2px 9px; border-radius: 10px; font-size: 11px; font-weight: 700; color: #0d1117; white-space: nowrap; }
+.class-path { font-size: 11px; color: var(--text2); font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', monospace; word-break: break-all; }
+td.num { text-align: right; font-weight: 600; white-space: nowrap; }
+td.overlap { color: var(--accent); }
+
+/* ── Coupling matrix ── */
+.matrix-wrap { overflow: auto; }
+.matrix { border-collapse: collapse; }
+.matrix-corner { min-width: 16px; }
+.matrix-col-hdr { padding: 0 1px 4px 1px; vertical-align: bottom; }
+.matrix-col-hdr span { display: block; writing-mode: vertical-rl; transform: rotate(180deg); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-height: 140px; color: var(--text2); font-weight: 400; font-size: 10px; cursor: default; text-align: left; }
+.matrix-row-hdr { text-align: right; padding: 1px 6px 1px 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 200px; color: var(--text2); font-weight: 400; font-size: 10px; cursor: default; }
+.matrix-cell { width: 16px; height: 16px; min-width: 16px; min-height: 16px; border: 1px solid #1c2129; cursor: default; }
+.matrix-cell.empty { background: transparent; }
+.matrix-cell.self-cell { background: var(--surface2); }
+.matrix-cell.filled { }
+
+/* ── Legend inline ── */
+.legend-inline { display: inline-flex; align-items: center; gap: 6px; font-size: 10px; color: var(--text2); font-weight: 400; text-transform: none; letter-spacing: 0; }
+.li-cell { display: inline-block; width: 10px; height: 10px; border-radius: 2px; vertical-align: middle; flex-shrink: 0; }
+</style>
+</head>
+<body>
+
+<div class="page-header">
+  <a class="back-btn" href="repo_google_gson.html">← Back to google/gson</a>
+  <span class="header-title">Community <strong>C8</strong> — google/gson</span>
+</div>
+
+<div class="stats-row">
+  <div class="stat-pill"><span class="pill-val">14</span><span class="pill-lbl">Nodes</span></div>
+  <div class="stat-pill"><span class="pill-val">170</span><span class="pill-lbl">Arcs</span></div>
+  <div class="stat-pill"><span class="pill-val">14</span><span class="pill-lbl">Overlapping</span></div>
+  <div class="stat-pill"><span class="pill-val">13</span><span class="pill-lbl">Coupled arcs</span></div>
+  <div class="stat-pill"><span class="pill-val">0</span><span class="pill-lbl">Co-change only</span></div>
+</div>
+
+<section class="content-section">
+  <h2 class="section-title">Nodes</h2>
+  <table class="node-table">
+    <thead>
+      <tr>
+        <th>Health</th>
+        <th>Class</th>
+        <th>Degree</th>
+        <th>Communities</th>
+      </tr>
+    </thead>
+    <tbody>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#f85149">0.462</span></td>
+        <td class="class-path" title="gson/src/main/java/com/google/gson/internal/bind/ReflectiveTypeAdapterFactory.java">gson/src/main/java/com/google/gson/internal/bind/ReflectiveTypeAdapterFactory.java</td>
+        <td class="num">23</td>
+        <td class="num overlap">9</td>
+      </tr>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#e3b341">0.558</span></td>
+        <td class="class-path" title="gson/src/main/java/com/google/gson/internal/ConstructorConstructor.java">gson/src/main/java/com/google/gson/internal/ConstructorConstructor.java</td>
+        <td class="num">23</td>
+        <td class="num overlap">8</td>
+      </tr>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#e3b341">0.577</span></td>
+        <td class="class-path" title="gson/src/test/java/com/google/gson/functional/DefaultTypeAdaptersTest.java">gson/src/test/java/com/google/gson/functional/DefaultTypeAdaptersTest.java</td>
+        <td class="num">24</td>
+        <td class="num overlap">10</td>
+      </tr>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#e3b341">0.596</span></td>
+        <td class="class-path" title="gson/src/test/java/com/google/gson/functional/ObjectTest.java">gson/src/test/java/com/google/gson/functional/ObjectTest.java</td>
+        <td class="num">24</td>
+        <td class="num overlap">7</td>
+      </tr>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#3fb950">0.769</span></td>
+        <td class="class-path" title="gson/src/test/java/com/google/gson/internal/bind/DefaultDateTypeAdapterTest.java">gson/src/test/java/com/google/gson/internal/bind/DefaultDateTypeAdapterTest.java</td>
+        <td class="num">24</td>
+        <td class="num overlap">4</td>
+      </tr>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#3fb950">0.827</span></td>
+        <td class="class-path" title="gson/src/main/java/com/google/gson/internal/JavaVersion.java">gson/src/main/java/com/google/gson/internal/JavaVersion.java</td>
+        <td class="num">22</td>
+        <td class="num overlap">4</td>
+      </tr>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#3fb950">0.885</span></td>
+        <td class="class-path" title="gson/src/main/java/com/google/gson/FieldAttributes.java">gson/src/main/java/com/google/gson/FieldAttributes.java</td>
+        <td class="num">26</td>
+        <td class="num overlap">2</td>
+      </tr>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#3fb950">0.885</span></td>
+        <td class="class-path" title="gson/src/main/java/com/google/gson/internal/bind/DefaultDateTypeAdapter.java">gson/src/main/java/com/google/gson/internal/bind/DefaultDateTypeAdapter.java</td>
+        <td class="num">26</td>
+        <td class="num overlap">4</td>
+      </tr>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#3fb950">0.904</span></td>
+        <td class="class-path" title="gson/src/main/java/com/google/gson/internal/ReflectionAccessFilterHelper.java">gson/src/main/java/com/google/gson/internal/ReflectionAccessFilterHelper.java</td>
+        <td class="num">18</td>
+        <td class="num overlap">3</td>
+      </tr>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#3fb950">0.920</span></td>
+        <td class="class-path" title="gson/src/main/java/com/google/gson/JsonDeserializer.java">gson/src/main/java/com/google/gson/JsonDeserializer.java</td>
+        <td class="num">26</td>
+        <td class="num overlap">7</td>
+      </tr>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#3fb950">0.920</span></td>
+        <td class="class-path" title="gson/src/main/java/com/google/gson/internal/UnsafeAllocator.java">gson/src/main/java/com/google/gson/internal/UnsafeAllocator.java</td>
+        <td class="num">26</td>
+        <td class="num overlap">2</td>
+      </tr>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#3fb950">0.923</span></td>
+        <td class="class-path" title="gson/src/main/java/com/google/gson/ExclusionStrategy.java">gson/src/main/java/com/google/gson/ExclusionStrategy.java</td>
+        <td class="num">26</td>
+        <td class="num overlap">5</td>
+      </tr>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#3fb950">0.980</span></td>
+        <td class="class-path" title="metrics/src/main/java/com/google/gson/metrics/ParseBenchmark.java">metrics/src/main/java/com/google/gson/metrics/ParseBenchmark.java</td>
+        <td class="num">26</td>
+        <td class="num overlap">3</td>
+      </tr>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#8b949e">—</span></td>
+        <td class="class-path" title="gson/src/main/java/com/google/gson/annotations/SerializedName.java">gson/src/main/java/com/google/gson/annotations/SerializedName.java</td>
+        <td class="num">26</td>
+        <td class="num overlap">2</td>
+      </tr>
+      
+    </tbody>
+  </table>
+</section>
+
+
+<section class="content-section">
+  <h2 class="section-title">Coupling matrix
+    <span class="legend-inline">
+      <span class="li-cell" style="background:#30363d"></span>Co-change only
+      <span class="li-cell" style="background:#3fb950"></span>Weak
+      <span class="li-cell" style="background:#e3b341"></span>Moderate
+      <span class="li-cell" style="background:#f85149"></span>Strong
+    </span>
+  </h2>
+  <div class="matrix-wrap">
+    <table class="matrix">
+      <thead>
+        <tr>
+          <th class="matrix-corner"></th>
+          <th class="matrix-col-hdr" title="gson/src/main/java/com/google/gson/internal/bind/ReflectiveTypeAdapterFactory.java"><span>ReflectiveTypeAdapterFactory</span></th><th class="matrix-col-hdr" title="gson/src/main/java/com/google/gson/internal/ConstructorConstructor.java"><span>ConstructorConstructor</span></th><th class="matrix-col-hdr" title="gson/src/test/java/com/google/gson/functional/DefaultTypeAdaptersTest.java"><span>DefaultTypeAdaptersTest</span></th><th class="matrix-col-hdr" title="gson/src/test/java/com/google/gson/functional/ObjectTest.java"><span>ObjectTest</span></th><th class="matrix-col-hdr" title="gson/src/test/java/com/google/gson/internal/bind/DefaultDateTypeAdapterTest.java"><span>DefaultDateTypeAdapterTest</span></th><th class="matrix-col-hdr" title="gson/src/main/java/com/google/gson/internal/JavaVersion.java"><span>JavaVersion</span></th><th class="matrix-col-hdr" title="gson/src/main/java/com/google/gson/FieldAttributes.java"><span>FieldAttributes</span></th><th class="matrix-col-hdr" title="gson/src/main/java/com/google/gson/internal/bind/DefaultDateTypeAdapter.java"><span>DefaultDateTypeAdapter</span></th><th class="matrix-col-hdr" title="gson/src/main/java/com/google/gson/internal/ReflectionAccessFilterHelper.java"><span>ReflectionAccessFilterHelper</span></th><th class="matrix-col-hdr" title="gson/src/main/java/com/google/gson/JsonDeserializer.java"><span>JsonDeserializer</span></th><th class="matrix-col-hdr" title="gson/src/main/java/com/google/gson/internal/UnsafeAllocator.java"><span>UnsafeAllocator</span></th><th class="matrix-col-hdr" title="gson/src/main/java/com/google/gson/ExclusionStrategy.java"><span>ExclusionStrategy</span></th><th class="matrix-col-hdr" title="metrics/src/main/java/com/google/gson/metrics/ParseBenchmark.java"><span>ParseBenchmark</span></th><th class="matrix-col-hdr" title="gson/src/main/java/com/google/gson/annotations/SerializedName.java"><span>SerializedName</span></th>
+        </tr>
+      </thead>
+      <tbody>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="gson/src/main/java/com/google/gson/internal/bind/ReflectiveTypeAdapterFactory.java">ReflectiveTypeAdapterFactory</th>
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#153-15b6b" title="ReflectiveTypeAdapterFactory → ConstructorConstructor · weight: 10 · cw: 3.1852 · DATA_ABSTRACTION_COUPLING, METHOD_INVOCATION_OBJECT_PARAMETER, METHOD_PARAMETER_TYPE, VARIABLE_FIELD_DECLARATION, VARIABLE_SINGLE_DECLARATION"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ReflectiveTypeAdapterFactory → DefaultTypeAdaptersTest · weight: 12 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ReflectiveTypeAdapterFactory → ObjectTest · weight: 15 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ReflectiveTypeAdapterFactory → DefaultDateTypeAdapterTest · weight: 9 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ReflectiveTypeAdapterFactory → FieldAttributes · weight: 12 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ReflectiveTypeAdapterFactory → DefaultDateTypeAdapter · weight: 10 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#eb8b44" title="ReflectiveTypeAdapterFactory → ReflectionAccessFilterHelper · weight: 2 · cw: 0.7024 · METHOD_INVOCATION_OBJECT_PARAMETER"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ReflectiveTypeAdapterFactory → JsonDeserializer · weight: 6 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ReflectiveTypeAdapterFactory → UnsafeAllocator · weight: 9 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ReflectiveTypeAdapterFactory → ExclusionStrategy · weight: 6 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ReflectiveTypeAdapterFactory → ParseBenchmark · weight: 6 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ReflectiveTypeAdapterFactory → SerializedName · weight: 7 · cw: 0.0000 · co-change only"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="gson/src/main/java/com/google/gson/internal/ConstructorConstructor.java">ConstructorConstructor</th>
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ConstructorConstructor → ReflectiveTypeAdapterFactory · weight: 10 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ConstructorConstructor → DefaultTypeAdaptersTest · weight: 12 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ConstructorConstructor → ObjectTest · weight: 12 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ConstructorConstructor → DefaultDateTypeAdapterTest · weight: 9 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ConstructorConstructor → FieldAttributes · weight: 12 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ConstructorConstructor → DefaultDateTypeAdapter · weight: 9 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#eb8b44" title="ConstructorConstructor → ReflectionAccessFilterHelper · weight: 1 · cw: 0.7024 · METHOD_INVOCATION_OBJECT_PARAMETER"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ConstructorConstructor → JsonDeserializer · weight: 6 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#f36447" title="ConstructorConstructor → UnsafeAllocator · weight: 11 · cw: 0.9024 · CONSTANT, METHOD_INVOCATION_OBJECT_PARAMETER"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ConstructorConstructor → ExclusionStrategy · weight: 6 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ConstructorConstructor → ParseBenchmark · weight: 6 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ConstructorConstructor → SerializedName · weight: 6 · cw: 0.0000 · co-change only"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="gson/src/test/java/com/google/gson/functional/DefaultTypeAdaptersTest.java">DefaultTypeAdaptersTest</th>
+          
+            <td class="matrix-cell filled" style="background:#1070a4e" title="DefaultTypeAdaptersTest → ReflectiveTypeAdapterFactory · weight: 12 · cw: 1.3603 · METHOD_INVOCATION_OBJECT_PARAMETER, VARIABLE_DECLARATION_STATEMENT"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="DefaultTypeAdaptersTest → ConstructorConstructor · weight: 12 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="DefaultTypeAdaptersTest → ObjectTest · weight: 19 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="DefaultTypeAdaptersTest → DefaultDateTypeAdapterTest · weight: 17 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="DefaultTypeAdaptersTest → JavaVersion · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="DefaultTypeAdaptersTest → FieldAttributes · weight: 16 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="DefaultTypeAdaptersTest → DefaultDateTypeAdapter · weight: 15 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#e79c42" title="DefaultTypeAdaptersTest → JsonDeserializer · weight: 8 · cw: 0.6167 · PARAMETERIZED_TYPE"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="DefaultTypeAdaptersTest → UnsafeAllocator · weight: 12 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="DefaultTypeAdaptersTest → ExclusionStrategy · weight: 8 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="DefaultTypeAdaptersTest → ParseBenchmark · weight: 8 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="DefaultTypeAdaptersTest → SerializedName · weight: 8 · cw: 0.0000 · co-change only"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="gson/src/test/java/com/google/gson/functional/ObjectTest.java">ObjectTest</th>
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ObjectTest → ReflectiveTypeAdapterFactory · weight: 15 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ObjectTest → ConstructorConstructor · weight: 12 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ObjectTest → DefaultTypeAdaptersTest · weight: 19 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ObjectTest → DefaultDateTypeAdapterTest · weight: 15 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ObjectTest → JavaVersion · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ObjectTest → FieldAttributes · weight: 16 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ObjectTest → DefaultDateTypeAdapter · weight: 14 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#e79c42" title="ObjectTest → JsonDeserializer · weight: 8 · cw: 0.6167 · PARAMETERIZED_TYPE"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ObjectTest → UnsafeAllocator · weight: 12 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#e6a342" title="ObjectTest → ExclusionStrategy · weight: 8 · cw: 0.5800 · ATOMIC_PARAMETER_COUPLING"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ObjectTest → ParseBenchmark · weight: 8 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ObjectTest → SerializedName · weight: 8 · cw: 0.0000 · co-change only"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="gson/src/test/java/com/google/gson/internal/bind/DefaultDateTypeAdapterTest.java">DefaultDateTypeAdapterTest</th>
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="DefaultDateTypeAdapterTest → ReflectiveTypeAdapterFactory · weight: 9 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="DefaultDateTypeAdapterTest → ConstructorConstructor · weight: 9 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="DefaultDateTypeAdapterTest → DefaultTypeAdaptersTest · weight: 17 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="DefaultDateTypeAdapterTest → ObjectTest · weight: 15 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="DefaultDateTypeAdapterTest → JavaVersion · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="DefaultDateTypeAdapterTest → FieldAttributes · weight: 12 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#80b64a" title="DefaultDateTypeAdapterTest → DefaultDateTypeAdapter · weight: 16 · cw: 0.2000 · CONSTANT"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="DefaultDateTypeAdapterTest → JsonDeserializer · weight: 6 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="DefaultDateTypeAdapterTest → UnsafeAllocator · weight: 9 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="DefaultDateTypeAdapterTest → ExclusionStrategy · weight: 6 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="DefaultDateTypeAdapterTest → ParseBenchmark · weight: 6 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="DefaultDateTypeAdapterTest → SerializedName · weight: 6 · cw: 0.0000 · co-change only"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="gson/src/main/java/com/google/gson/internal/JavaVersion.java">JavaVersion</th>
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JavaVersion → DefaultTypeAdaptersTest · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JavaVersion → ObjectTest · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JavaVersion → DefaultDateTypeAdapterTest · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JavaVersion → FieldAttributes · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JavaVersion → DefaultDateTypeAdapter · weight: 2 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JavaVersion → ReflectionAccessFilterHelper · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JavaVersion → JsonDeserializer · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JavaVersion → UnsafeAllocator · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JavaVersion → ExclusionStrategy · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JavaVersion → ParseBenchmark · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JavaVersion → SerializedName · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="gson/src/main/java/com/google/gson/FieldAttributes.java">FieldAttributes</th>
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="FieldAttributes → ReflectiveTypeAdapterFactory · weight: 12 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="FieldAttributes → ConstructorConstructor · weight: 12 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="FieldAttributes → DefaultTypeAdaptersTest · weight: 16 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="FieldAttributes → ObjectTest · weight: 16 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="FieldAttributes → DefaultDateTypeAdapterTest · weight: 12 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="FieldAttributes → JavaVersion · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="FieldAttributes → DefaultDateTypeAdapter · weight: 13 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="FieldAttributes → ReflectionAccessFilterHelper · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="FieldAttributes → JsonDeserializer · weight: 9 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="FieldAttributes → UnsafeAllocator · weight: 13 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="FieldAttributes → ExclusionStrategy · weight: 9 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="FieldAttributes → ParseBenchmark · weight: 9 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="FieldAttributes → SerializedName · weight: 9 · cw: 0.0000 · co-change only"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="gson/src/main/java/com/google/gson/internal/bind/DefaultDateTypeAdapter.java">DefaultDateTypeAdapter</th>
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="DefaultDateTypeAdapter → ReflectiveTypeAdapterFactory · weight: 10 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="DefaultDateTypeAdapter → ConstructorConstructor · weight: 9 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="DefaultDateTypeAdapter → DefaultTypeAdaptersTest · weight: 15 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="DefaultDateTypeAdapter → ObjectTest · weight: 14 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="DefaultDateTypeAdapter → DefaultDateTypeAdapterTest · weight: 16 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#ec8844" title="DefaultDateTypeAdapter → JavaVersion · weight: 2 · cw: 0.7163 · METHOD_INVOCATION_ATOMIC_PARAMETER"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="DefaultDateTypeAdapter → FieldAttributes · weight: 13 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="DefaultDateTypeAdapter → ReflectionAccessFilterHelper · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="DefaultDateTypeAdapter → JsonDeserializer · weight: 7 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="DefaultDateTypeAdapter → UnsafeAllocator · weight: 10 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="DefaultDateTypeAdapter → ExclusionStrategy · weight: 7 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="DefaultDateTypeAdapter → ParseBenchmark · weight: 7 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="DefaultDateTypeAdapter → SerializedName · weight: 7 · cw: 0.0000 · co-change only"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="gson/src/main/java/com/google/gson/internal/ReflectionAccessFilterHelper.java">ReflectionAccessFilterHelper</th>
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#ec8844" title="ReflectionAccessFilterHelper → JavaVersion · weight: 1 · cw: 0.7163 · METHOD_INVOCATION_ATOMIC_PARAMETER"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ReflectionAccessFilterHelper → FieldAttributes · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ReflectionAccessFilterHelper → DefaultDateTypeAdapter · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ReflectionAccessFilterHelper → JsonDeserializer · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ReflectionAccessFilterHelper → UnsafeAllocator · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ReflectionAccessFilterHelper → ExclusionStrategy · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ReflectionAccessFilterHelper → ParseBenchmark · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ReflectionAccessFilterHelper → SerializedName · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="gson/src/main/java/com/google/gson/JsonDeserializer.java">JsonDeserializer</th>
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonDeserializer → ReflectiveTypeAdapterFactory · weight: 6 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonDeserializer → ConstructorConstructor · weight: 6 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonDeserializer → DefaultTypeAdaptersTest · weight: 8 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonDeserializer → ObjectTest · weight: 8 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonDeserializer → DefaultDateTypeAdapterTest · weight: 6 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonDeserializer → JavaVersion · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonDeserializer → FieldAttributes · weight: 9 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonDeserializer → DefaultDateTypeAdapter · weight: 7 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonDeserializer → ReflectionAccessFilterHelper · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonDeserializer → UnsafeAllocator · weight: 7 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonDeserializer → ExclusionStrategy · weight: 6 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonDeserializer → ParseBenchmark · weight: 5 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JsonDeserializer → SerializedName · weight: 5 · cw: 0.0000 · co-change only"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="gson/src/main/java/com/google/gson/internal/UnsafeAllocator.java">UnsafeAllocator</th>
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="UnsafeAllocator → ReflectiveTypeAdapterFactory · weight: 9 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#eb8b44" title="UnsafeAllocator → ConstructorConstructor · weight: 11 · cw: 0.7024 · METHOD_INVOCATION_OBJECT_PARAMETER"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="UnsafeAllocator → DefaultTypeAdaptersTest · weight: 12 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="UnsafeAllocator → ObjectTest · weight: 12 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="UnsafeAllocator → DefaultDateTypeAdapterTest · weight: 9 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="UnsafeAllocator → JavaVersion · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="UnsafeAllocator → FieldAttributes · weight: 13 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="UnsafeAllocator → DefaultDateTypeAdapter · weight: 10 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="UnsafeAllocator → ReflectionAccessFilterHelper · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="UnsafeAllocator → JsonDeserializer · weight: 7 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="UnsafeAllocator → ExclusionStrategy · weight: 7 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="UnsafeAllocator → ParseBenchmark · weight: 7 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="UnsafeAllocator → SerializedName · weight: 7 · cw: 0.0000 · co-change only"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="gson/src/main/java/com/google/gson/ExclusionStrategy.java">ExclusionStrategy</th>
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ExclusionStrategy → ReflectiveTypeAdapterFactory · weight: 6 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ExclusionStrategy → ConstructorConstructor · weight: 6 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ExclusionStrategy → DefaultTypeAdaptersTest · weight: 8 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ExclusionStrategy → ObjectTest · weight: 8 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ExclusionStrategy → DefaultDateTypeAdapterTest · weight: 6 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ExclusionStrategy → JavaVersion · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#105134e" title="ExclusionStrategy → FieldAttributes · weight: 9 · cw: 1.3129 · METHOD_PARAMETER_TYPE, VARIABLE_SINGLE_DECLARATION"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ExclusionStrategy → DefaultDateTypeAdapter · weight: 7 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ExclusionStrategy → ReflectionAccessFilterHelper · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ExclusionStrategy → JsonDeserializer · weight: 6 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ExclusionStrategy → UnsafeAllocator · weight: 7 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ExclusionStrategy → ParseBenchmark · weight: 5 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ExclusionStrategy → SerializedName · weight: 6 · cw: 0.0000 · co-change only"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="metrics/src/main/java/com/google/gson/metrics/ParseBenchmark.java">ParseBenchmark</th>
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ParseBenchmark → ReflectiveTypeAdapterFactory · weight: 6 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ParseBenchmark → ConstructorConstructor · weight: 6 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ParseBenchmark → DefaultTypeAdaptersTest · weight: 8 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ParseBenchmark → ObjectTest · weight: 8 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ParseBenchmark → DefaultDateTypeAdapterTest · weight: 6 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ParseBenchmark → JavaVersion · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ParseBenchmark → FieldAttributes · weight: 9 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ParseBenchmark → DefaultDateTypeAdapter · weight: 7 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ParseBenchmark → ReflectionAccessFilterHelper · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ParseBenchmark → JsonDeserializer · weight: 5 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ParseBenchmark → UnsafeAllocator · weight: 7 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ParseBenchmark → ExclusionStrategy · weight: 5 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ParseBenchmark → SerializedName · weight: 5 · cw: 0.0000 · co-change only"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="gson/src/main/java/com/google/gson/annotations/SerializedName.java">SerializedName</th>
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="SerializedName → ReflectiveTypeAdapterFactory · weight: 7 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="SerializedName → ConstructorConstructor · weight: 6 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="SerializedName → DefaultTypeAdaptersTest · weight: 8 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="SerializedName → ObjectTest · weight: 8 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="SerializedName → DefaultDateTypeAdapterTest · weight: 6 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="SerializedName → JavaVersion · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="SerializedName → FieldAttributes · weight: 9 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="SerializedName → DefaultDateTypeAdapter · weight: 7 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="SerializedName → ReflectionAccessFilterHelper · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="SerializedName → JsonDeserializer · weight: 5 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="SerializedName → UnsafeAllocator · weight: 7 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="SerializedName → ExclusionStrategy · weight: 6 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="SerializedName → ParseBenchmark · weight: 5 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+        </tr>
+        
+      </tbody>
+    </table>
+  </div>
+</section>
+
+
+</body>
+</html>

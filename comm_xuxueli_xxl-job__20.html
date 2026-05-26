@@ -1,0 +1,2807 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HyCPA — Community 20 · xuxueli/xxl-job</title>
+  <style>
+:root {
+  --bg: #0d1117; --surface: #161b22; --surface2: #21262d;
+  --border: #30363d; --text: #e6edf3; --text2: #8b949e;
+  --accent: #58a6ff; --green: #3fb950; --orange: #e3b341; --red: #f85149;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { background: var(--bg); color: var(--text); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif; padding-bottom: 48px; }
+
+/* ── Header ── */
+.page-header { background: var(--surface); border-bottom: 1px solid var(--border); padding: 12px 24px; display: flex; align-items: center; gap: 20px; }
+.back-btn { color: var(--text2); font-size: 12px; text-decoration: none; white-space: nowrap; }
+.back-btn:hover { color: var(--accent); }
+.header-title { font-size: 15px; color: var(--text); }
+.header-title strong { color: var(--accent); }
+
+/* ── Stats pills ── */
+.stats-row { display: flex; gap: 12px; padding: 16px 24px; background: var(--surface); border-bottom: 1px solid var(--border); flex-wrap: wrap; }
+.stat-pill { background: var(--surface2); border: 1px solid var(--border); border-radius: 8px; padding: 10px 20px; display: flex; flex-direction: column; align-items: center; gap: 2px; min-width: 90px; }
+.pill-val { font-size: 22px; font-weight: 700; color: var(--text); line-height: 1; }
+.pill-lbl { font-size: 10px; color: var(--text2); text-transform: uppercase; letter-spacing: 0.5px; margin-top: 2px; }
+
+/* ── Content sections ── */
+.content-section { padding: 24px; }
+.section-title { font-size: 11px; font-weight: 600; color: var(--text2); text-transform: uppercase; letter-spacing: 0.6px; margin-bottom: 14px; display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
+
+/* ── Node table ── */
+.node-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+.node-table th { background: var(--surface); color: var(--text2); font-weight: 600; font-size: 10px; text-transform: uppercase; letter-spacing: 0.5px; padding: 8px 12px; text-align: left; border-bottom: 2px solid var(--border); white-space: nowrap; }
+.node-table td { padding: 7px 12px; border-bottom: 1px solid var(--border); vertical-align: middle; }
+.node-table tbody tr:hover td { background: var(--surface); }
+.health-badge { display: inline-block; padding: 2px 9px; border-radius: 10px; font-size: 11px; font-weight: 700; color: #0d1117; white-space: nowrap; }
+.class-path { font-size: 11px; color: var(--text2); font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', monospace; word-break: break-all; }
+td.num { text-align: right; font-weight: 600; white-space: nowrap; }
+td.overlap { color: var(--accent); }
+
+/* ── Coupling matrix ── */
+.matrix-wrap { overflow: auto; }
+.matrix { border-collapse: collapse; }
+.matrix-corner { min-width: 16px; }
+.matrix-col-hdr { padding: 0 1px 4px 1px; vertical-align: bottom; }
+.matrix-col-hdr span { display: block; writing-mode: vertical-rl; transform: rotate(180deg); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-height: 140px; color: var(--text2); font-weight: 400; font-size: 10px; cursor: default; text-align: left; }
+.matrix-row-hdr { text-align: right; padding: 1px 6px 1px 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 200px; color: var(--text2); font-weight: 400; font-size: 10px; cursor: default; }
+.matrix-cell { width: 16px; height: 16px; min-width: 16px; min-height: 16px; border: 1px solid #1c2129; cursor: default; }
+.matrix-cell.empty { background: transparent; }
+.matrix-cell.self-cell { background: var(--surface2); }
+.matrix-cell.filled { }
+
+/* ── Legend inline ── */
+.legend-inline { display: inline-flex; align-items: center; gap: 6px; font-size: 10px; color: var(--text2); font-weight: 400; text-transform: none; letter-spacing: 0; }
+.li-cell { display: inline-block; width: 10px; height: 10px; border-radius: 2px; vertical-align: middle; flex-shrink: 0; }
+</style>
+</head>
+<body>
+
+<div class="page-header">
+  <a class="back-btn" href="repo_xuxueli_xxl-job.html">← Back to xuxueli/xxl-job</a>
+  <span class="header-title">Community <strong>C20</strong> — xuxueli/xxl-job</span>
+</div>
+
+<div class="stats-row">
+  <div class="stat-pill"><span class="pill-val">28</span><span class="pill-lbl">Nodes</span></div>
+  <div class="stat-pill"><span class="pill-val">756</span><span class="pill-lbl">Arcs</span></div>
+  <div class="stat-pill"><span class="pill-val">28</span><span class="pill-lbl">Overlapping</span></div>
+  <div class="stat-pill"><span class="pill-val">23</span><span class="pill-lbl">Coupled arcs</span></div>
+  <div class="stat-pill"><span class="pill-val">0</span><span class="pill-lbl">Co-change only</span></div>
+</div>
+
+<section class="content-section">
+  <h2 class="section-title">Nodes</h2>
+  <table class="node-table">
+    <thead>
+      <tr>
+        <th>Health</th>
+        <th>Class</th>
+        <th>Degree</th>
+        <th>Communities</th>
+      </tr>
+    </thead>
+    <tbody>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#e3b341">0.654</span></td>
+        <td class="class-path" title="xxl-job-admin/src/main/java/com/xxl/job/admin/controller/biz/JobLogController.java">xxl-job-admin/src/main/java/com/xxl/job/admin/controller/biz/JobLogController.java</td>
+        <td class="num">54</td>
+        <td class="num overlap">6</td>
+      </tr>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#e3b341">0.712</span></td>
+        <td class="class-path" title="xxl-job-executor-samples/xxl-job-executor-sample-frameless/src/main/java/com/xxl/job/executor/sample/frameless/jobhandler/SampleXxlJob.java">xxl-job-executor-samples/xxl-job-executor-sample-frameless/src/main/java/com/xxl/job/executor/sample/frameless/jobhandler/SampleXxlJob.java</td>
+        <td class="num">54</td>
+        <td class="num overlap">6</td>
+      </tr>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#e3b341">0.720</span></td>
+        <td class="class-path" title="xxl-job-admin/src/main/java/com/xxl/job/admin/scheduler/trigger/JobTrigger.java">xxl-job-admin/src/main/java/com/xxl/job/admin/scheduler/trigger/JobTrigger.java</td>
+        <td class="num">54</td>
+        <td class="num overlap">6</td>
+      </tr>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#3fb950">0.750</span></td>
+        <td class="class-path" title="xxl-job-admin/src/main/java/com/xxl/job/admin/controller/biz/JobInfoController.java">xxl-job-admin/src/main/java/com/xxl/job/admin/controller/biz/JobInfoController.java</td>
+        <td class="num">54</td>
+        <td class="num overlap">7</td>
+      </tr>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#3fb950">0.788</span></td>
+        <td class="class-path" title="xxl-job-admin/src/main/java/com/xxl/job/admin/model/XxlJobLog.java">xxl-job-admin/src/main/java/com/xxl/job/admin/model/XxlJobLog.java</td>
+        <td class="num">54</td>
+        <td class="num overlap">6</td>
+      </tr>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#3fb950">0.788</span></td>
+        <td class="class-path" title="xxl-job-core/src/main/java/com/xxl/job/core/context/XxlJobHelper.java">xxl-job-core/src/main/java/com/xxl/job/core/context/XxlJobHelper.java</td>
+        <td class="num">54</td>
+        <td class="num overlap">6</td>
+      </tr>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#3fb950">0.788</span></td>
+        <td class="class-path" title="xxl-job-executor-samples/xxl-job-executor-sample-springboot-ai/src/main/java/com/xxl/job/executor/jobhandler/AIXxlJob.java">xxl-job-executor-samples/xxl-job-executor-sample-springboot-ai/src/main/java/com/xxl/job/executor/jobhandler/AIXxlJob.java</td>
+        <td class="num">54</td>
+        <td class="num overlap">6</td>
+      </tr>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#3fb950">0.808</span></td>
+        <td class="class-path" title="xxl-job-core/src/main/java/com/xxl/job/core/context/XxlJobContext.java">xxl-job-core/src/main/java/com/xxl/job/core/context/XxlJobContext.java</td>
+        <td class="num">54</td>
+        <td class="num overlap">6</td>
+      </tr>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#3fb950">0.846</span></td>
+        <td class="class-path" title="xxl-job-admin/src/main/java/com/xxl/job/admin/model/XxlJobGroup.java">xxl-job-admin/src/main/java/com/xxl/job/admin/model/XxlJobGroup.java</td>
+        <td class="num">54</td>
+        <td class="num overlap">6</td>
+      </tr>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#3fb950">0.865</span></td>
+        <td class="class-path" title="xxl-job-admin/src/main/java/com/xxl/job/admin/model/XxlJobUser.java">xxl-job-admin/src/main/java/com/xxl/job/admin/model/XxlJobUser.java</td>
+        <td class="num">54</td>
+        <td class="num overlap">6</td>
+      </tr>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#3fb950">0.865</span></td>
+        <td class="class-path" title="xxl-job-executor-samples/xxl-job-executor-sample-springboot-ai/src/main/java/com/xxl/job/executor/controller/IndexController.java">xxl-job-executor-samples/xxl-job-executor-sample-springboot-ai/src/main/java/com/xxl/job/executor/controller/IndexController.java</td>
+        <td class="num">54</td>
+        <td class="num overlap">6</td>
+      </tr>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#3fb950">0.885</span></td>
+        <td class="class-path" title="xxl-job-admin/src/main/java/com/xxl/job/admin/mapper/XxlJobInfoMapper.java">xxl-job-admin/src/main/java/com/xxl/job/admin/mapper/XxlJobInfoMapper.java</td>
+        <td class="num">54</td>
+        <td class="num overlap">6</td>
+      </tr>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#3fb950">0.885</span></td>
+        <td class="class-path" title="xxl-job-admin/src/main/java/com/xxl/job/admin/model/XxlJobRegistry.java">xxl-job-admin/src/main/java/com/xxl/job/admin/model/XxlJobRegistry.java</td>
+        <td class="num">54</td>
+        <td class="num overlap">6</td>
+      </tr>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#3fb950">0.904</span></td>
+        <td class="class-path" title="xxl-job-admin/src/main/java/com/xxl/job/admin/scheduler/route/ExecutorRouteStrategyEnum.java">xxl-job-admin/src/main/java/com/xxl/job/admin/scheduler/route/ExecutorRouteStrategyEnum.java</td>
+        <td class="num">54</td>
+        <td class="num overlap">6</td>
+      </tr>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#3fb950">0.923</span></td>
+        <td class="class-path" title="xxl-job-admin/src/main/java/com/xxl/job/admin/mapper/XxlJobGroupMapper.java">xxl-job-admin/src/main/java/com/xxl/job/admin/mapper/XxlJobGroupMapper.java</td>
+        <td class="num">54</td>
+        <td class="num overlap">6</td>
+      </tr>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#3fb950">0.923</span></td>
+        <td class="class-path" title="xxl-job-admin/src/main/java/com/xxl/job/admin/service/XxlJobService.java">xxl-job-admin/src/main/java/com/xxl/job/admin/service/XxlJobService.java</td>
+        <td class="num">54</td>
+        <td class="num overlap">7</td>
+      </tr>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#3fb950">0.923</span></td>
+        <td class="class-path" title="xxl-job-core/src/main/java/com/xxl/job/core/handler/impl/MethodJobHandler.java">xxl-job-core/src/main/java/com/xxl/job/core/handler/impl/MethodJobHandler.java</td>
+        <td class="num">54</td>
+        <td class="num overlap">6</td>
+      </tr>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#3fb950">0.940</span></td>
+        <td class="class-path" title="xxl-job-executor-samples/xxl-job-executor-sample-springboot-ai/src/main/java/com/xxl/job/executor/config/XxlJobConfig.java">xxl-job-executor-samples/xxl-job-executor-sample-springboot-ai/src/main/java/com/xxl/job/executor/config/XxlJobConfig.java</td>
+        <td class="num">54</td>
+        <td class="num overlap">6</td>
+      </tr>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#3fb950">0.942</span></td>
+        <td class="class-path" title="xxl-job-admin/src/main/java/com/xxl/job/admin/mapper/XxlJobRegistryMapper.java">xxl-job-admin/src/main/java/com/xxl/job/admin/mapper/XxlJobRegistryMapper.java</td>
+        <td class="num">54</td>
+        <td class="num overlap">6</td>
+      </tr>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#3fb950">0.942</span></td>
+        <td class="class-path" title="xxl-job-admin/src/main/java/com/xxl/job/admin/scheduler/thread/JobFailAlarmMonitorHelper.java">xxl-job-admin/src/main/java/com/xxl/job/admin/scheduler/thread/JobFailAlarmMonitorHelper.java</td>
+        <td class="num">54</td>
+        <td class="num overlap">6</td>
+      </tr>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#3fb950">0.942</span></td>
+        <td class="class-path" title="xxl-job-admin/src/test/java/com/xxl/job/admin/controller/JobInfoControllerTest.java">xxl-job-admin/src/test/java/com/xxl/job/admin/controller/JobInfoControllerTest.java</td>
+        <td class="num">54</td>
+        <td class="num overlap">6</td>
+      </tr>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#3fb950">0.962</span></td>
+        <td class="class-path" title="xxl-job-core/src/main/java/com/xxl/job/core/thread/JobLogFileCleanThread.java">xxl-job-core/src/main/java/com/xxl/job/core/thread/JobLogFileCleanThread.java</td>
+        <td class="num">54</td>
+        <td class="num overlap">6</td>
+      </tr>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#3fb950">0.980</span></td>
+        <td class="class-path" title="xxl-job-admin/src/main/java/com/xxl/job/admin/scheduler/type/strategy/FixRateScheduleType.java">xxl-job-admin/src/main/java/com/xxl/job/admin/scheduler/type/strategy/FixRateScheduleType.java</td>
+        <td class="num">54</td>
+        <td class="num overlap">7</td>
+      </tr>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#3fb950">0.980</span></td>
+        <td class="class-path" title="xxl-job-admin/src/main/java/com/xxl/job/admin/web/error/WebErrorPageRegistrar.java">xxl-job-admin/src/main/java/com/xxl/job/admin/web/error/WebErrorPageRegistrar.java</td>
+        <td class="num">54</td>
+        <td class="num overlap">6</td>
+      </tr>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#3fb950">0.980</span></td>
+        <td class="class-path" title="xxl-job-admin/src/test/java/com/xxl/job/admin/mapper/XxlJobGroupMapperTest.java">xxl-job-admin/src/test/java/com/xxl/job/admin/mapper/XxlJobGroupMapperTest.java</td>
+        <td class="num">54</td>
+        <td class="num overlap">6</td>
+      </tr>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#3fb950">0.980</span></td>
+        <td class="class-path" title="xxl-job-executor-samples/xxl-job-executor-sample-springboot-ai/src/test/java/com/xxl/job/executor/test/BaseTests.java">xxl-job-executor-samples/xxl-job-executor-sample-springboot-ai/src/test/java/com/xxl/job/executor/test/BaseTests.java</td>
+        <td class="num">54</td>
+        <td class="num overlap">6</td>
+      </tr>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#3fb950">0.980</span></td>
+        <td class="class-path" title="xxl-job-executor-samples/xxl-job-executor-sample-springboot/src/test/java/com/xxl/job/executor/test/XxlJobExecutorExampleBootApplicationTests.java">xxl-job-executor-samples/xxl-job-executor-sample-springboot/src/test/java/com/xxl/job/executor/test/XxlJobExecutorExampleBootApplicationTests.java</td>
+        <td class="num">54</td>
+        <td class="num overlap">6</td>
+      </tr>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#8b949e">—</span></td>
+        <td class="class-path" title="xxl-job-admin/src/test/java/com/xxl/job/admin/core/util/JacksonUtilTest.java">xxl-job-admin/src/test/java/com/xxl/job/admin/core/util/JacksonUtilTest.java</td>
+        <td class="num">54</td>
+        <td class="num overlap">6</td>
+      </tr>
+      
+    </tbody>
+  </table>
+</section>
+
+
+<section class="content-section">
+  <h2 class="section-title">Coupling matrix
+    <span class="legend-inline">
+      <span class="li-cell" style="background:#30363d"></span>Co-change only
+      <span class="li-cell" style="background:#3fb950"></span>Weak
+      <span class="li-cell" style="background:#e3b341"></span>Moderate
+      <span class="li-cell" style="background:#f85149"></span>Strong
+    </span>
+  </h2>
+  <div class="matrix-wrap">
+    <table class="matrix">
+      <thead>
+        <tr>
+          <th class="matrix-corner"></th>
+          <th class="matrix-col-hdr" title="xxl-job-admin/src/main/java/com/xxl/job/admin/controller/biz/JobLogController.java"><span>JobLogController</span></th><th class="matrix-col-hdr" title="xxl-job-executor-samples/xxl-job-executor-sample-frameless/src/main/java/com/xxl/job/executor/sample/frameless/jobhandler/SampleXxlJob.java"><span>SampleXxlJob</span></th><th class="matrix-col-hdr" title="xxl-job-admin/src/main/java/com/xxl/job/admin/scheduler/trigger/JobTrigger.java"><span>JobTrigger</span></th><th class="matrix-col-hdr" title="xxl-job-admin/src/main/java/com/xxl/job/admin/controller/biz/JobInfoController.java"><span>JobInfoController</span></th><th class="matrix-col-hdr" title="xxl-job-admin/src/main/java/com/xxl/job/admin/model/XxlJobLog.java"><span>XxlJobLog</span></th><th class="matrix-col-hdr" title="xxl-job-core/src/main/java/com/xxl/job/core/context/XxlJobHelper.java"><span>XxlJobHelper</span></th><th class="matrix-col-hdr" title="xxl-job-executor-samples/xxl-job-executor-sample-springboot-ai/src/main/java/com/xxl/job/executor/jobhandler/AIXxlJob.java"><span>AIXxlJob</span></th><th class="matrix-col-hdr" title="xxl-job-core/src/main/java/com/xxl/job/core/context/XxlJobContext.java"><span>XxlJobContext</span></th><th class="matrix-col-hdr" title="xxl-job-admin/src/main/java/com/xxl/job/admin/model/XxlJobGroup.java"><span>XxlJobGroup</span></th><th class="matrix-col-hdr" title="xxl-job-admin/src/main/java/com/xxl/job/admin/model/XxlJobUser.java"><span>XxlJobUser</span></th><th class="matrix-col-hdr" title="xxl-job-executor-samples/xxl-job-executor-sample-springboot-ai/src/main/java/com/xxl/job/executor/controller/IndexController.java"><span>IndexController</span></th><th class="matrix-col-hdr" title="xxl-job-admin/src/main/java/com/xxl/job/admin/mapper/XxlJobInfoMapper.java"><span>XxlJobInfoMapper</span></th><th class="matrix-col-hdr" title="xxl-job-admin/src/main/java/com/xxl/job/admin/model/XxlJobRegistry.java"><span>XxlJobRegistry</span></th><th class="matrix-col-hdr" title="xxl-job-admin/src/main/java/com/xxl/job/admin/scheduler/route/ExecutorRouteStrategyEnum.java"><span>ExecutorRouteStrategyEnum</span></th><th class="matrix-col-hdr" title="xxl-job-admin/src/main/java/com/xxl/job/admin/mapper/XxlJobGroupMapper.java"><span>XxlJobGroupMapper</span></th><th class="matrix-col-hdr" title="xxl-job-admin/src/main/java/com/xxl/job/admin/service/XxlJobService.java"><span>XxlJobService</span></th><th class="matrix-col-hdr" title="xxl-job-core/src/main/java/com/xxl/job/core/handler/impl/MethodJobHandler.java"><span>MethodJobHandler</span></th><th class="matrix-col-hdr" title="xxl-job-executor-samples/xxl-job-executor-sample-springboot-ai/src/main/java/com/xxl/job/executor/config/XxlJobConfig.java"><span>XxlJobConfig</span></th><th class="matrix-col-hdr" title="xxl-job-admin/src/main/java/com/xxl/job/admin/mapper/XxlJobRegistryMapper.java"><span>XxlJobRegistryMapper</span></th><th class="matrix-col-hdr" title="xxl-job-admin/src/main/java/com/xxl/job/admin/scheduler/thread/JobFailAlarmMonitorHelper.java"><span>JobFailAlarmMonitorHelper</span></th><th class="matrix-col-hdr" title="xxl-job-admin/src/test/java/com/xxl/job/admin/controller/JobInfoControllerTest.java"><span>JobInfoControllerTest</span></th><th class="matrix-col-hdr" title="xxl-job-core/src/main/java/com/xxl/job/core/thread/JobLogFileCleanThread.java"><span>JobLogFileCleanThread</span></th><th class="matrix-col-hdr" title="xxl-job-admin/src/main/java/com/xxl/job/admin/scheduler/type/strategy/FixRateScheduleType.java"><span>FixRateScheduleType</span></th><th class="matrix-col-hdr" title="xxl-job-admin/src/main/java/com/xxl/job/admin/web/error/WebErrorPageRegistrar.java"><span>WebErrorPageRegistrar</span></th><th class="matrix-col-hdr" title="xxl-job-admin/src/test/java/com/xxl/job/admin/mapper/XxlJobGroupMapperTest.java"><span>XxlJobGroupMapperTest</span></th><th class="matrix-col-hdr" title="xxl-job-executor-samples/xxl-job-executor-sample-springboot-ai/src/test/java/com/xxl/job/executor/test/BaseTests.java"><span>BaseTests</span></th><th class="matrix-col-hdr" title="xxl-job-executor-samples/xxl-job-executor-sample-springboot/src/test/java/com/xxl/job/executor/test/XxlJobExecutorExampleBootApplicationTests.java"><span>XxlJobExecutorExampleBootApplicationTests</span></th><th class="matrix-col-hdr" title="xxl-job-admin/src/test/java/com/xxl/job/admin/core/util/JacksonUtilTest.java"><span>JacksonUtilTest</span></th>
+        </tr>
+      </thead>
+      <tbody>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="xxl-job-admin/src/main/java/com/xxl/job/admin/controller/biz/JobLogController.java">JobLogController</th>
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobLogController → SampleXxlJob · weight: 18 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobLogController → JobTrigger · weight: 81 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobLogController → JobInfoController · weight: 81 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#13f-fa64" title="JobLogController → XxlJobLog · weight: 18 · cw: 2.6933 · METHOD_INVOCATION_ATOMIC_PARAMETER, METHOD_INVOCATION_OBJECT_PARAMETER, PARAMETERIZED_TYPE, VARIABLE_DECLARATION_STATEMENT"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobLogController → XxlJobHelper · weight: 18 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobLogController → AIXxlJob · weight: 18 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#80b64a" title="JobLogController → XxlJobContext · weight: 18 · cw: 0.2000 · CONSTANT"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#1050f4e" title="JobLogController → XxlJobGroup · weight: 18 · cw: 1.3330 · METHOD_INVOCATION_ATOMIC_PARAMETER, PARAMETERIZED_TYPE"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobLogController → XxlJobUser · weight: 18 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobLogController → IndexController · weight: 18 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#13a-e662" title="JobLogController → XxlJobInfoMapper · weight: 18 · cw: 2.5886 · DATA_ABSTRACTION_COUPLING, METHOD_INVOCATION_ATOMIC_PARAMETER, METHOD_INVOCATION_OBJECT_PARAMETER, VARIABLE_FIELD_DECLARATION"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobLogController → XxlJobRegistry · weight: 18 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobLogController → ExecutorRouteStrategyEnum · weight: 18 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#11d-5c57" title="JobLogController → XxlJobGroupMapper · weight: 18 · cw: 1.8862 · DATA_ABSTRACTION_COUPLING, METHOD_INVOCATION_ATOMIC_PARAMETER, VARIABLE_FIELD_DECLARATION"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#ff2f4b" title="JobLogController → XxlJobService · weight: 18 · cw: 1.1699 · DATA_ABSTRACTION_COUPLING, VARIABLE_FIELD_DECLARATION"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobLogController → MethodJobHandler · weight: 18 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobLogController → XxlJobConfig · weight: 18 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobLogController → XxlJobRegistryMapper · weight: 18 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobLogController → JobFailAlarmMonitorHelper · weight: 90 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobLogController → JobInfoControllerTest · weight: 18 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobLogController → JobLogFileCleanThread · weight: 18 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobLogController → FixRateScheduleType · weight: 18 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobLogController → WebErrorPageRegistrar · weight: 18 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobLogController → XxlJobGroupMapperTest · weight: 18 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobLogController → BaseTests · weight: 18 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobLogController → XxlJobExecutorExampleBootApplicationTests · weight: 18 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobLogController → JacksonUtilTest · weight: 18 · cw: 0.0000 · co-change only"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="xxl-job-executor-samples/xxl-job-executor-sample-frameless/src/main/java/com/xxl/job/executor/sample/frameless/jobhandler/SampleXxlJob.java">SampleXxlJob</th>
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="SampleXxlJob → JobLogController · weight: 18 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="SampleXxlJob → JobTrigger · weight: 18 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="SampleXxlJob → JobInfoController · weight: 18 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="SampleXxlJob → XxlJobLog · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#109-14f" title="SampleXxlJob → XxlJobHelper · weight: 4 · cw: 1.4187 · METHOD_INVOCATION_ATOMIC_PARAMETER, METHOD_INVOCATION_OBJECT_PARAMETER"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="SampleXxlJob → AIXxlJob · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="SampleXxlJob → XxlJobContext · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="SampleXxlJob → XxlJobGroup · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="SampleXxlJob → XxlJobUser · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="SampleXxlJob → IndexController · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="SampleXxlJob → XxlJobInfoMapper · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="SampleXxlJob → XxlJobRegistry · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="SampleXxlJob → ExecutorRouteStrategyEnum · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="SampleXxlJob → XxlJobGroupMapper · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="SampleXxlJob → XxlJobService · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="SampleXxlJob → MethodJobHandler · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="SampleXxlJob → XxlJobConfig · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="SampleXxlJob → XxlJobRegistryMapper · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="SampleXxlJob → JobFailAlarmMonitorHelper · weight: 20 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="SampleXxlJob → JobInfoControllerTest · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="SampleXxlJob → JobLogFileCleanThread · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="SampleXxlJob → FixRateScheduleType · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="SampleXxlJob → WebErrorPageRegistrar · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="SampleXxlJob → XxlJobGroupMapperTest · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="SampleXxlJob → BaseTests · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="SampleXxlJob → XxlJobExecutorExampleBootApplicationTests · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="SampleXxlJob → JacksonUtilTest · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="xxl-job-admin/src/main/java/com/xxl/job/admin/scheduler/trigger/JobTrigger.java">JobTrigger</th>
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobTrigger → JobLogController · weight: 81 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobTrigger → SampleXxlJob · weight: 18 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobTrigger → JobInfoController · weight: 81 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#154-15f6c" title="JobTrigger → XxlJobLog · weight: 18 · cw: 3.2066 · ATOMIC_PARAMETER_COUPLING, METHOD_INVOCATION_ATOMIC_PARAMETER, METHOD_INVOCATION_OBJECT_PARAMETER, VARIABLE_CLASS_INSTANCE_CREATION, VARIABLE_DECLARATION_STATEMENT"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobTrigger → XxlJobHelper · weight: 18 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobTrigger → AIXxlJob · weight: 18 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#80b64a" title="JobTrigger → XxlJobContext · weight: 18 · cw: 0.2000 · CONSTANT"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#15c-1836f" title="JobTrigger → XxlJobGroup · weight: 18 · cw: 3.3895 · METHOD_INVOCATION_ATOMIC_PARAMETER, METHOD_INVOCATION_OBJECT_PARAMETER, METHOD_PARAMETER_TYPE, VARIABLE_DECLARATION_STATEMENT, VARIABLE_SINGLE_DECLARATION"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobTrigger → XxlJobUser · weight: 18 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobTrigger → IndexController · weight: 18 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#11d-5c57" title="JobTrigger → XxlJobInfoMapper · weight: 18 · cw: 1.8862 · DATA_ABSTRACTION_COUPLING, METHOD_INVOCATION_ATOMIC_PARAMETER, VARIABLE_FIELD_DECLARATION"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobTrigger → XxlJobRegistry · weight: 18 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#12d-a95d" title="JobTrigger → ExecutorRouteStrategyEnum · weight: 18 · cw: 2.2766 · CONSTANT, METHOD_INVOCATION_ATOMIC_PARAMETER, METHOD_INVOCATION_OBJECT_PARAMETER, VARIABLE_DECLARATION_STATEMENT"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#11d-5c57" title="JobTrigger → XxlJobGroupMapper · weight: 18 · cw: 1.8862 · DATA_ABSTRACTION_COUPLING, METHOD_INVOCATION_ATOMIC_PARAMETER, VARIABLE_FIELD_DECLARATION"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobTrigger → XxlJobService · weight: 18 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobTrigger → MethodJobHandler · weight: 18 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobTrigger → XxlJobConfig · weight: 18 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobTrigger → XxlJobRegistryMapper · weight: 18 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobTrigger → JobFailAlarmMonitorHelper · weight: 90 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobTrigger → JobInfoControllerTest · weight: 18 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobTrigger → JobLogFileCleanThread · weight: 18 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobTrigger → FixRateScheduleType · weight: 18 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobTrigger → WebErrorPageRegistrar · weight: 18 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobTrigger → XxlJobGroupMapperTest · weight: 18 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobTrigger → BaseTests · weight: 18 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobTrigger → XxlJobExecutorExampleBootApplicationTests · weight: 18 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobTrigger → JacksonUtilTest · weight: 18 · cw: 0.0000 · co-change only"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="xxl-job-admin/src/main/java/com/xxl/job/admin/controller/biz/JobInfoController.java">JobInfoController</th>
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobInfoController → JobLogController · weight: 81 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobInfoController → SampleXxlJob · weight: 18 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobInfoController → JobTrigger · weight: 81 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobInfoController → XxlJobLog · weight: 18 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobInfoController → XxlJobHelper · weight: 18 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobInfoController → AIXxlJob · weight: 18 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobInfoController → XxlJobContext · weight: 18 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#e79c42" title="JobInfoController → XxlJobGroup · weight: 18 · cw: 0.6167 · PARAMETERIZED_TYPE"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobInfoController → XxlJobUser · weight: 18 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobInfoController → IndexController · weight: 18 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobInfoController → XxlJobInfoMapper · weight: 18 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobInfoController → XxlJobRegistry · weight: 18 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#ec8844" title="JobInfoController → ExecutorRouteStrategyEnum · weight: 18 · cw: 0.7163 · METHOD_INVOCATION_ATOMIC_PARAMETER"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#11d-5c57" title="JobInfoController → XxlJobGroupMapper · weight: 18 · cw: 1.8862 · DATA_ABSTRACTION_COUPLING, METHOD_INVOCATION_ATOMIC_PARAMETER, VARIABLE_FIELD_DECLARATION"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#11c-5956" title="JobInfoController → XxlJobService · weight: 18 · cw: 1.8723 · DATA_ABSTRACTION_COUPLING, METHOD_INVOCATION_OBJECT_PARAMETER, VARIABLE_FIELD_DECLARATION"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobInfoController → MethodJobHandler · weight: 18 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobInfoController → XxlJobConfig · weight: 18 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobInfoController → XxlJobRegistryMapper · weight: 18 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobInfoController → JobFailAlarmMonitorHelper · weight: 90 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobInfoController → JobInfoControllerTest · weight: 18 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobInfoController → JobLogFileCleanThread · weight: 18 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobInfoController → FixRateScheduleType · weight: 18 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobInfoController → WebErrorPageRegistrar · weight: 18 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobInfoController → XxlJobGroupMapperTest · weight: 18 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobInfoController → BaseTests · weight: 18 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobInfoController → XxlJobExecutorExampleBootApplicationTests · weight: 18 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobInfoController → JacksonUtilTest · weight: 18 · cw: 0.0000 · co-change only"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="xxl-job-admin/src/main/java/com/xxl/job/admin/model/XxlJobLog.java">XxlJobLog</th>
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobLog → JobLogController · weight: 18 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobLog → SampleXxlJob · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobLog → JobTrigger · weight: 18 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobLog → JobInfoController · weight: 18 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobLog → XxlJobHelper · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobLog → AIXxlJob · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobLog → XxlJobContext · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobLog → XxlJobGroup · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobLog → XxlJobUser · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobLog → IndexController · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobLog → XxlJobInfoMapper · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobLog → XxlJobRegistry · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobLog → ExecutorRouteStrategyEnum · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobLog → XxlJobGroupMapper · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobLog → XxlJobService · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobLog → MethodJobHandler · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobLog → XxlJobConfig · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobLog → XxlJobRegistryMapper · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobLog → JobFailAlarmMonitorHelper · weight: 20 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobLog → JobInfoControllerTest · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobLog → JobLogFileCleanThread · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobLog → FixRateScheduleType · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobLog → WebErrorPageRegistrar · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobLog → XxlJobGroupMapperTest · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobLog → BaseTests · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobLog → XxlJobExecutorExampleBootApplicationTests · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobLog → JacksonUtilTest · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="xxl-job-core/src/main/java/com/xxl/job/core/context/XxlJobHelper.java">XxlJobHelper</th>
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobHelper → JobLogController · weight: 18 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobHelper → SampleXxlJob · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobHelper → JobTrigger · weight: 18 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobHelper → JobInfoController · weight: 18 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobHelper → XxlJobLog · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobHelper → AIXxlJob · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#12d-a95d" title="XxlJobHelper → XxlJobContext · weight: 6 · cw: 2.2766 · CONSTANT, METHOD_INVOCATION_ATOMIC_PARAMETER, METHOD_INVOCATION_OBJECT_PARAMETER, VARIABLE_DECLARATION_STATEMENT"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobHelper → XxlJobGroup · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobHelper → XxlJobUser · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobHelper → IndexController · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobHelper → XxlJobInfoMapper · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobHelper → XxlJobRegistry · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobHelper → ExecutorRouteStrategyEnum · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobHelper → XxlJobGroupMapper · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobHelper → XxlJobService · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobHelper → MethodJobHandler · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobHelper → XxlJobConfig · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobHelper → XxlJobRegistryMapper · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobHelper → JobFailAlarmMonitorHelper · weight: 20 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobHelper → JobInfoControllerTest · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobHelper → JobLogFileCleanThread · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobHelper → FixRateScheduleType · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobHelper → WebErrorPageRegistrar · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobHelper → XxlJobGroupMapperTest · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobHelper → BaseTests · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobHelper → XxlJobExecutorExampleBootApplicationTests · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobHelper → JacksonUtilTest · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="xxl-job-executor-samples/xxl-job-executor-sample-springboot-ai/src/main/java/com/xxl/job/executor/jobhandler/AIXxlJob.java">AIXxlJob</th>
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="AIXxlJob → JobLogController · weight: 18 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="AIXxlJob → SampleXxlJob · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="AIXxlJob → JobTrigger · weight: 18 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="AIXxlJob → JobInfoController · weight: 18 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="AIXxlJob → XxlJobLog · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#109-14f" title="AIXxlJob → XxlJobHelper · weight: 4 · cw: 1.4187 · METHOD_INVOCATION_ATOMIC_PARAMETER, METHOD_INVOCATION_OBJECT_PARAMETER"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="AIXxlJob → XxlJobContext · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="AIXxlJob → XxlJobGroup · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="AIXxlJob → XxlJobUser · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="AIXxlJob → IndexController · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="AIXxlJob → XxlJobInfoMapper · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="AIXxlJob → XxlJobRegistry · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="AIXxlJob → ExecutorRouteStrategyEnum · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="AIXxlJob → XxlJobGroupMapper · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="AIXxlJob → XxlJobService · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="AIXxlJob → MethodJobHandler · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="AIXxlJob → XxlJobConfig · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="AIXxlJob → XxlJobRegistryMapper · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="AIXxlJob → JobFailAlarmMonitorHelper · weight: 20 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="AIXxlJob → JobInfoControllerTest · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="AIXxlJob → JobLogFileCleanThread · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="AIXxlJob → FixRateScheduleType · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="AIXxlJob → WebErrorPageRegistrar · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="AIXxlJob → XxlJobGroupMapperTest · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="AIXxlJob → BaseTests · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="AIXxlJob → XxlJobExecutorExampleBootApplicationTests · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="AIXxlJob → JacksonUtilTest · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="xxl-job-core/src/main/java/com/xxl/job/core/context/XxlJobContext.java">XxlJobContext</th>
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobContext → JobLogController · weight: 18 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobContext → SampleXxlJob · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobContext → JobTrigger · weight: 18 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobContext → JobInfoController · weight: 18 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobContext → XxlJobLog · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobContext → XxlJobHelper · weight: 6 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobContext → AIXxlJob · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobContext → XxlJobGroup · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobContext → XxlJobUser · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobContext → IndexController · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobContext → XxlJobInfoMapper · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobContext → XxlJobRegistry · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobContext → ExecutorRouteStrategyEnum · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobContext → XxlJobGroupMapper · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobContext → XxlJobService · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobContext → MethodJobHandler · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobContext → XxlJobConfig · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobContext → XxlJobRegistryMapper · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobContext → JobFailAlarmMonitorHelper · weight: 20 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobContext → JobInfoControllerTest · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobContext → JobLogFileCleanThread · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobContext → FixRateScheduleType · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobContext → WebErrorPageRegistrar · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobContext → XxlJobGroupMapperTest · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobContext → BaseTests · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobContext → XxlJobExecutorExampleBootApplicationTests · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobContext → JacksonUtilTest · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="xxl-job-admin/src/main/java/com/xxl/job/admin/model/XxlJobGroup.java">XxlJobGroup</th>
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobGroup → JobLogController · weight: 18 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobGroup → SampleXxlJob · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobGroup → JobTrigger · weight: 18 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobGroup → JobInfoController · weight: 18 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobGroup → XxlJobLog · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobGroup → XxlJobHelper · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobGroup → AIXxlJob · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobGroup → XxlJobContext · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobGroup → XxlJobUser · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobGroup → IndexController · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobGroup → XxlJobInfoMapper · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobGroup → XxlJobRegistry · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobGroup → ExecutorRouteStrategyEnum · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobGroup → XxlJobGroupMapper · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobGroup → XxlJobService · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobGroup → MethodJobHandler · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobGroup → XxlJobConfig · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobGroup → XxlJobRegistryMapper · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobGroup → JobFailAlarmMonitorHelper · weight: 20 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobGroup → JobInfoControllerTest · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobGroup → JobLogFileCleanThread · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobGroup → FixRateScheduleType · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobGroup → WebErrorPageRegistrar · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobGroup → XxlJobGroupMapperTest · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobGroup → BaseTests · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobGroup → XxlJobExecutorExampleBootApplicationTests · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobGroup → JacksonUtilTest · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="xxl-job-admin/src/main/java/com/xxl/job/admin/model/XxlJobUser.java">XxlJobUser</th>
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobUser → JobLogController · weight: 18 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobUser → SampleXxlJob · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobUser → JobTrigger · weight: 18 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobUser → JobInfoController · weight: 18 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobUser → XxlJobLog · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobUser → XxlJobHelper · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobUser → AIXxlJob · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobUser → XxlJobContext · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobUser → XxlJobGroup · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobUser → IndexController · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobUser → XxlJobInfoMapper · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobUser → XxlJobRegistry · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobUser → ExecutorRouteStrategyEnum · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobUser → XxlJobGroupMapper · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobUser → XxlJobService · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobUser → MethodJobHandler · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobUser → XxlJobConfig · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobUser → XxlJobRegistryMapper · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobUser → JobFailAlarmMonitorHelper · weight: 20 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobUser → JobInfoControllerTest · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobUser → JobLogFileCleanThread · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobUser → FixRateScheduleType · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobUser → WebErrorPageRegistrar · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobUser → XxlJobGroupMapperTest · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobUser → BaseTests · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobUser → XxlJobExecutorExampleBootApplicationTests · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobUser → JacksonUtilTest · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="xxl-job-executor-samples/xxl-job-executor-sample-springboot-ai/src/main/java/com/xxl/job/executor/controller/IndexController.java">IndexController</th>
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="IndexController → JobLogController · weight: 18 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="IndexController → SampleXxlJob · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="IndexController → JobTrigger · weight: 18 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="IndexController → JobInfoController · weight: 18 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="IndexController → XxlJobLog · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="IndexController → XxlJobHelper · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="IndexController → AIXxlJob · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="IndexController → XxlJobContext · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="IndexController → XxlJobGroup · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="IndexController → XxlJobUser · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="IndexController → XxlJobInfoMapper · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="IndexController → XxlJobRegistry · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="IndexController → ExecutorRouteStrategyEnum · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="IndexController → XxlJobGroupMapper · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="IndexController → XxlJobService · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="IndexController → MethodJobHandler · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="IndexController → XxlJobConfig · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="IndexController → XxlJobRegistryMapper · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="IndexController → JobFailAlarmMonitorHelper · weight: 20 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="IndexController → JobInfoControllerTest · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="IndexController → JobLogFileCleanThread · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="IndexController → FixRateScheduleType · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="IndexController → WebErrorPageRegistrar · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="IndexController → XxlJobGroupMapperTest · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="IndexController → BaseTests · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="IndexController → XxlJobExecutorExampleBootApplicationTests · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="IndexController → JacksonUtilTest · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="xxl-job-admin/src/main/java/com/xxl/job/admin/mapper/XxlJobInfoMapper.java">XxlJobInfoMapper</th>
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobInfoMapper → JobLogController · weight: 18 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobInfoMapper → SampleXxlJob · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobInfoMapper → JobTrigger · weight: 18 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobInfoMapper → JobInfoController · weight: 18 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobInfoMapper → XxlJobLog · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobInfoMapper → XxlJobHelper · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobInfoMapper → AIXxlJob · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobInfoMapper → XxlJobContext · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobInfoMapper → XxlJobGroup · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobInfoMapper → XxlJobUser · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobInfoMapper → IndexController · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobInfoMapper → XxlJobRegistry · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobInfoMapper → ExecutorRouteStrategyEnum · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobInfoMapper → XxlJobGroupMapper · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobInfoMapper → XxlJobService · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobInfoMapper → MethodJobHandler · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobInfoMapper → XxlJobConfig · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobInfoMapper → XxlJobRegistryMapper · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobInfoMapper → JobFailAlarmMonitorHelper · weight: 20 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobInfoMapper → JobInfoControllerTest · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobInfoMapper → JobLogFileCleanThread · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobInfoMapper → FixRateScheduleType · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobInfoMapper → WebErrorPageRegistrar · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobInfoMapper → XxlJobGroupMapperTest · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobInfoMapper → BaseTests · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobInfoMapper → XxlJobExecutorExampleBootApplicationTests · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobInfoMapper → JacksonUtilTest · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="xxl-job-admin/src/main/java/com/xxl/job/admin/model/XxlJobRegistry.java">XxlJobRegistry</th>
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobRegistry → JobLogController · weight: 18 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobRegistry → SampleXxlJob · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobRegistry → JobTrigger · weight: 18 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobRegistry → JobInfoController · weight: 18 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobRegistry → XxlJobLog · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobRegistry → XxlJobHelper · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobRegistry → AIXxlJob · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobRegistry → XxlJobContext · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobRegistry → XxlJobGroup · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobRegistry → XxlJobUser · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobRegistry → IndexController · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobRegistry → XxlJobInfoMapper · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobRegistry → ExecutorRouteStrategyEnum · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobRegistry → XxlJobGroupMapper · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobRegistry → XxlJobService · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobRegistry → MethodJobHandler · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobRegistry → XxlJobConfig · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobRegistry → XxlJobRegistryMapper · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobRegistry → JobFailAlarmMonitorHelper · weight: 20 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobRegistry → JobInfoControllerTest · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobRegistry → JobLogFileCleanThread · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobRegistry → FixRateScheduleType · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobRegistry → WebErrorPageRegistrar · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobRegistry → XxlJobGroupMapperTest · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobRegistry → BaseTests · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobRegistry → XxlJobExecutorExampleBootApplicationTests · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobRegistry → JacksonUtilTest · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="xxl-job-admin/src/main/java/com/xxl/job/admin/scheduler/route/ExecutorRouteStrategyEnum.java">ExecutorRouteStrategyEnum</th>
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ExecutorRouteStrategyEnum → JobLogController · weight: 18 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ExecutorRouteStrategyEnum → SampleXxlJob · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ExecutorRouteStrategyEnum → JobTrigger · weight: 18 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ExecutorRouteStrategyEnum → JobInfoController · weight: 18 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ExecutorRouteStrategyEnum → XxlJobLog · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ExecutorRouteStrategyEnum → XxlJobHelper · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ExecutorRouteStrategyEnum → AIXxlJob · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ExecutorRouteStrategyEnum → XxlJobContext · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ExecutorRouteStrategyEnum → XxlJobGroup · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ExecutorRouteStrategyEnum → XxlJobUser · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ExecutorRouteStrategyEnum → IndexController · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ExecutorRouteStrategyEnum → XxlJobInfoMapper · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ExecutorRouteStrategyEnum → XxlJobRegistry · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ExecutorRouteStrategyEnum → XxlJobGroupMapper · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ExecutorRouteStrategyEnum → XxlJobService · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ExecutorRouteStrategyEnum → MethodJobHandler · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ExecutorRouteStrategyEnum → XxlJobConfig · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ExecutorRouteStrategyEnum → XxlJobRegistryMapper · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ExecutorRouteStrategyEnum → JobFailAlarmMonitorHelper · weight: 20 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ExecutorRouteStrategyEnum → JobInfoControllerTest · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ExecutorRouteStrategyEnum → JobLogFileCleanThread · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ExecutorRouteStrategyEnum → FixRateScheduleType · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ExecutorRouteStrategyEnum → WebErrorPageRegistrar · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ExecutorRouteStrategyEnum → XxlJobGroupMapperTest · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ExecutorRouteStrategyEnum → BaseTests · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ExecutorRouteStrategyEnum → XxlJobExecutorExampleBootApplicationTests · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ExecutorRouteStrategyEnum → JacksonUtilTest · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="xxl-job-admin/src/main/java/com/xxl/job/admin/mapper/XxlJobGroupMapper.java">XxlJobGroupMapper</th>
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobGroupMapper → JobLogController · weight: 18 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobGroupMapper → SampleXxlJob · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobGroupMapper → JobTrigger · weight: 18 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobGroupMapper → JobInfoController · weight: 18 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobGroupMapper → XxlJobLog · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobGroupMapper → XxlJobHelper · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobGroupMapper → AIXxlJob · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobGroupMapper → XxlJobContext · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#13c-ef63" title="XxlJobGroupMapper → XxlJobGroup · weight: 4 · cw: 2.6353 · METHOD_PARAMETER_TYPE, METHOD_RETURN_TYPE, PARAMETERIZED_TYPE, VARIABLE_SINGLE_DECLARATION"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobGroupMapper → XxlJobUser · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobGroupMapper → IndexController · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobGroupMapper → XxlJobInfoMapper · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobGroupMapper → XxlJobRegistry · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobGroupMapper → ExecutorRouteStrategyEnum · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobGroupMapper → XxlJobService · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobGroupMapper → MethodJobHandler · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobGroupMapper → XxlJobConfig · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobGroupMapper → XxlJobRegistryMapper · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobGroupMapper → JobFailAlarmMonitorHelper · weight: 20 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobGroupMapper → JobInfoControllerTest · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobGroupMapper → JobLogFileCleanThread · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobGroupMapper → FixRateScheduleType · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobGroupMapper → WebErrorPageRegistrar · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobGroupMapper → XxlJobGroupMapperTest · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobGroupMapper → BaseTests · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobGroupMapper → XxlJobExecutorExampleBootApplicationTests · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobGroupMapper → JacksonUtilTest · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="xxl-job-admin/src/main/java/com/xxl/job/admin/service/XxlJobService.java">XxlJobService</th>
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobService → JobLogController · weight: 18 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobService → SampleXxlJob · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobService → JobTrigger · weight: 18 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobService → JobInfoController · weight: 18 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobService → XxlJobLog · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobService → XxlJobHelper · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobService → AIXxlJob · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobService → XxlJobContext · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobService → XxlJobGroup · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobService → XxlJobUser · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobService → IndexController · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobService → XxlJobInfoMapper · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobService → XxlJobRegistry · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobService → ExecutorRouteStrategyEnum · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobService → XxlJobGroupMapper · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobService → MethodJobHandler · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobService → XxlJobConfig · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobService → XxlJobRegistryMapper · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobService → JobFailAlarmMonitorHelper · weight: 20 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobService → JobInfoControllerTest · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobService → JobLogFileCleanThread · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobService → FixRateScheduleType · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobService → WebErrorPageRegistrar · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobService → XxlJobGroupMapperTest · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobService → BaseTests · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobService → XxlJobExecutorExampleBootApplicationTests · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobService → JacksonUtilTest · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="xxl-job-core/src/main/java/com/xxl/job/core/handler/impl/MethodJobHandler.java">MethodJobHandler</th>
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="MethodJobHandler → JobLogController · weight: 18 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="MethodJobHandler → SampleXxlJob · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="MethodJobHandler → JobTrigger · weight: 18 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="MethodJobHandler → JobInfoController · weight: 18 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="MethodJobHandler → XxlJobLog · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="MethodJobHandler → XxlJobHelper · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="MethodJobHandler → AIXxlJob · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="MethodJobHandler → XxlJobContext · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="MethodJobHandler → XxlJobGroup · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="MethodJobHandler → XxlJobUser · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="MethodJobHandler → IndexController · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="MethodJobHandler → XxlJobInfoMapper · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="MethodJobHandler → XxlJobRegistry · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="MethodJobHandler → ExecutorRouteStrategyEnum · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="MethodJobHandler → XxlJobGroupMapper · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="MethodJobHandler → XxlJobService · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="MethodJobHandler → XxlJobConfig · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="MethodJobHandler → XxlJobRegistryMapper · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="MethodJobHandler → JobFailAlarmMonitorHelper · weight: 20 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="MethodJobHandler → JobInfoControllerTest · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="MethodJobHandler → JobLogFileCleanThread · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="MethodJobHandler → FixRateScheduleType · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="MethodJobHandler → WebErrorPageRegistrar · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="MethodJobHandler → XxlJobGroupMapperTest · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="MethodJobHandler → BaseTests · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="MethodJobHandler → XxlJobExecutorExampleBootApplicationTests · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="MethodJobHandler → JacksonUtilTest · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="xxl-job-executor-samples/xxl-job-executor-sample-springboot-ai/src/main/java/com/xxl/job/executor/config/XxlJobConfig.java">XxlJobConfig</th>
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobConfig → JobLogController · weight: 18 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobConfig → SampleXxlJob · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobConfig → JobTrigger · weight: 18 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobConfig → JobInfoController · weight: 18 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobConfig → XxlJobLog · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobConfig → XxlJobHelper · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobConfig → AIXxlJob · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobConfig → XxlJobContext · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobConfig → XxlJobGroup · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobConfig → XxlJobUser · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobConfig → IndexController · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobConfig → XxlJobInfoMapper · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobConfig → XxlJobRegistry · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobConfig → ExecutorRouteStrategyEnum · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobConfig → XxlJobGroupMapper · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobConfig → XxlJobService · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobConfig → MethodJobHandler · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobConfig → XxlJobRegistryMapper · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobConfig → JobFailAlarmMonitorHelper · weight: 20 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobConfig → JobInfoControllerTest · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobConfig → JobLogFileCleanThread · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobConfig → FixRateScheduleType · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobConfig → WebErrorPageRegistrar · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobConfig → XxlJobGroupMapperTest · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobConfig → BaseTests · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobConfig → XxlJobExecutorExampleBootApplicationTests · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobConfig → JacksonUtilTest · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="xxl-job-admin/src/main/java/com/xxl/job/admin/mapper/XxlJobRegistryMapper.java">XxlJobRegistryMapper</th>
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobRegistryMapper → JobLogController · weight: 18 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobRegistryMapper → SampleXxlJob · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobRegistryMapper → JobTrigger · weight: 18 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobRegistryMapper → JobInfoController · weight: 18 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobRegistryMapper → XxlJobLog · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobRegistryMapper → XxlJobHelper · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobRegistryMapper → AIXxlJob · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobRegistryMapper → XxlJobContext · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobRegistryMapper → XxlJobGroup · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobRegistryMapper → XxlJobUser · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobRegistryMapper → IndexController · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobRegistryMapper → XxlJobInfoMapper · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#e79c42" title="XxlJobRegistryMapper → XxlJobRegistry · weight: 4 · cw: 0.6167 · PARAMETERIZED_TYPE"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobRegistryMapper → ExecutorRouteStrategyEnum · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobRegistryMapper → XxlJobGroupMapper · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobRegistryMapper → XxlJobService · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobRegistryMapper → MethodJobHandler · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobRegistryMapper → XxlJobConfig · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobRegistryMapper → JobFailAlarmMonitorHelper · weight: 20 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobRegistryMapper → JobInfoControllerTest · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobRegistryMapper → JobLogFileCleanThread · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobRegistryMapper → FixRateScheduleType · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobRegistryMapper → WebErrorPageRegistrar · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobRegistryMapper → XxlJobGroupMapperTest · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobRegistryMapper → BaseTests · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobRegistryMapper → XxlJobExecutorExampleBootApplicationTests · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobRegistryMapper → JacksonUtilTest · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="xxl-job-admin/src/main/java/com/xxl/job/admin/scheduler/thread/JobFailAlarmMonitorHelper.java">JobFailAlarmMonitorHelper</th>
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobFailAlarmMonitorHelper → JobLogController · weight: 90 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobFailAlarmMonitorHelper → SampleXxlJob · weight: 20 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobFailAlarmMonitorHelper → JobTrigger · weight: 90 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobFailAlarmMonitorHelper → JobInfoController · weight: 90 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobFailAlarmMonitorHelper → XxlJobLog · weight: 20 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobFailAlarmMonitorHelper → XxlJobHelper · weight: 20 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobFailAlarmMonitorHelper → AIXxlJob · weight: 20 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobFailAlarmMonitorHelper → XxlJobContext · weight: 20 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobFailAlarmMonitorHelper → XxlJobGroup · weight: 20 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobFailAlarmMonitorHelper → XxlJobUser · weight: 20 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobFailAlarmMonitorHelper → IndexController · weight: 20 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobFailAlarmMonitorHelper → XxlJobInfoMapper · weight: 20 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobFailAlarmMonitorHelper → XxlJobRegistry · weight: 20 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobFailAlarmMonitorHelper → ExecutorRouteStrategyEnum · weight: 20 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobFailAlarmMonitorHelper → XxlJobGroupMapper · weight: 20 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobFailAlarmMonitorHelper → XxlJobService · weight: 20 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobFailAlarmMonitorHelper → MethodJobHandler · weight: 20 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobFailAlarmMonitorHelper → XxlJobConfig · weight: 20 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobFailAlarmMonitorHelper → XxlJobRegistryMapper · weight: 20 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobFailAlarmMonitorHelper → JobInfoControllerTest · weight: 20 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobFailAlarmMonitorHelper → JobLogFileCleanThread · weight: 20 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobFailAlarmMonitorHelper → FixRateScheduleType · weight: 20 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobFailAlarmMonitorHelper → WebErrorPageRegistrar · weight: 20 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobFailAlarmMonitorHelper → XxlJobGroupMapperTest · weight: 20 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobFailAlarmMonitorHelper → BaseTests · weight: 20 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobFailAlarmMonitorHelper → XxlJobExecutorExampleBootApplicationTests · weight: 20 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobFailAlarmMonitorHelper → JacksonUtilTest · weight: 20 · cw: 0.0000 · co-change only"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="xxl-job-admin/src/test/java/com/xxl/job/admin/controller/JobInfoControllerTest.java">JobInfoControllerTest</th>
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobInfoControllerTest → JobLogController · weight: 18 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobInfoControllerTest → SampleXxlJob · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobInfoControllerTest → JobTrigger · weight: 18 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobInfoControllerTest → JobInfoController · weight: 18 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobInfoControllerTest → XxlJobLog · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobInfoControllerTest → XxlJobHelper · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobInfoControllerTest → AIXxlJob · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobInfoControllerTest → XxlJobContext · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobInfoControllerTest → XxlJobGroup · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobInfoControllerTest → XxlJobUser · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobInfoControllerTest → IndexController · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobInfoControllerTest → XxlJobInfoMapper · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobInfoControllerTest → XxlJobRegistry · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobInfoControllerTest → ExecutorRouteStrategyEnum · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobInfoControllerTest → XxlJobGroupMapper · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobInfoControllerTest → XxlJobService · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobInfoControllerTest → MethodJobHandler · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobInfoControllerTest → XxlJobConfig · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobInfoControllerTest → XxlJobRegistryMapper · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobInfoControllerTest → JobFailAlarmMonitorHelper · weight: 20 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobInfoControllerTest → JobLogFileCleanThread · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobInfoControllerTest → FixRateScheduleType · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobInfoControllerTest → WebErrorPageRegistrar · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobInfoControllerTest → XxlJobGroupMapperTest · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobInfoControllerTest → BaseTests · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobInfoControllerTest → XxlJobExecutorExampleBootApplicationTests · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobInfoControllerTest → JacksonUtilTest · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="xxl-job-core/src/main/java/com/xxl/job/core/thread/JobLogFileCleanThread.java">JobLogFileCleanThread</th>
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobLogFileCleanThread → JobLogController · weight: 18 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobLogFileCleanThread → SampleXxlJob · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobLogFileCleanThread → JobTrigger · weight: 18 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobLogFileCleanThread → JobInfoController · weight: 18 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobLogFileCleanThread → XxlJobLog · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobLogFileCleanThread → XxlJobHelper · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobLogFileCleanThread → AIXxlJob · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobLogFileCleanThread → XxlJobContext · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobLogFileCleanThread → XxlJobGroup · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobLogFileCleanThread → XxlJobUser · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobLogFileCleanThread → IndexController · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobLogFileCleanThread → XxlJobInfoMapper · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobLogFileCleanThread → XxlJobRegistry · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobLogFileCleanThread → ExecutorRouteStrategyEnum · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobLogFileCleanThread → XxlJobGroupMapper · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobLogFileCleanThread → XxlJobService · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobLogFileCleanThread → MethodJobHandler · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobLogFileCleanThread → XxlJobConfig · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobLogFileCleanThread → XxlJobRegistryMapper · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobLogFileCleanThread → JobFailAlarmMonitorHelper · weight: 20 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobLogFileCleanThread → JobInfoControllerTest · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobLogFileCleanThread → FixRateScheduleType · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobLogFileCleanThread → WebErrorPageRegistrar · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobLogFileCleanThread → XxlJobGroupMapperTest · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobLogFileCleanThread → BaseTests · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobLogFileCleanThread → XxlJobExecutorExampleBootApplicationTests · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobLogFileCleanThread → JacksonUtilTest · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="xxl-job-admin/src/main/java/com/xxl/job/admin/scheduler/type/strategy/FixRateScheduleType.java">FixRateScheduleType</th>
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="FixRateScheduleType → JobLogController · weight: 18 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="FixRateScheduleType → SampleXxlJob · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="FixRateScheduleType → JobTrigger · weight: 18 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="FixRateScheduleType → JobInfoController · weight: 18 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="FixRateScheduleType → XxlJobLog · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="FixRateScheduleType → XxlJobHelper · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="FixRateScheduleType → AIXxlJob · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="FixRateScheduleType → XxlJobContext · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="FixRateScheduleType → XxlJobGroup · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="FixRateScheduleType → XxlJobUser · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="FixRateScheduleType → IndexController · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="FixRateScheduleType → XxlJobInfoMapper · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="FixRateScheduleType → XxlJobRegistry · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="FixRateScheduleType → ExecutorRouteStrategyEnum · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="FixRateScheduleType → XxlJobGroupMapper · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="FixRateScheduleType → XxlJobService · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="FixRateScheduleType → MethodJobHandler · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="FixRateScheduleType → XxlJobConfig · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="FixRateScheduleType → XxlJobRegistryMapper · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="FixRateScheduleType → JobFailAlarmMonitorHelper · weight: 20 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="FixRateScheduleType → JobInfoControllerTest · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="FixRateScheduleType → JobLogFileCleanThread · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="FixRateScheduleType → WebErrorPageRegistrar · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="FixRateScheduleType → XxlJobGroupMapperTest · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="FixRateScheduleType → BaseTests · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="FixRateScheduleType → XxlJobExecutorExampleBootApplicationTests · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="FixRateScheduleType → JacksonUtilTest · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="xxl-job-admin/src/main/java/com/xxl/job/admin/web/error/WebErrorPageRegistrar.java">WebErrorPageRegistrar</th>
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="WebErrorPageRegistrar → JobLogController · weight: 18 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="WebErrorPageRegistrar → SampleXxlJob · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="WebErrorPageRegistrar → JobTrigger · weight: 18 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="WebErrorPageRegistrar → JobInfoController · weight: 18 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="WebErrorPageRegistrar → XxlJobLog · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="WebErrorPageRegistrar → XxlJobHelper · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="WebErrorPageRegistrar → AIXxlJob · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="WebErrorPageRegistrar → XxlJobContext · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="WebErrorPageRegistrar → XxlJobGroup · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="WebErrorPageRegistrar → XxlJobUser · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="WebErrorPageRegistrar → IndexController · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="WebErrorPageRegistrar → XxlJobInfoMapper · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="WebErrorPageRegistrar → XxlJobRegistry · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="WebErrorPageRegistrar → ExecutorRouteStrategyEnum · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="WebErrorPageRegistrar → XxlJobGroupMapper · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="WebErrorPageRegistrar → XxlJobService · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="WebErrorPageRegistrar → MethodJobHandler · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="WebErrorPageRegistrar → XxlJobConfig · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="WebErrorPageRegistrar → XxlJobRegistryMapper · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="WebErrorPageRegistrar → JobFailAlarmMonitorHelper · weight: 20 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="WebErrorPageRegistrar → JobInfoControllerTest · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="WebErrorPageRegistrar → JobLogFileCleanThread · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="WebErrorPageRegistrar → FixRateScheduleType · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="WebErrorPageRegistrar → XxlJobGroupMapperTest · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="WebErrorPageRegistrar → BaseTests · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="WebErrorPageRegistrar → XxlJobExecutorExampleBootApplicationTests · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="WebErrorPageRegistrar → JacksonUtilTest · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="xxl-job-admin/src/test/java/com/xxl/job/admin/mapper/XxlJobGroupMapperTest.java">XxlJobGroupMapperTest</th>
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobGroupMapperTest → JobLogController · weight: 18 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobGroupMapperTest → SampleXxlJob · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobGroupMapperTest → JobTrigger · weight: 18 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobGroupMapperTest → JobInfoController · weight: 18 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobGroupMapperTest → XxlJobLog · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobGroupMapperTest → XxlJobHelper · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobGroupMapperTest → AIXxlJob · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobGroupMapperTest → XxlJobContext · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#16e-1d876" title="XxlJobGroupMapperTest → XxlJobGroup · weight: 4 · cw: 3.8233 · ATOMIC_PARAMETER_COUPLING, METHOD_INVOCATION_ATOMIC_PARAMETER, METHOD_INVOCATION_OBJECT_PARAMETER, PARAMETERIZED_TYPE, VARIABLE_CLASS_INSTANCE_CREATION, VARIABLE_DECLARATION_STATEMENT"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobGroupMapperTest → XxlJobUser · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobGroupMapperTest → IndexController · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobGroupMapperTest → XxlJobInfoMapper · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobGroupMapperTest → XxlJobRegistry · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobGroupMapperTest → ExecutorRouteStrategyEnum · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#13a-e662" title="XxlJobGroupMapperTest → XxlJobGroupMapper · weight: 4 · cw: 2.5886 · DATA_ABSTRACTION_COUPLING, METHOD_INVOCATION_ATOMIC_PARAMETER, METHOD_INVOCATION_OBJECT_PARAMETER, VARIABLE_FIELD_DECLARATION"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobGroupMapperTest → XxlJobService · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobGroupMapperTest → MethodJobHandler · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobGroupMapperTest → XxlJobConfig · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobGroupMapperTest → XxlJobRegistryMapper · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobGroupMapperTest → JobFailAlarmMonitorHelper · weight: 20 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobGroupMapperTest → JobInfoControllerTest · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobGroupMapperTest → JobLogFileCleanThread · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobGroupMapperTest → FixRateScheduleType · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobGroupMapperTest → WebErrorPageRegistrar · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobGroupMapperTest → BaseTests · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobGroupMapperTest → XxlJobExecutorExampleBootApplicationTests · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobGroupMapperTest → JacksonUtilTest · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="xxl-job-executor-samples/xxl-job-executor-sample-springboot-ai/src/test/java/com/xxl/job/executor/test/BaseTests.java">BaseTests</th>
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="BaseTests → JobLogController · weight: 18 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="BaseTests → SampleXxlJob · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="BaseTests → JobTrigger · weight: 18 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="BaseTests → JobInfoController · weight: 18 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="BaseTests → XxlJobLog · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="BaseTests → XxlJobHelper · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="BaseTests → AIXxlJob · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="BaseTests → XxlJobContext · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="BaseTests → XxlJobGroup · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="BaseTests → XxlJobUser · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="BaseTests → IndexController · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="BaseTests → XxlJobInfoMapper · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="BaseTests → XxlJobRegistry · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="BaseTests → ExecutorRouteStrategyEnum · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="BaseTests → XxlJobGroupMapper · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="BaseTests → XxlJobService · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="BaseTests → MethodJobHandler · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="BaseTests → XxlJobConfig · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="BaseTests → XxlJobRegistryMapper · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="BaseTests → JobFailAlarmMonitorHelper · weight: 20 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="BaseTests → JobInfoControllerTest · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="BaseTests → JobLogFileCleanThread · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="BaseTests → FixRateScheduleType · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="BaseTests → WebErrorPageRegistrar · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="BaseTests → XxlJobGroupMapperTest · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="BaseTests → XxlJobExecutorExampleBootApplicationTests · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="BaseTests → JacksonUtilTest · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="xxl-job-executor-samples/xxl-job-executor-sample-springboot/src/test/java/com/xxl/job/executor/test/XxlJobExecutorExampleBootApplicationTests.java">XxlJobExecutorExampleBootApplicationTests</th>
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobExecutorExampleBootApplicationTests → JobLogController · weight: 18 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobExecutorExampleBootApplicationTests → SampleXxlJob · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobExecutorExampleBootApplicationTests → JobTrigger · weight: 18 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobExecutorExampleBootApplicationTests → JobInfoController · weight: 18 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobExecutorExampleBootApplicationTests → XxlJobLog · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobExecutorExampleBootApplicationTests → XxlJobHelper · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobExecutorExampleBootApplicationTests → AIXxlJob · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobExecutorExampleBootApplicationTests → XxlJobContext · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobExecutorExampleBootApplicationTests → XxlJobGroup · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobExecutorExampleBootApplicationTests → XxlJobUser · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobExecutorExampleBootApplicationTests → IndexController · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobExecutorExampleBootApplicationTests → XxlJobInfoMapper · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobExecutorExampleBootApplicationTests → XxlJobRegistry · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobExecutorExampleBootApplicationTests → ExecutorRouteStrategyEnum · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobExecutorExampleBootApplicationTests → XxlJobGroupMapper · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobExecutorExampleBootApplicationTests → XxlJobService · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobExecutorExampleBootApplicationTests → MethodJobHandler · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobExecutorExampleBootApplicationTests → XxlJobConfig · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobExecutorExampleBootApplicationTests → XxlJobRegistryMapper · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobExecutorExampleBootApplicationTests → JobFailAlarmMonitorHelper · weight: 20 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobExecutorExampleBootApplicationTests → JobInfoControllerTest · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobExecutorExampleBootApplicationTests → JobLogFileCleanThread · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobExecutorExampleBootApplicationTests → FixRateScheduleType · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobExecutorExampleBootApplicationTests → WebErrorPageRegistrar · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobExecutorExampleBootApplicationTests → XxlJobGroupMapperTest · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobExecutorExampleBootApplicationTests → BaseTests · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="XxlJobExecutorExampleBootApplicationTests → JacksonUtilTest · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="xxl-job-admin/src/test/java/com/xxl/job/admin/core/util/JacksonUtilTest.java">JacksonUtilTest</th>
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JacksonUtilTest → JobLogController · weight: 18 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JacksonUtilTest → SampleXxlJob · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JacksonUtilTest → JobTrigger · weight: 18 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JacksonUtilTest → JobInfoController · weight: 18 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JacksonUtilTest → XxlJobLog · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JacksonUtilTest → XxlJobHelper · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JacksonUtilTest → AIXxlJob · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JacksonUtilTest → XxlJobContext · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JacksonUtilTest → XxlJobGroup · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JacksonUtilTest → XxlJobUser · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JacksonUtilTest → IndexController · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JacksonUtilTest → XxlJobInfoMapper · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JacksonUtilTest → XxlJobRegistry · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JacksonUtilTest → ExecutorRouteStrategyEnum · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JacksonUtilTest → XxlJobGroupMapper · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JacksonUtilTest → XxlJobService · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JacksonUtilTest → MethodJobHandler · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JacksonUtilTest → XxlJobConfig · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JacksonUtilTest → XxlJobRegistryMapper · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JacksonUtilTest → JobFailAlarmMonitorHelper · weight: 20 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JacksonUtilTest → JobInfoControllerTest · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JacksonUtilTest → JobLogFileCleanThread · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JacksonUtilTest → FixRateScheduleType · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JacksonUtilTest → WebErrorPageRegistrar · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JacksonUtilTest → XxlJobGroupMapperTest · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JacksonUtilTest → BaseTests · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JacksonUtilTest → XxlJobExecutorExampleBootApplicationTests · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+        </tr>
+        
+      </tbody>
+    </table>
+  </div>
+</section>
+
+
+</body>
+</html>

@@ -1,0 +1,695 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HyCPA — Community 38 · alibaba/spring-cloud-alibaba</title>
+  <style>
+:root {
+  --bg: #0d1117; --surface: #161b22; --surface2: #21262d;
+  --border: #30363d; --text: #e6edf3; --text2: #8b949e;
+  --accent: #58a6ff; --green: #3fb950; --orange: #e3b341; --red: #f85149;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { background: var(--bg); color: var(--text); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif; padding-bottom: 48px; }
+
+/* ── Header ── */
+.page-header { background: var(--surface); border-bottom: 1px solid var(--border); padding: 12px 24px; display: flex; align-items: center; gap: 20px; }
+.back-btn { color: var(--text2); font-size: 12px; text-decoration: none; white-space: nowrap; }
+.back-btn:hover { color: var(--accent); }
+.header-title { font-size: 15px; color: var(--text); }
+.header-title strong { color: var(--accent); }
+
+/* ── Stats pills ── */
+.stats-row { display: flex; gap: 12px; padding: 16px 24px; background: var(--surface); border-bottom: 1px solid var(--border); flex-wrap: wrap; }
+.stat-pill { background: var(--surface2); border: 1px solid var(--border); border-radius: 8px; padding: 10px 20px; display: flex; flex-direction: column; align-items: center; gap: 2px; min-width: 90px; }
+.pill-val { font-size: 22px; font-weight: 700; color: var(--text); line-height: 1; }
+.pill-lbl { font-size: 10px; color: var(--text2); text-transform: uppercase; letter-spacing: 0.5px; margin-top: 2px; }
+
+/* ── Content sections ── */
+.content-section { padding: 24px; }
+.section-title { font-size: 11px; font-weight: 600; color: var(--text2); text-transform: uppercase; letter-spacing: 0.6px; margin-bottom: 14px; display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
+
+/* ── Node table ── */
+.node-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+.node-table th { background: var(--surface); color: var(--text2); font-weight: 600; font-size: 10px; text-transform: uppercase; letter-spacing: 0.5px; padding: 8px 12px; text-align: left; border-bottom: 2px solid var(--border); white-space: nowrap; }
+.node-table td { padding: 7px 12px; border-bottom: 1px solid var(--border); vertical-align: middle; }
+.node-table tbody tr:hover td { background: var(--surface); }
+.health-badge { display: inline-block; padding: 2px 9px; border-radius: 10px; font-size: 11px; font-weight: 700; color: #0d1117; white-space: nowrap; }
+.class-path { font-size: 11px; color: var(--text2); font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', monospace; word-break: break-all; }
+td.num { text-align: right; font-weight: 600; white-space: nowrap; }
+td.overlap { color: var(--accent); }
+
+/* ── Coupling matrix ── */
+.matrix-wrap { overflow: auto; }
+.matrix { border-collapse: collapse; }
+.matrix-corner { min-width: 16px; }
+.matrix-col-hdr { padding: 0 1px 4px 1px; vertical-align: bottom; }
+.matrix-col-hdr span { display: block; writing-mode: vertical-rl; transform: rotate(180deg); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-height: 140px; color: var(--text2); font-weight: 400; font-size: 10px; cursor: default; text-align: left; }
+.matrix-row-hdr { text-align: right; padding: 1px 6px 1px 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 200px; color: var(--text2); font-weight: 400; font-size: 10px; cursor: default; }
+.matrix-cell { width: 16px; height: 16px; min-width: 16px; min-height: 16px; border: 1px solid #1c2129; cursor: default; }
+.matrix-cell.empty { background: transparent; }
+.matrix-cell.self-cell { background: var(--surface2); }
+.matrix-cell.filled { }
+
+/* ── Legend inline ── */
+.legend-inline { display: inline-flex; align-items: center; gap: 6px; font-size: 10px; color: var(--text2); font-weight: 400; text-transform: none; letter-spacing: 0; }
+.li-cell { display: inline-block; width: 10px; height: 10px; border-radius: 2px; vertical-align: middle; flex-shrink: 0; }
+</style>
+</head>
+<body>
+
+<div class="page-header">
+  <a class="back-btn" href="repo_alibaba_spring-cloud-alibaba.html">← Back to alibaba/spring-cloud-alibaba</a>
+  <span class="header-title">Community <strong>C38</strong> — alibaba/spring-cloud-alibaba</span>
+</div>
+
+<div class="stats-row">
+  <div class="stat-pill"><span class="pill-val">12</span><span class="pill-lbl">Nodes</span></div>
+  <div class="stat-pill"><span class="pill-val">100</span><span class="pill-lbl">Arcs</span></div>
+  <div class="stat-pill"><span class="pill-val">12</span><span class="pill-lbl">Overlapping</span></div>
+  <div class="stat-pill"><span class="pill-val">28</span><span class="pill-lbl">Coupled arcs</span></div>
+  <div class="stat-pill"><span class="pill-val">0</span><span class="pill-lbl">Co-change only</span></div>
+</div>
+
+<section class="content-section">
+  <h2 class="section-title">Nodes</h2>
+  <table class="node-table">
+    <thead>
+      <tr>
+        <th>Health</th>
+        <th>Class</th>
+        <th>Degree</th>
+        <th>Communities</th>
+      </tr>
+    </thead>
+    <tbody>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#e3b341">0.577</span></td>
+        <td class="class-path" title="spring-cloud-alibaba-starters/spring-alibaba-nacos-config/src/main/java/com/alibaba/cloud/nacos/NacosConfigProperties.java">spring-cloud-alibaba-starters/spring-alibaba-nacos-config/src/main/java/com/alibaba/cloud/nacos/NacosConfigProperties.java</td>
+        <td class="num">15</td>
+        <td class="num overlap">5</td>
+      </tr>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#3fb950">0.827</span></td>
+        <td class="class-path" title="spring-cloud-alibaba-starters/spring-alibaba-nacos-config/src/main/java/com/alibaba/cloud/nacos/configdata/NacosConfigDataLoader.java">spring-cloud-alibaba-starters/spring-alibaba-nacos-config/src/main/java/com/alibaba/cloud/nacos/configdata/NacosConfigDataLoader.java</td>
+        <td class="num">22</td>
+        <td class="num overlap">4</td>
+      </tr>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#3fb950">0.865</span></td>
+        <td class="class-path" title="spring-cloud-alibaba-starters/spring-alibaba-nacos-config/src/main/java/com/alibaba/cloud/nacos/configdata/NacosConfigDataResource.java">spring-cloud-alibaba-starters/spring-alibaba-nacos-config/src/main/java/com/alibaba/cloud/nacos/configdata/NacosConfigDataResource.java</td>
+        <td class="num">13</td>
+        <td class="num overlap">2</td>
+      </tr>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#3fb950">0.865</span></td>
+        <td class="class-path" title="spring-cloud-alibaba-starters/spring-alibaba-nacos-config/src/main/java/com/alibaba/cloud/nacos/refresh/NacosContextRefresher.java">spring-cloud-alibaba-starters/spring-alibaba-nacos-config/src/main/java/com/alibaba/cloud/nacos/refresh/NacosContextRefresher.java</td>
+        <td class="num">22</td>
+        <td class="num overlap">2</td>
+      </tr>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#3fb950">0.885</span></td>
+        <td class="class-path" title="spring-cloud-alibaba-starters/spring-alibaba-nacos-config/src/main/java/com/alibaba/cloud/nacos/refresh/NacosPropertySourceRefreshListener.java">spring-cloud-alibaba-starters/spring-alibaba-nacos-config/src/main/java/com/alibaba/cloud/nacos/refresh/NacosPropertySourceRefreshListener.java</td>
+        <td class="num">17</td>
+        <td class="num overlap">3</td>
+      </tr>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#3fb950">0.885</span></td>
+        <td class="class-path" title="spring-cloud-alibaba-starters/spring-alibaba-nacos-config/src/main/java/com/alibaba/cloud/nacos/refresh/NacosSnapshotConfigManager.java">spring-cloud-alibaba-starters/spring-alibaba-nacos-config/src/main/java/com/alibaba/cloud/nacos/refresh/NacosSnapshotConfigManager.java</td>
+        <td class="num">15</td>
+        <td class="num overlap">2</td>
+      </tr>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#3fb950">0.904</span></td>
+        <td class="class-path" title="spring-cloud-alibaba-starters/spring-alibaba-nacos-config/src/main/java/com/alibaba/cloud/nacos/NacosConfigManager.java">spring-cloud-alibaba-starters/spring-alibaba-nacos-config/src/main/java/com/alibaba/cloud/nacos/NacosConfigManager.java</td>
+        <td class="num">14</td>
+        <td class="num overlap">4</td>
+      </tr>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#3fb950">0.904</span></td>
+        <td class="class-path" title="spring-cloud-alibaba-starters/spring-alibaba-nacos-config/src/main/java/com/alibaba/cloud/nacos/client/NacosPropertySource.java">spring-cloud-alibaba-starters/spring-alibaba-nacos-config/src/main/java/com/alibaba/cloud/nacos/client/NacosPropertySource.java</td>
+        <td class="num">14</td>
+        <td class="num overlap">2</td>
+      </tr>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#3fb950">0.904</span></td>
+        <td class="class-path" title="spring-cloud-alibaba-starters/spring-alibaba-nacos-config/src/test/java/com.alibaba.cloud.nacos/refresh/NacosSnapshotConfigManagerTest.java">spring-cloud-alibaba-starters/spring-alibaba-nacos-config/src/test/java/com.alibaba.cloud.nacos/refresh/NacosSnapshotConfigManagerTest.java</td>
+        <td class="num">14</td>
+        <td class="num overlap">2</td>
+      </tr>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#3fb950">0.923</span></td>
+        <td class="class-path" title="spring-cloud-alibaba-starters/spring-alibaba-nacos-config/src/test/java/com.alibaba.cloud.nacos/configdata/NacosConfigDataLoaderTest.java">spring-cloud-alibaba-starters/spring-alibaba-nacos-config/src/test/java/com.alibaba.cloud.nacos/configdata/NacosConfigDataLoaderTest.java</td>
+        <td class="num">17</td>
+        <td class="num overlap">2</td>
+      </tr>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#3fb950">0.962</span></td>
+        <td class="class-path" title="spring-cloud-alibaba-starters/spring-alibaba-nacos-config/src/main/java/com/alibaba/cloud/nacos/client/NacosPropertySourceBuilder.java">spring-cloud-alibaba-starters/spring-alibaba-nacos-config/src/main/java/com/alibaba/cloud/nacos/client/NacosPropertySourceBuilder.java</td>
+        <td class="num">22</td>
+        <td class="num overlap">2</td>
+      </tr>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#3fb950">0.980</span></td>
+        <td class="class-path" title="spring-cloud-alibaba-starters/spring-alibaba-nacos-config/src/test/java/com.alibaba.cloud.nacos/client/NacosPropertySourceBuilderTest.java">spring-cloud-alibaba-starters/spring-alibaba-nacos-config/src/test/java/com.alibaba.cloud.nacos/client/NacosPropertySourceBuilderTest.java</td>
+        <td class="num">15</td>
+        <td class="num overlap">2</td>
+      </tr>
+      
+    </tbody>
+  </table>
+</section>
+
+
+<section class="content-section">
+  <h2 class="section-title">Coupling matrix
+    <span class="legend-inline">
+      <span class="li-cell" style="background:#30363d"></span>Co-change only
+      <span class="li-cell" style="background:#3fb950"></span>Weak
+      <span class="li-cell" style="background:#e3b341"></span>Moderate
+      <span class="li-cell" style="background:#f85149"></span>Strong
+    </span>
+  </h2>
+  <div class="matrix-wrap">
+    <table class="matrix">
+      <thead>
+        <tr>
+          <th class="matrix-corner"></th>
+          <th class="matrix-col-hdr" title="spring-cloud-alibaba-starters/spring-alibaba-nacos-config/src/main/java/com/alibaba/cloud/nacos/NacosConfigProperties.java"><span>NacosConfigProperties</span></th><th class="matrix-col-hdr" title="spring-cloud-alibaba-starters/spring-alibaba-nacos-config/src/main/java/com/alibaba/cloud/nacos/configdata/NacosConfigDataLoader.java"><span>NacosConfigDataLoader</span></th><th class="matrix-col-hdr" title="spring-cloud-alibaba-starters/spring-alibaba-nacos-config/src/main/java/com/alibaba/cloud/nacos/configdata/NacosConfigDataResource.java"><span>NacosConfigDataResource</span></th><th class="matrix-col-hdr" title="spring-cloud-alibaba-starters/spring-alibaba-nacos-config/src/main/java/com/alibaba/cloud/nacos/refresh/NacosContextRefresher.java"><span>NacosContextRefresher</span></th><th class="matrix-col-hdr" title="spring-cloud-alibaba-starters/spring-alibaba-nacos-config/src/main/java/com/alibaba/cloud/nacos/refresh/NacosPropertySourceRefreshListener.java"><span>NacosPropertySourceRefreshListener</span></th><th class="matrix-col-hdr" title="spring-cloud-alibaba-starters/spring-alibaba-nacos-config/src/main/java/com/alibaba/cloud/nacos/refresh/NacosSnapshotConfigManager.java"><span>NacosSnapshotConfigManager</span></th><th class="matrix-col-hdr" title="spring-cloud-alibaba-starters/spring-alibaba-nacos-config/src/main/java/com/alibaba/cloud/nacos/NacosConfigManager.java"><span>NacosConfigManager</span></th><th class="matrix-col-hdr" title="spring-cloud-alibaba-starters/spring-alibaba-nacos-config/src/main/java/com/alibaba/cloud/nacos/client/NacosPropertySource.java"><span>NacosPropertySource</span></th><th class="matrix-col-hdr" title="spring-cloud-alibaba-starters/spring-alibaba-nacos-config/src/test/java/com.alibaba.cloud.nacos/refresh/NacosSnapshotConfigManagerTest.java"><span>NacosSnapshotConfigManagerTest</span></th><th class="matrix-col-hdr" title="spring-cloud-alibaba-starters/spring-alibaba-nacos-config/src/test/java/com.alibaba.cloud.nacos/configdata/NacosConfigDataLoaderTest.java"><span>NacosConfigDataLoaderTest</span></th><th class="matrix-col-hdr" title="spring-cloud-alibaba-starters/spring-alibaba-nacos-config/src/main/java/com/alibaba/cloud/nacos/client/NacosPropertySourceBuilder.java"><span>NacosPropertySourceBuilder</span></th><th class="matrix-col-hdr" title="spring-cloud-alibaba-starters/spring-alibaba-nacos-config/src/test/java/com.alibaba.cloud.nacos/client/NacosPropertySourceBuilderTest.java"><span>NacosPropertySourceBuilderTest</span></th>
+        </tr>
+      </thead>
+      <tbody>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="spring-cloud-alibaba-starters/spring-alibaba-nacos-config/src/main/java/com/alibaba/cloud/nacos/NacosConfigProperties.java">NacosConfigProperties</th>
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosConfigProperties → NacosConfigDataLoader · weight: 36 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosConfigProperties → NacosConfigDataResource · weight: 9 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosConfigProperties → NacosContextRefresher · weight: 47 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#109-14f" title="NacosConfigProperties → NacosConfigManager · weight: 23 · cw: 1.4187 · METHOD_INVOCATION_ATOMIC_PARAMETER, METHOD_INVOCATION_OBJECT_PARAMETER"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosConfigProperties → NacosPropertySource · weight: 27 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosConfigProperties → NacosPropertySourceBuilder · weight: 55 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="spring-cloud-alibaba-starters/spring-alibaba-nacos-config/src/main/java/com/alibaba/cloud/nacos/configdata/NacosConfigDataLoader.java">NacosConfigDataLoader</th>
+          
+            <td class="matrix-cell filled" style="background:#107074e" title="NacosConfigDataLoader → NacosConfigProperties · weight: 36 · cw: 1.3742 · METHOD_INVOCATION_ATOMIC_PARAMETER, VARIABLE_DECLARATION_STATEMENT"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#13a-e662" title="NacosConfigDataLoader → NacosConfigDataResource · weight: 4 · cw: 2.5892 · METHOD_INVOCATION_ATOMIC_PARAMETER, METHOD_PARAMETER_TYPE, OBJECT_PARAMETER_CLASS, VARIABLE_SINGLE_DECLARATION"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosConfigDataLoader → NacosContextRefresher · weight: 21 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosConfigDataLoader → NacosPropertySourceRefreshListener · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#eb8b44" title="NacosConfigDataLoader → NacosSnapshotConfigManager · weight: 1 · cw: 0.7024 · METHOD_INVOCATION_OBJECT_PARAMETER"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#107074e" title="NacosConfigDataLoader → NacosConfigManager · weight: 8 · cw: 1.3742 · METHOD_INVOCATION_ATOMIC_PARAMETER, VARIABLE_DECLARATION_STATEMENT"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#118-4555" title="NacosConfigDataLoader → NacosPropertySource · weight: 12 · cw: 1.7686 · OBJECT_PARAMETER_COUPLING, VARIABLE_CLASS_INSTANCE_CREATION, VARIABLE_DECLARATION_STATEMENT"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosConfigDataLoader → NacosSnapshotConfigManagerTest · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosConfigDataLoader → NacosConfigDataLoaderTest · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosConfigDataLoader → NacosPropertySourceBuilder · weight: 25 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosConfigDataLoader → NacosPropertySourceBuilderTest · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="spring-cloud-alibaba-starters/spring-alibaba-nacos-config/src/main/java/com/alibaba/cloud/nacos/configdata/NacosConfigDataResource.java">NacosConfigDataResource</th>
+          
+            <td class="matrix-cell filled" style="background:#16e-1d876" title="NacosConfigDataResource → NacosConfigProperties · weight: 9 · cw: 3.8224 · DATA_ABSTRACTION_COUPLING, METHOD_PARAMETER_TYPE, METHOD_RETURN_TYPE, VARIABLE_FIELD_DECLARATION, VARIABLE_RETURN_STATEMENT, VARIABLE_SINGLE_DECLARATION"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosConfigDataResource → NacosConfigDataLoader · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosConfigDataResource → NacosContextRefresher · weight: 5 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosConfigDataResource → NacosConfigManager · weight: 2 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosConfigDataResource → NacosPropertySource · weight: 3 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosConfigDataResource → NacosPropertySourceBuilder · weight: 6 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="spring-cloud-alibaba-starters/spring-alibaba-nacos-config/src/main/java/com/alibaba/cloud/nacos/refresh/NacosContextRefresher.java">NacosContextRefresher</th>
+          
+            <td class="matrix-cell filled" style="background:#18c-26481" title="NacosContextRefresher → NacosConfigProperties · weight: 47 · cw: 4.5387 · DATA_ABSTRACTION_COUPLING, METHOD_INVOCATION_ATOMIC_PARAMETER, METHOD_PARAMETER_TYPE, METHOD_RETURN_TYPE, VARIABLE_FIELD_DECLARATION, VARIABLE_RETURN_STATEMENT, VARIABLE_SINGLE_DECLARATION"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosContextRefresher → NacosConfigDataLoader · weight: 21 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosContextRefresher → NacosConfigDataResource · weight: 5 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosContextRefresher → NacosPropertySourceRefreshListener · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosContextRefresher → NacosSnapshotConfigManager · weight: 2 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#154-15e6c" title="NacosContextRefresher → NacosConfigManager · weight: 11 · cw: 3.1991 · DATA_ABSTRACTION_COUPLING, METHOD_INVOCATION_ATOMIC_PARAMETER, METHOD_PARAMETER_TYPE, VARIABLE_FIELD_DECLARATION, VARIABLE_SINGLE_DECLARATION"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#1031c4d" title="NacosContextRefresher → NacosPropertySource · weight: 15 · cw: 1.2663 · METHOD_INVOCATION_ATOMIC_PARAMETER, VARIABLE_SINGLE_DECLARATION"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosContextRefresher → NacosSnapshotConfigManagerTest · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosContextRefresher → NacosConfigDataLoaderTest · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosContextRefresher → NacosPropertySourceBuilder · weight: 34 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosContextRefresher → NacosPropertySourceBuilderTest · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="spring-cloud-alibaba-starters/spring-alibaba-nacos-config/src/main/java/com/alibaba/cloud/nacos/refresh/NacosPropertySourceRefreshListener.java">NacosPropertySourceRefreshListener</th>
+          
+            <td class="matrix-cell filled" style="background:#f46147" title="NacosPropertySourceRefreshListener → NacosConfigProperties · weight: 1 · cw: 0.9163 · CONSTANT, METHOD_INVOCATION_ATOMIC_PARAMETER"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosPropertySourceRefreshListener → NacosConfigDataLoader · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosPropertySourceRefreshListener → NacosContextRefresher · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosPropertySourceRefreshListener → NacosSnapshotConfigManager · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#154-15e6c" title="NacosPropertySourceRefreshListener → NacosConfigManager · weight: 1 · cw: 3.1991 · DATA_ABSTRACTION_COUPLING, METHOD_INVOCATION_ATOMIC_PARAMETER, METHOD_PARAMETER_TYPE, VARIABLE_FIELD_DECLARATION, VARIABLE_SINGLE_DECLARATION"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#107074e" title="NacosPropertySourceRefreshListener → NacosPropertySource · weight: 1 · cw: 1.3742 · METHOD_INVOCATION_ATOMIC_PARAMETER, VARIABLE_DECLARATION_STATEMENT"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosPropertySourceRefreshListener → NacosSnapshotConfigManagerTest · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosPropertySourceRefreshListener → NacosConfigDataLoaderTest · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#135-cf60" title="NacosPropertySourceRefreshListener → NacosPropertySourceBuilder · weight: 1 · cw: 2.4710 · METHOD_INVOCATION_OBJECT_PARAMETER, OBJECT_PARAMETER_COUPLING, VARIABLE_CLASS_INSTANCE_CREATION, VARIABLE_DECLARATION_STATEMENT"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosPropertySourceRefreshListener → NacosPropertySourceBuilderTest · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="spring-cloud-alibaba-starters/spring-alibaba-nacos-config/src/main/java/com/alibaba/cloud/nacos/refresh/NacosSnapshotConfigManager.java">NacosSnapshotConfigManager</th>
+          
+            <td class="matrix-cell filled" style="background:#80b64a" title="NacosSnapshotConfigManager → NacosConfigProperties · weight: 1 · cw: 0.2000 · CONSTANT"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosSnapshotConfigManager → NacosConfigDataLoader · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosSnapshotConfigManager → NacosContextRefresher · weight: 2 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosSnapshotConfigManager → NacosPropertySourceRefreshListener · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosSnapshotConfigManager → NacosSnapshotConfigManagerTest · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosSnapshotConfigManager → NacosConfigDataLoaderTest · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosSnapshotConfigManager → NacosPropertySourceBuilder · weight: 2 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosSnapshotConfigManager → NacosPropertySourceBuilderTest · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="spring-cloud-alibaba-starters/spring-alibaba-nacos-config/src/main/java/com/alibaba/cloud/nacos/NacosConfigManager.java">NacosConfigManager</th>
+          
+            <td class="matrix-cell filled" style="background:#1a4-2d28a" title="NacosConfigManager → NacosConfigProperties · weight: 23 · cw: 5.0987 · DATA_ABSTRACTION_COUPLING, METHOD_INVOCATION_ATOMIC_PARAMETER, METHOD_PARAMETER_TYPE, METHOD_RETURN_TYPE, OBJECT_PARAMETER_CLASS, VARIABLE_FIELD_DECLARATION, VARIABLE_RETURN_STATEMENT, VARIABLE_SINGLE_DECLARATION"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosConfigManager → NacosConfigDataLoader · weight: 8 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosConfigManager → NacosConfigDataResource · weight: 2 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosConfigManager → NacosContextRefresher · weight: 11 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosConfigManager → NacosPropertySource · weight: 7 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosConfigManager → NacosPropertySourceBuilder · weight: 12 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="spring-cloud-alibaba-starters/spring-alibaba-nacos-config/src/main/java/com/alibaba/cloud/nacos/client/NacosPropertySource.java">NacosPropertySource</th>
+          
+            <td class="matrix-cell filled" style="background:#80b64a" title="NacosPropertySource → NacosConfigProperties · weight: 27 · cw: 0.2000 · CONSTANT"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosPropertySource → NacosConfigDataLoader · weight: 12 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosPropertySource → NacosConfigDataResource · weight: 3 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosPropertySource → NacosContextRefresher · weight: 15 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosPropertySource → NacosConfigManager · weight: 7 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosPropertySource → NacosPropertySourceBuilder · weight: 18 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="spring-cloud-alibaba-starters/spring-alibaba-nacos-config/src/test/java/com.alibaba.cloud.nacos/refresh/NacosSnapshotConfigManagerTest.java">NacosSnapshotConfigManagerTest</th>
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosSnapshotConfigManagerTest → NacosConfigDataLoader · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosSnapshotConfigManagerTest → NacosContextRefresher · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosSnapshotConfigManagerTest → NacosPropertySourceRefreshListener · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#eb8b44" title="NacosSnapshotConfigManagerTest → NacosSnapshotConfigManager · weight: 1 · cw: 0.7024 · METHOD_INVOCATION_OBJECT_PARAMETER"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosSnapshotConfigManagerTest → NacosConfigDataLoaderTest · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosSnapshotConfigManagerTest → NacosPropertySourceBuilder · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosSnapshotConfigManagerTest → NacosPropertySourceBuilderTest · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="spring-cloud-alibaba-starters/spring-alibaba-nacos-config/src/test/java/com.alibaba.cloud.nacos/configdata/NacosConfigDataLoaderTest.java">NacosConfigDataLoaderTest</th>
+          
+            <td class="matrix-cell filled" style="background:#14e-1436a" title="NacosConfigDataLoaderTest → NacosConfigProperties · weight: 1 · cw: 3.0642 · ATOMIC_PARAMETER_COUPLING, METHOD_INVOCATION_ATOMIC_PARAMETER, OBJECT_PARAMETER_CLASS, VARIABLE_CLASS_INSTANCE_CREATION, VARIABLE_DECLARATION_STATEMENT"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#1031d4d" title="NacosConfigDataLoaderTest → NacosConfigDataLoader · weight: 1 · cw: 1.2631 · METHOD_INVOCATION_OBJECT_PARAMETER, OBJECT_PARAMETER_COUPLING"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#118-4555" title="NacosConfigDataLoaderTest → NacosConfigDataResource · weight: 1 · cw: 1.7686 · OBJECT_PARAMETER_COUPLING, VARIABLE_CLASS_INSTANCE_CREATION, VARIABLE_DECLARATION_STATEMENT"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosConfigDataLoaderTest → NacosContextRefresher · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosConfigDataLoaderTest → NacosPropertySourceRefreshListener · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#eb8b44" title="NacosConfigDataLoaderTest → NacosSnapshotConfigManager · weight: 1 · cw: 0.7024 · METHOD_INVOCATION_OBJECT_PARAMETER"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#107074e" title="NacosConfigDataLoaderTest → NacosConfigManager · weight: 1 · cw: 1.3742 · METHOD_INVOCATION_ATOMIC_PARAMETER, VARIABLE_DECLARATION_STATEMENT"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosConfigDataLoaderTest → NacosSnapshotConfigManagerTest · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosConfigDataLoaderTest → NacosPropertySourceBuilder · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosConfigDataLoaderTest → NacosPropertySourceBuilderTest · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="spring-cloud-alibaba-starters/spring-alibaba-nacos-config/src/main/java/com/alibaba/cloud/nacos/client/NacosPropertySourceBuilder.java">NacosPropertySourceBuilder</th>
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosPropertySourceBuilder → NacosConfigProperties · weight: 55 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosPropertySourceBuilder → NacosConfigDataLoader · weight: 25 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosPropertySourceBuilder → NacosConfigDataResource · weight: 6 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosPropertySourceBuilder → NacosContextRefresher · weight: 34 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosPropertySourceBuilder → NacosPropertySourceRefreshListener · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#eb8b44" title="NacosPropertySourceBuilder → NacosSnapshotConfigManager · weight: 2 · cw: 0.7024 · METHOD_INVOCATION_OBJECT_PARAMETER"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosPropertySourceBuilder → NacosConfigManager · weight: 12 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#150-14c6a" title="NacosPropertySourceBuilder → NacosPropertySource · weight: 18 · cw: 3.1082 · METHOD_RETURN_TYPE, OBJECT_PARAMETER_COUPLING, VARIABLE_CLASS_INSTANCE_CREATION, VARIABLE_DECLARATION_STATEMENT, VARIABLE_RETURN_STATEMENT"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosPropertySourceBuilder → NacosSnapshotConfigManagerTest · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosPropertySourceBuilder → NacosConfigDataLoaderTest · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosPropertySourceBuilder → NacosPropertySourceBuilderTest · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="spring-cloud-alibaba-starters/spring-alibaba-nacos-config/src/test/java/com.alibaba.cloud.nacos/client/NacosPropertySourceBuilderTest.java">NacosPropertySourceBuilderTest</th>
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosPropertySourceBuilderTest → NacosConfigDataLoader · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosPropertySourceBuilderTest → NacosContextRefresher · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosPropertySourceBuilderTest → NacosPropertySourceRefreshListener · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#eb8b44" title="NacosPropertySourceBuilderTest → NacosSnapshotConfigManager · weight: 1 · cw: 0.7024 · METHOD_INVOCATION_OBJECT_PARAMETER"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#e99443" title="NacosPropertySourceBuilderTest → NacosPropertySource · weight: 1 · cw: 0.6579 · VARIABLE_DECLARATION_STATEMENT"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosPropertySourceBuilderTest → NacosSnapshotConfigManagerTest · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosPropertySourceBuilderTest → NacosConfigDataLoaderTest · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#1031d4d" title="NacosPropertySourceBuilderTest → NacosPropertySourceBuilder · weight: 1 · cw: 1.2631 · METHOD_INVOCATION_OBJECT_PARAMETER, OBJECT_PARAMETER_COUPLING"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+        </tr>
+        
+      </tbody>
+    </table>
+  </div>
+</section>
+
+
+</body>
+</html>

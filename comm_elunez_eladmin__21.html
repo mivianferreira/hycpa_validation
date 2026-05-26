@@ -1,0 +1,875 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HyCPA — Community 21 · elunez/eladmin</title>
+  <style>
+:root {
+  --bg: #0d1117; --surface: #161b22; --surface2: #21262d;
+  --border: #30363d; --text: #e6edf3; --text2: #8b949e;
+  --accent: #58a6ff; --green: #3fb950; --orange: #e3b341; --red: #f85149;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { background: var(--bg); color: var(--text); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif; padding-bottom: 48px; }
+
+/* ── Header ── */
+.page-header { background: var(--surface); border-bottom: 1px solid var(--border); padding: 12px 24px; display: flex; align-items: center; gap: 20px; }
+.back-btn { color: var(--text2); font-size: 12px; text-decoration: none; white-space: nowrap; }
+.back-btn:hover { color: var(--accent); }
+.header-title { font-size: 15px; color: var(--text); }
+.header-title strong { color: var(--accent); }
+
+/* ── Stats pills ── */
+.stats-row { display: flex; gap: 12px; padding: 16px 24px; background: var(--surface); border-bottom: 1px solid var(--border); flex-wrap: wrap; }
+.stat-pill { background: var(--surface2); border: 1px solid var(--border); border-radius: 8px; padding: 10px 20px; display: flex; flex-direction: column; align-items: center; gap: 2px; min-width: 90px; }
+.pill-val { font-size: 22px; font-weight: 700; color: var(--text); line-height: 1; }
+.pill-lbl { font-size: 10px; color: var(--text2); text-transform: uppercase; letter-spacing: 0.5px; margin-top: 2px; }
+
+/* ── Content sections ── */
+.content-section { padding: 24px; }
+.section-title { font-size: 11px; font-weight: 600; color: var(--text2); text-transform: uppercase; letter-spacing: 0.6px; margin-bottom: 14px; display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
+
+/* ── Node table ── */
+.node-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+.node-table th { background: var(--surface); color: var(--text2); font-weight: 600; font-size: 10px; text-transform: uppercase; letter-spacing: 0.5px; padding: 8px 12px; text-align: left; border-bottom: 2px solid var(--border); white-space: nowrap; }
+.node-table td { padding: 7px 12px; border-bottom: 1px solid var(--border); vertical-align: middle; }
+.node-table tbody tr:hover td { background: var(--surface); }
+.health-badge { display: inline-block; padding: 2px 9px; border-radius: 10px; font-size: 11px; font-weight: 700; color: #0d1117; white-space: nowrap; }
+.class-path { font-size: 11px; color: var(--text2); font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', monospace; word-break: break-all; }
+td.num { text-align: right; font-weight: 600; white-space: nowrap; }
+td.overlap { color: var(--accent); }
+
+/* ── Coupling matrix ── */
+.matrix-wrap { overflow: auto; }
+.matrix { border-collapse: collapse; }
+.matrix-corner { min-width: 16px; }
+.matrix-col-hdr { padding: 0 1px 4px 1px; vertical-align: bottom; }
+.matrix-col-hdr span { display: block; writing-mode: vertical-rl; transform: rotate(180deg); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-height: 140px; color: var(--text2); font-weight: 400; font-size: 10px; cursor: default; text-align: left; }
+.matrix-row-hdr { text-align: right; padding: 1px 6px 1px 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 200px; color: var(--text2); font-weight: 400; font-size: 10px; cursor: default; }
+.matrix-cell { width: 16px; height: 16px; min-width: 16px; min-height: 16px; border: 1px solid #1c2129; cursor: default; }
+.matrix-cell.empty { background: transparent; }
+.matrix-cell.self-cell { background: var(--surface2); }
+.matrix-cell.filled { }
+
+/* ── Legend inline ── */
+.legend-inline { display: inline-flex; align-items: center; gap: 6px; font-size: 10px; color: var(--text2); font-weight: 400; text-transform: none; letter-spacing: 0; }
+.li-cell { display: inline-block; width: 10px; height: 10px; border-radius: 2px; vertical-align: middle; flex-shrink: 0; }
+</style>
+</head>
+<body>
+
+<div class="page-header">
+  <a class="back-btn" href="repo_elunez_eladmin.html">← Back to elunez/eladmin</a>
+  <span class="header-title">Community <strong>C21</strong> — elunez/eladmin</span>
+</div>
+
+<div class="stats-row">
+  <div class="stat-pill"><span class="pill-val">14</span><span class="pill-lbl">Nodes</span></div>
+  <div class="stat-pill"><span class="pill-val">169</span><span class="pill-lbl">Arcs</span></div>
+  <div class="stat-pill"><span class="pill-val">14</span><span class="pill-lbl">Overlapping</span></div>
+  <div class="stat-pill"><span class="pill-val">13</span><span class="pill-lbl">Coupled arcs</span></div>
+  <div class="stat-pill"><span class="pill-val">0</span><span class="pill-lbl">Co-change only</span></div>
+</div>
+
+<section class="content-section">
+  <h2 class="section-title">Nodes</h2>
+  <table class="node-table">
+    <thead>
+      <tr>
+        <th>Health</th>
+        <th>Class</th>
+        <th>Degree</th>
+        <th>Communities</th>
+      </tr>
+    </thead>
+    <tbody>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#e3b341">0.500</span></td>
+        <td class="class-path" title="eladmin-system/src/main/java/me/zhengjie/modules/maint/service/impl/DeployServiceImpl.java">eladmin-system/src/main/java/me/zhengjie/modules/maint/service/impl/DeployServiceImpl.java</td>
+        <td class="num">25</td>
+        <td class="num overlap">4</td>
+      </tr>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#e3b341">0.538</span></td>
+        <td class="class-path" title="eladmin-system/src/main/java/me/zhengjie/modules/system/service/impl/MenuServiceImpl.java">eladmin-system/src/main/java/me/zhengjie/modules/system/service/impl/MenuServiceImpl.java</td>
+        <td class="num">25</td>
+        <td class="num overlap">7</td>
+      </tr>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#e3b341">0.577</span></td>
+        <td class="class-path" title="eladmin-system/src/main/java/me/zhengjie/modules/system/service/impl/DeptServiceImpl.java">eladmin-system/src/main/java/me/zhengjie/modules/system/service/impl/DeptServiceImpl.java</td>
+        <td class="num">25</td>
+        <td class="num overlap">4</td>
+      </tr>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#e3b341">0.673</span></td>
+        <td class="class-path" title="eladmin-system/src/main/java/me/zhengjie/modules/system/service/impl/RoleServiceImpl.java">eladmin-system/src/main/java/me/zhengjie/modules/system/service/impl/RoleServiceImpl.java</td>
+        <td class="num">25</td>
+        <td class="num overlap">5</td>
+      </tr>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#e3b341">0.673</span></td>
+        <td class="class-path" title="eladmin-system/src/main/java/me/zhengjie/modules/system/service/impl/UserServiceImpl.java">eladmin-system/src/main/java/me/zhengjie/modules/system/service/impl/UserServiceImpl.java</td>
+        <td class="num">25</td>
+        <td class="num overlap">6</td>
+      </tr>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#3fb950">0.769</span></td>
+        <td class="class-path" title="eladmin-system/src/main/java/me/zhengjie/modules/system/rest/MenuController.java">eladmin-system/src/main/java/me/zhengjie/modules/system/rest/MenuController.java</td>
+        <td class="num">25</td>
+        <td class="num overlap">4</td>
+      </tr>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#3fb950">0.788</span></td>
+        <td class="class-path" title="eladmin-system/src/main/java/me/zhengjie/modules/system/service/impl/JobServiceImpl.java">eladmin-system/src/main/java/me/zhengjie/modules/system/service/impl/JobServiceImpl.java</td>
+        <td class="num">25</td>
+        <td class="num overlap">5</td>
+      </tr>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#3fb950">0.885</span></td>
+        <td class="class-path" title="eladmin-tools/src/main/java/me/zhengjie/service/impl/LocalStorageServiceImpl.java">eladmin-tools/src/main/java/me/zhengjie/service/impl/LocalStorageServiceImpl.java</td>
+        <td class="num">25</td>
+        <td class="num overlap">4</td>
+      </tr>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#3fb950">0.904</span></td>
+        <td class="class-path" title="eladmin-common/src/main/java/me/zhengjie/base/BaseMapper.java">eladmin-common/src/main/java/me/zhengjie/base/BaseMapper.java</td>
+        <td class="num">13</td>
+        <td class="num overlap">8</td>
+      </tr>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#3fb950">0.904</span></td>
+        <td class="class-path" title="eladmin-system/src/main/java/me/zhengjie/modules/system/service/impl/DictServiceImpl.java">eladmin-system/src/main/java/me/zhengjie/modules/system/service/impl/DictServiceImpl.java</td>
+        <td class="num">25</td>
+        <td class="num overlap">3</td>
+      </tr>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#3fb950">0.923</span></td>
+        <td class="class-path" title="eladmin-system/src/main/java/me/zhengjie/modules/maint/service/impl/AppServiceImpl.java">eladmin-system/src/main/java/me/zhengjie/modules/maint/service/impl/AppServiceImpl.java</td>
+        <td class="num">25</td>
+        <td class="num overlap">4</td>
+      </tr>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#3fb950">0.923</span></td>
+        <td class="class-path" title="eladmin-system/src/main/java/me/zhengjie/modules/system/service/impl/DictDetailServiceImpl.java">eladmin-system/src/main/java/me/zhengjie/modules/system/service/impl/DictDetailServiceImpl.java</td>
+        <td class="num">25</td>
+        <td class="num overlap">3</td>
+      </tr>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#3fb950">0.962</span></td>
+        <td class="class-path" title="eladmin-system/src/main/java/me/zhengjie/modules/maint/service/impl/ServerDeployServiceImpl.java">eladmin-system/src/main/java/me/zhengjie/modules/maint/service/impl/ServerDeployServiceImpl.java</td>
+        <td class="num">25</td>
+        <td class="num overlap">3</td>
+      </tr>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#3fb950">0.981</span></td>
+        <td class="class-path" title="eladmin-system/src/main/java/me/zhengjie/modules/maint/service/impl/DatabaseServiceImpl.java">eladmin-system/src/main/java/me/zhengjie/modules/maint/service/impl/DatabaseServiceImpl.java</td>
+        <td class="num">25</td>
+        <td class="num overlap">3</td>
+      </tr>
+      
+    </tbody>
+  </table>
+</section>
+
+
+<section class="content-section">
+  <h2 class="section-title">Coupling matrix
+    <span class="legend-inline">
+      <span class="li-cell" style="background:#30363d"></span>Co-change only
+      <span class="li-cell" style="background:#3fb950"></span>Weak
+      <span class="li-cell" style="background:#e3b341"></span>Moderate
+      <span class="li-cell" style="background:#f85149"></span>Strong
+    </span>
+  </h2>
+  <div class="matrix-wrap">
+    <table class="matrix">
+      <thead>
+        <tr>
+          <th class="matrix-corner"></th>
+          <th class="matrix-col-hdr" title="eladmin-system/src/main/java/me/zhengjie/modules/maint/service/impl/DeployServiceImpl.java"><span>DeployServiceImpl</span></th><th class="matrix-col-hdr" title="eladmin-system/src/main/java/me/zhengjie/modules/system/service/impl/MenuServiceImpl.java"><span>MenuServiceImpl</span></th><th class="matrix-col-hdr" title="eladmin-system/src/main/java/me/zhengjie/modules/system/service/impl/DeptServiceImpl.java"><span>DeptServiceImpl</span></th><th class="matrix-col-hdr" title="eladmin-system/src/main/java/me/zhengjie/modules/system/service/impl/RoleServiceImpl.java"><span>RoleServiceImpl</span></th><th class="matrix-col-hdr" title="eladmin-system/src/main/java/me/zhengjie/modules/system/service/impl/UserServiceImpl.java"><span>UserServiceImpl</span></th><th class="matrix-col-hdr" title="eladmin-system/src/main/java/me/zhengjie/modules/system/rest/MenuController.java"><span>MenuController</span></th><th class="matrix-col-hdr" title="eladmin-system/src/main/java/me/zhengjie/modules/system/service/impl/JobServiceImpl.java"><span>JobServiceImpl</span></th><th class="matrix-col-hdr" title="eladmin-tools/src/main/java/me/zhengjie/service/impl/LocalStorageServiceImpl.java"><span>LocalStorageServiceImpl</span></th><th class="matrix-col-hdr" title="eladmin-common/src/main/java/me/zhengjie/base/BaseMapper.java"><span>BaseMapper</span></th><th class="matrix-col-hdr" title="eladmin-system/src/main/java/me/zhengjie/modules/system/service/impl/DictServiceImpl.java"><span>DictServiceImpl</span></th><th class="matrix-col-hdr" title="eladmin-system/src/main/java/me/zhengjie/modules/maint/service/impl/AppServiceImpl.java"><span>AppServiceImpl</span></th><th class="matrix-col-hdr" title="eladmin-system/src/main/java/me/zhengjie/modules/system/service/impl/DictDetailServiceImpl.java"><span>DictDetailServiceImpl</span></th><th class="matrix-col-hdr" title="eladmin-system/src/main/java/me/zhengjie/modules/maint/service/impl/ServerDeployServiceImpl.java"><span>ServerDeployServiceImpl</span></th><th class="matrix-col-hdr" title="eladmin-system/src/main/java/me/zhengjie/modules/maint/service/impl/DatabaseServiceImpl.java"><span>DatabaseServiceImpl</span></th>
+        </tr>
+      </thead>
+      <tbody>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="eladmin-system/src/main/java/me/zhengjie/modules/maint/service/impl/DeployServiceImpl.java">DeployServiceImpl</th>
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="DeployServiceImpl → MenuServiceImpl · weight: 20 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="DeployServiceImpl → DeptServiceImpl · weight: 16 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="DeployServiceImpl → RoleServiceImpl · weight: 16 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="DeployServiceImpl → UserServiceImpl · weight: 16 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="DeployServiceImpl → MenuController · weight: 12 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="DeployServiceImpl → JobServiceImpl · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="DeployServiceImpl → LocalStorageServiceImpl · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#109-14f" title="DeployServiceImpl → BaseMapper · weight: 1 · cw: 1.4187 · METHOD_INVOCATION_ATOMIC_PARAMETER, METHOD_INVOCATION_OBJECT_PARAMETER"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="DeployServiceImpl → DictServiceImpl · weight: 12 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="DeployServiceImpl → AppServiceImpl · weight: 5 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="DeployServiceImpl → DictDetailServiceImpl · weight: 12 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="DeployServiceImpl → ServerDeployServiceImpl · weight: 12 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="DeployServiceImpl → DatabaseServiceImpl · weight: 8 · cw: 0.0000 · co-change only"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="eladmin-system/src/main/java/me/zhengjie/modules/system/service/impl/MenuServiceImpl.java">MenuServiceImpl</th>
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="MenuServiceImpl → DeployServiceImpl · weight: 20 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="MenuServiceImpl → DeptServiceImpl · weight: 22 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="MenuServiceImpl → RoleServiceImpl · weight: 22 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="MenuServiceImpl → UserServiceImpl · weight: 21 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="MenuServiceImpl → MenuController · weight: 15 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="MenuServiceImpl → JobServiceImpl · weight: 6 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="MenuServiceImpl → LocalStorageServiceImpl · weight: 5 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#109-14f" title="MenuServiceImpl → BaseMapper · weight: 1 · cw: 1.4187 · METHOD_INVOCATION_ATOMIC_PARAMETER, METHOD_INVOCATION_OBJECT_PARAMETER"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="MenuServiceImpl → DictServiceImpl · weight: 16 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="MenuServiceImpl → AppServiceImpl · weight: 5 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="MenuServiceImpl → DictDetailServiceImpl · weight: 16 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="MenuServiceImpl → ServerDeployServiceImpl · weight: 15 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="MenuServiceImpl → DatabaseServiceImpl · weight: 10 · cw: 0.0000 · co-change only"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="eladmin-system/src/main/java/me/zhengjie/modules/system/service/impl/DeptServiceImpl.java">DeptServiceImpl</th>
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="DeptServiceImpl → DeployServiceImpl · weight: 16 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="DeptServiceImpl → MenuServiceImpl · weight: 22 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="DeptServiceImpl → RoleServiceImpl · weight: 18 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="DeptServiceImpl → UserServiceImpl · weight: 17 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="DeptServiceImpl → MenuController · weight: 12 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="DeptServiceImpl → JobServiceImpl · weight: 5 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="DeptServiceImpl → LocalStorageServiceImpl · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#109-14f" title="DeptServiceImpl → BaseMapper · weight: 1 · cw: 1.4187 · METHOD_INVOCATION_ATOMIC_PARAMETER, METHOD_INVOCATION_OBJECT_PARAMETER"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="DeptServiceImpl → DictServiceImpl · weight: 13 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="DeptServiceImpl → AppServiceImpl · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="DeptServiceImpl → DictDetailServiceImpl · weight: 13 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="DeptServiceImpl → ServerDeployServiceImpl · weight: 12 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="DeptServiceImpl → DatabaseServiceImpl · weight: 8 · cw: 0.0000 · co-change only"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="eladmin-system/src/main/java/me/zhengjie/modules/system/service/impl/RoleServiceImpl.java">RoleServiceImpl</th>
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="RoleServiceImpl → DeployServiceImpl · weight: 16 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="RoleServiceImpl → MenuServiceImpl · weight: 22 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="RoleServiceImpl → DeptServiceImpl · weight: 18 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="RoleServiceImpl → UserServiceImpl · weight: 17 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="RoleServiceImpl → MenuController · weight: 12 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="RoleServiceImpl → JobServiceImpl · weight: 5 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="RoleServiceImpl → LocalStorageServiceImpl · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#109-14f" title="RoleServiceImpl → BaseMapper · weight: 1 · cw: 1.4187 · METHOD_INVOCATION_ATOMIC_PARAMETER, METHOD_INVOCATION_OBJECT_PARAMETER"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="RoleServiceImpl → DictServiceImpl · weight: 13 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="RoleServiceImpl → AppServiceImpl · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="RoleServiceImpl → DictDetailServiceImpl · weight: 13 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="RoleServiceImpl → ServerDeployServiceImpl · weight: 12 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="RoleServiceImpl → DatabaseServiceImpl · weight: 8 · cw: 0.0000 · co-change only"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="eladmin-system/src/main/java/me/zhengjie/modules/system/service/impl/UserServiceImpl.java">UserServiceImpl</th>
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="UserServiceImpl → DeployServiceImpl · weight: 16 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="UserServiceImpl → MenuServiceImpl · weight: 21 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="UserServiceImpl → DeptServiceImpl · weight: 17 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="UserServiceImpl → RoleServiceImpl · weight: 17 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="UserServiceImpl → MenuController · weight: 12 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="UserServiceImpl → JobServiceImpl · weight: 5 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="UserServiceImpl → LocalStorageServiceImpl · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#eb8b44" title="UserServiceImpl → BaseMapper · weight: 1 · cw: 0.7024 · METHOD_INVOCATION_OBJECT_PARAMETER"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="UserServiceImpl → DictServiceImpl · weight: 13 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="UserServiceImpl → AppServiceImpl · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="UserServiceImpl → DictDetailServiceImpl · weight: 13 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="UserServiceImpl → ServerDeployServiceImpl · weight: 12 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="UserServiceImpl → DatabaseServiceImpl · weight: 8 · cw: 0.0000 · co-change only"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="eladmin-system/src/main/java/me/zhengjie/modules/system/rest/MenuController.java">MenuController</th>
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="MenuController → DeployServiceImpl · weight: 12 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="MenuController → MenuServiceImpl · weight: 15 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="MenuController → DeptServiceImpl · weight: 12 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="MenuController → RoleServiceImpl · weight: 12 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="MenuController → UserServiceImpl · weight: 12 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="MenuController → JobServiceImpl · weight: 3 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="MenuController → LocalStorageServiceImpl · weight: 3 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#eb8b44" title="MenuController → BaseMapper · weight: 1 · cw: 0.7024 · METHOD_INVOCATION_OBJECT_PARAMETER"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="MenuController → DictServiceImpl · weight: 9 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="MenuController → AppServiceImpl · weight: 3 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="MenuController → DictDetailServiceImpl · weight: 9 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="MenuController → ServerDeployServiceImpl · weight: 9 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="MenuController → DatabaseServiceImpl · weight: 6 · cw: 0.0000 · co-change only"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="eladmin-system/src/main/java/me/zhengjie/modules/system/service/impl/JobServiceImpl.java">JobServiceImpl</th>
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobServiceImpl → DeployServiceImpl · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobServiceImpl → MenuServiceImpl · weight: 6 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobServiceImpl → DeptServiceImpl · weight: 5 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobServiceImpl → RoleServiceImpl · weight: 5 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobServiceImpl → UserServiceImpl · weight: 5 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobServiceImpl → MenuController · weight: 3 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobServiceImpl → LocalStorageServiceImpl · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#eb8b44" title="JobServiceImpl → BaseMapper · weight: 1 · cw: 0.7024 · METHOD_INVOCATION_OBJECT_PARAMETER"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobServiceImpl → DictServiceImpl · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobServiceImpl → AppServiceImpl · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobServiceImpl → DictDetailServiceImpl · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobServiceImpl → ServerDeployServiceImpl · weight: 3 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JobServiceImpl → DatabaseServiceImpl · weight: 2 · cw: 0.0000 · co-change only"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="eladmin-tools/src/main/java/me/zhengjie/service/impl/LocalStorageServiceImpl.java">LocalStorageServiceImpl</th>
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="LocalStorageServiceImpl → DeployServiceImpl · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="LocalStorageServiceImpl → MenuServiceImpl · weight: 5 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="LocalStorageServiceImpl → DeptServiceImpl · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="LocalStorageServiceImpl → RoleServiceImpl · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="LocalStorageServiceImpl → UserServiceImpl · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="LocalStorageServiceImpl → MenuController · weight: 3 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="LocalStorageServiceImpl → JobServiceImpl · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#109-14f" title="LocalStorageServiceImpl → BaseMapper · weight: 1 · cw: 1.4187 · METHOD_INVOCATION_ATOMIC_PARAMETER, METHOD_INVOCATION_OBJECT_PARAMETER"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="LocalStorageServiceImpl → DictServiceImpl · weight: 3 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="LocalStorageServiceImpl → AppServiceImpl · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="LocalStorageServiceImpl → DictDetailServiceImpl · weight: 3 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="LocalStorageServiceImpl → ServerDeployServiceImpl · weight: 3 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="LocalStorageServiceImpl → DatabaseServiceImpl · weight: 2 · cw: 0.0000 · co-change only"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="eladmin-common/src/main/java/me/zhengjie/base/BaseMapper.java">BaseMapper</th>
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="eladmin-system/src/main/java/me/zhengjie/modules/system/service/impl/DictServiceImpl.java">DictServiceImpl</th>
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="DictServiceImpl → DeployServiceImpl · weight: 12 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="DictServiceImpl → MenuServiceImpl · weight: 16 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="DictServiceImpl → DeptServiceImpl · weight: 13 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="DictServiceImpl → RoleServiceImpl · weight: 13 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="DictServiceImpl → UserServiceImpl · weight: 13 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="DictServiceImpl → MenuController · weight: 9 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="DictServiceImpl → JobServiceImpl · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="DictServiceImpl → LocalStorageServiceImpl · weight: 3 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#eb8b44" title="DictServiceImpl → BaseMapper · weight: 1 · cw: 0.7024 · METHOD_INVOCATION_OBJECT_PARAMETER"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="DictServiceImpl → AppServiceImpl · weight: 3 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="DictServiceImpl → DictDetailServiceImpl · weight: 10 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="DictServiceImpl → ServerDeployServiceImpl · weight: 9 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="DictServiceImpl → DatabaseServiceImpl · weight: 6 · cw: 0.0000 · co-change only"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="eladmin-system/src/main/java/me/zhengjie/modules/maint/service/impl/AppServiceImpl.java">AppServiceImpl</th>
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="AppServiceImpl → DeployServiceImpl · weight: 5 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="AppServiceImpl → MenuServiceImpl · weight: 5 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="AppServiceImpl → DeptServiceImpl · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="AppServiceImpl → RoleServiceImpl · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="AppServiceImpl → UserServiceImpl · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="AppServiceImpl → MenuController · weight: 3 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="AppServiceImpl → JobServiceImpl · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="AppServiceImpl → LocalStorageServiceImpl · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#109-14f" title="AppServiceImpl → BaseMapper · weight: 1 · cw: 1.4187 · METHOD_INVOCATION_ATOMIC_PARAMETER, METHOD_INVOCATION_OBJECT_PARAMETER"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="AppServiceImpl → DictServiceImpl · weight: 3 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="AppServiceImpl → DictDetailServiceImpl · weight: 3 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="AppServiceImpl → ServerDeployServiceImpl · weight: 3 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="AppServiceImpl → DatabaseServiceImpl · weight: 2 · cw: 0.0000 · co-change only"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="eladmin-system/src/main/java/me/zhengjie/modules/system/service/impl/DictDetailServiceImpl.java">DictDetailServiceImpl</th>
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="DictDetailServiceImpl → DeployServiceImpl · weight: 12 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="DictDetailServiceImpl → MenuServiceImpl · weight: 16 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="DictDetailServiceImpl → DeptServiceImpl · weight: 13 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="DictDetailServiceImpl → RoleServiceImpl · weight: 13 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="DictDetailServiceImpl → UserServiceImpl · weight: 13 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="DictDetailServiceImpl → MenuController · weight: 9 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="DictDetailServiceImpl → JobServiceImpl · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="DictDetailServiceImpl → LocalStorageServiceImpl · weight: 3 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#eb8b44" title="DictDetailServiceImpl → BaseMapper · weight: 1 · cw: 0.7024 · METHOD_INVOCATION_OBJECT_PARAMETER"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="DictDetailServiceImpl → DictServiceImpl · weight: 10 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="DictDetailServiceImpl → AppServiceImpl · weight: 3 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="DictDetailServiceImpl → ServerDeployServiceImpl · weight: 9 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="DictDetailServiceImpl → DatabaseServiceImpl · weight: 6 · cw: 0.0000 · co-change only"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="eladmin-system/src/main/java/me/zhengjie/modules/maint/service/impl/ServerDeployServiceImpl.java">ServerDeployServiceImpl</th>
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ServerDeployServiceImpl → DeployServiceImpl · weight: 12 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ServerDeployServiceImpl → MenuServiceImpl · weight: 15 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ServerDeployServiceImpl → DeptServiceImpl · weight: 12 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ServerDeployServiceImpl → RoleServiceImpl · weight: 12 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ServerDeployServiceImpl → UserServiceImpl · weight: 12 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ServerDeployServiceImpl → MenuController · weight: 9 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ServerDeployServiceImpl → JobServiceImpl · weight: 3 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ServerDeployServiceImpl → LocalStorageServiceImpl · weight: 3 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#109-14f" title="ServerDeployServiceImpl → BaseMapper · weight: 1 · cw: 1.4187 · METHOD_INVOCATION_ATOMIC_PARAMETER, METHOD_INVOCATION_OBJECT_PARAMETER"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ServerDeployServiceImpl → DictServiceImpl · weight: 9 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ServerDeployServiceImpl → AppServiceImpl · weight: 3 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ServerDeployServiceImpl → DictDetailServiceImpl · weight: 9 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ServerDeployServiceImpl → DatabaseServiceImpl · weight: 6 · cw: 0.0000 · co-change only"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="eladmin-system/src/main/java/me/zhengjie/modules/maint/service/impl/DatabaseServiceImpl.java">DatabaseServiceImpl</th>
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="DatabaseServiceImpl → DeployServiceImpl · weight: 8 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="DatabaseServiceImpl → MenuServiceImpl · weight: 10 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="DatabaseServiceImpl → DeptServiceImpl · weight: 8 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="DatabaseServiceImpl → RoleServiceImpl · weight: 8 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="DatabaseServiceImpl → UserServiceImpl · weight: 8 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="DatabaseServiceImpl → MenuController · weight: 6 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="DatabaseServiceImpl → JobServiceImpl · weight: 2 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="DatabaseServiceImpl → LocalStorageServiceImpl · weight: 2 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#109-14f" title="DatabaseServiceImpl → BaseMapper · weight: 1 · cw: 1.4187 · METHOD_INVOCATION_ATOMIC_PARAMETER, METHOD_INVOCATION_OBJECT_PARAMETER"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="DatabaseServiceImpl → DictServiceImpl · weight: 6 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="DatabaseServiceImpl → AppServiceImpl · weight: 2 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="DatabaseServiceImpl → DictDetailServiceImpl · weight: 6 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="DatabaseServiceImpl → ServerDeployServiceImpl · weight: 6 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+        </tr>
+        
+      </tbody>
+    </table>
+  </div>
+</section>
+
+
+</body>
+</html>

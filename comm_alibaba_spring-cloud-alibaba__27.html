@@ -1,0 +1,974 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HyCPA — Community 27 · alibaba/spring-cloud-alibaba</title>
+  <style>
+:root {
+  --bg: #0d1117; --surface: #161b22; --surface2: #21262d;
+  --border: #30363d; --text: #e6edf3; --text2: #8b949e;
+  --accent: #58a6ff; --green: #3fb950; --orange: #e3b341; --red: #f85149;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { background: var(--bg); color: var(--text); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif; padding-bottom: 48px; }
+
+/* ── Header ── */
+.page-header { background: var(--surface); border-bottom: 1px solid var(--border); padding: 12px 24px; display: flex; align-items: center; gap: 20px; }
+.back-btn { color: var(--text2); font-size: 12px; text-decoration: none; white-space: nowrap; }
+.back-btn:hover { color: var(--accent); }
+.header-title { font-size: 15px; color: var(--text); }
+.header-title strong { color: var(--accent); }
+
+/* ── Stats pills ── */
+.stats-row { display: flex; gap: 12px; padding: 16px 24px; background: var(--surface); border-bottom: 1px solid var(--border); flex-wrap: wrap; }
+.stat-pill { background: var(--surface2); border: 1px solid var(--border); border-radius: 8px; padding: 10px 20px; display: flex; flex-direction: column; align-items: center; gap: 2px; min-width: 90px; }
+.pill-val { font-size: 22px; font-weight: 700; color: var(--text); line-height: 1; }
+.pill-lbl { font-size: 10px; color: var(--text2); text-transform: uppercase; letter-spacing: 0.5px; margin-top: 2px; }
+
+/* ── Content sections ── */
+.content-section { padding: 24px; }
+.section-title { font-size: 11px; font-weight: 600; color: var(--text2); text-transform: uppercase; letter-spacing: 0.6px; margin-bottom: 14px; display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
+
+/* ── Node table ── */
+.node-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+.node-table th { background: var(--surface); color: var(--text2); font-weight: 600; font-size: 10px; text-transform: uppercase; letter-spacing: 0.5px; padding: 8px 12px; text-align: left; border-bottom: 2px solid var(--border); white-space: nowrap; }
+.node-table td { padding: 7px 12px; border-bottom: 1px solid var(--border); vertical-align: middle; }
+.node-table tbody tr:hover td { background: var(--surface); }
+.health-badge { display: inline-block; padding: 2px 9px; border-radius: 10px; font-size: 11px; font-weight: 700; color: #0d1117; white-space: nowrap; }
+.class-path { font-size: 11px; color: var(--text2); font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', monospace; word-break: break-all; }
+td.num { text-align: right; font-weight: 600; white-space: nowrap; }
+td.overlap { color: var(--accent); }
+
+/* ── Coupling matrix ── */
+.matrix-wrap { overflow: auto; }
+.matrix { border-collapse: collapse; }
+.matrix-corner { min-width: 16px; }
+.matrix-col-hdr { padding: 0 1px 4px 1px; vertical-align: bottom; }
+.matrix-col-hdr span { display: block; writing-mode: vertical-rl; transform: rotate(180deg); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-height: 140px; color: var(--text2); font-weight: 400; font-size: 10px; cursor: default; text-align: left; }
+.matrix-row-hdr { text-align: right; padding: 1px 6px 1px 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 200px; color: var(--text2); font-weight: 400; font-size: 10px; cursor: default; }
+.matrix-cell { width: 16px; height: 16px; min-width: 16px; min-height: 16px; border: 1px solid #1c2129; cursor: default; }
+.matrix-cell.empty { background: transparent; }
+.matrix-cell.self-cell { background: var(--surface2); }
+.matrix-cell.filled { }
+
+/* ── Legend inline ── */
+.legend-inline { display: inline-flex; align-items: center; gap: 6px; font-size: 10px; color: var(--text2); font-weight: 400; text-transform: none; letter-spacing: 0; }
+.li-cell { display: inline-block; width: 10px; height: 10px; border-radius: 2px; vertical-align: middle; flex-shrink: 0; }
+</style>
+</head>
+<body>
+
+<div class="page-header">
+  <a class="back-btn" href="repo_alibaba_spring-cloud-alibaba.html">← Back to alibaba/spring-cloud-alibaba</a>
+  <span class="header-title">Community <strong>C27</strong> — alibaba/spring-cloud-alibaba</span>
+</div>
+
+<div class="stats-row">
+  <div class="stat-pill"><span class="pill-val">15</span><span class="pill-lbl">Nodes</span></div>
+  <div class="stat-pill"><span class="pill-val">126</span><span class="pill-lbl">Arcs</span></div>
+  <div class="stat-pill"><span class="pill-val">15</span><span class="pill-lbl">Overlapping</span></div>
+  <div class="stat-pill"><span class="pill-val">9</span><span class="pill-lbl">Coupled arcs</span></div>
+  <div class="stat-pill"><span class="pill-val">0</span><span class="pill-lbl">Co-change only</span></div>
+</div>
+
+<section class="content-section">
+  <h2 class="section-title">Nodes</h2>
+  <table class="node-table">
+    <thead>
+      <tr>
+        <th>Health</th>
+        <th>Class</th>
+        <th>Degree</th>
+        <th>Communities</th>
+      </tr>
+    </thead>
+    <tbody>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#f85149">0.481</span></td>
+        <td class="class-path" title="spring-cloud-alibaba-starters/spring-alibaba-nacos-config/src/main/java/com/alibaba/cloud/nacos/annotation/NacosAnnotationProcessor.java">spring-cloud-alibaba-starters/spring-alibaba-nacos-config/src/main/java/com/alibaba/cloud/nacos/annotation/NacosAnnotationProcessor.java</td>
+        <td class="num">6</td>
+        <td class="num overlap">3</td>
+      </tr>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#e3b341">0.635</span></td>
+        <td class="class-path" title="spring-cloud-alibaba-starters/spring-alibaba-nacos-config/src/main/java/com/alibaba/cloud/nacos/configdata/NacosConfigDataLocationResolver.java">spring-cloud-alibaba-starters/spring-alibaba-nacos-config/src/main/java/com/alibaba/cloud/nacos/configdata/NacosConfigDataLocationResolver.java</td>
+        <td class="num">20</td>
+        <td class="num overlap">4</td>
+      </tr>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#e3b341">0.712</span></td>
+        <td class="class-path" title="spring-cloud-alibaba-starters/spring-cloud-starter-stream-rocketmq/src/main/java/com/alibaba/cloud/stream/binder/rocketmq/integration/inbound/RocketMQInboundChannelAdapter.java">spring-cloud-alibaba-starters/spring-cloud-starter-stream-rocketmq/src/main/java/com/alibaba/cloud/stream/binder/rocketmq/integration/inbound/RocketMQInboundChannelAdapter.java</td>
+        <td class="num">22</td>
+        <td class="num overlap">4</td>
+      </tr>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#e3b341">0.731</span></td>
+        <td class="class-path" title="spring-cloud-alibaba-starters/spring-alibaba-nacos-config/src/test/java/com.alibaba.cloud.nacos/configdata/NacosConfigDataLocationResolverTest.java">spring-cloud-alibaba-starters/spring-alibaba-nacos-config/src/test/java/com.alibaba.cloud.nacos/configdata/NacosConfigDataLocationResolverTest.java</td>
+        <td class="num">20</td>
+        <td class="num overlap">3</td>
+      </tr>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#3fb950">0.827</span></td>
+        <td class="class-path" title="spring-cloud-alibaba-starters/spring-alibaba-nacos-config/src/main/java/com/alibaba/cloud/nacos/configdata/NacosConfigDataLoader.java">spring-cloud-alibaba-starters/spring-alibaba-nacos-config/src/main/java/com/alibaba/cloud/nacos/configdata/NacosConfigDataLoader.java</td>
+        <td class="num">20</td>
+        <td class="num overlap">4</td>
+      </tr>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#3fb950">0.885</span></td>
+        <td class="class-path" title="spring-cloud-alibaba-starters/spring-alibaba-nacos-config/src/main/java/com/alibaba/cloud/nacos/proxy/druid/NacosDruidConfigFilter.java">spring-cloud-alibaba-starters/spring-alibaba-nacos-config/src/main/java/com/alibaba/cloud/nacos/proxy/druid/NacosDruidConfigFilter.java</td>
+        <td class="num">5</td>
+        <td class="num overlap">3</td>
+      </tr>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#3fb950">0.904</span></td>
+        <td class="class-path" title="spring-cloud-alibaba-starters/spring-alibaba-nacos-config/src/main/java/com/alibaba/cloud/nacos/NacosConfigManager.java">spring-cloud-alibaba-starters/spring-alibaba-nacos-config/src/main/java/com/alibaba/cloud/nacos/NacosConfigManager.java</td>
+        <td class="num">19</td>
+        <td class="num overlap">4</td>
+      </tr>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#3fb950">0.904</span></td>
+        <td class="class-path" title="spring-cloud-alibaba-starters/spring-alibaba-nacos-config/src/main/java/com/alibaba/cloud/nacos/constants/Constants.java">spring-cloud-alibaba-starters/spring-alibaba-nacos-config/src/main/java/com/alibaba/cloud/nacos/constants/Constants.java</td>
+        <td class="num">22</td>
+        <td class="num overlap">3</td>
+      </tr>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#3fb950">0.923</span></td>
+        <td class="class-path" title="spring-cloud-alibaba-starters/spring-cloud-starter-stream-rocketmq/src/test/java/com/alibaba/cloud/stream/binder/rocketmq/RocketMQMessageChannelBinderTest.java">spring-cloud-alibaba-starters/spring-cloud-starter-stream-rocketmq/src/test/java/com/alibaba/cloud/stream/binder/rocketmq/RocketMQMessageChannelBinderTest.java</td>
+        <td class="num">22</td>
+        <td class="num overlap">2</td>
+      </tr>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#3fb950">0.942</span></td>
+        <td class="class-path" title="spring-cloud-alibaba-starters/spring-alibaba-nacos-config/src/main/java/com/alibaba/cloud/nacos/NacosConfigAutoConfiguration.java">spring-cloud-alibaba-starters/spring-alibaba-nacos-config/src/main/java/com/alibaba/cloud/nacos/NacosConfigAutoConfiguration.java</td>
+        <td class="num">21</td>
+        <td class="num overlap">3</td>
+      </tr>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#3fb950">0.942</span></td>
+        <td class="class-path" title="spring-cloud-alibaba-starters/spring-cloud-starter-alibaba-nacos-config/src/main/java/com/alibaba/cloud/nacos/NacosConfigSpringCloudAutoConfiguration.java">spring-cloud-alibaba-starters/spring-cloud-starter-alibaba-nacos-config/src/main/java/com/alibaba/cloud/nacos/NacosConfigSpringCloudAutoConfiguration.java</td>
+        <td class="num">20</td>
+        <td class="num overlap">4</td>
+      </tr>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#3fb950">0.942</span></td>
+        <td class="class-path" title="spring-cloud-alibaba-starters/spring-cloud-starter-alibaba-nacos-config/src/test/java/com/alibaba/cloud/nacos/SmartConfigurationPropertiesRebinderIntegrationTest.java">spring-cloud-alibaba-starters/spring-cloud-starter-alibaba-nacos-config/src/test/java/com/alibaba/cloud/nacos/SmartConfigurationPropertiesRebinderIntegrationTest.java</td>
+        <td class="num">20</td>
+        <td class="num overlap">2</td>
+      </tr>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#3fb950">0.942</span></td>
+        <td class="class-path" title="spring-cloud-alibaba-starters/spring-cloud-starter-alibaba-seata/src/main/java/com/alibaba/cloud/seata/webclient/SeataWebClientAutoConfiguration.java">spring-cloud-alibaba-starters/spring-cloud-starter-alibaba-seata/src/main/java/com/alibaba/cloud/seata/webclient/SeataWebClientAutoConfiguration.java</td>
+        <td class="num">8</td>
+        <td class="num overlap">2</td>
+      </tr>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#3fb950">0.942</span></td>
+        <td class="class-path" title="spring-cloud-alibaba-starters/spring-cloud-starter-alibaba-seata/src/main/java/com/alibaba/cloud/seata/webclient/SeataWebClientBuilderCustomizer.java">spring-cloud-alibaba-starters/spring-cloud-starter-alibaba-seata/src/main/java/com/alibaba/cloud/seata/webclient/SeataWebClientBuilderCustomizer.java</td>
+        <td class="num">8</td>
+        <td class="num overlap">2</td>
+      </tr>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#3fb950">0.980</span></td>
+        <td class="class-path" title="spring-cloud-alibaba-starters/spring-alibaba-nacos-config/src/main/java/com/alibaba/cloud/nacos/proxy/druid/NacosDruidFilterConfiguration.java">spring-cloud-alibaba-starters/spring-alibaba-nacos-config/src/main/java/com/alibaba/cloud/nacos/proxy/druid/NacosDruidFilterConfiguration.java</td>
+        <td class="num">19</td>
+        <td class="num overlap">3</td>
+      </tr>
+      
+    </tbody>
+  </table>
+</section>
+
+
+<section class="content-section">
+  <h2 class="section-title">Coupling matrix
+    <span class="legend-inline">
+      <span class="li-cell" style="background:#30363d"></span>Co-change only
+      <span class="li-cell" style="background:#3fb950"></span>Weak
+      <span class="li-cell" style="background:#e3b341"></span>Moderate
+      <span class="li-cell" style="background:#f85149"></span>Strong
+    </span>
+  </h2>
+  <div class="matrix-wrap">
+    <table class="matrix">
+      <thead>
+        <tr>
+          <th class="matrix-corner"></th>
+          <th class="matrix-col-hdr" title="spring-cloud-alibaba-starters/spring-alibaba-nacos-config/src/main/java/com/alibaba/cloud/nacos/annotation/NacosAnnotationProcessor.java"><span>NacosAnnotationProcessor</span></th><th class="matrix-col-hdr" title="spring-cloud-alibaba-starters/spring-alibaba-nacos-config/src/main/java/com/alibaba/cloud/nacos/configdata/NacosConfigDataLocationResolver.java"><span>NacosConfigDataLocationResolver</span></th><th class="matrix-col-hdr" title="spring-cloud-alibaba-starters/spring-cloud-starter-stream-rocketmq/src/main/java/com/alibaba/cloud/stream/binder/rocketmq/integration/inbound/RocketMQInboundChannelAdapter.java"><span>RocketMQInboundChannelAdapter</span></th><th class="matrix-col-hdr" title="spring-cloud-alibaba-starters/spring-alibaba-nacos-config/src/test/java/com.alibaba.cloud.nacos/configdata/NacosConfigDataLocationResolverTest.java"><span>NacosConfigDataLocationResolverTest</span></th><th class="matrix-col-hdr" title="spring-cloud-alibaba-starters/spring-alibaba-nacos-config/src/main/java/com/alibaba/cloud/nacos/configdata/NacosConfigDataLoader.java"><span>NacosConfigDataLoader</span></th><th class="matrix-col-hdr" title="spring-cloud-alibaba-starters/spring-alibaba-nacos-config/src/main/java/com/alibaba/cloud/nacos/proxy/druid/NacosDruidConfigFilter.java"><span>NacosDruidConfigFilter</span></th><th class="matrix-col-hdr" title="spring-cloud-alibaba-starters/spring-alibaba-nacos-config/src/main/java/com/alibaba/cloud/nacos/NacosConfigManager.java"><span>NacosConfigManager</span></th><th class="matrix-col-hdr" title="spring-cloud-alibaba-starters/spring-alibaba-nacos-config/src/main/java/com/alibaba/cloud/nacos/constants/Constants.java"><span>Constants</span></th><th class="matrix-col-hdr" title="spring-cloud-alibaba-starters/spring-cloud-starter-stream-rocketmq/src/test/java/com/alibaba/cloud/stream/binder/rocketmq/RocketMQMessageChannelBinderTest.java"><span>RocketMQMessageChannelBinderTest</span></th><th class="matrix-col-hdr" title="spring-cloud-alibaba-starters/spring-alibaba-nacos-config/src/main/java/com/alibaba/cloud/nacos/NacosConfigAutoConfiguration.java"><span>NacosConfigAutoConfiguration</span></th><th class="matrix-col-hdr" title="spring-cloud-alibaba-starters/spring-cloud-starter-alibaba-nacos-config/src/main/java/com/alibaba/cloud/nacos/NacosConfigSpringCloudAutoConfiguration.java"><span>NacosConfigSpringCloudAutoConfiguration</span></th><th class="matrix-col-hdr" title="spring-cloud-alibaba-starters/spring-cloud-starter-alibaba-nacos-config/src/test/java/com/alibaba/cloud/nacos/SmartConfigurationPropertiesRebinderIntegrationTest.java"><span>SmartConfigurationPropertiesRebinderIntegrationTest</span></th><th class="matrix-col-hdr" title="spring-cloud-alibaba-starters/spring-cloud-starter-alibaba-seata/src/main/java/com/alibaba/cloud/seata/webclient/SeataWebClientAutoConfiguration.java"><span>SeataWebClientAutoConfiguration</span></th><th class="matrix-col-hdr" title="spring-cloud-alibaba-starters/spring-cloud-starter-alibaba-seata/src/main/java/com/alibaba/cloud/seata/webclient/SeataWebClientBuilderCustomizer.java"><span>SeataWebClientBuilderCustomizer</span></th><th class="matrix-col-hdr" title="spring-cloud-alibaba-starters/spring-alibaba-nacos-config/src/main/java/com/alibaba/cloud/nacos/proxy/druid/NacosDruidFilterConfiguration.java"><span>NacosDruidFilterConfiguration</span></th>
+        </tr>
+      </thead>
+      <tbody>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="spring-cloud-alibaba-starters/spring-alibaba-nacos-config/src/main/java/com/alibaba/cloud/nacos/annotation/NacosAnnotationProcessor.java">NacosAnnotationProcessor</th>
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosAnnotationProcessor → NacosDruidConfigFilter · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#155-1636c" title="NacosAnnotationProcessor → NacosConfigManager · weight: 1 · cw: 3.2258 · DATA_ABSTRACTION_COUPLING, METHOD_INVOCATION_ATOMIC_PARAMETER, METHOD_RETURN_TYPE, VARIABLE_FIELD_DECLARATION, VARIABLE_RETURN_STATEMENT"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosAnnotationProcessor → NacosDruidFilterConfiguration · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="spring-cloud-alibaba-starters/spring-alibaba-nacos-config/src/main/java/com/alibaba/cloud/nacos/configdata/NacosConfigDataLocationResolver.java">NacosConfigDataLocationResolver</th>
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosConfigDataLocationResolver → RocketMQInboundChannelAdapter · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosConfigDataLocationResolver → NacosConfigDataLocationResolverTest · weight: 6 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosConfigDataLocationResolver → NacosConfigDataLoader · weight: 17 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#eb8b44" title="NacosConfigDataLocationResolver → NacosConfigManager · weight: 10 · cw: 0.7024 · METHOD_INVOCATION_OBJECT_PARAMETER"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosConfigDataLocationResolver → Constants · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosConfigDataLocationResolver → RocketMQMessageChannelBinderTest · weight: 12 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosConfigDataLocationResolver → NacosConfigAutoConfiguration · weight: 25 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosConfigDataLocationResolver → NacosConfigSpringCloudAutoConfiguration · weight: 21 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosConfigDataLocationResolver → SmartConfigurationPropertiesRebinderIntegrationTest · weight: 5 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosConfigDataLocationResolver → NacosDruidFilterConfiguration · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="spring-cloud-alibaba-starters/spring-cloud-starter-stream-rocketmq/src/main/java/com/alibaba/cloud/stream/binder/rocketmq/integration/inbound/RocketMQInboundChannelAdapter.java">RocketMQInboundChannelAdapter</th>
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="RocketMQInboundChannelAdapter → NacosConfigDataLocationResolver · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="RocketMQInboundChannelAdapter → NacosConfigDataLocationResolverTest · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="RocketMQInboundChannelAdapter → NacosConfigDataLoader · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="RocketMQInboundChannelAdapter → NacosConfigManager · weight: 2 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="RocketMQInboundChannelAdapter → Constants · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="RocketMQInboundChannelAdapter → RocketMQMessageChannelBinderTest · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="RocketMQInboundChannelAdapter → NacosConfigAutoConfiguration · weight: 6 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="RocketMQInboundChannelAdapter → NacosConfigSpringCloudAutoConfiguration · weight: 5 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="RocketMQInboundChannelAdapter → SmartConfigurationPropertiesRebinderIntegrationTest · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="RocketMQInboundChannelAdapter → SeataWebClientAutoConfiguration · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="RocketMQInboundChannelAdapter → SeataWebClientBuilderCustomizer · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="spring-cloud-alibaba-starters/spring-alibaba-nacos-config/src/test/java/com.alibaba.cloud.nacos/configdata/NacosConfigDataLocationResolverTest.java">NacosConfigDataLocationResolverTest</th>
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#14b-13368" title="NacosConfigDataLocationResolverTest → NacosConfigDataLocationResolver · weight: 6 · cw: 2.9830 · DATA_ABSTRACTION_COUPLING, METHOD_INVOCATION_OBJECT_PARAMETER, OBJECT_PARAMETER_COUPLING, VARIABLE_CLASS_INSTANCE_CREATION, VARIABLE_FIELD_DECLARATION"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosConfigDataLocationResolverTest → RocketMQInboundChannelAdapter · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosConfigDataLocationResolverTest → NacosConfigDataLoader · weight: 5 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosConfigDataLocationResolverTest → NacosConfigManager · weight: 2 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosConfigDataLocationResolverTest → Constants · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosConfigDataLocationResolverTest → RocketMQMessageChannelBinderTest · weight: 3 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosConfigDataLocationResolverTest → NacosConfigAutoConfiguration · weight: 7 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosConfigDataLocationResolverTest → NacosConfigSpringCloudAutoConfiguration · weight: 6 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosConfigDataLocationResolverTest → SmartConfigurationPropertiesRebinderIntegrationTest · weight: 2 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosConfigDataLocationResolverTest → NacosDruidFilterConfiguration · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="spring-cloud-alibaba-starters/spring-alibaba-nacos-config/src/main/java/com/alibaba/cloud/nacos/configdata/NacosConfigDataLoader.java">NacosConfigDataLoader</th>
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosConfigDataLoader → NacosConfigDataLocationResolver · weight: 17 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosConfigDataLoader → RocketMQInboundChannelAdapter · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosConfigDataLoader → NacosConfigDataLocationResolverTest · weight: 5 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#107074e" title="NacosConfigDataLoader → NacosConfigManager · weight: 8 · cw: 1.3742 · METHOD_INVOCATION_ATOMIC_PARAMETER, VARIABLE_DECLARATION_STATEMENT"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosConfigDataLoader → Constants · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosConfigDataLoader → RocketMQMessageChannelBinderTest · weight: 12 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosConfigDataLoader → NacosConfigAutoConfiguration · weight: 25 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosConfigDataLoader → NacosConfigSpringCloudAutoConfiguration · weight: 21 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosConfigDataLoader → SmartConfigurationPropertiesRebinderIntegrationTest · weight: 5 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosConfigDataLoader → NacosDruidFilterConfiguration · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="spring-cloud-alibaba-starters/spring-alibaba-nacos-config/src/main/java/com/alibaba/cloud/nacos/proxy/druid/NacosDruidConfigFilter.java">NacosDruidConfigFilter</th>
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosDruidConfigFilter → NacosAnnotationProcessor · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#107074e" title="NacosDruidConfigFilter → NacosConfigManager · weight: 1 · cw: 1.3742 · METHOD_INVOCATION_ATOMIC_PARAMETER, VARIABLE_DECLARATION_STATEMENT"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosDruidConfigFilter → NacosDruidFilterConfiguration · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="spring-cloud-alibaba-starters/spring-alibaba-nacos-config/src/main/java/com/alibaba/cloud/nacos/NacosConfigManager.java">NacosConfigManager</th>
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosConfigManager → NacosConfigDataLocationResolver · weight: 10 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosConfigManager → RocketMQInboundChannelAdapter · weight: 2 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosConfigManager → NacosConfigDataLocationResolverTest · weight: 2 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosConfigManager → NacosConfigDataLoader · weight: 8 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosConfigManager → RocketMQMessageChannelBinderTest · weight: 6 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosConfigManager → NacosConfigAutoConfiguration · weight: 13 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosConfigManager → NacosConfigSpringCloudAutoConfiguration · weight: 10 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosConfigManager → SmartConfigurationPropertiesRebinderIntegrationTest · weight: 2 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="spring-cloud-alibaba-starters/spring-alibaba-nacos-config/src/main/java/com/alibaba/cloud/nacos/constants/Constants.java">Constants</th>
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Constants → NacosConfigDataLocationResolver · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Constants → RocketMQInboundChannelAdapter · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Constants → NacosConfigDataLocationResolverTest · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Constants → NacosConfigDataLoader · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Constants → RocketMQMessageChannelBinderTest · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Constants → NacosConfigAutoConfiguration · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Constants → NacosConfigSpringCloudAutoConfiguration · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Constants → SmartConfigurationPropertiesRebinderIntegrationTest · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Constants → SeataWebClientAutoConfiguration · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Constants → SeataWebClientBuilderCustomizer · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Constants → NacosDruidFilterConfiguration · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="spring-cloud-alibaba-starters/spring-cloud-starter-stream-rocketmq/src/test/java/com/alibaba/cloud/stream/binder/rocketmq/RocketMQMessageChannelBinderTest.java">RocketMQMessageChannelBinderTest</th>
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="RocketMQMessageChannelBinderTest → NacosConfigDataLocationResolver · weight: 12 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="RocketMQMessageChannelBinderTest → RocketMQInboundChannelAdapter · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="RocketMQMessageChannelBinderTest → NacosConfigDataLocationResolverTest · weight: 3 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="RocketMQMessageChannelBinderTest → NacosConfigDataLoader · weight: 12 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="RocketMQMessageChannelBinderTest → NacosConfigManager · weight: 6 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="RocketMQMessageChannelBinderTest → Constants · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="RocketMQMessageChannelBinderTest → NacosConfigAutoConfiguration · weight: 18 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="RocketMQMessageChannelBinderTest → NacosConfigSpringCloudAutoConfiguration · weight: 15 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="RocketMQMessageChannelBinderTest → SmartConfigurationPropertiesRebinderIntegrationTest · weight: 3 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="RocketMQMessageChannelBinderTest → SeataWebClientAutoConfiguration · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="RocketMQMessageChannelBinderTest → SeataWebClientBuilderCustomizer · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="spring-cloud-alibaba-starters/spring-alibaba-nacos-config/src/main/java/com/alibaba/cloud/nacos/NacosConfigAutoConfiguration.java">NacosConfigAutoConfiguration</th>
+          
+            <td class="matrix-cell filled" style="background:#135-cf60" title="NacosConfigAutoConfiguration → NacosAnnotationProcessor · weight: 1 · cw: 2.4696 · ATOMIC_PARAMETER_COUPLING, METHOD_RETURN_TYPE, VARIABLE_CLASS_INSTANCE_CREATION, VARIABLE_RETURN_STATEMENT"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosConfigAutoConfiguration → NacosConfigDataLocationResolver · weight: 25 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosConfigAutoConfiguration → RocketMQInboundChannelAdapter · weight: 6 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosConfigAutoConfiguration → NacosConfigDataLocationResolverTest · weight: 7 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosConfigAutoConfiguration → NacosConfigDataLoader · weight: 25 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#190-27683" title="NacosConfigAutoConfiguration → NacosConfigManager · weight: 13 · cw: 4.6312 · METHOD_INVOCATION_ATOMIC_PARAMETER, METHOD_INVOCATION_OBJECT_PARAMETER, METHOD_PARAMETER_TYPE, METHOD_RETURN_TYPE, OBJECT_PARAMETER_CLASS, VARIABLE_RETURN_STATEMENT, VARIABLE_SINGLE_DECLARATION"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosConfigAutoConfiguration → Constants · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosConfigAutoConfiguration → RocketMQMessageChannelBinderTest · weight: 18 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosConfigAutoConfiguration → NacosConfigSpringCloudAutoConfiguration · weight: 36 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosConfigAutoConfiguration → SmartConfigurationPropertiesRebinderIntegrationTest · weight: 8 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosConfigAutoConfiguration → NacosDruidFilterConfiguration · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="spring-cloud-alibaba-starters/spring-cloud-starter-alibaba-nacos-config/src/main/java/com/alibaba/cloud/nacos/NacosConfigSpringCloudAutoConfiguration.java">NacosConfigSpringCloudAutoConfiguration</th>
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosConfigSpringCloudAutoConfiguration → NacosConfigDataLocationResolver · weight: 21 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosConfigSpringCloudAutoConfiguration → RocketMQInboundChannelAdapter · weight: 5 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosConfigSpringCloudAutoConfiguration → NacosConfigDataLocationResolverTest · weight: 6 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosConfigSpringCloudAutoConfiguration → NacosConfigDataLoader · weight: 21 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosConfigSpringCloudAutoConfiguration → NacosConfigManager · weight: 10 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosConfigSpringCloudAutoConfiguration → Constants · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosConfigSpringCloudAutoConfiguration → RocketMQMessageChannelBinderTest · weight: 15 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosConfigSpringCloudAutoConfiguration → NacosConfigAutoConfiguration · weight: 36 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosConfigSpringCloudAutoConfiguration → SmartConfigurationPropertiesRebinderIntegrationTest · weight: 7 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosConfigSpringCloudAutoConfiguration → NacosDruidFilterConfiguration · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="spring-cloud-alibaba-starters/spring-cloud-starter-alibaba-nacos-config/src/test/java/com/alibaba/cloud/nacos/SmartConfigurationPropertiesRebinderIntegrationTest.java">SmartConfigurationPropertiesRebinderIntegrationTest</th>
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="SmartConfigurationPropertiesRebinderIntegrationTest → NacosConfigDataLocationResolver · weight: 5 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="SmartConfigurationPropertiesRebinderIntegrationTest → RocketMQInboundChannelAdapter · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="SmartConfigurationPropertiesRebinderIntegrationTest → NacosConfigDataLocationResolverTest · weight: 2 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="SmartConfigurationPropertiesRebinderIntegrationTest → NacosConfigDataLoader · weight: 5 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="SmartConfigurationPropertiesRebinderIntegrationTest → NacosConfigManager · weight: 2 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="SmartConfigurationPropertiesRebinderIntegrationTest → Constants · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="SmartConfigurationPropertiesRebinderIntegrationTest → RocketMQMessageChannelBinderTest · weight: 3 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="SmartConfigurationPropertiesRebinderIntegrationTest → NacosConfigAutoConfiguration · weight: 8 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="SmartConfigurationPropertiesRebinderIntegrationTest → NacosConfigSpringCloudAutoConfiguration · weight: 7 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="SmartConfigurationPropertiesRebinderIntegrationTest → NacosDruidFilterConfiguration · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="spring-cloud-alibaba-starters/spring-cloud-starter-alibaba-seata/src/main/java/com/alibaba/cloud/seata/webclient/SeataWebClientAutoConfiguration.java">SeataWebClientAutoConfiguration</th>
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="SeataWebClientAutoConfiguration → RocketMQInboundChannelAdapter · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="SeataWebClientAutoConfiguration → Constants · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="SeataWebClientAutoConfiguration → RocketMQMessageChannelBinderTest · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#117-4054" title="SeataWebClientAutoConfiguration → SeataWebClientBuilderCustomizer · weight: 1 · cw: 1.7446 · OBJECT_PARAMETER_COUPLING, VARIABLE_CLASS_INSTANCE_CREATION, VARIABLE_RETURN_STATEMENT"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="spring-cloud-alibaba-starters/spring-cloud-starter-alibaba-seata/src/main/java/com/alibaba/cloud/seata/webclient/SeataWebClientBuilderCustomizer.java">SeataWebClientBuilderCustomizer</th>
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="SeataWebClientBuilderCustomizer → RocketMQInboundChannelAdapter · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="SeataWebClientBuilderCustomizer → Constants · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="SeataWebClientBuilderCustomizer → RocketMQMessageChannelBinderTest · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="SeataWebClientBuilderCustomizer → SeataWebClientAutoConfiguration · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="spring-cloud-alibaba-starters/spring-alibaba-nacos-config/src/main/java/com/alibaba/cloud/nacos/proxy/druid/NacosDruidFilterConfiguration.java">NacosDruidFilterConfiguration</th>
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosDruidFilterConfiguration → NacosAnnotationProcessor · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosDruidFilterConfiguration → NacosConfigDataLocationResolver · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosDruidFilterConfiguration → NacosConfigDataLocationResolverTest · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosDruidFilterConfiguration → NacosConfigDataLoader · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#134-cb60" title="NacosDruidFilterConfiguration → NacosDruidConfigFilter · weight: 1 · cw: 2.4503 · METHOD_RETURN_TYPE, OBJECT_PARAMETER_COUPLING, VARIABLE_CLASS_INSTANCE_CREATION, VARIABLE_RETURN_STATEMENT"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosDruidFilterConfiguration → NacosConfigManager · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosDruidFilterConfiguration → Constants · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosDruidFilterConfiguration → NacosConfigAutoConfiguration · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosDruidFilterConfiguration → NacosConfigSpringCloudAutoConfiguration · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosDruidFilterConfiguration → SmartConfigurationPropertiesRebinderIntegrationTest · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+        </tr>
+        
+      </tbody>
+    </table>
+  </div>
+</section>
+
+
+</body>
+</html>

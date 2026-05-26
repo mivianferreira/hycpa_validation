@@ -1,0 +1,2294 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HyCPA — Community 6 · CarGuo/GSYVideoPlayer</title>
+  <style>
+:root {
+  --bg: #0d1117; --surface: #161b22; --surface2: #21262d;
+  --border: #30363d; --text: #e6edf3; --text2: #8b949e;
+  --accent: #58a6ff; --green: #3fb950; --orange: #e3b341; --red: #f85149;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { background: var(--bg); color: var(--text); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif; padding-bottom: 48px; }
+
+/* ── Header ── */
+.page-header { background: var(--surface); border-bottom: 1px solid var(--border); padding: 12px 24px; display: flex; align-items: center; gap: 20px; }
+.back-btn { color: var(--text2); font-size: 12px; text-decoration: none; white-space: nowrap; }
+.back-btn:hover { color: var(--accent); }
+.header-title { font-size: 15px; color: var(--text); }
+.header-title strong { color: var(--accent); }
+
+/* ── Stats pills ── */
+.stats-row { display: flex; gap: 12px; padding: 16px 24px; background: var(--surface); border-bottom: 1px solid var(--border); flex-wrap: wrap; }
+.stat-pill { background: var(--surface2); border: 1px solid var(--border); border-radius: 8px; padding: 10px 20px; display: flex; flex-direction: column; align-items: center; gap: 2px; min-width: 90px; }
+.pill-val { font-size: 22px; font-weight: 700; color: var(--text); line-height: 1; }
+.pill-lbl { font-size: 10px; color: var(--text2); text-transform: uppercase; letter-spacing: 0.5px; margin-top: 2px; }
+
+/* ── Content sections ── */
+.content-section { padding: 24px; }
+.section-title { font-size: 11px; font-weight: 600; color: var(--text2); text-transform: uppercase; letter-spacing: 0.6px; margin-bottom: 14px; display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
+
+/* ── Node table ── */
+.node-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+.node-table th { background: var(--surface); color: var(--text2); font-weight: 600; font-size: 10px; text-transform: uppercase; letter-spacing: 0.5px; padding: 8px 12px; text-align: left; border-bottom: 2px solid var(--border); white-space: nowrap; }
+.node-table td { padding: 7px 12px; border-bottom: 1px solid var(--border); vertical-align: middle; }
+.node-table tbody tr:hover td { background: var(--surface); }
+.health-badge { display: inline-block; padding: 2px 9px; border-radius: 10px; font-size: 11px; font-weight: 700; color: #0d1117; white-space: nowrap; }
+.class-path { font-size: 11px; color: var(--text2); font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', monospace; word-break: break-all; }
+td.num { text-align: right; font-weight: 600; white-space: nowrap; }
+td.overlap { color: var(--accent); }
+
+/* ── Coupling matrix ── */
+.matrix-wrap { overflow: auto; }
+.matrix { border-collapse: collapse; }
+.matrix-corner { min-width: 16px; }
+.matrix-col-hdr { padding: 0 1px 4px 1px; vertical-align: bottom; }
+.matrix-col-hdr span { display: block; writing-mode: vertical-rl; transform: rotate(180deg); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-height: 140px; color: var(--text2); font-weight: 400; font-size: 10px; cursor: default; text-align: left; }
+.matrix-row-hdr { text-align: right; padding: 1px 6px 1px 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 200px; color: var(--text2); font-weight: 400; font-size: 10px; cursor: default; }
+.matrix-cell { width: 16px; height: 16px; min-width: 16px; min-height: 16px; border: 1px solid #1c2129; cursor: default; }
+.matrix-cell.empty { background: transparent; }
+.matrix-cell.self-cell { background: var(--surface2); }
+.matrix-cell.filled { }
+
+/* ── Legend inline ── */
+.legend-inline { display: inline-flex; align-items: center; gap: 6px; font-size: 10px; color: var(--text2); font-weight: 400; text-transform: none; letter-spacing: 0; }
+.li-cell { display: inline-block; width: 10px; height: 10px; border-radius: 2px; vertical-align: middle; flex-shrink: 0; }
+</style>
+</head>
+<body>
+
+<div class="page-header">
+  <a class="back-btn" href="repo_CarGuo_GSYVideoPlayer.html">← Back to CarGuo/GSYVideoPlayer</a>
+  <span class="header-title">Community <strong>C6</strong> — CarGuo/GSYVideoPlayer</span>
+</div>
+
+<div class="stats-row">
+  <div class="stat-pill"><span class="pill-val">25</span><span class="pill-lbl">Nodes</span></div>
+  <div class="stat-pill"><span class="pill-val">468</span><span class="pill-lbl">Arcs</span></div>
+  <div class="stat-pill"><span class="pill-val">23</span><span class="pill-lbl">Overlapping</span></div>
+  <div class="stat-pill"><span class="pill-val">64</span><span class="pill-lbl">Coupled arcs</span></div>
+  <div class="stat-pill"><span class="pill-val">0</span><span class="pill-lbl">Co-change only</span></div>
+</div>
+
+<section class="content-section">
+  <h2 class="section-title">Nodes</h2>
+  <table class="node-table">
+    <thead>
+      <tr>
+        <th>Health</th>
+        <th>Class</th>
+        <th>Degree</th>
+        <th>Communities</th>
+      </tr>
+    </thead>
+    <tbody>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#f85149">0.327</span></td>
+        <td class="class-path" title="gsyVideoPlayer-java/src/main/java/com/shuyu/gsyvideoplayer/video/base/GSYVideoView.java">gsyVideoPlayer-java/src/main/java/com/shuyu/gsyvideoplayer/video/base/GSYVideoView.java</td>
+        <td class="num">43</td>
+        <td class="num overlap">5</td>
+      </tr>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#f85149">0.365</span></td>
+        <td class="class-path" title="gsyVideoPlayer-java/src/main/java/com/shuyu/gsyvideoplayer/video/base/GSYVideoControlView.java">gsyVideoPlayer-java/src/main/java/com/shuyu/gsyvideoplayer/video/base/GSYVideoControlView.java</td>
+        <td class="num">44</td>
+        <td class="num overlap">6</td>
+      </tr>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#f85149">0.481</span></td>
+        <td class="class-path" title="gsyVideoPlayer-exo_player2/src/main/java/tv/danmaku/ijk/media/exo2/ExoSourceManager.java">gsyVideoPlayer-exo_player2/src/main/java/tv/danmaku/ijk/media/exo2/ExoSourceManager.java</td>
+        <td class="num">41</td>
+        <td class="num overlap">4</td>
+      </tr>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#e3b341">0.558</span></td>
+        <td class="class-path" title="gsyVideoPlayer-java/src/main/java/com/shuyu/gsyvideoplayer/utils/CommonUtil.java">gsyVideoPlayer-java/src/main/java/com/shuyu/gsyvideoplayer/utils/CommonUtil.java</td>
+        <td class="num">42</td>
+        <td class="num overlap">2</td>
+      </tr>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#e3b341">0.596</span></td>
+        <td class="class-path" title="app/src/main/java/com/example/gsyvideoplayer/exo/ExoAdaptiveTrackActivity.java">app/src/main/java/com/example/gsyvideoplayer/exo/ExoAdaptiveTrackActivity.java</td>
+        <td class="num">8</td>
+        <td class="num">1</td>
+      </tr>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#e3b341">0.596</span></td>
+        <td class="class-path" title="app/src/main/java/com/example/gsyvideoplayer/exo/GSYExo2PlayerView.java">app/src/main/java/com/example/gsyvideoplayer/exo/GSYExo2PlayerView.java</td>
+        <td class="num">41</td>
+        <td class="num overlap">3</td>
+      </tr>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#e3b341">0.596</span></td>
+        <td class="class-path" title="app/src/main/java/com/example/gsyvideoplayer/exosubtitle/GSYExoSubTitleDetailPlayer.java">app/src/main/java/com/example/gsyvideoplayer/exosubtitle/GSYExoSubTitleDetailPlayer.java</td>
+        <td class="num">17</td>
+        <td class="num overlap">4</td>
+      </tr>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#e3b341">0.635</span></td>
+        <td class="class-path" title="gsyVideoPlayer-java/src/main/java/com/shuyu/gsyvideoplayer/builder/GSYVideoOptionBuilder.java">gsyVideoPlayer-java/src/main/java/com/shuyu/gsyvideoplayer/builder/GSYVideoOptionBuilder.java</td>
+        <td class="num">44</td>
+        <td class="num overlap">4</td>
+      </tr>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#e3b341">0.654</span></td>
+        <td class="class-path" title="app/src/main/java/com/example/gsyvideoplayer/exosubtitle/GSYExoSubTitleVideoView.java">app/src/main/java/com/example/gsyvideoplayer/exosubtitle/GSYExoSubTitleVideoView.java</td>
+        <td class="num">42</td>
+        <td class="num overlap">4</td>
+      </tr>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#e3b341">0.654</span></td>
+        <td class="class-path" title="gsyVideoPlayer-java/src/main/java/com/shuyu/gsyvideoplayer/utils/OrientationUtils.java">gsyVideoPlayer-java/src/main/java/com/shuyu/gsyvideoplayer/utils/OrientationUtils.java</td>
+        <td class="num">43</td>
+        <td class="num overlap">6</td>
+      </tr>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#e3b341">0.692</span></td>
+        <td class="class-path" title="app/src/main/java/com/example/gsyvideoplayer/DetailPlayer.java">app/src/main/java/com/example/gsyvideoplayer/DetailPlayer.java</td>
+        <td class="num">42</td>
+        <td class="num overlap">5</td>
+      </tr>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#e3b341">0.692</span></td>
+        <td class="class-path" title="gsyVideoPlayer-java/src/main/java/com/shuyu/gsyvideoplayer/player/IjkPlayerManager.java">gsyVideoPlayer-java/src/main/java/com/shuyu/gsyvideoplayer/player/IjkPlayerManager.java</td>
+        <td class="num">41</td>
+        <td class="num overlap">5</td>
+      </tr>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#e3b341">0.731</span></td>
+        <td class="class-path" title="app/src/main/java/com/example/gsyvideoplayer/SubtitleDetailPlayer.java">app/src/main/java/com/example/gsyvideoplayer/SubtitleDetailPlayer.java</td>
+        <td class="num">10</td>
+        <td class="num overlap">2</td>
+      </tr>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#3fb950">0.750</span></td>
+        <td class="class-path" title="app/src/main/java/com/example/gsyvideoplayer/utils/JumpUtils.java">app/src/main/java/com/example/gsyvideoplayer/utils/JumpUtils.java</td>
+        <td class="num">45</td>
+        <td class="num overlap">7</td>
+      </tr>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#3fb950">0.769</span></td>
+        <td class="class-path" title="gsyVideoPlayer-java/src/main/java/com/shuyu/gsyvideoplayer/GSYBaseActivityDetail.java">gsyVideoPlayer-java/src/main/java/com/shuyu/gsyvideoplayer/GSYBaseActivityDetail.java</td>
+        <td class="num">41</td>
+        <td class="num overlap">3</td>
+      </tr>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#3fb950">0.788</span></td>
+        <td class="class-path" title="app/src/main/java/com/example/gsyvideoplayer/exo/GSYExoVideoManager.java">app/src/main/java/com/example/gsyvideoplayer/exo/GSYExoVideoManager.java</td>
+        <td class="num">41</td>
+        <td class="num overlap">2</td>
+      </tr>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#3fb950">0.827</span></td>
+        <td class="class-path" title="app/src/main/java/com/example/gsyvideoplayer/DetailNormalActivityPlayer.java">app/src/main/java/com/example/gsyvideoplayer/DetailNormalActivityPlayer.java</td>
+        <td class="num">13</td>
+        <td class="num">1</td>
+      </tr>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#3fb950">0.827</span></td>
+        <td class="class-path" title="gsyVideoPlayer-java/src/main/java/com/shuyu/gsyvideoplayer/listener/GSYSampleCallBack.java">gsyVideoPlayer-java/src/main/java/com/shuyu/gsyvideoplayer/listener/GSYSampleCallBack.java</td>
+        <td class="num">43</td>
+        <td class="num overlap">4</td>
+      </tr>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#3fb950">0.846</span></td>
+        <td class="class-path" title="app/src/main/java/com/example/gsyvideoplayer/MainActivity.java">app/src/main/java/com/example/gsyvideoplayer/MainActivity.java</td>
+        <td class="num">42</td>
+        <td class="num overlap">7</td>
+      </tr>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#3fb950">0.846</span></td>
+        <td class="class-path" title="gsyVideoPlayer-java/src/main/java/com/shuyu/gsyvideoplayer/video/base/GSYVideoPlayer.java">gsyVideoPlayer-java/src/main/java/com/shuyu/gsyvideoplayer/video/base/GSYVideoPlayer.java</td>
+        <td class="num">44</td>
+        <td class="num overlap">3</td>
+      </tr>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#3fb950">0.904</span></td>
+        <td class="class-path" title="app/src/main/java/com/example/gsyvideoplayer/exosubtitle/GSYExoSubTitlePlayer.java">app/src/main/java/com/example/gsyvideoplayer/exosubtitle/GSYExoSubTitlePlayer.java</td>
+        <td class="num">42</td>
+        <td class="num overlap">2</td>
+      </tr>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#3fb950">0.940</span></td>
+        <td class="class-path" title="gsyVideoPlayer-java/src/main/java/com/shuyu/gsyvideoplayer/listener/LockClickListener.java">gsyVideoPlayer-java/src/main/java/com/shuyu/gsyvideoplayer/listener/LockClickListener.java</td>
+        <td class="num">44</td>
+        <td class="num overlap">2</td>
+      </tr>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#3fb950">0.942</span></td>
+        <td class="class-path" title="gsyVideoPlayer-java/src/main/java/com/shuyu/gsyvideoplayer/cache/CacheFactory.java">gsyVideoPlayer-java/src/main/java/com/shuyu/gsyvideoplayer/cache/CacheFactory.java</td>
+        <td class="num">41</td>
+        <td class="num overlap">2</td>
+      </tr>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#3fb950">0.942</span></td>
+        <td class="class-path" title="gsyVideoPlayer-java/src/main/java/com/shuyu/gsyvideoplayer/player/PlayerFactory.java">gsyVideoPlayer-java/src/main/java/com/shuyu/gsyvideoplayer/player/PlayerFactory.java</td>
+        <td class="num">41</td>
+        <td class="num overlap">3</td>
+      </tr>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#3fb950">0.980</span></td>
+        <td class="class-path" title="gsyVideoPlayer-base/src/main/java/com/shuyu/gsyvideoplayer/cache/ICacheManager.java">gsyVideoPlayer-base/src/main/java/com/shuyu/gsyvideoplayer/cache/ICacheManager.java</td>
+        <td class="num">41</td>
+        <td class="num overlap">3</td>
+      </tr>
+      
+    </tbody>
+  </table>
+</section>
+
+
+<section class="content-section">
+  <h2 class="section-title">Coupling matrix
+    <span class="legend-inline">
+      <span class="li-cell" style="background:#30363d"></span>Co-change only
+      <span class="li-cell" style="background:#3fb950"></span>Weak
+      <span class="li-cell" style="background:#e3b341"></span>Moderate
+      <span class="li-cell" style="background:#f85149"></span>Strong
+    </span>
+  </h2>
+  <div class="matrix-wrap">
+    <table class="matrix">
+      <thead>
+        <tr>
+          <th class="matrix-corner"></th>
+          <th class="matrix-col-hdr" title="gsyVideoPlayer-java/src/main/java/com/shuyu/gsyvideoplayer/video/base/GSYVideoView.java"><span>GSYVideoView</span></th><th class="matrix-col-hdr" title="gsyVideoPlayer-java/src/main/java/com/shuyu/gsyvideoplayer/video/base/GSYVideoControlView.java"><span>GSYVideoControlView</span></th><th class="matrix-col-hdr" title="gsyVideoPlayer-exo_player2/src/main/java/tv/danmaku/ijk/media/exo2/ExoSourceManager.java"><span>ExoSourceManager</span></th><th class="matrix-col-hdr" title="gsyVideoPlayer-java/src/main/java/com/shuyu/gsyvideoplayer/utils/CommonUtil.java"><span>CommonUtil</span></th><th class="matrix-col-hdr" title="app/src/main/java/com/example/gsyvideoplayer/exo/ExoAdaptiveTrackActivity.java"><span>ExoAdaptiveTrackActivity</span></th><th class="matrix-col-hdr" title="app/src/main/java/com/example/gsyvideoplayer/exo/GSYExo2PlayerView.java"><span>GSYExo2PlayerView</span></th><th class="matrix-col-hdr" title="app/src/main/java/com/example/gsyvideoplayer/exosubtitle/GSYExoSubTitleDetailPlayer.java"><span>GSYExoSubTitleDetailPlayer</span></th><th class="matrix-col-hdr" title="gsyVideoPlayer-java/src/main/java/com/shuyu/gsyvideoplayer/builder/GSYVideoOptionBuilder.java"><span>GSYVideoOptionBuilder</span></th><th class="matrix-col-hdr" title="app/src/main/java/com/example/gsyvideoplayer/exosubtitle/GSYExoSubTitleVideoView.java"><span>GSYExoSubTitleVideoView</span></th><th class="matrix-col-hdr" title="gsyVideoPlayer-java/src/main/java/com/shuyu/gsyvideoplayer/utils/OrientationUtils.java"><span>OrientationUtils</span></th><th class="matrix-col-hdr" title="app/src/main/java/com/example/gsyvideoplayer/DetailPlayer.java"><span>DetailPlayer</span></th><th class="matrix-col-hdr" title="gsyVideoPlayer-java/src/main/java/com/shuyu/gsyvideoplayer/player/IjkPlayerManager.java"><span>IjkPlayerManager</span></th><th class="matrix-col-hdr" title="app/src/main/java/com/example/gsyvideoplayer/SubtitleDetailPlayer.java"><span>SubtitleDetailPlayer</span></th><th class="matrix-col-hdr" title="app/src/main/java/com/example/gsyvideoplayer/utils/JumpUtils.java"><span>JumpUtils</span></th><th class="matrix-col-hdr" title="gsyVideoPlayer-java/src/main/java/com/shuyu/gsyvideoplayer/GSYBaseActivityDetail.java"><span>GSYBaseActivityDetail</span></th><th class="matrix-col-hdr" title="app/src/main/java/com/example/gsyvideoplayer/exo/GSYExoVideoManager.java"><span>GSYExoVideoManager</span></th><th class="matrix-col-hdr" title="app/src/main/java/com/example/gsyvideoplayer/DetailNormalActivityPlayer.java"><span>DetailNormalActivityPlayer</span></th><th class="matrix-col-hdr" title="gsyVideoPlayer-java/src/main/java/com/shuyu/gsyvideoplayer/listener/GSYSampleCallBack.java"><span>GSYSampleCallBack</span></th><th class="matrix-col-hdr" title="app/src/main/java/com/example/gsyvideoplayer/MainActivity.java"><span>MainActivity</span></th><th class="matrix-col-hdr" title="gsyVideoPlayer-java/src/main/java/com/shuyu/gsyvideoplayer/video/base/GSYVideoPlayer.java"><span>GSYVideoPlayer</span></th><th class="matrix-col-hdr" title="app/src/main/java/com/example/gsyvideoplayer/exosubtitle/GSYExoSubTitlePlayer.java"><span>GSYExoSubTitlePlayer</span></th><th class="matrix-col-hdr" title="gsyVideoPlayer-java/src/main/java/com/shuyu/gsyvideoplayer/listener/LockClickListener.java"><span>LockClickListener</span></th><th class="matrix-col-hdr" title="gsyVideoPlayer-java/src/main/java/com/shuyu/gsyvideoplayer/cache/CacheFactory.java"><span>CacheFactory</span></th><th class="matrix-col-hdr" title="gsyVideoPlayer-java/src/main/java/com/shuyu/gsyvideoplayer/player/PlayerFactory.java"><span>PlayerFactory</span></th><th class="matrix-col-hdr" title="gsyVideoPlayer-base/src/main/java/com/shuyu/gsyvideoplayer/cache/ICacheManager.java"><span>ICacheManager</span></th>
+        </tr>
+      </thead>
+      <tbody>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="gsyVideoPlayer-java/src/main/java/com/shuyu/gsyvideoplayer/video/base/GSYVideoView.java">GSYVideoView</th>
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GSYVideoView → GSYVideoControlView · weight: 13 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GSYVideoView → ExoSourceManager · weight: 15 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#ec8844" title="GSYVideoView → CommonUtil · weight: 21 · cw: 0.7163 · METHOD_INVOCATION_ATOMIC_PARAMETER"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GSYVideoView → GSYExo2PlayerView · weight: 8 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GSYVideoView → GSYVideoOptionBuilder · weight: 15 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GSYVideoView → GSYExoSubTitleVideoView · weight: 6 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GSYVideoView → OrientationUtils · weight: 21 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GSYVideoView → DetailPlayer · weight: 14 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GSYVideoView → IjkPlayerManager · weight: 21 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GSYVideoView → JumpUtils · weight: 3 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GSYVideoView → GSYBaseActivityDetail · weight: 9 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GSYVideoView → GSYExoVideoManager · weight: 9 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GSYVideoView → GSYSampleCallBack · weight: 6 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GSYVideoView → MainActivity · weight: 12 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GSYVideoView → GSYVideoPlayer · weight: 9 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GSYVideoView → GSYExoSubTitlePlayer · weight: 9 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GSYVideoView → LockClickListener · weight: 3 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GSYVideoView → CacheFactory · weight: 3 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GSYVideoView → PlayerFactory · weight: 6 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GSYVideoView → ICacheManager · weight: 3 · cw: 0.0000 · co-change only"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="gsyVideoPlayer-java/src/main/java/com/shuyu/gsyvideoplayer/video/base/GSYVideoControlView.java">GSYVideoControlView</th>
+          
+            <td class="matrix-cell filled" style="background:#1021f4d" title="GSYVideoControlView → GSYVideoView · weight: 13 · cw: 1.2536 · INHERITANCE, METHOD_INVOCATION_ATOMIC_PARAMETER"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GSYVideoControlView → ExoSourceManager · weight: 20 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#109-14f" title="GSYVideoControlView → CommonUtil · weight: 29 · cw: 1.4187 · METHOD_INVOCATION_ATOMIC_PARAMETER, METHOD_INVOCATION_OBJECT_PARAMETER"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GSYVideoControlView → GSYExo2PlayerView · weight: 8 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GSYVideoControlView → GSYVideoOptionBuilder · weight: 21 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GSYVideoControlView → GSYExoSubTitleVideoView · weight: 8 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GSYVideoControlView → OrientationUtils · weight: 28 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GSYVideoControlView → DetailPlayer · weight: 18 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GSYVideoControlView → IjkPlayerManager · weight: 28 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GSYVideoControlView → JumpUtils · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GSYVideoControlView → GSYBaseActivityDetail · weight: 12 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GSYVideoControlView → GSYExoVideoManager · weight: 12 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GSYVideoControlView → GSYSampleCallBack · weight: 8 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GSYVideoControlView → MainActivity · weight: 16 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GSYVideoControlView → GSYVideoPlayer · weight: 12 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GSYVideoControlView → GSYExoSubTitlePlayer · weight: 12 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#136-d160" title="GSYVideoControlView → LockClickListener · weight: 4 · cw: 2.4828 · DATA_ABSTRACTION_COUPLING, METHOD_PARAMETER_TYPE, VARIABLE_FIELD_DECLARATION, VARIABLE_SINGLE_DECLARATION"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GSYVideoControlView → CacheFactory · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GSYVideoControlView → PlayerFactory · weight: 8 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GSYVideoControlView → ICacheManager · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="gsyVideoPlayer-exo_player2/src/main/java/tv/danmaku/ijk/media/exo2/ExoSourceManager.java">ExoSourceManager</th>
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ExoSourceManager → GSYVideoView · weight: 15 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ExoSourceManager → GSYVideoControlView · weight: 20 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ExoSourceManager → CommonUtil · weight: 35 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ExoSourceManager → GSYExo2PlayerView · weight: 10 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ExoSourceManager → GSYVideoOptionBuilder · weight: 25 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ExoSourceManager → GSYExoSubTitleVideoView · weight: 10 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ExoSourceManager → OrientationUtils · weight: 35 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ExoSourceManager → DetailPlayer · weight: 23 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ExoSourceManager → IjkPlayerManager · weight: 35 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ExoSourceManager → JumpUtils · weight: 5 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ExoSourceManager → GSYBaseActivityDetail · weight: 15 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ExoSourceManager → GSYExoVideoManager · weight: 15 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ExoSourceManager → GSYSampleCallBack · weight: 10 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ExoSourceManager → MainActivity · weight: 20 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ExoSourceManager → GSYVideoPlayer · weight: 15 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ExoSourceManager → GSYExoSubTitlePlayer · weight: 15 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ExoSourceManager → LockClickListener · weight: 5 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ExoSourceManager → CacheFactory · weight: 5 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ExoSourceManager → PlayerFactory · weight: 10 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ExoSourceManager → ICacheManager · weight: 5 · cw: 0.0000 · co-change only"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="gsyVideoPlayer-java/src/main/java/com/shuyu/gsyvideoplayer/utils/CommonUtil.java">CommonUtil</th>
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="CommonUtil → GSYVideoView · weight: 21 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="CommonUtil → GSYVideoControlView · weight: 29 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="CommonUtil → ExoSourceManager · weight: 35 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="CommonUtil → GSYExo2PlayerView · weight: 14 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="CommonUtil → GSYVideoOptionBuilder · weight: 35 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="CommonUtil → GSYExoSubTitleVideoView · weight: 14 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="CommonUtil → OrientationUtils · weight: 49 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="CommonUtil → DetailPlayer · weight: 28 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="CommonUtil → IjkPlayerManager · weight: 49 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="CommonUtil → JumpUtils · weight: 8 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="CommonUtil → GSYBaseActivityDetail · weight: 21 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="CommonUtil → GSYExoVideoManager · weight: 21 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="CommonUtil → DetailNormalActivityPlayer · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="CommonUtil → GSYSampleCallBack · weight: 14 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="CommonUtil → MainActivity · weight: 29 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="CommonUtil → GSYVideoPlayer · weight: 21 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="CommonUtil → GSYExoSubTitlePlayer · weight: 21 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="CommonUtil → LockClickListener · weight: 7 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="CommonUtil → CacheFactory · weight: 7 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="CommonUtil → PlayerFactory · weight: 14 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="CommonUtil → ICacheManager · weight: 7 · cw: 0.0000 · co-change only"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="app/src/main/java/com/example/gsyvideoplayer/exo/ExoAdaptiveTrackActivity.java">ExoAdaptiveTrackActivity</th>
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#ec8844" title="ExoAdaptiveTrackActivity → GSYVideoControlView · weight: 1 · cw: 0.7163 · METHOD_INVOCATION_ATOMIC_PARAMETER"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#105114e" title="ExoAdaptiveTrackActivity → GSYExo2PlayerView · weight: 1 · cw: 1.3224 · METHOD_RETURN_TYPE, PARAMETERIZED_TYPE"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#eb8a44" title="ExoAdaptiveTrackActivity → GSYVideoOptionBuilder · weight: 1 · cw: 0.7057 · METHOD_RETURN_TYPE"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#11c-5956" title="ExoAdaptiveTrackActivity → GSYBaseActivityDetail · weight: 1 · cw: 1.8703 · INHERITANCE, METHOD_INVOCATION_ATOMIC_PARAMETER, PARAMETERIZED_TYPE"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#ec8844" title="ExoAdaptiveTrackActivity → GSYExoVideoManager · weight: 1 · cw: 0.7163 · METHOD_INVOCATION_ATOMIC_PARAMETER"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#e99443" title="ExoAdaptiveTrackActivity → GSYVideoPlayer · weight: 1 · cw: 0.6579 · VARIABLE_DECLARATION_STATEMENT"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#e6a342" title="ExoAdaptiveTrackActivity → LockClickListener · weight: 1 · cw: 0.5800 · ATOMIC_PARAMETER_COUPLING"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="app/src/main/java/com/example/gsyvideoplayer/exo/GSYExo2PlayerView.java">GSYExo2PlayerView</th>
+          
+            <td class="matrix-cell filled" style="background:#109-14f" title="GSYExo2PlayerView → GSYVideoView · weight: 8 · cw: 1.4187 · METHOD_INVOCATION_ATOMIC_PARAMETER, METHOD_INVOCATION_OBJECT_PARAMETER"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#ec8844" title="GSYExo2PlayerView → GSYVideoControlView · weight: 8 · cw: 0.7163 · METHOD_INVOCATION_ATOMIC_PARAMETER"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GSYExo2PlayerView → ExoSourceManager · weight: 10 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GSYExo2PlayerView → CommonUtil · weight: 14 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GSYExo2PlayerView → GSYVideoOptionBuilder · weight: 10 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GSYExo2PlayerView → GSYExoSubTitleVideoView · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GSYExo2PlayerView → OrientationUtils · weight: 14 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GSYExo2PlayerView → DetailPlayer · weight: 9 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GSYExo2PlayerView → IjkPlayerManager · weight: 14 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GSYExo2PlayerView → JumpUtils · weight: 2 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GSYExo2PlayerView → GSYBaseActivityDetail · weight: 6 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#12c-a45d" title="GSYExo2PlayerView → GSYExoVideoManager · weight: 9 · cw: 2.2526 · CONSTANT, METHOD_INVOCATION_ATOMIC_PARAMETER, METHOD_INVOCATION_OBJECT_PARAMETER, VARIABLE_RETURN_STATEMENT"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GSYExo2PlayerView → GSYSampleCallBack · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GSYExo2PlayerView → MainActivity · weight: 8 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#105134e" title="GSYExo2PlayerView → GSYVideoPlayer · weight: 6 · cw: 1.3129 · METHOD_PARAMETER_TYPE, VARIABLE_SINGLE_DECLARATION"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GSYExo2PlayerView → GSYExoSubTitlePlayer · weight: 6 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GSYExo2PlayerView → LockClickListener · weight: 2 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GSYExo2PlayerView → CacheFactory · weight: 2 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GSYExo2PlayerView → PlayerFactory · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GSYExo2PlayerView → ICacheManager · weight: 2 · cw: 0.0000 · co-change only"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="app/src/main/java/com/example/gsyvideoplayer/exosubtitle/GSYExoSubTitleDetailPlayer.java">GSYExoSubTitleDetailPlayer</th>
+          
+            <td class="matrix-cell filled" style="background:#ec8844" title="GSYExoSubTitleDetailPlayer → GSYVideoView · weight: 1 · cw: 0.7163 · METHOD_INVOCATION_ATOMIC_PARAMETER"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#ec8844" title="GSYExoSubTitleDetailPlayer → GSYVideoControlView · weight: 1 · cw: 0.7163 · METHOD_INVOCATION_ATOMIC_PARAMETER"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#eb8b44" title="GSYExoSubTitleDetailPlayer → ExoSourceManager · weight: 1 · cw: 0.7024 · METHOD_INVOCATION_OBJECT_PARAMETER"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#136-d360" title="GSYExoSubTitleDetailPlayer → GSYVideoOptionBuilder · weight: 1 · cw: 2.4903 · ATOMIC_PARAMETER_COUPLING, METHOD_INVOCATION_OBJECT_PARAMETER, VARIABLE_CLASS_INSTANCE_CREATION, VARIABLE_DECLARATION_STATEMENT"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GSYExoSubTitleDetailPlayer → GSYExoSubTitleVideoView · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#14b-13668" title="GSYExoSubTitleDetailPlayer → OrientationUtils · weight: 1 · cw: 2.9969 · DATA_ABSTRACTION_COUPLING, METHOD_INVOCATION_ATOMIC_PARAMETER, OBJECT_PARAMETER_COUPLING, VARIABLE_CLASS_INSTANCE_CREATION, VARIABLE_FIELD_DECLARATION"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GSYExoSubTitleDetailPlayer → DetailPlayer · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#e6a342" title="GSYExoSubTitleDetailPlayer → GSYSampleCallBack · weight: 1 · cw: 0.5800 · ATOMIC_PARAMETER_COUPLING"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#eb8a44" title="GSYExoSubTitleDetailPlayer → GSYVideoPlayer · weight: 1 · cw: 0.7057 · METHOD_RETURN_TYPE"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GSYExoSubTitleDetailPlayer → GSYExoSubTitlePlayer · weight: 3 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#e6a342" title="GSYExoSubTitleDetailPlayer → LockClickListener · weight: 1 · cw: 0.5800 · ATOMIC_PARAMETER_COUPLING"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#ec8844" title="GSYExoSubTitleDetailPlayer → CacheFactory · weight: 1 · cw: 0.7163 · METHOD_INVOCATION_ATOMIC_PARAMETER"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GSYExoSubTitleDetailPlayer → ICacheManager · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="gsyVideoPlayer-java/src/main/java/com/shuyu/gsyvideoplayer/builder/GSYVideoOptionBuilder.java">GSYVideoOptionBuilder</th>
+          
+            <td class="matrix-cell filled" style="background:#109-14f" title="GSYVideoOptionBuilder → GSYVideoView · weight: 15 · cw: 1.4187 · METHOD_INVOCATION_ATOMIC_PARAMETER, METHOD_INVOCATION_OBJECT_PARAMETER"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#109-14f" title="GSYVideoOptionBuilder → GSYVideoControlView · weight: 21 · cw: 1.4187 · METHOD_INVOCATION_ATOMIC_PARAMETER, METHOD_INVOCATION_OBJECT_PARAMETER"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GSYVideoOptionBuilder → ExoSourceManager · weight: 25 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GSYVideoOptionBuilder → CommonUtil · weight: 35 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GSYVideoOptionBuilder → GSYExo2PlayerView · weight: 10 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GSYVideoOptionBuilder → GSYExoSubTitleVideoView · weight: 10 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GSYVideoOptionBuilder → OrientationUtils · weight: 36 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GSYVideoOptionBuilder → DetailPlayer · weight: 22 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GSYVideoOptionBuilder → IjkPlayerManager · weight: 35 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GSYVideoOptionBuilder → JumpUtils · weight: 5 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GSYVideoOptionBuilder → GSYBaseActivityDetail · weight: 15 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GSYVideoOptionBuilder → GSYExoVideoManager · weight: 15 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GSYVideoOptionBuilder → GSYSampleCallBack · weight: 10 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GSYVideoOptionBuilder → MainActivity · weight: 20 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GSYVideoOptionBuilder → GSYVideoPlayer · weight: 15 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GSYVideoOptionBuilder → GSYExoSubTitlePlayer · weight: 15 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#136-d160" title="GSYVideoOptionBuilder → LockClickListener · weight: 5 · cw: 2.4828 · DATA_ABSTRACTION_COUPLING, METHOD_PARAMETER_TYPE, VARIABLE_FIELD_DECLARATION, VARIABLE_SINGLE_DECLARATION"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GSYVideoOptionBuilder → CacheFactory · weight: 5 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GSYVideoOptionBuilder → PlayerFactory · weight: 10 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GSYVideoOptionBuilder → ICacheManager · weight: 5 · cw: 0.0000 · co-change only"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="app/src/main/java/com/example/gsyvideoplayer/exosubtitle/GSYExoSubTitleVideoView.java">GSYExoSubTitleVideoView</th>
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GSYExoSubTitleVideoView → GSYVideoView · weight: 6 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#109-14f" title="GSYExoSubTitleVideoView → GSYVideoControlView · weight: 8 · cw: 1.4187 · METHOD_INVOCATION_ATOMIC_PARAMETER, METHOD_INVOCATION_OBJECT_PARAMETER"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GSYExoSubTitleVideoView → ExoSourceManager · weight: 10 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GSYExoSubTitleVideoView → CommonUtil · weight: 14 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GSYExoSubTitleVideoView → GSYExo2PlayerView · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GSYExoSubTitleVideoView → GSYExoSubTitleDetailPlayer · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GSYExoSubTitleVideoView → GSYVideoOptionBuilder · weight: 10 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GSYExoSubTitleVideoView → OrientationUtils · weight: 14 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GSYExoSubTitleVideoView → DetailPlayer · weight: 9 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GSYExoSubTitleVideoView → IjkPlayerManager · weight: 14 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GSYExoSubTitleVideoView → JumpUtils · weight: 2 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GSYExoSubTitleVideoView → GSYBaseActivityDetail · weight: 6 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GSYExoSubTitleVideoView → GSYExoVideoManager · weight: 6 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GSYExoSubTitleVideoView → GSYSampleCallBack · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GSYExoSubTitleVideoView → MainActivity · weight: 8 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#120-6d58" title="GSYExoSubTitleVideoView → GSYVideoPlayer · weight: 6 · cw: 1.9708 · METHOD_PARAMETER_TYPE, VARIABLE_DECLARATION_STATEMENT, VARIABLE_SINGLE_DECLARATION"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GSYExoSubTitleVideoView → GSYExoSubTitlePlayer · weight: 8 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GSYExoSubTitleVideoView → LockClickListener · weight: 2 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GSYExoSubTitleVideoView → CacheFactory · weight: 2 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GSYExoSubTitleVideoView → PlayerFactory · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GSYExoSubTitleVideoView → ICacheManager · weight: 2 · cw: 0.0000 · co-change only"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="gsyVideoPlayer-java/src/main/java/com/shuyu/gsyvideoplayer/utils/OrientationUtils.java">OrientationUtils</th>
+          
+            <td class="matrix-cell filled" style="background:#ec8844" title="OrientationUtils → GSYVideoView · weight: 21 · cw: 0.7163 · METHOD_INVOCATION_ATOMIC_PARAMETER"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#ec8844" title="OrientationUtils → GSYVideoControlView · weight: 28 · cw: 0.7163 · METHOD_INVOCATION_ATOMIC_PARAMETER"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="OrientationUtils → ExoSourceManager · weight: 35 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="OrientationUtils → CommonUtil · weight: 49 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="OrientationUtils → GSYExo2PlayerView · weight: 14 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="OrientationUtils → GSYVideoOptionBuilder · weight: 36 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="OrientationUtils → GSYExoSubTitleVideoView · weight: 14 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="OrientationUtils → DetailPlayer · weight: 30 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="OrientationUtils → IjkPlayerManager · weight: 49 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="OrientationUtils → JumpUtils · weight: 7 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="OrientationUtils → GSYBaseActivityDetail · weight: 22 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="OrientationUtils → GSYExoVideoManager · weight: 21 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="OrientationUtils → GSYSampleCallBack · weight: 14 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="OrientationUtils → MainActivity · weight: 28 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="OrientationUtils → GSYVideoPlayer · weight: 21 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="OrientationUtils → GSYExoSubTitlePlayer · weight: 21 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="OrientationUtils → LockClickListener · weight: 7 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="OrientationUtils → CacheFactory · weight: 7 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="OrientationUtils → PlayerFactory · weight: 14 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="OrientationUtils → ICacheManager · weight: 7 · cw: 0.0000 · co-change only"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="app/src/main/java/com/example/gsyvideoplayer/DetailPlayer.java">DetailPlayer</th>
+          
+            <td class="matrix-cell filled" style="background:#ec8844" title="DetailPlayer → GSYVideoView · weight: 14 · cw: 0.7163 · METHOD_INVOCATION_ATOMIC_PARAMETER"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#ec8844" title="DetailPlayer → GSYVideoControlView · weight: 18 · cw: 0.7163 · METHOD_INVOCATION_ATOMIC_PARAMETER"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="DetailPlayer → ExoSourceManager · weight: 23 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="DetailPlayer → CommonUtil · weight: 28 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="DetailPlayer → GSYExo2PlayerView · weight: 9 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="DetailPlayer → GSYExoSubTitleDetailPlayer · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#136-d360" title="DetailPlayer → GSYVideoOptionBuilder · weight: 22 · cw: 2.4903 · ATOMIC_PARAMETER_COUPLING, METHOD_INVOCATION_OBJECT_PARAMETER, VARIABLE_CLASS_INSTANCE_CREATION, VARIABLE_DECLARATION_STATEMENT"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="DetailPlayer → GSYExoSubTitleVideoView · weight: 9 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#14b-13668" title="DetailPlayer → OrientationUtils · weight: 30 · cw: 2.9969 · DATA_ABSTRACTION_COUPLING, METHOD_INVOCATION_ATOMIC_PARAMETER, OBJECT_PARAMETER_COUPLING, VARIABLE_CLASS_INSTANCE_CREATION, VARIABLE_FIELD_DECLARATION"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="DetailPlayer → IjkPlayerManager · weight: 28 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="DetailPlayer → JumpUtils · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="DetailPlayer → GSYBaseActivityDetail · weight: 12 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="DetailPlayer → GSYExoVideoManager · weight: 13 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#e6a342" title="DetailPlayer → GSYSampleCallBack · weight: 8 · cw: 0.5800 · ATOMIC_PARAMETER_COUPLING"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="DetailPlayer → MainActivity · weight: 16 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#eb8a44" title="DetailPlayer → GSYVideoPlayer · weight: 12 · cw: 0.7057 · METHOD_RETURN_TYPE"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="DetailPlayer → GSYExoSubTitlePlayer · weight: 15 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#e6a342" title="DetailPlayer → LockClickListener · weight: 4 · cw: 0.5800 · ATOMIC_PARAMETER_COUPLING"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="DetailPlayer → CacheFactory · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="DetailPlayer → PlayerFactory · weight: 8 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="DetailPlayer → ICacheManager · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="gsyVideoPlayer-java/src/main/java/com/shuyu/gsyvideoplayer/player/IjkPlayerManager.java">IjkPlayerManager</th>
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="IjkPlayerManager → GSYVideoView · weight: 21 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="IjkPlayerManager → GSYVideoControlView · weight: 28 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="IjkPlayerManager → ExoSourceManager · weight: 35 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="IjkPlayerManager → CommonUtil · weight: 49 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="IjkPlayerManager → GSYExo2PlayerView · weight: 14 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="IjkPlayerManager → GSYVideoOptionBuilder · weight: 35 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="IjkPlayerManager → GSYExoSubTitleVideoView · weight: 14 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="IjkPlayerManager → OrientationUtils · weight: 49 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="IjkPlayerManager → DetailPlayer · weight: 28 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="IjkPlayerManager → JumpUtils · weight: 7 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="IjkPlayerManager → GSYBaseActivityDetail · weight: 21 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="IjkPlayerManager → GSYExoVideoManager · weight: 21 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="IjkPlayerManager → GSYSampleCallBack · weight: 14 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="IjkPlayerManager → MainActivity · weight: 28 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="IjkPlayerManager → GSYVideoPlayer · weight: 21 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="IjkPlayerManager → GSYExoSubTitlePlayer · weight: 21 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="IjkPlayerManager → LockClickListener · weight: 7 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="IjkPlayerManager → CacheFactory · weight: 7 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="IjkPlayerManager → PlayerFactory · weight: 14 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#122-7559" title="IjkPlayerManager → ICacheManager · weight: 7 · cw: 2.0153 · METHOD_INVOCATION_OBJECT_PARAMETER, METHOD_PARAMETER_TYPE, VARIABLE_SINGLE_DECLARATION"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="app/src/main/java/com/example/gsyvideoplayer/SubtitleDetailPlayer.java">SubtitleDetailPlayer</th>
+          
+            <td class="matrix-cell filled" style="background:#ec8844" title="SubtitleDetailPlayer → GSYVideoView · weight: 1 · cw: 0.7163 · METHOD_INVOCATION_ATOMIC_PARAMETER"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#ec8844" title="SubtitleDetailPlayer → GSYVideoControlView · weight: 1 · cw: 0.7163 · METHOD_INVOCATION_ATOMIC_PARAMETER"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#103194d" title="SubtitleDetailPlayer → GSYVideoOptionBuilder · weight: 1 · cw: 1.2824 · ATOMIC_PARAMETER_COUPLING, METHOD_INVOCATION_OBJECT_PARAMETER"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#14b-13668" title="SubtitleDetailPlayer → OrientationUtils · weight: 1 · cw: 2.9969 · DATA_ABSTRACTION_COUPLING, METHOD_INVOCATION_ATOMIC_PARAMETER, OBJECT_PARAMETER_COUPLING, VARIABLE_CLASS_INSTANCE_CREATION, VARIABLE_FIELD_DECLARATION"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="SubtitleDetailPlayer → IjkPlayerManager · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#e6a342" title="SubtitleDetailPlayer → GSYSampleCallBack · weight: 1 · cw: 0.5800 · ATOMIC_PARAMETER_COUPLING"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#eb8a44" title="SubtitleDetailPlayer → GSYVideoPlayer · weight: 1 · cw: 0.7057 · METHOD_RETURN_TYPE"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#e6a342" title="SubtitleDetailPlayer → LockClickListener · weight: 1 · cw: 0.5800 · ATOMIC_PARAMETER_COUPLING"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#eb8b44" title="SubtitleDetailPlayer → PlayerFactory · weight: 1 · cw: 0.7024 · METHOD_INVOCATION_OBJECT_PARAMETER"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="app/src/main/java/com/example/gsyvideoplayer/utils/JumpUtils.java">JumpUtils</th>
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JumpUtils → GSYVideoView · weight: 3 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JumpUtils → GSYVideoControlView · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JumpUtils → ExoSourceManager · weight: 5 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JumpUtils → CommonUtil · weight: 8 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JumpUtils → ExoAdaptiveTrackActivity · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JumpUtils → GSYExo2PlayerView · weight: 2 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JumpUtils → GSYExoSubTitleDetailPlayer · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JumpUtils → GSYVideoOptionBuilder · weight: 5 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JumpUtils → GSYExoSubTitleVideoView · weight: 2 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JumpUtils → OrientationUtils · weight: 7 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JumpUtils → DetailPlayer · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JumpUtils → IjkPlayerManager · weight: 7 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JumpUtils → SubtitleDetailPlayer · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JumpUtils → GSYBaseActivityDetail · weight: 3 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JumpUtils → GSYExoVideoManager · weight: 3 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JumpUtils → DetailNormalActivityPlayer · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JumpUtils → GSYSampleCallBack · weight: 2 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JumpUtils → MainActivity · weight: 7 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JumpUtils → GSYVideoPlayer · weight: 3 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JumpUtils → GSYExoSubTitlePlayer · weight: 3 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JumpUtils → LockClickListener · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JumpUtils → CacheFactory · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JumpUtils → PlayerFactory · weight: 2 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JumpUtils → ICacheManager · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="gsyVideoPlayer-java/src/main/java/com/shuyu/gsyvideoplayer/GSYBaseActivityDetail.java">GSYBaseActivityDetail</th>
+          
+            <td class="matrix-cell filled" style="background:#ec8844" title="GSYBaseActivityDetail → GSYVideoView · weight: 9 · cw: 0.7163 · METHOD_INVOCATION_ATOMIC_PARAMETER"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#ec8844" title="GSYBaseActivityDetail → GSYVideoControlView · weight: 12 · cw: 0.7163 · METHOD_INVOCATION_ATOMIC_PARAMETER"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GSYBaseActivityDetail → ExoSourceManager · weight: 15 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GSYBaseActivityDetail → CommonUtil · weight: 21 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GSYBaseActivityDetail → GSYExo2PlayerView · weight: 6 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#109014f" title="GSYBaseActivityDetail → GSYVideoOptionBuilder · weight: 15 · cw: 1.4081 · METHOD_INVOCATION_OBJECT_PARAMETER, METHOD_RETURN_TYPE"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GSYBaseActivityDetail → GSYExoSubTitleVideoView · weight: 6 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#14b-13668" title="GSYBaseActivityDetail → OrientationUtils · weight: 22 · cw: 2.9969 · DATA_ABSTRACTION_COUPLING, METHOD_INVOCATION_ATOMIC_PARAMETER, OBJECT_PARAMETER_COUPLING, VARIABLE_CLASS_INSTANCE_CREATION, VARIABLE_FIELD_DECLARATION"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GSYBaseActivityDetail → DetailPlayer · weight: 12 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GSYBaseActivityDetail → IjkPlayerManager · weight: 21 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GSYBaseActivityDetail → JumpUtils · weight: 3 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GSYBaseActivityDetail → GSYExoVideoManager · weight: 9 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GSYBaseActivityDetail → GSYSampleCallBack · weight: 6 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GSYBaseActivityDetail → MainActivity · weight: 12 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GSYBaseActivityDetail → GSYVideoPlayer · weight: 9 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GSYBaseActivityDetail → GSYExoSubTitlePlayer · weight: 9 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GSYBaseActivityDetail → LockClickListener · weight: 3 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GSYBaseActivityDetail → CacheFactory · weight: 3 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GSYBaseActivityDetail → PlayerFactory · weight: 6 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GSYBaseActivityDetail → ICacheManager · weight: 3 · cw: 0.0000 · co-change only"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="app/src/main/java/com/example/gsyvideoplayer/exo/GSYExoVideoManager.java">GSYExoVideoManager</th>
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GSYExoVideoManager → GSYVideoView · weight: 9 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GSYExoVideoManager → GSYVideoControlView · weight: 12 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GSYExoVideoManager → ExoSourceManager · weight: 15 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#eb8b44" title="GSYExoVideoManager → CommonUtil · weight: 21 · cw: 0.7024 · METHOD_INVOCATION_OBJECT_PARAMETER"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GSYExoVideoManager → GSYExo2PlayerView · weight: 9 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GSYExoVideoManager → GSYVideoOptionBuilder · weight: 15 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GSYExoVideoManager → GSYExoSubTitleVideoView · weight: 6 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GSYExoVideoManager → OrientationUtils · weight: 21 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GSYExoVideoManager → DetailPlayer · weight: 13 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GSYExoVideoManager → IjkPlayerManager · weight: 21 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GSYExoVideoManager → JumpUtils · weight: 3 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GSYExoVideoManager → GSYBaseActivityDetail · weight: 9 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GSYExoVideoManager → GSYSampleCallBack · weight: 6 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GSYExoVideoManager → MainActivity · weight: 12 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#e99443" title="GSYExoVideoManager → GSYVideoPlayer · weight: 9 · cw: 0.6579 · VARIABLE_DECLARATION_STATEMENT"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GSYExoVideoManager → GSYExoSubTitlePlayer · weight: 9 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GSYExoVideoManager → LockClickListener · weight: 3 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GSYExoVideoManager → CacheFactory · weight: 3 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GSYExoVideoManager → PlayerFactory · weight: 6 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GSYExoVideoManager → ICacheManager · weight: 3 · cw: 0.0000 · co-change only"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="app/src/main/java/com/example/gsyvideoplayer/DetailNormalActivityPlayer.java">DetailNormalActivityPlayer</th>
+          
+            <td class="matrix-cell filled" style="background:#ec8844" title="DetailNormalActivityPlayer → GSYVideoView · weight: 1 · cw: 0.7163 · METHOD_INVOCATION_ATOMIC_PARAMETER"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#ec8844" title="DetailNormalActivityPlayer → GSYVideoControlView · weight: 1 · cw: 0.7163 · METHOD_INVOCATION_ATOMIC_PARAMETER"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="DetailNormalActivityPlayer → CommonUtil · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#136-d360" title="DetailNormalActivityPlayer → GSYVideoOptionBuilder · weight: 1 · cw: 2.4903 · ATOMIC_PARAMETER_COUPLING, METHOD_INVOCATION_OBJECT_PARAMETER, VARIABLE_CLASS_INSTANCE_CREATION, VARIABLE_DECLARATION_STATEMENT"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#14b-13668" title="DetailNormalActivityPlayer → OrientationUtils · weight: 1 · cw: 2.9969 · DATA_ABSTRACTION_COUPLING, METHOD_INVOCATION_ATOMIC_PARAMETER, OBJECT_PARAMETER_COUPLING, VARIABLE_CLASS_INSTANCE_CREATION, VARIABLE_FIELD_DECLARATION"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="DetailNormalActivityPlayer → JumpUtils · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#e6a342" title="DetailNormalActivityPlayer → GSYSampleCallBack · weight: 1 · cw: 0.5800 · ATOMIC_PARAMETER_COUPLING"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="DetailNormalActivityPlayer → MainActivity · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#eb8a44" title="DetailNormalActivityPlayer → GSYVideoPlayer · weight: 1 · cw: 0.7057 · METHOD_RETURN_TYPE"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#e6a342" title="DetailNormalActivityPlayer → LockClickListener · weight: 1 · cw: 0.5800 · ATOMIC_PARAMETER_COUPLING"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="gsyVideoPlayer-java/src/main/java/com/shuyu/gsyvideoplayer/listener/GSYSampleCallBack.java">GSYSampleCallBack</th>
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GSYSampleCallBack → GSYVideoView · weight: 6 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GSYSampleCallBack → GSYVideoControlView · weight: 8 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GSYSampleCallBack → ExoSourceManager · weight: 10 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GSYSampleCallBack → CommonUtil · weight: 14 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GSYSampleCallBack → GSYExo2PlayerView · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GSYSampleCallBack → GSYVideoOptionBuilder · weight: 10 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GSYSampleCallBack → GSYExoSubTitleVideoView · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GSYSampleCallBack → OrientationUtils · weight: 14 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GSYSampleCallBack → DetailPlayer · weight: 8 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GSYSampleCallBack → IjkPlayerManager · weight: 14 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GSYSampleCallBack → JumpUtils · weight: 2 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GSYSampleCallBack → GSYBaseActivityDetail · weight: 6 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GSYSampleCallBack → GSYExoVideoManager · weight: 6 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GSYSampleCallBack → MainActivity · weight: 8 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GSYSampleCallBack → GSYVideoPlayer · weight: 6 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GSYSampleCallBack → GSYExoSubTitlePlayer · weight: 6 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GSYSampleCallBack → LockClickListener · weight: 2 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GSYSampleCallBack → CacheFactory · weight: 2 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GSYSampleCallBack → PlayerFactory · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GSYSampleCallBack → ICacheManager · weight: 2 · cw: 0.0000 · co-change only"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="app/src/main/java/com/example/gsyvideoplayer/MainActivity.java">MainActivity</th>
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="MainActivity → GSYVideoView · weight: 12 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="MainActivity → GSYVideoControlView · weight: 16 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="MainActivity → ExoSourceManager · weight: 20 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="MainActivity → CommonUtil · weight: 29 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="MainActivity → GSYExo2PlayerView · weight: 8 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="MainActivity → GSYVideoOptionBuilder · weight: 20 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="MainActivity → GSYExoSubTitleVideoView · weight: 8 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="MainActivity → OrientationUtils · weight: 28 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="MainActivity → DetailPlayer · weight: 16 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="MainActivity → IjkPlayerManager · weight: 28 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#eb8b44" title="MainActivity → JumpUtils · weight: 7 · cw: 0.7024 · METHOD_INVOCATION_OBJECT_PARAMETER"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="MainActivity → GSYBaseActivityDetail · weight: 12 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="MainActivity → GSYExoVideoManager · weight: 12 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="MainActivity → DetailNormalActivityPlayer · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="MainActivity → GSYSampleCallBack · weight: 8 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="MainActivity → GSYVideoPlayer · weight: 12 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="MainActivity → GSYExoSubTitlePlayer · weight: 12 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="MainActivity → LockClickListener · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#eb8b44" title="MainActivity → CacheFactory · weight: 4 · cw: 0.7024 · METHOD_INVOCATION_OBJECT_PARAMETER"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#eb8b44" title="MainActivity → PlayerFactory · weight: 8 · cw: 0.7024 · METHOD_INVOCATION_OBJECT_PARAMETER"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="MainActivity → ICacheManager · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="gsyVideoPlayer-java/src/main/java/com/shuyu/gsyvideoplayer/video/base/GSYVideoPlayer.java">GSYVideoPlayer</th>
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GSYVideoPlayer → GSYVideoView · weight: 9 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GSYVideoPlayer → GSYVideoControlView · weight: 12 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GSYVideoPlayer → ExoSourceManager · weight: 15 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GSYVideoPlayer → CommonUtil · weight: 21 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GSYVideoPlayer → GSYExo2PlayerView · weight: 6 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GSYVideoPlayer → GSYVideoOptionBuilder · weight: 15 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GSYVideoPlayer → GSYExoSubTitleVideoView · weight: 6 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GSYVideoPlayer → OrientationUtils · weight: 21 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GSYVideoPlayer → DetailPlayer · weight: 12 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GSYVideoPlayer → IjkPlayerManager · weight: 21 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GSYVideoPlayer → JumpUtils · weight: 3 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GSYVideoPlayer → GSYBaseActivityDetail · weight: 9 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GSYVideoPlayer → GSYExoVideoManager · weight: 9 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GSYVideoPlayer → GSYSampleCallBack · weight: 6 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GSYVideoPlayer → MainActivity · weight: 12 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GSYVideoPlayer → GSYExoSubTitlePlayer · weight: 9 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GSYVideoPlayer → LockClickListener · weight: 3 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GSYVideoPlayer → CacheFactory · weight: 3 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GSYVideoPlayer → PlayerFactory · weight: 6 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GSYVideoPlayer → ICacheManager · weight: 3 · cw: 0.0000 · co-change only"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="app/src/main/java/com/example/gsyvideoplayer/exosubtitle/GSYExoSubTitlePlayer.java">GSYExoSubTitlePlayer</th>
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GSYExoSubTitlePlayer → GSYVideoView · weight: 9 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GSYExoSubTitlePlayer → GSYVideoControlView · weight: 12 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GSYExoSubTitlePlayer → ExoSourceManager · weight: 15 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GSYExoSubTitlePlayer → CommonUtil · weight: 21 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GSYExoSubTitlePlayer → GSYExo2PlayerView · weight: 6 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GSYExoSubTitlePlayer → GSYExoSubTitleDetailPlayer · weight: 3 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GSYExoSubTitlePlayer → GSYVideoOptionBuilder · weight: 15 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GSYExoSubTitlePlayer → GSYExoSubTitleVideoView · weight: 8 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GSYExoSubTitlePlayer → OrientationUtils · weight: 21 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GSYExoSubTitlePlayer → DetailPlayer · weight: 15 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GSYExoSubTitlePlayer → IjkPlayerManager · weight: 21 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GSYExoSubTitlePlayer → JumpUtils · weight: 3 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GSYExoSubTitlePlayer → GSYBaseActivityDetail · weight: 9 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GSYExoSubTitlePlayer → GSYExoVideoManager · weight: 9 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GSYExoSubTitlePlayer → GSYSampleCallBack · weight: 6 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GSYExoSubTitlePlayer → MainActivity · weight: 12 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GSYExoSubTitlePlayer → GSYVideoPlayer · weight: 9 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GSYExoSubTitlePlayer → LockClickListener · weight: 3 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GSYExoSubTitlePlayer → CacheFactory · weight: 3 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GSYExoSubTitlePlayer → PlayerFactory · weight: 6 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GSYExoSubTitlePlayer → ICacheManager · weight: 3 · cw: 0.0000 · co-change only"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="gsyVideoPlayer-java/src/main/java/com/shuyu/gsyvideoplayer/listener/LockClickListener.java">LockClickListener</th>
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="LockClickListener → GSYVideoView · weight: 3 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="LockClickListener → GSYVideoControlView · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="LockClickListener → ExoSourceManager · weight: 5 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="LockClickListener → CommonUtil · weight: 7 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="LockClickListener → GSYExo2PlayerView · weight: 2 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="LockClickListener → GSYVideoOptionBuilder · weight: 5 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="LockClickListener → GSYExoSubTitleVideoView · weight: 2 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="LockClickListener → OrientationUtils · weight: 7 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="LockClickListener → DetailPlayer · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="LockClickListener → IjkPlayerManager · weight: 7 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="LockClickListener → JumpUtils · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="LockClickListener → GSYBaseActivityDetail · weight: 3 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="LockClickListener → GSYExoVideoManager · weight: 3 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="LockClickListener → GSYSampleCallBack · weight: 2 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="LockClickListener → MainActivity · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="LockClickListener → GSYVideoPlayer · weight: 3 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="LockClickListener → GSYExoSubTitlePlayer · weight: 3 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="LockClickListener → CacheFactory · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="LockClickListener → PlayerFactory · weight: 2 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="LockClickListener → ICacheManager · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="gsyVideoPlayer-java/src/main/java/com/shuyu/gsyvideoplayer/cache/CacheFactory.java">CacheFactory</th>
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="CacheFactory → GSYVideoView · weight: 3 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="CacheFactory → GSYVideoControlView · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="CacheFactory → ExoSourceManager · weight: 5 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="CacheFactory → CommonUtil · weight: 7 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="CacheFactory → GSYExo2PlayerView · weight: 2 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="CacheFactory → GSYVideoOptionBuilder · weight: 5 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="CacheFactory → GSYExoSubTitleVideoView · weight: 2 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="CacheFactory → OrientationUtils · weight: 7 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="CacheFactory → DetailPlayer · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="CacheFactory → IjkPlayerManager · weight: 7 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="CacheFactory → JumpUtils · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="CacheFactory → GSYBaseActivityDetail · weight: 3 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="CacheFactory → GSYExoVideoManager · weight: 3 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="CacheFactory → GSYSampleCallBack · weight: 2 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="CacheFactory → MainActivity · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="CacheFactory → GSYVideoPlayer · weight: 3 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="CacheFactory → GSYExoSubTitlePlayer · weight: 3 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="CacheFactory → LockClickListener · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="CacheFactory → PlayerFactory · weight: 2 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#eb8a44" title="CacheFactory → ICacheManager · weight: 1 · cw: 0.7057 · METHOD_RETURN_TYPE"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="gsyVideoPlayer-java/src/main/java/com/shuyu/gsyvideoplayer/player/PlayerFactory.java">PlayerFactory</th>
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="PlayerFactory → GSYVideoView · weight: 6 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="PlayerFactory → GSYVideoControlView · weight: 8 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="PlayerFactory → ExoSourceManager · weight: 10 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="PlayerFactory → CommonUtil · weight: 14 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="PlayerFactory → GSYExo2PlayerView · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="PlayerFactory → GSYVideoOptionBuilder · weight: 10 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="PlayerFactory → GSYExoSubTitleVideoView · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="PlayerFactory → OrientationUtils · weight: 14 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="PlayerFactory → DetailPlayer · weight: 8 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="PlayerFactory → IjkPlayerManager · weight: 14 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="PlayerFactory → JumpUtils · weight: 2 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="PlayerFactory → GSYBaseActivityDetail · weight: 6 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="PlayerFactory → GSYExoVideoManager · weight: 6 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="PlayerFactory → GSYSampleCallBack · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="PlayerFactory → MainActivity · weight: 8 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="PlayerFactory → GSYVideoPlayer · weight: 6 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="PlayerFactory → GSYExoSubTitlePlayer · weight: 6 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="PlayerFactory → LockClickListener · weight: 2 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="PlayerFactory → CacheFactory · weight: 2 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="PlayerFactory → ICacheManager · weight: 2 · cw: 0.0000 · co-change only"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="gsyVideoPlayer-base/src/main/java/com/shuyu/gsyvideoplayer/cache/ICacheManager.java">ICacheManager</th>
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ICacheManager → GSYVideoView · weight: 3 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ICacheManager → GSYVideoControlView · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ICacheManager → ExoSourceManager · weight: 5 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ICacheManager → CommonUtil · weight: 7 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ICacheManager → GSYExo2PlayerView · weight: 2 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ICacheManager → GSYVideoOptionBuilder · weight: 5 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ICacheManager → GSYExoSubTitleVideoView · weight: 2 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ICacheManager → OrientationUtils · weight: 7 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ICacheManager → DetailPlayer · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ICacheManager → IjkPlayerManager · weight: 7 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ICacheManager → JumpUtils · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ICacheManager → GSYBaseActivityDetail · weight: 3 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ICacheManager → GSYExoVideoManager · weight: 3 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ICacheManager → GSYSampleCallBack · weight: 2 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ICacheManager → MainActivity · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ICacheManager → GSYVideoPlayer · weight: 3 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ICacheManager → GSYExoSubTitlePlayer · weight: 3 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ICacheManager → LockClickListener · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ICacheManager → CacheFactory · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ICacheManager → PlayerFactory · weight: 2 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+        </tr>
+        
+      </tbody>
+    </table>
+  </div>
+</section>
+
+
+</body>
+</html>

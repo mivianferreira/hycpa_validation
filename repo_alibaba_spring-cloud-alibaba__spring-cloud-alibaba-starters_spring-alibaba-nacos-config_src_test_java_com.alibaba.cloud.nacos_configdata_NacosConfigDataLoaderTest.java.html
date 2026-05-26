@@ -1,0 +1,1633 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HyCPA — spring-cloud-alibaba-starters/spring-alibaba-nacos-config/src/test/java/com.alibaba.cloud.nacos/configdata/NacosConfigDataLoaderTest.java</title>
+  <style>
+:root {
+  --bg: #0d1117; --surface: #161b22; --surface2: #21262d;
+  --border: #30363d; --text: #e6edf3; --text2: #8b949e;
+  --accent: #58a6ff; --green: #3fb950; --orange: #d29922;
+  --red: #f85149; --purple: #bc8cff; --cyan: #39d2c0;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { background: var(--bg); color: var(--text); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif; font-size: 14px; line-height: 1.5; }
+
+/* ── Sticky page header (Page C) ── */
+.page-header { background: var(--surface); border-bottom: 1px solid var(--border); padding: 16px 32px; position: sticky; top: 0; z-index: 100; display: flex; flex-wrap: wrap; align-items: center; gap: 12px; }
+.back-btn { color: var(--text2); font-size: 13px; text-decoration: none; padding: 6px 14px; border: 1px solid var(--border); border-radius: 6px; background: var(--surface2); white-space: nowrap; }
+.back-btn:hover { color: var(--accent); border-color: var(--accent); }
+.src-label { color: var(--text2); font-size: 12px; }
+.src-name-h { color: var(--text); font-weight: 700; font-size: 14px; }
+.header-email-wrap { display: flex; flex-direction: column; gap: 3px; }
+.header-email-wrap label { font-size: 11px; color: var(--text2); }
+.header-email-input { background: var(--surface2); border: 1px solid var(--border); border-radius: 6px; padding: 7px 12px; color: var(--text); font-size: 13px; width: 240px; font-family: inherit; }
+.header-email-input:focus { outline: none; border-color: var(--accent); }
+.header-email-input.invalid { border-color: var(--red); }
+.export-btn { padding: 7px 14px; border-radius: 6px; border: 1px solid var(--border); background: var(--surface2); color: var(--text); cursor: pointer; font-size: 12px; }
+.export-btn:hover { border-color: var(--accent); color: var(--accent); }
+
+/* ── Main container ── */
+.container { max-width: 900px; margin: 0 auto; padding: 24px 32px; }
+
+/* ── Progress bar ── */
+.progress-bar { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 12px 20px; margin-bottom: 20px; display: flex; align-items: center; gap: 16px; }
+.progress-bar .bar-track { flex: 1; height: 8px; background: var(--surface2); border-radius: 4px; overflow: hidden; }
+.progress-bar .bar-fill { height: 100%; background: var(--green); border-radius: 4px; transition: width 0.3s; }
+.progress-bar .bar-label { font-size: 13px; color: var(--text2); white-space: nowrap; }
+
+/* ── Cards ── */
+.card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; margin-bottom: 16px; overflow: hidden; transition: border-color 0.2s; }
+.card:hover { border-color: var(--accent); }
+.card-header { display: flex; justify-content: space-between; align-items: center; padding: 16px 20px; border-bottom: 1px solid var(--border); cursor: pointer; }
+.card-header .source-target { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; flex: 1; }
+.class-badge { background: var(--surface2); border: 1px solid var(--border); border-radius: 6px; padding: 4px 10px; font-family: 'SFMono-Regular', Consolas, monospace; font-size: 12px; max-width: 300px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.class-badge.source { border-color: var(--orange); color: var(--orange); }
+.class-badge.target { border-color: var(--green); color: var(--green); }
+.arrow-icon { color: var(--text2); font-size: 18px; flex-shrink: 0; }
+.metrics-mini { display: flex; gap: 16px; flex-shrink: 0; }
+.metric-pill { display: flex; flex-direction: column; align-items: center; }
+.metric-pill .val { font-weight: 700; font-size: 14px; }
+.metric-pill .lbl { font-size: 10px; color: var(--text2); text-transform: uppercase; }
+.metric-pill.score .val { color: var(--red); }
+.metric-pill.cochange .val { color: var(--cyan); }
+.metric-pill.dist .val { color: var(--purple); }
+.metric-pill.rank-m .val { color: var(--text2); }
+.card-body { padding: 20px; display: none; border-top: 1px solid var(--border); }
+.card.open .card-body { display: block; }
+
+/* ── Path diagram ── */
+.path-diagram { display: flex; align-items: flex-start; gap: 0; overflow-x: auto; padding: 16px 0; }
+.path-node { display: flex; flex-direction: column; align-items: center; min-width: 80px; flex-shrink: 0; }
+.path-node .node-circle { width: 44px; height: 44px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 13px; border: 2px solid var(--border); background: var(--surface2); }
+.path-node.first .node-circle { border-color: var(--orange); background: rgba(210,153,34,0.15); color: var(--orange); }
+.path-node.last .node-circle { border-color: var(--green); background: rgba(63,185,80,0.15); color: var(--green); }
+.path-node .node-label { font-size: 10px; color: var(--text2); text-align: center; margin-top: 4px; max-width: 100px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.path-node .node-health { font-size: 10px; font-weight: 600; text-align: center; margin-top: 2px; }
+.path-edge { display: flex; flex-direction: column; align-items: center; min-width: 100px; flex-shrink: 0; padding-top: 10px; }
+.path-edge .edge-arrow { display: flex; align-items: center; color: var(--text2); font-size: 12px; white-space: nowrap; }
+.path-edge .edge-arrow .line { width: 40px; height: 2px; background: var(--border); }
+.path-edge .edge-arrow .tip { margin-left: -2px; }
+.path-edge .edge-tags { display: flex; flex-direction: column; align-items: center; gap: 3px; margin-top: 4px; }
+.edge-tag { font-size: 9px; padding: 1px 6px; border-radius: 4px; white-space: nowrap; }
+.edge-tag.cochange { background: rgba(57,210,192,0.15); color: var(--cyan); border: 1px solid rgba(57,210,192,0.3); }
+.edge-tag.coupling { background: rgba(188,140,255,0.15); color: var(--purple); border: 1px solid rgba(188,140,255,0.3); }
+.edge-tag.none { background: var(--surface2); color: var(--text2); border: 1px solid var(--border); }
+
+/* ── Coupling section ── */
+.coupling-section { margin-top: 16px; }
+.coupling-section h4 { font-size: 12px; color: var(--text2); margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.5px; }
+.coupling-chip { display: inline-block; font-size: 11px; padding: 3px 10px; border-radius: 12px; margin: 2px 4px 2px 0; background: rgba(188,140,255,0.12); color: var(--purple); border: 1px solid rgba(188,140,255,0.25); font-family: monospace; }
+.none-text { color: var(--text2); font-style: italic; font-size: 12px; }
+.toggle-icon { transition: transform 0.2s; color: var(--text2); font-size: 18px; margin-left: 12px; }
+.card.open .toggle-icon { transform: rotate(180deg); }
+
+/* ── Validation section ── */
+.validation-section { margin-top: 20px; padding-top: 16px; border-top: 1px dashed var(--border); }
+.validation-section h4 { font-size: 12px; color: var(--text2); margin-bottom: 10px; text-transform: uppercase; letter-spacing: 0.5px; }
+.vote-buttons { display: flex; gap: 8px; margin-bottom: 10px; }
+.vote-btn { padding: 8px 18px; border-radius: 8px; border: 2px solid var(--border); background: var(--surface2); color: var(--text); cursor: pointer; font-size: 13px; font-weight: 600; transition: all 0.2s; display: flex; align-items: center; gap: 6px; }
+.vote-btn:hover { border-color: var(--accent); }
+.vote-btn.correct.selected { border-color: var(--green); background: rgba(63,185,80,0.15); color: var(--green); }
+.vote-btn.incorrect.selected { border-color: var(--red); background: rgba(248,81,73,0.15); color: var(--red); }
+.vote-btn.unsure.selected { border-color: var(--orange); background: rgba(210,153,34,0.15); color: var(--orange); }
+.validation-comment { width: 100%; background: var(--surface2); border: 1px solid var(--border); border-radius: 6px; color: var(--text); padding: 8px 12px; font-size: 13px; font-family: inherit; resize: vertical; min-height: 50px; margin-bottom: 10px; }
+.validation-comment::placeholder { color: var(--text2); }
+.submit-row { display: flex; align-items: center; gap: 12px; }
+.submit-btn { padding: 8px 24px; border-radius: 8px; border: none; background: var(--accent); color: #fff; cursor: pointer; font-size: 13px; font-weight: 600; transition: opacity 0.2s; }
+.submit-btn:hover { opacity: 0.85; }
+.submit-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+.submit-status { font-size: 12px; color: var(--green); }
+.submit-status.error { color: var(--red); }
+.already-sent { display: flex; align-items: center; gap: 8px; padding: 10px 16px; border-radius: 8px; background: rgba(63,185,80,0.1); border: 1px solid rgba(63,185,80,0.25); color: var(--green); font-size: 13px; }
+
+/* ── Tooltips ── */
+[data-tooltip] { position: relative; cursor: default; }
+[data-tooltip]::after { content: attr(data-tooltip); position: absolute; bottom: calc(100% + 7px); left: 50%; transform: translateX(-50%); background: #2d333b; color: var(--text); border: 1px solid var(--border); border-radius: 6px; padding: 7px 10px; font-size: 11px; line-height: 1.45; white-space: normal; width: max-content; max-width: 220px; text-align: center; pointer-events: none; opacity: 0; transition: opacity 0.15s; z-index: 999; text-transform: none; font-weight: 400; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif; }
+[data-tooltip]:hover::after { opacity: 1; }
+
+@media (max-width: 768px) {
+  .metrics-mini { gap: 8px; }
+  .class-badge { max-width: 150px; font-size: 11px; }
+  .container { padding: 16px; }
+  .page-header { padding: 12px 16px; }
+}
+
+/* ── HyCPA tabs ── */
+.tabs { display: flex; gap: 4px; border-bottom: 1px solid var(--border); margin-bottom: 16px; }
+.tab-btn { background: transparent; border: none; color: var(--text2); padding: 10px 18px; font-size: 13px; font-weight: 600; cursor: pointer; border-bottom: 2px solid transparent; }
+.tab-btn:hover { color: var(--text); }
+.tab-btn.active { color: var(--accent); border-bottom-color: var(--accent); }
+.tab-pane { display: none; }
+.tab-pane.active { display: block; }
+.metric-pill.prob .val { color: var(--red); }
+.metric-pill.hop .val  { color: var(--purple); }
+.metric-pill.health .val { color: var(--cyan); }
+
+/* ── Filter bar ── */
+.filter-bar { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 14px; align-items: center; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 10px 14px; }
+.filter-bar label { font-size: 11px; color: var(--text2); display: flex; flex-direction: column; gap: 2px; }
+.filter-bar input[type=number], .filter-bar input[type=text] { background: var(--surface2); border: 1px solid var(--border); color: var(--text); border-radius: 4px; padding: 4px 8px; font-size: 12px; width: 110px; }
+
+/* ── Params badge ── */
+.params-line { color: var(--text2); font-size: 12px; }
+.params-line code { background: var(--surface2); padding: 1px 6px; border-radius: 4px; color: var(--accent); font-size: 11px; }
+
+/* ── Tooltip fix: allow tooltips inside cards to escape the card border ── */
+.card { overflow: visible !important; }
+.card-header, .metrics-mini, .metric-pill { overflow: visible; }
+</style>
+</head>
+<body>
+<div class="page-header">
+  <a class="back-btn" href="repo_alibaba_spring-cloud-alibaba.html">← Back</a>
+  <span class="src-label">Class:</span>
+  <span class="src-name-h">spring-cloud-alibaba-starters/spring-alibaba-nacos-config/src/test/java/com.alibaba.cloud.nacos/configdata/NacosConfigDataLoaderTest.java</span>
+  <span class="src-label" style="margin-left:12px">Code Smell Score: 0.167 · Communities: C38, C44</span>
+  <div class="header-email-wrap" style="margin-left:auto">
+    <label>Email (required to submit)</label>
+    <input type="email" id="userEmail" class="header-email-input"
+           placeholder="your@email.com" oninput="saveEmail(this.value)" />
+  </div>
+  <a class="export-btn" href="help.html">❓ Help</a>
+  <a class="export-btn" href="repo_alibaba_spring-cloud-alibaba.html">📁 Repo</a>
+</div>
+
+<div class="container">
+  <div class="tabs">
+    <button class="tab-btn active" data-tab="det" onclick="switchTab('det')">Deterministic (6)</button>
+    <button class="tab-btn" data-tab="prob" onclick="switchTab('prob')">Probabilistic (10)</button>
+  </div>
+  <div class="filter-bar">
+    <label>Min probability
+      <input type="number" id="fMinProb" min="0" max="1" step="0.05" value="0" oninput="applyFilters()">
+    </label>
+    <label>Max distance
+      <input type="number" id="fMaxHop" min="1" step="1" placeholder="any" oninput="applyFilters()">
+    </label>
+    <label style="flex:1">Search target label
+      <input type="text" id="fSearch" placeholder="substring…" oninput="applyFilters()" style="width:100%">
+    </label>
+  </div>
+
+  <div class="tab-pane active" data-tab="det"><div class="card"
+     data-source="spring-cloud-alibaba-starters/spring-alibaba-nacos-config/src/test/java/com.alibaba.cloud.nacos/configdata/NacosConfigDataLoaderTest.java" data-target="spring-cloud-alibaba-starters/spring-alibaba-nacos-config/src/main/java/com/alibaba/cloud/nacos/NacosConfigProperties.java"
+     data-prob="0.4471147426534967" data-hop="1" data-rank="1">
+  <div class="card-header" onclick="this.parentElement.classList.toggle('open')">
+    <div class="source-target">
+      <span class="class-badge source" title="spring-cloud-alibaba-starters/spring-alibaba-nacos-config/src/test/java/com.alibaba.cloud.nacos/configdata/NacosConfigDataLoaderTest.java">NacosConfigDataLoaderTest</span>
+      <span class="arrow-icon">→</span>
+      <span class="class-badge target" title="spring-cloud-alibaba-starters/spring-alibaba-nacos-config/src/main/java/com/alibaba/cloud/nacos/NacosConfigProperties.java">NacosConfigProperties</span>
+    </div>
+    <div class="metrics-mini">
+      <div class="metric-pill rank-m" data-tooltip="Rank in the DET list.">
+        <span class="val">#1</span><span class="lbl">Rank</span>
+      </div>
+      <div class="metric-pill prob" style="color:var(--orange)"
+           data-tooltip="HyCPA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
+        <span class="val" style="color:var(--orange)">0.4471</span>
+        <span class="lbl">Prob</span>
+      </div>
+      <div class="metric-pill hop"
+           data-tooltip="Number of edges (distance) in the propagation path from the source class to this target.">
+        <span class="val">1</span><span class="lbl">Distance</span>
+      </div>
+      <div class="metric-pill health"
+           data-tooltip="Target health.">
+        <span class="val">0.58</span><span class="lbl">Health</span>
+      </div>
+    </div>
+    <span class="toggle-icon">▼</span>
+  </div>
+  <div class="card-body">
+    <h4 style="color:var(--text2);font-size:12px;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:8px;">Propagation Path</h4><div class="path-diagram">
+      <div class="path-node first">
+        <div class="node-circle" title="spring-cloud-alibaba-starters/spring-alibaba-nacos-config/src/test/java/com.alibaba.cloud.nacos/configdata/NacosConfigDataLoaderTest.java">NA</div>
+        <div class="node-label" title="spring-cloud-alibaba-starters/spring-alibaba-nacos-config/src/test/java/com.alibaba.cloud.nacos/configdata/NacosConfigDataLoaderTest.java">NacosConfigDataLoaderTest</div>
+        <div class="node-health" style="color:var(--green)"
+             data-tooltip="Structural health (1 − code smell score from CK metrics). 1.00 (green) = healthy; 0.00 (red) = many CK metrics in the bad zone.">⚕ 0.83</div>
+      </div>
+      <div class="path-edge">
+        <div class="edge-arrow"><span class="line"></span><span class="tip">&#9658;</span></div>
+        <div class="edge-tags">
+          <span class="edge-tag cochange"
+                data-tooltip="Co-change weight: number of times these two classes were committed together in the project history.">co-change: 1</span>
+            <span class="edge-tag coupling" data-tooltip="ATOMIC_PARAMETER_COUPLING" title="ATOMIC_PARAMETER_COUPLING">Atomic Parameter Coupling</span>
+            <span class="edge-tag coupling" data-tooltip="METHOD_INVOCATION_ATOMIC_PARAMETER" title="METHOD_INVOCATION_ATOMIC_PARAMETER">Method Invocation Atomic Parameter</span>
+            <span class="edge-tag coupling" data-tooltip="OBJECT_PARAMETER_CLASS" title="OBJECT_PARAMETER_CLASS">Object Parameter Class</span>
+            <span class="edge-tag coupling" data-tooltip="VARIABLE_CLASS_INSTANCE_CREATION" title="VARIABLE_CLASS_INSTANCE_CREATION">Variable Class Instance Creation</span>
+            <span class="edge-tag coupling" data-tooltip="VARIABLE_DECLARATION_STATEMENT" title="VARIABLE_DECLARATION_STATEMENT">Variable Declaration Statement</span>
+        </div>
+      </div>
+      <div class="path-node last">
+        <div class="node-circle" title="spring-cloud-alibaba-starters/spring-alibaba-nacos-config/src/main/java/com/alibaba/cloud/nacos/NacosConfigProperties.java">NA</div>
+        <div class="node-label" title="spring-cloud-alibaba-starters/spring-alibaba-nacos-config/src/main/java/com/alibaba/cloud/nacos/NacosConfigProperties.java">NacosConfigProperties</div>
+        <div class="node-health" style="color:var(--orange)"
+             data-tooltip="Structural health (1 − code smell score from CK metrics). 1.00 (green) = healthy; 0.00 (red) = many CK metrics in the bad zone.">⚕ 0.58</div>
+      </div>
+  </div>
+    <div style="margin-top:10px;font-size:11px;color:var(--text2)">
+      <strong>Via:</strong> <code>spring-cloud-alibaba-starters/spring-alibaba-nacos-config/src/test/java/com.alibaba.cloud.nacos/configdata/NacosConfigDataLoaderTest.java</code>
+    </div>
+    <div style="margin-top:16px;font-size:11px;color:var(--text2);">
+      <div><strong>Source:</strong> <code>spring-cloud-alibaba-starters/spring-alibaba-nacos-config/src/test/java/com.alibaba.cloud.nacos/configdata/NacosConfigDataLoaderTest.java</code></div>
+      <div><strong>Target:</strong> <code>spring-cloud-alibaba-starters/spring-alibaba-nacos-config/src/main/java/com/alibaba/cloud/nacos/NacosConfigProperties.java</code></div>
+    </div>
+    <div class="validation-section" id="validation_det_0">
+      <h4>📋 Validation — Is this propagation correct?</h4>
+      <div class="vote-buttons">
+        <button class="vote-btn correct"   onclick="selectVote('det_0','correct',this)">✅ Correct</button>
+        <button class="vote-btn incorrect" onclick="selectVote('det_0','incorrect',this)">❌ Incorrect</button>
+        <button class="vote-btn unsure"    onclick="selectVote('det_0','unsure',this)">❓ Unsure</button>
+      </div>
+      <textarea class="validation-comment" id="comment_det_0"
+                placeholder="Optional comment (e.g., why you think it is incorrect)…"
+                oninput="saveComment('det_0', this.value)"></textarea>
+      <div class="submit-row">
+        <button class="submit-btn" id="submitBtn_det_0"
+                onclick="submitVote('det_0')" disabled>Submit</button>
+        <span class="submit-status" id="status_det_0"></span>
+      </div>
+      <input type="hidden" id="vote_det_0"         value="">
+      <input type="hidden" id="meta_kind_det_0"   value="det">
+      <input type="hidden" id="meta_source_det_0" value="spring-cloud-alibaba-starters/spring-alibaba-nacos-config/src/test/java/com.alibaba.cloud.nacos/configdata/NacosConfigDataLoaderTest.java">
+      <input type="hidden" id="meta_target_det_0" value="spring-cloud-alibaba-starters/spring-alibaba-nacos-config/src/main/java/com/alibaba/cloud/nacos/NacosConfigProperties.java">
+      <input type="hidden" id="meta_rank_det_0"   value="1">
+      <input type="hidden" id="meta_prob_det_0"   value="0.4471147426534967">
+      <input type="hidden" id="meta_hop_det_0"    value="1">
+    </div>
+  </div>
+</div><div class="card"
+     data-source="spring-cloud-alibaba-starters/spring-alibaba-nacos-config/src/test/java/com.alibaba.cloud.nacos/configdata/NacosConfigDataLoaderTest.java" data-target="spring-cloud-alibaba-starters/spring-alibaba-nacos-config/src/main/java/com/alibaba/cloud/nacos/configdata/NacosConfigDataLoader.java"
+     data-prob="0.4148289127638709" data-hop="1" data-rank="2">
+  <div class="card-header" onclick="this.parentElement.classList.toggle('open')">
+    <div class="source-target">
+      <span class="class-badge source" title="spring-cloud-alibaba-starters/spring-alibaba-nacos-config/src/test/java/com.alibaba.cloud.nacos/configdata/NacosConfigDataLoaderTest.java">NacosConfigDataLoaderTest</span>
+      <span class="arrow-icon">→</span>
+      <span class="class-badge target" title="spring-cloud-alibaba-starters/spring-alibaba-nacos-config/src/main/java/com/alibaba/cloud/nacos/configdata/NacosConfigDataLoader.java">NacosConfigDataLoader</span>
+    </div>
+    <div class="metrics-mini">
+      <div class="metric-pill rank-m" data-tooltip="Rank in the DET list.">
+        <span class="val">#2</span><span class="lbl">Rank</span>
+      </div>
+      <div class="metric-pill prob" style="color:var(--orange)"
+           data-tooltip="HyCPA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
+        <span class="val" style="color:var(--orange)">0.4148</span>
+        <span class="lbl">Prob</span>
+      </div>
+      <div class="metric-pill hop"
+           data-tooltip="Number of edges (distance) in the propagation path from the source class to this target.">
+        <span class="val">1</span><span class="lbl">Distance</span>
+      </div>
+      <div class="metric-pill health"
+           data-tooltip="Target health.">
+        <span class="val">0.83</span><span class="lbl">Health</span>
+      </div>
+    </div>
+    <span class="toggle-icon">▼</span>
+  </div>
+  <div class="card-body">
+    <h4 style="color:var(--text2);font-size:12px;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:8px;">Propagation Path</h4><div class="path-diagram">
+      <div class="path-node first">
+        <div class="node-circle" title="spring-cloud-alibaba-starters/spring-alibaba-nacos-config/src/test/java/com.alibaba.cloud.nacos/configdata/NacosConfigDataLoaderTest.java">NA</div>
+        <div class="node-label" title="spring-cloud-alibaba-starters/spring-alibaba-nacos-config/src/test/java/com.alibaba.cloud.nacos/configdata/NacosConfigDataLoaderTest.java">NacosConfigDataLoaderTest</div>
+        <div class="node-health" style="color:var(--green)"
+             data-tooltip="Structural health (1 − code smell score from CK metrics). 1.00 (green) = healthy; 0.00 (red) = many CK metrics in the bad zone.">⚕ 0.83</div>
+      </div>
+      <div class="path-edge">
+        <div class="edge-arrow"><span class="line"></span><span class="tip">&#9658;</span></div>
+        <div class="edge-tags">
+          <span class="edge-tag cochange"
+                data-tooltip="Co-change weight: number of times these two classes were committed together in the project history.">co-change: 1</span>
+            <span class="edge-tag coupling" data-tooltip="METHOD_INVOCATION_OBJECT_PARAMETER" title="METHOD_INVOCATION_OBJECT_PARAMETER">Method Invocation Object Parameter</span>
+            <span class="edge-tag coupling" data-tooltip="OBJECT_PARAMETER_COUPLING" title="OBJECT_PARAMETER_COUPLING">Object Parameter Coupling</span>
+        </div>
+      </div>
+      <div class="path-node last">
+        <div class="node-circle" title="spring-cloud-alibaba-starters/spring-alibaba-nacos-config/src/main/java/com/alibaba/cloud/nacos/configdata/NacosConfigDataLoader.java">NA</div>
+        <div class="node-label" title="spring-cloud-alibaba-starters/spring-alibaba-nacos-config/src/main/java/com/alibaba/cloud/nacos/configdata/NacosConfigDataLoader.java">NacosConfigDataLoader</div>
+        <div class="node-health" style="color:var(--green)"
+             data-tooltip="Structural health (1 − code smell score from CK metrics). 1.00 (green) = healthy; 0.00 (red) = many CK metrics in the bad zone.">⚕ 0.83</div>
+      </div>
+  </div>
+    <div style="margin-top:10px;font-size:11px;color:var(--text2)">
+      <strong>Via:</strong> <code>spring-cloud-alibaba-starters/spring-alibaba-nacos-config/src/test/java/com.alibaba.cloud.nacos/configdata/NacosConfigDataLoaderTest.java</code>
+    </div>
+    <div style="margin-top:16px;font-size:11px;color:var(--text2);">
+      <div><strong>Source:</strong> <code>spring-cloud-alibaba-starters/spring-alibaba-nacos-config/src/test/java/com.alibaba.cloud.nacos/configdata/NacosConfigDataLoaderTest.java</code></div>
+      <div><strong>Target:</strong> <code>spring-cloud-alibaba-starters/spring-alibaba-nacos-config/src/main/java/com/alibaba/cloud/nacos/configdata/NacosConfigDataLoader.java</code></div>
+    </div>
+    <div class="validation-section" id="validation_det_1">
+      <h4>📋 Validation — Is this propagation correct?</h4>
+      <div class="vote-buttons">
+        <button class="vote-btn correct"   onclick="selectVote('det_1','correct',this)">✅ Correct</button>
+        <button class="vote-btn incorrect" onclick="selectVote('det_1','incorrect',this)">❌ Incorrect</button>
+        <button class="vote-btn unsure"    onclick="selectVote('det_1','unsure',this)">❓ Unsure</button>
+      </div>
+      <textarea class="validation-comment" id="comment_det_1"
+                placeholder="Optional comment (e.g., why you think it is incorrect)…"
+                oninput="saveComment('det_1', this.value)"></textarea>
+      <div class="submit-row">
+        <button class="submit-btn" id="submitBtn_det_1"
+                onclick="submitVote('det_1')" disabled>Submit</button>
+        <span class="submit-status" id="status_det_1"></span>
+      </div>
+      <input type="hidden" id="vote_det_1"         value="">
+      <input type="hidden" id="meta_kind_det_1"   value="det">
+      <input type="hidden" id="meta_source_det_1" value="spring-cloud-alibaba-starters/spring-alibaba-nacos-config/src/test/java/com.alibaba.cloud.nacos/configdata/NacosConfigDataLoaderTest.java">
+      <input type="hidden" id="meta_target_det_1" value="spring-cloud-alibaba-starters/spring-alibaba-nacos-config/src/main/java/com/alibaba/cloud/nacos/configdata/NacosConfigDataLoader.java">
+      <input type="hidden" id="meta_rank_det_1"   value="2">
+      <input type="hidden" id="meta_prob_det_1"   value="0.4148289127638709">
+      <input type="hidden" id="meta_hop_det_1"    value="1">
+    </div>
+  </div>
+</div><div class="card"
+     data-source="spring-cloud-alibaba-starters/spring-alibaba-nacos-config/src/test/java/com.alibaba.cloud.nacos/configdata/NacosConfigDataLoaderTest.java" data-target="spring-cloud-alibaba-starters/spring-alibaba-nacos-config/src/main/java/com/alibaba/cloud/nacos/NacosConfigManager.java"
+     data-prob="0.38446456632387105" data-hop="1" data-rank="3">
+  <div class="card-header" onclick="this.parentElement.classList.toggle('open')">
+    <div class="source-target">
+      <span class="class-badge source" title="spring-cloud-alibaba-starters/spring-alibaba-nacos-config/src/test/java/com.alibaba.cloud.nacos/configdata/NacosConfigDataLoaderTest.java">NacosConfigDataLoaderTest</span>
+      <span class="arrow-icon">→</span>
+      <span class="class-badge target" title="spring-cloud-alibaba-starters/spring-alibaba-nacos-config/src/main/java/com/alibaba/cloud/nacos/NacosConfigManager.java">NacosConfigManager</span>
+    </div>
+    <div class="metrics-mini">
+      <div class="metric-pill rank-m" data-tooltip="Rank in the DET list.">
+        <span class="val">#3</span><span class="lbl">Rank</span>
+      </div>
+      <div class="metric-pill prob" style="color:var(--orange)"
+           data-tooltip="HyCPA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
+        <span class="val" style="color:var(--orange)">0.3845</span>
+        <span class="lbl">Prob</span>
+      </div>
+      <div class="metric-pill hop"
+           data-tooltip="Number of edges (distance) in the propagation path from the source class to this target.">
+        <span class="val">1</span><span class="lbl">Distance</span>
+      </div>
+      <div class="metric-pill health"
+           data-tooltip="Target health.">
+        <span class="val">0.90</span><span class="lbl">Health</span>
+      </div>
+    </div>
+    <span class="toggle-icon">▼</span>
+  </div>
+  <div class="card-body">
+    <h4 style="color:var(--text2);font-size:12px;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:8px;">Propagation Path</h4><div class="path-diagram">
+      <div class="path-node first">
+        <div class="node-circle" title="spring-cloud-alibaba-starters/spring-alibaba-nacos-config/src/test/java/com.alibaba.cloud.nacos/configdata/NacosConfigDataLoaderTest.java">NA</div>
+        <div class="node-label" title="spring-cloud-alibaba-starters/spring-alibaba-nacos-config/src/test/java/com.alibaba.cloud.nacos/configdata/NacosConfigDataLoaderTest.java">NacosConfigDataLoaderTest</div>
+        <div class="node-health" style="color:var(--green)"
+             data-tooltip="Structural health (1 − code smell score from CK metrics). 1.00 (green) = healthy; 0.00 (red) = many CK metrics in the bad zone.">⚕ 0.83</div>
+      </div>
+      <div class="path-edge">
+        <div class="edge-arrow"><span class="line"></span><span class="tip">&#9658;</span></div>
+        <div class="edge-tags">
+          <span class="edge-tag cochange"
+                data-tooltip="Co-change weight: number of times these two classes were committed together in the project history.">co-change: 1</span>
+            <span class="edge-tag coupling" data-tooltip="METHOD_INVOCATION_ATOMIC_PARAMETER" title="METHOD_INVOCATION_ATOMIC_PARAMETER">Method Invocation Atomic Parameter</span>
+            <span class="edge-tag coupling" data-tooltip="VARIABLE_DECLARATION_STATEMENT" title="VARIABLE_DECLARATION_STATEMENT">Variable Declaration Statement</span>
+        </div>
+      </div>
+      <div class="path-node last">
+        <div class="node-circle" title="spring-cloud-alibaba-starters/spring-alibaba-nacos-config/src/main/java/com/alibaba/cloud/nacos/NacosConfigManager.java">NA</div>
+        <div class="node-label" title="spring-cloud-alibaba-starters/spring-alibaba-nacos-config/src/main/java/com/alibaba/cloud/nacos/NacosConfigManager.java">NacosConfigManager</div>
+        <div class="node-health" style="color:var(--green)"
+             data-tooltip="Structural health (1 − code smell score from CK metrics). 1.00 (green) = healthy; 0.00 (red) = many CK metrics in the bad zone.">⚕ 0.90</div>
+      </div>
+  </div>
+    <div style="margin-top:10px;font-size:11px;color:var(--text2)">
+      <strong>Via:</strong> <code>spring-cloud-alibaba-starters/spring-alibaba-nacos-config/src/test/java/com.alibaba.cloud.nacos/configdata/NacosConfigDataLoaderTest.java</code>
+    </div>
+    <div style="margin-top:16px;font-size:11px;color:var(--text2);">
+      <div><strong>Source:</strong> <code>spring-cloud-alibaba-starters/spring-alibaba-nacos-config/src/test/java/com.alibaba.cloud.nacos/configdata/NacosConfigDataLoaderTest.java</code></div>
+      <div><strong>Target:</strong> <code>spring-cloud-alibaba-starters/spring-alibaba-nacos-config/src/main/java/com/alibaba/cloud/nacos/NacosConfigManager.java</code></div>
+    </div>
+    <div class="validation-section" id="validation_det_2">
+      <h4>📋 Validation — Is this propagation correct?</h4>
+      <div class="vote-buttons">
+        <button class="vote-btn correct"   onclick="selectVote('det_2','correct',this)">✅ Correct</button>
+        <button class="vote-btn incorrect" onclick="selectVote('det_2','incorrect',this)">❌ Incorrect</button>
+        <button class="vote-btn unsure"    onclick="selectVote('det_2','unsure',this)">❓ Unsure</button>
+      </div>
+      <textarea class="validation-comment" id="comment_det_2"
+                placeholder="Optional comment (e.g., why you think it is incorrect)…"
+                oninput="saveComment('det_2', this.value)"></textarea>
+      <div class="submit-row">
+        <button class="submit-btn" id="submitBtn_det_2"
+                onclick="submitVote('det_2')" disabled>Submit</button>
+        <span class="submit-status" id="status_det_2"></span>
+      </div>
+      <input type="hidden" id="vote_det_2"         value="">
+      <input type="hidden" id="meta_kind_det_2"   value="det">
+      <input type="hidden" id="meta_source_det_2" value="spring-cloud-alibaba-starters/spring-alibaba-nacos-config/src/test/java/com.alibaba.cloud.nacos/configdata/NacosConfigDataLoaderTest.java">
+      <input type="hidden" id="meta_target_det_2" value="spring-cloud-alibaba-starters/spring-alibaba-nacos-config/src/main/java/com/alibaba/cloud/nacos/NacosConfigManager.java">
+      <input type="hidden" id="meta_rank_det_2"   value="3">
+      <input type="hidden" id="meta_prob_det_2"   value="0.38446456632387105">
+      <input type="hidden" id="meta_hop_det_2"    value="1">
+    </div>
+  </div>
+</div><div class="card"
+     data-source="spring-cloud-alibaba-starters/spring-alibaba-nacos-config/src/test/java/com.alibaba.cloud.nacos/configdata/NacosConfigDataLoaderTest.java" data-target="spring-cloud-alibaba-starters/spring-alibaba-nacos-config/src/main/java/com/alibaba/cloud/nacos/client/NacosPropertySource.java"
+     data-prob="0.36543898072258063" data-hop="2" data-rank="4">
+  <div class="card-header" onclick="this.parentElement.classList.toggle('open')">
+    <div class="source-target">
+      <span class="class-badge source" title="spring-cloud-alibaba-starters/spring-alibaba-nacos-config/src/test/java/com.alibaba.cloud.nacos/configdata/NacosConfigDataLoaderTest.java">NacosConfigDataLoaderTest</span>
+      <span class="arrow-icon">→</span>
+      <span class="class-badge target" title="spring-cloud-alibaba-starters/spring-alibaba-nacos-config/src/main/java/com/alibaba/cloud/nacos/client/NacosPropertySource.java">NacosPropertySource</span>
+    </div>
+    <div class="metrics-mini">
+      <div class="metric-pill rank-m" data-tooltip="Rank in the DET list.">
+        <span class="val">#4</span><span class="lbl">Rank</span>
+      </div>
+      <div class="metric-pill prob" style="color:var(--orange)"
+           data-tooltip="HyCPA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
+        <span class="val" style="color:var(--orange)">0.3654</span>
+        <span class="lbl">Prob</span>
+      </div>
+      <div class="metric-pill hop"
+           data-tooltip="Number of edges (distance) in the propagation path from the source class to this target.">
+        <span class="val">2</span><span class="lbl">Distance</span>
+      </div>
+      <div class="metric-pill health"
+           data-tooltip="Target health.">
+        <span class="val">0.90</span><span class="lbl">Health</span>
+      </div>
+    </div>
+    <span class="toggle-icon">▼</span>
+  </div>
+  <div class="card-body">
+    <h4 style="color:var(--text2);font-size:12px;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:8px;">Propagation Path</h4><div class="path-diagram">
+      <div class="path-node first">
+        <div class="node-circle" title="spring-cloud-alibaba-starters/spring-alibaba-nacos-config/src/test/java/com.alibaba.cloud.nacos/configdata/NacosConfigDataLoaderTest.java">NA</div>
+        <div class="node-label" title="spring-cloud-alibaba-starters/spring-alibaba-nacos-config/src/test/java/com.alibaba.cloud.nacos/configdata/NacosConfigDataLoaderTest.java">NacosConfigDataLoaderTest</div>
+        <div class="node-health" style="color:var(--green)"
+             data-tooltip="Structural health (1 − code smell score from CK metrics). 1.00 (green) = healthy; 0.00 (red) = many CK metrics in the bad zone.">⚕ 0.83</div>
+      </div>
+      <div class="path-edge">
+        <div class="edge-arrow"><span class="line"></span><span class="tip">&#9658;</span></div>
+        <div class="edge-tags">
+          <span class="edge-tag cochange"
+                data-tooltip="Co-change weight: number of times these two classes were committed together in the project history.">co-change: 1</span>
+            <span class="edge-tag coupling" data-tooltip="METHOD_INVOCATION_OBJECT_PARAMETER" title="METHOD_INVOCATION_OBJECT_PARAMETER">Method Invocation Object Parameter</span>
+            <span class="edge-tag coupling" data-tooltip="OBJECT_PARAMETER_COUPLING" title="OBJECT_PARAMETER_COUPLING">Object Parameter Coupling</span>
+        </div>
+      </div>
+      <div class="path-node ">
+        <div class="node-circle" title="spring-cloud-alibaba-starters/spring-alibaba-nacos-config/src/main/java/com/alibaba/cloud/nacos/configdata/NacosConfigDataLoader.java">NA</div>
+        <div class="node-label" title="spring-cloud-alibaba-starters/spring-alibaba-nacos-config/src/main/java/com/alibaba/cloud/nacos/configdata/NacosConfigDataLoader.java">NacosConfigDataLoader</div>
+        <div class="node-health" style="color:var(--green)"
+             data-tooltip="Structural health (1 − code smell score from CK metrics). 1.00 (green) = healthy; 0.00 (red) = many CK metrics in the bad zone.">⚕ 0.83</div>
+      </div>
+      <div class="path-edge">
+        <div class="edge-arrow"><span class="line"></span><span class="tip">&#9658;</span></div>
+        <div class="edge-tags">
+          <span class="edge-tag cochange"
+                data-tooltip="Co-change weight: number of times these two classes were committed together in the project history.">co-change: 12</span>
+            <span class="edge-tag coupling" data-tooltip="OBJECT_PARAMETER_COUPLING" title="OBJECT_PARAMETER_COUPLING">Object Parameter Coupling</span>
+            <span class="edge-tag coupling" data-tooltip="VARIABLE_CLASS_INSTANCE_CREATION" title="VARIABLE_CLASS_INSTANCE_CREATION">Variable Class Instance Creation</span>
+            <span class="edge-tag coupling" data-tooltip="VARIABLE_DECLARATION_STATEMENT" title="VARIABLE_DECLARATION_STATEMENT">Variable Declaration Statement</span>
+        </div>
+      </div>
+      <div class="path-node last">
+        <div class="node-circle" title="spring-cloud-alibaba-starters/spring-alibaba-nacos-config/src/main/java/com/alibaba/cloud/nacos/client/NacosPropertySource.java">NA</div>
+        <div class="node-label" title="spring-cloud-alibaba-starters/spring-alibaba-nacos-config/src/main/java/com/alibaba/cloud/nacos/client/NacosPropertySource.java">NacosPropertySource</div>
+        <div class="node-health" style="color:var(--green)"
+             data-tooltip="Structural health (1 − code smell score from CK metrics). 1.00 (green) = healthy; 0.00 (red) = many CK metrics in the bad zone.">⚕ 0.90</div>
+      </div>
+  </div>
+    <div style="margin-top:10px;font-size:11px;color:var(--text2)">
+      <strong>Via:</strong> <code>spring-cloud-alibaba-starters/spring-alibaba-nacos-config/src/main/java/com/alibaba/cloud/nacos/configdata/NacosConfigDataLoader.java</code>
+    </div>
+    <div style="margin-top:16px;font-size:11px;color:var(--text2);">
+      <div><strong>Source:</strong> <code>spring-cloud-alibaba-starters/spring-alibaba-nacos-config/src/test/java/com.alibaba.cloud.nacos/configdata/NacosConfigDataLoaderTest.java</code></div>
+      <div><strong>Target:</strong> <code>spring-cloud-alibaba-starters/spring-alibaba-nacos-config/src/main/java/com/alibaba/cloud/nacos/client/NacosPropertySource.java</code></div>
+    </div>
+    <div class="validation-section" id="validation_det_3">
+      <h4>📋 Validation — Is this propagation correct?</h4>
+      <div class="vote-buttons">
+        <button class="vote-btn correct"   onclick="selectVote('det_3','correct',this)">✅ Correct</button>
+        <button class="vote-btn incorrect" onclick="selectVote('det_3','incorrect',this)">❌ Incorrect</button>
+        <button class="vote-btn unsure"    onclick="selectVote('det_3','unsure',this)">❓ Unsure</button>
+      </div>
+      <textarea class="validation-comment" id="comment_det_3"
+                placeholder="Optional comment (e.g., why you think it is incorrect)…"
+                oninput="saveComment('det_3', this.value)"></textarea>
+      <div class="submit-row">
+        <button class="submit-btn" id="submitBtn_det_3"
+                onclick="submitVote('det_3')" disabled>Submit</button>
+        <span class="submit-status" id="status_det_3"></span>
+      </div>
+      <input type="hidden" id="vote_det_3"         value="">
+      <input type="hidden" id="meta_kind_det_3"   value="det">
+      <input type="hidden" id="meta_source_det_3" value="spring-cloud-alibaba-starters/spring-alibaba-nacos-config/src/test/java/com.alibaba.cloud.nacos/configdata/NacosConfigDataLoaderTest.java">
+      <input type="hidden" id="meta_target_det_3" value="spring-cloud-alibaba-starters/spring-alibaba-nacos-config/src/main/java/com/alibaba/cloud/nacos/client/NacosPropertySource.java">
+      <input type="hidden" id="meta_rank_det_3"   value="4">
+      <input type="hidden" id="meta_prob_det_3"   value="0.36543898072258063">
+      <input type="hidden" id="meta_hop_det_3"    value="2">
+    </div>
+  </div>
+</div><div class="card"
+     data-source="spring-cloud-alibaba-starters/spring-alibaba-nacos-config/src/test/java/com.alibaba.cloud.nacos/configdata/NacosConfigDataLoaderTest.java" data-target="spring-cloud-alibaba-starters/spring-alibaba-nacos-config/src/main/java/com/alibaba/cloud/nacos/configdata/NacosConfigDataResource.java"
+     data-prob="0.3420155873935484" data-hop="1" data-rank="5">
+  <div class="card-header" onclick="this.parentElement.classList.toggle('open')">
+    <div class="source-target">
+      <span class="class-badge source" title="spring-cloud-alibaba-starters/spring-alibaba-nacos-config/src/test/java/com.alibaba.cloud.nacos/configdata/NacosConfigDataLoaderTest.java">NacosConfigDataLoaderTest</span>
+      <span class="arrow-icon">→</span>
+      <span class="class-badge target" title="spring-cloud-alibaba-starters/spring-alibaba-nacos-config/src/main/java/com/alibaba/cloud/nacos/configdata/NacosConfigDataResource.java">NacosConfigDataResource</span>
+    </div>
+    <div class="metrics-mini">
+      <div class="metric-pill rank-m" data-tooltip="Rank in the DET list.">
+        <span class="val">#5</span><span class="lbl">Rank</span>
+      </div>
+      <div class="metric-pill prob" style="color:var(--orange)"
+           data-tooltip="HyCPA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
+        <span class="val" style="color:var(--orange)">0.3420</span>
+        <span class="lbl">Prob</span>
+      </div>
+      <div class="metric-pill hop"
+           data-tooltip="Number of edges (distance) in the propagation path from the source class to this target.">
+        <span class="val">1</span><span class="lbl">Distance</span>
+      </div>
+      <div class="metric-pill health"
+           data-tooltip="Target health.">
+        <span class="val">0.87</span><span class="lbl">Health</span>
+      </div>
+    </div>
+    <span class="toggle-icon">▼</span>
+  </div>
+  <div class="card-body">
+    <h4 style="color:var(--text2);font-size:12px;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:8px;">Propagation Path</h4><div class="path-diagram">
+      <div class="path-node first">
+        <div class="node-circle" title="spring-cloud-alibaba-starters/spring-alibaba-nacos-config/src/test/java/com.alibaba.cloud.nacos/configdata/NacosConfigDataLoaderTest.java">NA</div>
+        <div class="node-label" title="spring-cloud-alibaba-starters/spring-alibaba-nacos-config/src/test/java/com.alibaba.cloud.nacos/configdata/NacosConfigDataLoaderTest.java">NacosConfigDataLoaderTest</div>
+        <div class="node-health" style="color:var(--green)"
+             data-tooltip="Structural health (1 − code smell score from CK metrics). 1.00 (green) = healthy; 0.00 (red) = many CK metrics in the bad zone.">⚕ 0.83</div>
+      </div>
+      <div class="path-edge">
+        <div class="edge-arrow"><span class="line"></span><span class="tip">&#9658;</span></div>
+        <div class="edge-tags">
+          <span class="edge-tag cochange"
+                data-tooltip="Co-change weight: number of times these two classes were committed together in the project history.">co-change: 1</span>
+            <span class="edge-tag coupling" data-tooltip="OBJECT_PARAMETER_COUPLING" title="OBJECT_PARAMETER_COUPLING">Object Parameter Coupling</span>
+            <span class="edge-tag coupling" data-tooltip="VARIABLE_CLASS_INSTANCE_CREATION" title="VARIABLE_CLASS_INSTANCE_CREATION">Variable Class Instance Creation</span>
+            <span class="edge-tag coupling" data-tooltip="VARIABLE_DECLARATION_STATEMENT" title="VARIABLE_DECLARATION_STATEMENT">Variable Declaration Statement</span>
+        </div>
+      </div>
+      <div class="path-node last">
+        <div class="node-circle" title="spring-cloud-alibaba-starters/spring-alibaba-nacos-config/src/main/java/com/alibaba/cloud/nacos/configdata/NacosConfigDataResource.java">NA</div>
+        <div class="node-label" title="spring-cloud-alibaba-starters/spring-alibaba-nacos-config/src/main/java/com/alibaba/cloud/nacos/configdata/NacosConfigDataResource.java">NacosConfigDataResource</div>
+        <div class="node-health" style="color:var(--green)"
+             data-tooltip="Structural health (1 − code smell score from CK metrics). 1.00 (green) = healthy; 0.00 (red) = many CK metrics in the bad zone.">⚕ 0.87</div>
+      </div>
+  </div>
+    <div style="margin-top:10px;font-size:11px;color:var(--text2)">
+      <strong>Via:</strong> <code>spring-cloud-alibaba-starters/spring-alibaba-nacos-config/src/test/java/com.alibaba.cloud.nacos/configdata/NacosConfigDataLoaderTest.java</code>
+    </div>
+    <div style="margin-top:16px;font-size:11px;color:var(--text2);">
+      <div><strong>Source:</strong> <code>spring-cloud-alibaba-starters/spring-alibaba-nacos-config/src/test/java/com.alibaba.cloud.nacos/configdata/NacosConfigDataLoaderTest.java</code></div>
+      <div><strong>Target:</strong> <code>spring-cloud-alibaba-starters/spring-alibaba-nacos-config/src/main/java/com/alibaba/cloud/nacos/configdata/NacosConfigDataResource.java</code></div>
+    </div>
+    <div class="validation-section" id="validation_det_4">
+      <h4>📋 Validation — Is this propagation correct?</h4>
+      <div class="vote-buttons">
+        <button class="vote-btn correct"   onclick="selectVote('det_4','correct',this)">✅ Correct</button>
+        <button class="vote-btn incorrect" onclick="selectVote('det_4','incorrect',this)">❌ Incorrect</button>
+        <button class="vote-btn unsure"    onclick="selectVote('det_4','unsure',this)">❓ Unsure</button>
+      </div>
+      <textarea class="validation-comment" id="comment_det_4"
+                placeholder="Optional comment (e.g., why you think it is incorrect)…"
+                oninput="saveComment('det_4', this.value)"></textarea>
+      <div class="submit-row">
+        <button class="submit-btn" id="submitBtn_det_4"
+                onclick="submitVote('det_4')" disabled>Submit</button>
+        <span class="submit-status" id="status_det_4"></span>
+      </div>
+      <input type="hidden" id="vote_det_4"         value="">
+      <input type="hidden" id="meta_kind_det_4"   value="det">
+      <input type="hidden" id="meta_source_det_4" value="spring-cloud-alibaba-starters/spring-alibaba-nacos-config/src/test/java/com.alibaba.cloud.nacos/configdata/NacosConfigDataLoaderTest.java">
+      <input type="hidden" id="meta_target_det_4" value="spring-cloud-alibaba-starters/spring-alibaba-nacos-config/src/main/java/com/alibaba/cloud/nacos/configdata/NacosConfigDataResource.java">
+      <input type="hidden" id="meta_rank_det_4"   value="5">
+      <input type="hidden" id="meta_prob_det_4"   value="0.3420155873935484">
+      <input type="hidden" id="meta_hop_det_4"    value="1">
+    </div>
+  </div>
+</div><div class="card"
+     data-source="spring-cloud-alibaba-starters/spring-alibaba-nacos-config/src/test/java/com.alibaba.cloud.nacos/configdata/NacosConfigDataLoaderTest.java" data-target="spring-cloud-alibaba-starters/spring-alibaba-nacos-config/src/main/java/com/alibaba/cloud/nacos/refresh/NacosSnapshotConfigManager.java"
+     data-prob="0.3071701677419355" data-hop="1" data-rank="6">
+  <div class="card-header" onclick="this.parentElement.classList.toggle('open')">
+    <div class="source-target">
+      <span class="class-badge source" title="spring-cloud-alibaba-starters/spring-alibaba-nacos-config/src/test/java/com.alibaba.cloud.nacos/configdata/NacosConfigDataLoaderTest.java">NacosConfigDataLoaderTest</span>
+      <span class="arrow-icon">→</span>
+      <span class="class-badge target" title="spring-cloud-alibaba-starters/spring-alibaba-nacos-config/src/main/java/com/alibaba/cloud/nacos/refresh/NacosSnapshotConfigManager.java">NacosSnapshotConfigManager</span>
+    </div>
+    <div class="metrics-mini">
+      <div class="metric-pill rank-m" data-tooltip="Rank in the DET list.">
+        <span class="val">#6</span><span class="lbl">Rank</span>
+      </div>
+      <div class="metric-pill prob" style="color:var(--orange)"
+           data-tooltip="HyCPA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
+        <span class="val" style="color:var(--orange)">0.3072</span>
+        <span class="lbl">Prob</span>
+      </div>
+      <div class="metric-pill hop"
+           data-tooltip="Number of edges (distance) in the propagation path from the source class to this target.">
+        <span class="val">1</span><span class="lbl">Distance</span>
+      </div>
+      <div class="metric-pill health"
+           data-tooltip="Target health.">
+        <span class="val">0.88</span><span class="lbl">Health</span>
+      </div>
+    </div>
+    <span class="toggle-icon">▼</span>
+  </div>
+  <div class="card-body">
+    <h4 style="color:var(--text2);font-size:12px;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:8px;">Propagation Path</h4><div class="path-diagram">
+      <div class="path-node first">
+        <div class="node-circle" title="spring-cloud-alibaba-starters/spring-alibaba-nacos-config/src/test/java/com.alibaba.cloud.nacos/configdata/NacosConfigDataLoaderTest.java">NA</div>
+        <div class="node-label" title="spring-cloud-alibaba-starters/spring-alibaba-nacos-config/src/test/java/com.alibaba.cloud.nacos/configdata/NacosConfigDataLoaderTest.java">NacosConfigDataLoaderTest</div>
+        <div class="node-health" style="color:var(--green)"
+             data-tooltip="Structural health (1 − code smell score from CK metrics). 1.00 (green) = healthy; 0.00 (red) = many CK metrics in the bad zone.">⚕ 0.83</div>
+      </div>
+      <div class="path-edge">
+        <div class="edge-arrow"><span class="line"></span><span class="tip">&#9658;</span></div>
+        <div class="edge-tags">
+          <span class="edge-tag cochange"
+                data-tooltip="Co-change weight: number of times these two classes were committed together in the project history.">co-change: 1</span>
+            <span class="edge-tag coupling" data-tooltip="METHOD_INVOCATION_OBJECT_PARAMETER" title="METHOD_INVOCATION_OBJECT_PARAMETER">Method Invocation Object Parameter</span>
+        </div>
+      </div>
+      <div class="path-node last">
+        <div class="node-circle" title="spring-cloud-alibaba-starters/spring-alibaba-nacos-config/src/main/java/com/alibaba/cloud/nacos/refresh/NacosSnapshotConfigManager.java">NA</div>
+        <div class="node-label" title="spring-cloud-alibaba-starters/spring-alibaba-nacos-config/src/main/java/com/alibaba/cloud/nacos/refresh/NacosSnapshotConfigManager.java">NacosSnapshotConfigManager</div>
+        <div class="node-health" style="color:var(--green)"
+             data-tooltip="Structural health (1 − code smell score from CK metrics). 1.00 (green) = healthy; 0.00 (red) = many CK metrics in the bad zone.">⚕ 0.88</div>
+      </div>
+  </div>
+    <div style="margin-top:10px;font-size:11px;color:var(--text2)">
+      <strong>Via:</strong> <code>spring-cloud-alibaba-starters/spring-alibaba-nacos-config/src/test/java/com.alibaba.cloud.nacos/configdata/NacosConfigDataLoaderTest.java</code>
+    </div>
+    <div style="margin-top:16px;font-size:11px;color:var(--text2);">
+      <div><strong>Source:</strong> <code>spring-cloud-alibaba-starters/spring-alibaba-nacos-config/src/test/java/com.alibaba.cloud.nacos/configdata/NacosConfigDataLoaderTest.java</code></div>
+      <div><strong>Target:</strong> <code>spring-cloud-alibaba-starters/spring-alibaba-nacos-config/src/main/java/com/alibaba/cloud/nacos/refresh/NacosSnapshotConfigManager.java</code></div>
+    </div>
+    <div class="validation-section" id="validation_det_5">
+      <h4>📋 Validation — Is this propagation correct?</h4>
+      <div class="vote-buttons">
+        <button class="vote-btn correct"   onclick="selectVote('det_5','correct',this)">✅ Correct</button>
+        <button class="vote-btn incorrect" onclick="selectVote('det_5','incorrect',this)">❌ Incorrect</button>
+        <button class="vote-btn unsure"    onclick="selectVote('det_5','unsure',this)">❓ Unsure</button>
+      </div>
+      <textarea class="validation-comment" id="comment_det_5"
+                placeholder="Optional comment (e.g., why you think it is incorrect)…"
+                oninput="saveComment('det_5', this.value)"></textarea>
+      <div class="submit-row">
+        <button class="submit-btn" id="submitBtn_det_5"
+                onclick="submitVote('det_5')" disabled>Submit</button>
+        <span class="submit-status" id="status_det_5"></span>
+      </div>
+      <input type="hidden" id="vote_det_5"         value="">
+      <input type="hidden" id="meta_kind_det_5"   value="det">
+      <input type="hidden" id="meta_source_det_5" value="spring-cloud-alibaba-starters/spring-alibaba-nacos-config/src/test/java/com.alibaba.cloud.nacos/configdata/NacosConfigDataLoaderTest.java">
+      <input type="hidden" id="meta_target_det_5" value="spring-cloud-alibaba-starters/spring-alibaba-nacos-config/src/main/java/com/alibaba/cloud/nacos/refresh/NacosSnapshotConfigManager.java">
+      <input type="hidden" id="meta_rank_det_5"   value="6">
+      <input type="hidden" id="meta_prob_det_5"   value="0.3071701677419355">
+      <input type="hidden" id="meta_hop_det_5"    value="1">
+    </div>
+  </div>
+</div>
+  </div>
+
+  <div class="tab-pane" data-tab="prob"><div class="card"
+     data-source="spring-cloud-alibaba-starters/spring-alibaba-nacos-config/src/test/java/com.alibaba.cloud.nacos/configdata/NacosConfigDataLoaderTest.java" data-target="spring-cloud-alibaba-starters/spring-alibaba-nacos-config/src/main/java/com/alibaba/cloud/nacos/NacosConfigProperties.java"
+     data-prob="0.796" data-hop="1.5238693467336684" data-rank="1">
+  <div class="card-header" onclick="this.parentElement.classList.toggle('open')">
+    <div class="source-target">
+      <span class="class-badge source" title="spring-cloud-alibaba-starters/spring-alibaba-nacos-config/src/test/java/com.alibaba.cloud.nacos/configdata/NacosConfigDataLoaderTest.java">NacosConfigDataLoaderTest</span>
+      <span class="arrow-icon">→</span>
+      <span class="class-badge target" title="spring-cloud-alibaba-starters/spring-alibaba-nacos-config/src/main/java/com/alibaba/cloud/nacos/NacosConfigProperties.java">NacosConfigProperties</span>
+    </div>
+    <div class="metrics-mini">
+      <div class="metric-pill rank-m" data-tooltip="Rank in the PROB list.">
+        <span class="val">#1</span><span class="lbl">Rank</span>
+      </div>
+      <div class="metric-pill prob" style="color:var(--red)"
+           data-tooltip="HyCPA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
+        <span class="val" style="color:var(--red)">0.7960</span>
+        <span class="lbl">Prob</span>
+      </div>
+      <div class="metric-pill hop"
+           data-tooltip="Number of edges (distance) in the propagation path from the source class to this target.">
+        <span class="val">1.52</span><span class="lbl">Avg Distance</span>
+      </div>
+      <div class="metric-pill health"
+           data-tooltip="Target health.">
+        <span class="val">0.58</span><span class="lbl">Health</span>
+      </div>
+    </div>
+    <span class="toggle-icon">▼</span>
+  </div>
+  <div class="card-body">
+    <h4 style="color:var(--text2);font-size:12px;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:8px;">Propagation Path</h4><div class="path-diagram">
+      <div class="path-node first">
+        <div class="node-circle" title="spring-cloud-alibaba-starters/spring-alibaba-nacos-config/src/test/java/com.alibaba.cloud.nacos/configdata/NacosConfigDataLoaderTest.java">NA</div>
+        <div class="node-label" title="spring-cloud-alibaba-starters/spring-alibaba-nacos-config/src/test/java/com.alibaba.cloud.nacos/configdata/NacosConfigDataLoaderTest.java">NacosConfigDataLoaderTest</div>
+        <div class="node-health" style="color:var(--green)"
+             data-tooltip="Structural health (1 − code smell score from CK metrics). 1.00 (green) = healthy; 0.00 (red) = many CK metrics in the bad zone.">⚕ 0.83</div>
+      </div>
+      <div class="path-edge">
+        <div class="edge-arrow"><span class="line"></span><span class="tip">&#9658;</span></div>
+        <div class="edge-tags">
+          <span class="edge-tag cochange"
+                data-tooltip="Co-change weight: number of times these two classes were committed together in the project history.">co-change: 1</span>
+            <span class="edge-tag coupling" data-tooltip="ATOMIC_PARAMETER_COUPLING" title="ATOMIC_PARAMETER_COUPLING">Atomic Parameter Coupling</span>
+            <span class="edge-tag coupling" data-tooltip="METHOD_INVOCATION_ATOMIC_PARAMETER" title="METHOD_INVOCATION_ATOMIC_PARAMETER">Method Invocation Atomic Parameter</span>
+            <span class="edge-tag coupling" data-tooltip="OBJECT_PARAMETER_CLASS" title="OBJECT_PARAMETER_CLASS">Object Parameter Class</span>
+            <span class="edge-tag coupling" data-tooltip="VARIABLE_CLASS_INSTANCE_CREATION" title="VARIABLE_CLASS_INSTANCE_CREATION">Variable Class Instance Creation</span>
+            <span class="edge-tag coupling" data-tooltip="VARIABLE_DECLARATION_STATEMENT" title="VARIABLE_DECLARATION_STATEMENT">Variable Declaration Statement</span>
+        </div>
+      </div>
+      <div class="path-node last">
+        <div class="node-circle" title="spring-cloud-alibaba-starters/spring-alibaba-nacos-config/src/main/java/com/alibaba/cloud/nacos/NacosConfigProperties.java">NA</div>
+        <div class="node-label" title="spring-cloud-alibaba-starters/spring-alibaba-nacos-config/src/main/java/com/alibaba/cloud/nacos/NacosConfigProperties.java">NacosConfigProperties</div>
+        <div class="node-health" style="color:var(--orange)"
+             data-tooltip="Structural health (1 − code smell score from CK metrics). 1.00 (green) = healthy; 0.00 (red) = many CK metrics in the bad zone.">⚕ 0.58</div>
+      </div>
+  </div>
+    <div style="margin-top:10px;font-size:11px;color:var(--text2);font-style:italic">Probabilistic entry — no causal path is available; avg_hop = 1.52 aggregates across runs.</div>
+    <div style="margin-top:16px;font-size:11px;color:var(--text2);">
+      <div><strong>Source:</strong> <code>spring-cloud-alibaba-starters/spring-alibaba-nacos-config/src/test/java/com.alibaba.cloud.nacos/configdata/NacosConfigDataLoaderTest.java</code></div>
+      <div><strong>Target:</strong> <code>spring-cloud-alibaba-starters/spring-alibaba-nacos-config/src/main/java/com/alibaba/cloud/nacos/NacosConfigProperties.java</code></div>
+    </div>
+    <div class="validation-section" id="validation_prob_0">
+      <h4>📋 Validation — Is this propagation correct?</h4>
+      <div class="vote-buttons">
+        <button class="vote-btn correct"   onclick="selectVote('prob_0','correct',this)">✅ Correct</button>
+        <button class="vote-btn incorrect" onclick="selectVote('prob_0','incorrect',this)">❌ Incorrect</button>
+        <button class="vote-btn unsure"    onclick="selectVote('prob_0','unsure',this)">❓ Unsure</button>
+      </div>
+      <textarea class="validation-comment" id="comment_prob_0"
+                placeholder="Optional comment (e.g., why you think it is incorrect)…"
+                oninput="saveComment('prob_0', this.value)"></textarea>
+      <div class="submit-row">
+        <button class="submit-btn" id="submitBtn_prob_0"
+                onclick="submitVote('prob_0')" disabled>Submit</button>
+        <span class="submit-status" id="status_prob_0"></span>
+      </div>
+      <input type="hidden" id="vote_prob_0"         value="">
+      <input type="hidden" id="meta_kind_prob_0"   value="prob">
+      <input type="hidden" id="meta_source_prob_0" value="spring-cloud-alibaba-starters/spring-alibaba-nacos-config/src/test/java/com.alibaba.cloud.nacos/configdata/NacosConfigDataLoaderTest.java">
+      <input type="hidden" id="meta_target_prob_0" value="spring-cloud-alibaba-starters/spring-alibaba-nacos-config/src/main/java/com/alibaba/cloud/nacos/NacosConfigProperties.java">
+      <input type="hidden" id="meta_rank_prob_0"   value="1">
+      <input type="hidden" id="meta_prob_prob_0"   value="0.796">
+      <input type="hidden" id="meta_hop_prob_0"    value="1.5238693467336684">
+    </div>
+  </div>
+</div><div class="card"
+     data-source="spring-cloud-alibaba-starters/spring-alibaba-nacos-config/src/test/java/com.alibaba.cloud.nacos/configdata/NacosConfigDataLoaderTest.java" data-target="spring-cloud-alibaba-starters/spring-alibaba-nacos-config/src/main/java/com/alibaba/cloud/nacos/NacosConfigManager.java"
+     data-prob="0.721" data-hop="1.653259361997226" data-rank="2">
+  <div class="card-header" onclick="this.parentElement.classList.toggle('open')">
+    <div class="source-target">
+      <span class="class-badge source" title="spring-cloud-alibaba-starters/spring-alibaba-nacos-config/src/test/java/com.alibaba.cloud.nacos/configdata/NacosConfigDataLoaderTest.java">NacosConfigDataLoaderTest</span>
+      <span class="arrow-icon">→</span>
+      <span class="class-badge target" title="spring-cloud-alibaba-starters/spring-alibaba-nacos-config/src/main/java/com/alibaba/cloud/nacos/NacosConfigManager.java">NacosConfigManager</span>
+    </div>
+    <div class="metrics-mini">
+      <div class="metric-pill rank-m" data-tooltip="Rank in the PROB list.">
+        <span class="val">#2</span><span class="lbl">Rank</span>
+      </div>
+      <div class="metric-pill prob" style="color:var(--red)"
+           data-tooltip="HyCPA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
+        <span class="val" style="color:var(--red)">0.7210</span>
+        <span class="lbl">Prob</span>
+      </div>
+      <div class="metric-pill hop"
+           data-tooltip="Number of edges (distance) in the propagation path from the source class to this target.">
+        <span class="val">1.65</span><span class="lbl">Avg Distance</span>
+      </div>
+      <div class="metric-pill health"
+           data-tooltip="Target health.">
+        <span class="val">0.90</span><span class="lbl">Health</span>
+      </div>
+    </div>
+    <span class="toggle-icon">▼</span>
+  </div>
+  <div class="card-body">
+    <h4 style="color:var(--text2);font-size:12px;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:8px;">Propagation Path</h4><div class="path-diagram">
+      <div class="path-node first">
+        <div class="node-circle" title="spring-cloud-alibaba-starters/spring-alibaba-nacos-config/src/test/java/com.alibaba.cloud.nacos/configdata/NacosConfigDataLoaderTest.java">NA</div>
+        <div class="node-label" title="spring-cloud-alibaba-starters/spring-alibaba-nacos-config/src/test/java/com.alibaba.cloud.nacos/configdata/NacosConfigDataLoaderTest.java">NacosConfigDataLoaderTest</div>
+        <div class="node-health" style="color:var(--green)"
+             data-tooltip="Structural health (1 − code smell score from CK metrics). 1.00 (green) = healthy; 0.00 (red) = many CK metrics in the bad zone.">⚕ 0.83</div>
+      </div>
+      <div class="path-edge">
+        <div class="edge-arrow"><span class="line"></span><span class="tip">&#9658;</span></div>
+        <div class="edge-tags">
+          <span class="edge-tag cochange"
+                data-tooltip="Co-change weight: number of times these two classes were committed together in the project history.">co-change: 1</span>
+            <span class="edge-tag coupling" data-tooltip="METHOD_INVOCATION_ATOMIC_PARAMETER" title="METHOD_INVOCATION_ATOMIC_PARAMETER">Method Invocation Atomic Parameter</span>
+            <span class="edge-tag coupling" data-tooltip="VARIABLE_DECLARATION_STATEMENT" title="VARIABLE_DECLARATION_STATEMENT">Variable Declaration Statement</span>
+        </div>
+      </div>
+      <div class="path-node last">
+        <div class="node-circle" title="spring-cloud-alibaba-starters/spring-alibaba-nacos-config/src/main/java/com/alibaba/cloud/nacos/NacosConfigManager.java">NA</div>
+        <div class="node-label" title="spring-cloud-alibaba-starters/spring-alibaba-nacos-config/src/main/java/com/alibaba/cloud/nacos/NacosConfigManager.java">NacosConfigManager</div>
+        <div class="node-health" style="color:var(--green)"
+             data-tooltip="Structural health (1 − code smell score from CK metrics). 1.00 (green) = healthy; 0.00 (red) = many CK metrics in the bad zone.">⚕ 0.90</div>
+      </div>
+  </div>
+    <div style="margin-top:10px;font-size:11px;color:var(--text2);font-style:italic">Probabilistic entry — no causal path is available; avg_hop = 1.65 aggregates across runs.</div>
+    <div style="margin-top:16px;font-size:11px;color:var(--text2);">
+      <div><strong>Source:</strong> <code>spring-cloud-alibaba-starters/spring-alibaba-nacos-config/src/test/java/com.alibaba.cloud.nacos/configdata/NacosConfigDataLoaderTest.java</code></div>
+      <div><strong>Target:</strong> <code>spring-cloud-alibaba-starters/spring-alibaba-nacos-config/src/main/java/com/alibaba/cloud/nacos/NacosConfigManager.java</code></div>
+    </div>
+    <div class="validation-section" id="validation_prob_1">
+      <h4>📋 Validation — Is this propagation correct?</h4>
+      <div class="vote-buttons">
+        <button class="vote-btn correct"   onclick="selectVote('prob_1','correct',this)">✅ Correct</button>
+        <button class="vote-btn incorrect" onclick="selectVote('prob_1','incorrect',this)">❌ Incorrect</button>
+        <button class="vote-btn unsure"    onclick="selectVote('prob_1','unsure',this)">❓ Unsure</button>
+      </div>
+      <textarea class="validation-comment" id="comment_prob_1"
+                placeholder="Optional comment (e.g., why you think it is incorrect)…"
+                oninput="saveComment('prob_1', this.value)"></textarea>
+      <div class="submit-row">
+        <button class="submit-btn" id="submitBtn_prob_1"
+                onclick="submitVote('prob_1')" disabled>Submit</button>
+        <span class="submit-status" id="status_prob_1"></span>
+      </div>
+      <input type="hidden" id="vote_prob_1"         value="">
+      <input type="hidden" id="meta_kind_prob_1"   value="prob">
+      <input type="hidden" id="meta_source_prob_1" value="spring-cloud-alibaba-starters/spring-alibaba-nacos-config/src/test/java/com.alibaba.cloud.nacos/configdata/NacosConfigDataLoaderTest.java">
+      <input type="hidden" id="meta_target_prob_1" value="spring-cloud-alibaba-starters/spring-alibaba-nacos-config/src/main/java/com/alibaba/cloud/nacos/NacosConfigManager.java">
+      <input type="hidden" id="meta_rank_prob_1"   value="2">
+      <input type="hidden" id="meta_prob_prob_1"   value="0.721">
+      <input type="hidden" id="meta_hop_prob_1"    value="1.653259361997226">
+    </div>
+  </div>
+</div><div class="card"
+     data-source="spring-cloud-alibaba-starters/spring-alibaba-nacos-config/src/test/java/com.alibaba.cloud.nacos/configdata/NacosConfigDataLoaderTest.java" data-target="spring-cloud-alibaba-starters/spring-alibaba-nacos-config/src/main/java/com/alibaba/cloud/nacos/configdata/NacosConfigDataLoader.java"
+     data-prob="0.594" data-hop="1.473063973063973" data-rank="3">
+  <div class="card-header" onclick="this.parentElement.classList.toggle('open')">
+    <div class="source-target">
+      <span class="class-badge source" title="spring-cloud-alibaba-starters/spring-alibaba-nacos-config/src/test/java/com.alibaba.cloud.nacos/configdata/NacosConfigDataLoaderTest.java">NacosConfigDataLoaderTest</span>
+      <span class="arrow-icon">→</span>
+      <span class="class-badge target" title="spring-cloud-alibaba-starters/spring-alibaba-nacos-config/src/main/java/com/alibaba/cloud/nacos/configdata/NacosConfigDataLoader.java">NacosConfigDataLoader</span>
+    </div>
+    <div class="metrics-mini">
+      <div class="metric-pill rank-m" data-tooltip="Rank in the PROB list.">
+        <span class="val">#3</span><span class="lbl">Rank</span>
+      </div>
+      <div class="metric-pill prob" style="color:var(--red)"
+           data-tooltip="HyCPA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
+        <span class="val" style="color:var(--red)">0.5940</span>
+        <span class="lbl">Prob</span>
+      </div>
+      <div class="metric-pill hop"
+           data-tooltip="Number of edges (distance) in the propagation path from the source class to this target.">
+        <span class="val">1.47</span><span class="lbl">Avg Distance</span>
+      </div>
+      <div class="metric-pill health"
+           data-tooltip="Target health.">
+        <span class="val">0.83</span><span class="lbl">Health</span>
+      </div>
+    </div>
+    <span class="toggle-icon">▼</span>
+  </div>
+  <div class="card-body">
+    <h4 style="color:var(--text2);font-size:12px;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:8px;">Propagation Path</h4><div class="path-diagram">
+      <div class="path-node first">
+        <div class="node-circle" title="spring-cloud-alibaba-starters/spring-alibaba-nacos-config/src/test/java/com.alibaba.cloud.nacos/configdata/NacosConfigDataLoaderTest.java">NA</div>
+        <div class="node-label" title="spring-cloud-alibaba-starters/spring-alibaba-nacos-config/src/test/java/com.alibaba.cloud.nacos/configdata/NacosConfigDataLoaderTest.java">NacosConfigDataLoaderTest</div>
+        <div class="node-health" style="color:var(--green)"
+             data-tooltip="Structural health (1 − code smell score from CK metrics). 1.00 (green) = healthy; 0.00 (red) = many CK metrics in the bad zone.">⚕ 0.83</div>
+      </div>
+      <div class="path-edge">
+        <div class="edge-arrow"><span class="line"></span><span class="tip">&#9658;</span></div>
+        <div class="edge-tags">
+          <span class="edge-tag cochange"
+                data-tooltip="Co-change weight: number of times these two classes were committed together in the project history.">co-change: 1</span>
+            <span class="edge-tag coupling" data-tooltip="METHOD_INVOCATION_OBJECT_PARAMETER" title="METHOD_INVOCATION_OBJECT_PARAMETER">Method Invocation Object Parameter</span>
+            <span class="edge-tag coupling" data-tooltip="OBJECT_PARAMETER_COUPLING" title="OBJECT_PARAMETER_COUPLING">Object Parameter Coupling</span>
+        </div>
+      </div>
+      <div class="path-node last">
+        <div class="node-circle" title="spring-cloud-alibaba-starters/spring-alibaba-nacos-config/src/main/java/com/alibaba/cloud/nacos/configdata/NacosConfigDataLoader.java">NA</div>
+        <div class="node-label" title="spring-cloud-alibaba-starters/spring-alibaba-nacos-config/src/main/java/com/alibaba/cloud/nacos/configdata/NacosConfigDataLoader.java">NacosConfigDataLoader</div>
+        <div class="node-health" style="color:var(--green)"
+             data-tooltip="Structural health (1 − code smell score from CK metrics). 1.00 (green) = healthy; 0.00 (red) = many CK metrics in the bad zone.">⚕ 0.83</div>
+      </div>
+  </div>
+    <div style="margin-top:10px;font-size:11px;color:var(--text2);font-style:italic">Probabilistic entry — no causal path is available; avg_hop = 1.47 aggregates across runs.</div>
+    <div style="margin-top:16px;font-size:11px;color:var(--text2);">
+      <div><strong>Source:</strong> <code>spring-cloud-alibaba-starters/spring-alibaba-nacos-config/src/test/java/com.alibaba.cloud.nacos/configdata/NacosConfigDataLoaderTest.java</code></div>
+      <div><strong>Target:</strong> <code>spring-cloud-alibaba-starters/spring-alibaba-nacos-config/src/main/java/com/alibaba/cloud/nacos/configdata/NacosConfigDataLoader.java</code></div>
+    </div>
+    <div class="validation-section" id="validation_prob_2">
+      <h4>📋 Validation — Is this propagation correct?</h4>
+      <div class="vote-buttons">
+        <button class="vote-btn correct"   onclick="selectVote('prob_2','correct',this)">✅ Correct</button>
+        <button class="vote-btn incorrect" onclick="selectVote('prob_2','incorrect',this)">❌ Incorrect</button>
+        <button class="vote-btn unsure"    onclick="selectVote('prob_2','unsure',this)">❓ Unsure</button>
+      </div>
+      <textarea class="validation-comment" id="comment_prob_2"
+                placeholder="Optional comment (e.g., why you think it is incorrect)…"
+                oninput="saveComment('prob_2', this.value)"></textarea>
+      <div class="submit-row">
+        <button class="submit-btn" id="submitBtn_prob_2"
+                onclick="submitVote('prob_2')" disabled>Submit</button>
+        <span class="submit-status" id="status_prob_2"></span>
+      </div>
+      <input type="hidden" id="vote_prob_2"         value="">
+      <input type="hidden" id="meta_kind_prob_2"   value="prob">
+      <input type="hidden" id="meta_source_prob_2" value="spring-cloud-alibaba-starters/spring-alibaba-nacos-config/src/test/java/com.alibaba.cloud.nacos/configdata/NacosConfigDataLoaderTest.java">
+      <input type="hidden" id="meta_target_prob_2" value="spring-cloud-alibaba-starters/spring-alibaba-nacos-config/src/main/java/com/alibaba/cloud/nacos/configdata/NacosConfigDataLoader.java">
+      <input type="hidden" id="meta_rank_prob_2"   value="3">
+      <input type="hidden" id="meta_prob_prob_2"   value="0.594">
+      <input type="hidden" id="meta_hop_prob_2"    value="1.473063973063973">
+    </div>
+  </div>
+</div><div class="card"
+     data-source="spring-cloud-alibaba-starters/spring-alibaba-nacos-config/src/test/java/com.alibaba.cloud.nacos/configdata/NacosConfigDataLoaderTest.java" data-target="spring-cloud-alibaba-starters/spring-alibaba-nacos-config/src/main/java/com/alibaba/cloud/nacos/configdata/NacosConfigDataResource.java"
+     data-prob="0.514" data-hop="1.4785992217898833" data-rank="4">
+  <div class="card-header" onclick="this.parentElement.classList.toggle('open')">
+    <div class="source-target">
+      <span class="class-badge source" title="spring-cloud-alibaba-starters/spring-alibaba-nacos-config/src/test/java/com.alibaba.cloud.nacos/configdata/NacosConfigDataLoaderTest.java">NacosConfigDataLoaderTest</span>
+      <span class="arrow-icon">→</span>
+      <span class="class-badge target" title="spring-cloud-alibaba-starters/spring-alibaba-nacos-config/src/main/java/com/alibaba/cloud/nacos/configdata/NacosConfigDataResource.java">NacosConfigDataResource</span>
+    </div>
+    <div class="metrics-mini">
+      <div class="metric-pill rank-m" data-tooltip="Rank in the PROB list.">
+        <span class="val">#4</span><span class="lbl">Rank</span>
+      </div>
+      <div class="metric-pill prob" style="color:var(--red)"
+           data-tooltip="HyCPA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
+        <span class="val" style="color:var(--red)">0.5140</span>
+        <span class="lbl">Prob</span>
+      </div>
+      <div class="metric-pill hop"
+           data-tooltip="Number of edges (distance) in the propagation path from the source class to this target.">
+        <span class="val">1.48</span><span class="lbl">Avg Distance</span>
+      </div>
+      <div class="metric-pill health"
+           data-tooltip="Target health.">
+        <span class="val">0.87</span><span class="lbl">Health</span>
+      </div>
+    </div>
+    <span class="toggle-icon">▼</span>
+  </div>
+  <div class="card-body">
+    <h4 style="color:var(--text2);font-size:12px;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:8px;">Propagation Path</h4><div class="path-diagram">
+      <div class="path-node first">
+        <div class="node-circle" title="spring-cloud-alibaba-starters/spring-alibaba-nacos-config/src/test/java/com.alibaba.cloud.nacos/configdata/NacosConfigDataLoaderTest.java">NA</div>
+        <div class="node-label" title="spring-cloud-alibaba-starters/spring-alibaba-nacos-config/src/test/java/com.alibaba.cloud.nacos/configdata/NacosConfigDataLoaderTest.java">NacosConfigDataLoaderTest</div>
+        <div class="node-health" style="color:var(--green)"
+             data-tooltip="Structural health (1 − code smell score from CK metrics). 1.00 (green) = healthy; 0.00 (red) = many CK metrics in the bad zone.">⚕ 0.83</div>
+      </div>
+      <div class="path-edge">
+        <div class="edge-arrow"><span class="line"></span><span class="tip">&#9658;</span></div>
+        <div class="edge-tags">
+          <span class="edge-tag cochange"
+                data-tooltip="Co-change weight: number of times these two classes were committed together in the project history.">co-change: 1</span>
+            <span class="edge-tag coupling" data-tooltip="OBJECT_PARAMETER_COUPLING" title="OBJECT_PARAMETER_COUPLING">Object Parameter Coupling</span>
+            <span class="edge-tag coupling" data-tooltip="VARIABLE_CLASS_INSTANCE_CREATION" title="VARIABLE_CLASS_INSTANCE_CREATION">Variable Class Instance Creation</span>
+            <span class="edge-tag coupling" data-tooltip="VARIABLE_DECLARATION_STATEMENT" title="VARIABLE_DECLARATION_STATEMENT">Variable Declaration Statement</span>
+        </div>
+      </div>
+      <div class="path-node last">
+        <div class="node-circle" title="spring-cloud-alibaba-starters/spring-alibaba-nacos-config/src/main/java/com/alibaba/cloud/nacos/configdata/NacosConfigDataResource.java">NA</div>
+        <div class="node-label" title="spring-cloud-alibaba-starters/spring-alibaba-nacos-config/src/main/java/com/alibaba/cloud/nacos/configdata/NacosConfigDataResource.java">NacosConfigDataResource</div>
+        <div class="node-health" style="color:var(--green)"
+             data-tooltip="Structural health (1 − code smell score from CK metrics). 1.00 (green) = healthy; 0.00 (red) = many CK metrics in the bad zone.">⚕ 0.87</div>
+      </div>
+  </div>
+    <div style="margin-top:10px;font-size:11px;color:var(--text2);font-style:italic">Probabilistic entry — no causal path is available; avg_hop = 1.48 aggregates across runs.</div>
+    <div style="margin-top:16px;font-size:11px;color:var(--text2);">
+      <div><strong>Source:</strong> <code>spring-cloud-alibaba-starters/spring-alibaba-nacos-config/src/test/java/com.alibaba.cloud.nacos/configdata/NacosConfigDataLoaderTest.java</code></div>
+      <div><strong>Target:</strong> <code>spring-cloud-alibaba-starters/spring-alibaba-nacos-config/src/main/java/com/alibaba/cloud/nacos/configdata/NacosConfigDataResource.java</code></div>
+    </div>
+    <div class="validation-section" id="validation_prob_3">
+      <h4>📋 Validation — Is this propagation correct?</h4>
+      <div class="vote-buttons">
+        <button class="vote-btn correct"   onclick="selectVote('prob_3','correct',this)">✅ Correct</button>
+        <button class="vote-btn incorrect" onclick="selectVote('prob_3','incorrect',this)">❌ Incorrect</button>
+        <button class="vote-btn unsure"    onclick="selectVote('prob_3','unsure',this)">❓ Unsure</button>
+      </div>
+      <textarea class="validation-comment" id="comment_prob_3"
+                placeholder="Optional comment (e.g., why you think it is incorrect)…"
+                oninput="saveComment('prob_3', this.value)"></textarea>
+      <div class="submit-row">
+        <button class="submit-btn" id="submitBtn_prob_3"
+                onclick="submitVote('prob_3')" disabled>Submit</button>
+        <span class="submit-status" id="status_prob_3"></span>
+      </div>
+      <input type="hidden" id="vote_prob_3"         value="">
+      <input type="hidden" id="meta_kind_prob_3"   value="prob">
+      <input type="hidden" id="meta_source_prob_3" value="spring-cloud-alibaba-starters/spring-alibaba-nacos-config/src/test/java/com.alibaba.cloud.nacos/configdata/NacosConfigDataLoaderTest.java">
+      <input type="hidden" id="meta_target_prob_3" value="spring-cloud-alibaba-starters/spring-alibaba-nacos-config/src/main/java/com/alibaba/cloud/nacos/configdata/NacosConfigDataResource.java">
+      <input type="hidden" id="meta_rank_prob_3"   value="4">
+      <input type="hidden" id="meta_prob_prob_3"   value="0.514">
+      <input type="hidden" id="meta_hop_prob_3"    value="1.4785992217898833">
+    </div>
+  </div>
+</div><div class="card"
+     data-source="spring-cloud-alibaba-starters/spring-alibaba-nacos-config/src/test/java/com.alibaba.cloud.nacos/configdata/NacosConfigDataLoaderTest.java" data-target="spring-cloud-alibaba-starters/spring-alibaba-nacos-config/src/main/java/com/alibaba/cloud/nacos/refresh/NacosSnapshotConfigManager.java"
+     data-prob="0.51" data-hop="1.6509803921568627" data-rank="5">
+  <div class="card-header" onclick="this.parentElement.classList.toggle('open')">
+    <div class="source-target">
+      <span class="class-badge source" title="spring-cloud-alibaba-starters/spring-alibaba-nacos-config/src/test/java/com.alibaba.cloud.nacos/configdata/NacosConfigDataLoaderTest.java">NacosConfigDataLoaderTest</span>
+      <span class="arrow-icon">→</span>
+      <span class="class-badge target" title="spring-cloud-alibaba-starters/spring-alibaba-nacos-config/src/main/java/com/alibaba/cloud/nacos/refresh/NacosSnapshotConfigManager.java">NacosSnapshotConfigManager</span>
+    </div>
+    <div class="metrics-mini">
+      <div class="metric-pill rank-m" data-tooltip="Rank in the PROB list.">
+        <span class="val">#5</span><span class="lbl">Rank</span>
+      </div>
+      <div class="metric-pill prob" style="color:var(--red)"
+           data-tooltip="HyCPA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
+        <span class="val" style="color:var(--red)">0.5100</span>
+        <span class="lbl">Prob</span>
+      </div>
+      <div class="metric-pill hop"
+           data-tooltip="Number of edges (distance) in the propagation path from the source class to this target.">
+        <span class="val">1.65</span><span class="lbl">Avg Distance</span>
+      </div>
+      <div class="metric-pill health"
+           data-tooltip="Target health.">
+        <span class="val">0.88</span><span class="lbl">Health</span>
+      </div>
+    </div>
+    <span class="toggle-icon">▼</span>
+  </div>
+  <div class="card-body">
+    <h4 style="color:var(--text2);font-size:12px;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:8px;">Propagation Path</h4><div class="path-diagram">
+      <div class="path-node first">
+        <div class="node-circle" title="spring-cloud-alibaba-starters/spring-alibaba-nacos-config/src/test/java/com.alibaba.cloud.nacos/configdata/NacosConfigDataLoaderTest.java">NA</div>
+        <div class="node-label" title="spring-cloud-alibaba-starters/spring-alibaba-nacos-config/src/test/java/com.alibaba.cloud.nacos/configdata/NacosConfigDataLoaderTest.java">NacosConfigDataLoaderTest</div>
+        <div class="node-health" style="color:var(--green)"
+             data-tooltip="Structural health (1 − code smell score from CK metrics). 1.00 (green) = healthy; 0.00 (red) = many CK metrics in the bad zone.">⚕ 0.83</div>
+      </div>
+      <div class="path-edge">
+        <div class="edge-arrow"><span class="line"></span><span class="tip">&#9658;</span></div>
+        <div class="edge-tags">
+          <span class="edge-tag cochange"
+                data-tooltip="Co-change weight: number of times these two classes were committed together in the project history.">co-change: 1</span>
+            <span class="edge-tag coupling" data-tooltip="METHOD_INVOCATION_OBJECT_PARAMETER" title="METHOD_INVOCATION_OBJECT_PARAMETER">Method Invocation Object Parameter</span>
+        </div>
+      </div>
+      <div class="path-node last">
+        <div class="node-circle" title="spring-cloud-alibaba-starters/spring-alibaba-nacos-config/src/main/java/com/alibaba/cloud/nacos/refresh/NacosSnapshotConfigManager.java">NA</div>
+        <div class="node-label" title="spring-cloud-alibaba-starters/spring-alibaba-nacos-config/src/main/java/com/alibaba/cloud/nacos/refresh/NacosSnapshotConfigManager.java">NacosSnapshotConfigManager</div>
+        <div class="node-health" style="color:var(--green)"
+             data-tooltip="Structural health (1 − code smell score from CK metrics). 1.00 (green) = healthy; 0.00 (red) = many CK metrics in the bad zone.">⚕ 0.88</div>
+      </div>
+  </div>
+    <div style="margin-top:10px;font-size:11px;color:var(--text2);font-style:italic">Probabilistic entry — no causal path is available; avg_hop = 1.65 aggregates across runs.</div>
+    <div style="margin-top:16px;font-size:11px;color:var(--text2);">
+      <div><strong>Source:</strong> <code>spring-cloud-alibaba-starters/spring-alibaba-nacos-config/src/test/java/com.alibaba.cloud.nacos/configdata/NacosConfigDataLoaderTest.java</code></div>
+      <div><strong>Target:</strong> <code>spring-cloud-alibaba-starters/spring-alibaba-nacos-config/src/main/java/com/alibaba/cloud/nacos/refresh/NacosSnapshotConfigManager.java</code></div>
+    </div>
+    <div class="validation-section" id="validation_prob_4">
+      <h4>📋 Validation — Is this propagation correct?</h4>
+      <div class="vote-buttons">
+        <button class="vote-btn correct"   onclick="selectVote('prob_4','correct',this)">✅ Correct</button>
+        <button class="vote-btn incorrect" onclick="selectVote('prob_4','incorrect',this)">❌ Incorrect</button>
+        <button class="vote-btn unsure"    onclick="selectVote('prob_4','unsure',this)">❓ Unsure</button>
+      </div>
+      <textarea class="validation-comment" id="comment_prob_4"
+                placeholder="Optional comment (e.g., why you think it is incorrect)…"
+                oninput="saveComment('prob_4', this.value)"></textarea>
+      <div class="submit-row">
+        <button class="submit-btn" id="submitBtn_prob_4"
+                onclick="submitVote('prob_4')" disabled>Submit</button>
+        <span class="submit-status" id="status_prob_4"></span>
+      </div>
+      <input type="hidden" id="vote_prob_4"         value="">
+      <input type="hidden" id="meta_kind_prob_4"   value="prob">
+      <input type="hidden" id="meta_source_prob_4" value="spring-cloud-alibaba-starters/spring-alibaba-nacos-config/src/test/java/com.alibaba.cloud.nacos/configdata/NacosConfigDataLoaderTest.java">
+      <input type="hidden" id="meta_target_prob_4" value="spring-cloud-alibaba-starters/spring-alibaba-nacos-config/src/main/java/com/alibaba/cloud/nacos/refresh/NacosSnapshotConfigManager.java">
+      <input type="hidden" id="meta_rank_prob_4"   value="5">
+      <input type="hidden" id="meta_prob_prob_4"   value="0.51">
+      <input type="hidden" id="meta_hop_prob_4"    value="1.6509803921568627">
+    </div>
+  </div>
+</div><div class="card"
+     data-source="spring-cloud-alibaba-starters/spring-alibaba-nacos-config/src/test/java/com.alibaba.cloud.nacos/configdata/NacosConfigDataLoaderTest.java" data-target="spring-cloud-alibaba-starters/spring-alibaba-nacos-config/src/main/java/com/alibaba/cloud/nacos/client/NacosPropertySource.java"
+     data-prob="0.433" data-hop="2.699769053117783" data-rank="6">
+  <div class="card-header" onclick="this.parentElement.classList.toggle('open')">
+    <div class="source-target">
+      <span class="class-badge source" title="spring-cloud-alibaba-starters/spring-alibaba-nacos-config/src/test/java/com.alibaba.cloud.nacos/configdata/NacosConfigDataLoaderTest.java">NacosConfigDataLoaderTest</span>
+      <span class="arrow-icon">→</span>
+      <span class="class-badge target" title="spring-cloud-alibaba-starters/spring-alibaba-nacos-config/src/main/java/com/alibaba/cloud/nacos/client/NacosPropertySource.java">NacosPropertySource</span>
+    </div>
+    <div class="metrics-mini">
+      <div class="metric-pill rank-m" data-tooltip="Rank in the PROB list.">
+        <span class="val">#6</span><span class="lbl">Rank</span>
+      </div>
+      <div class="metric-pill prob" style="color:var(--orange)"
+           data-tooltip="HyCPA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
+        <span class="val" style="color:var(--orange)">0.4330</span>
+        <span class="lbl">Prob</span>
+      </div>
+      <div class="metric-pill hop"
+           data-tooltip="Number of edges (distance) in the propagation path from the source class to this target.">
+        <span class="val">2.70</span><span class="lbl">Avg Distance</span>
+      </div>
+      <div class="metric-pill health"
+           data-tooltip="Target health.">
+        <span class="val">0.90</span><span class="lbl">Health</span>
+      </div>
+    </div>
+    <span class="toggle-icon">▼</span>
+  </div>
+  <div class="card-body">
+    <h4 style="color:var(--text2);font-size:12px;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:8px;">Propagation Path</h4><div class="path-diagram">
+      <div class="path-node first">
+        <div class="node-circle" title="spring-cloud-alibaba-starters/spring-alibaba-nacos-config/src/test/java/com.alibaba.cloud.nacos/configdata/NacosConfigDataLoaderTest.java">NA</div>
+        <div class="node-label" title="spring-cloud-alibaba-starters/spring-alibaba-nacos-config/src/test/java/com.alibaba.cloud.nacos/configdata/NacosConfigDataLoaderTest.java">NacosConfigDataLoaderTest</div>
+        <div class="node-health" style="color:var(--green)"
+             data-tooltip="Structural health (1 − code smell score from CK metrics). 1.00 (green) = healthy; 0.00 (red) = many CK metrics in the bad zone.">⚕ 0.83</div>
+      </div>
+      <div class="path-edge">
+        <div class="edge-arrow"><span class="line"></span><span class="tip">&#9658;</span></div>
+        <div class="edge-tags">
+          <span class="edge-tag none" data-tooltip="No edge data found in the featured graph.">no data</span>
+        </div>
+      </div>
+      <div class="path-node last">
+        <div class="node-circle" title="spring-cloud-alibaba-starters/spring-alibaba-nacos-config/src/main/java/com/alibaba/cloud/nacos/client/NacosPropertySource.java">NA</div>
+        <div class="node-label" title="spring-cloud-alibaba-starters/spring-alibaba-nacos-config/src/main/java/com/alibaba/cloud/nacos/client/NacosPropertySource.java">NacosPropertySource</div>
+        <div class="node-health" style="color:var(--green)"
+             data-tooltip="Structural health (1 − code smell score from CK metrics). 1.00 (green) = healthy; 0.00 (red) = many CK metrics in the bad zone.">⚕ 0.90</div>
+      </div>
+  </div>
+    <div style="margin-top:10px;font-size:11px;color:var(--text2);font-style:italic">Probabilistic entry — no causal path is available; avg_hop = 2.70 aggregates across runs.</div>
+    <div style="margin-top:16px;font-size:11px;color:var(--text2);">
+      <div><strong>Source:</strong> <code>spring-cloud-alibaba-starters/spring-alibaba-nacos-config/src/test/java/com.alibaba.cloud.nacos/configdata/NacosConfigDataLoaderTest.java</code></div>
+      <div><strong>Target:</strong> <code>spring-cloud-alibaba-starters/spring-alibaba-nacos-config/src/main/java/com/alibaba/cloud/nacos/client/NacosPropertySource.java</code></div>
+    </div>
+    <div class="validation-section" id="validation_prob_5">
+      <h4>📋 Validation — Is this propagation correct?</h4>
+      <div class="vote-buttons">
+        <button class="vote-btn correct"   onclick="selectVote('prob_5','correct',this)">✅ Correct</button>
+        <button class="vote-btn incorrect" onclick="selectVote('prob_5','incorrect',this)">❌ Incorrect</button>
+        <button class="vote-btn unsure"    onclick="selectVote('prob_5','unsure',this)">❓ Unsure</button>
+      </div>
+      <textarea class="validation-comment" id="comment_prob_5"
+                placeholder="Optional comment (e.g., why you think it is incorrect)…"
+                oninput="saveComment('prob_5', this.value)"></textarea>
+      <div class="submit-row">
+        <button class="submit-btn" id="submitBtn_prob_5"
+                onclick="submitVote('prob_5')" disabled>Submit</button>
+        <span class="submit-status" id="status_prob_5"></span>
+      </div>
+      <input type="hidden" id="vote_prob_5"         value="">
+      <input type="hidden" id="meta_kind_prob_5"   value="prob">
+      <input type="hidden" id="meta_source_prob_5" value="spring-cloud-alibaba-starters/spring-alibaba-nacos-config/src/test/java/com.alibaba.cloud.nacos/configdata/NacosConfigDataLoaderTest.java">
+      <input type="hidden" id="meta_target_prob_5" value="spring-cloud-alibaba-starters/spring-alibaba-nacos-config/src/main/java/com/alibaba/cloud/nacos/client/NacosPropertySource.java">
+      <input type="hidden" id="meta_rank_prob_5"   value="6">
+      <input type="hidden" id="meta_prob_prob_5"   value="0.433">
+      <input type="hidden" id="meta_hop_prob_5"    value="2.699769053117783">
+    </div>
+  </div>
+</div><div class="card"
+     data-source="spring-cloud-alibaba-starters/spring-alibaba-nacos-config/src/test/java/com.alibaba.cloud.nacos/configdata/NacosConfigDataLoaderTest.java" data-target="spring-cloud-alibaba-starters/spring-alibaba-nacos-config/src/main/java/com/alibaba/cloud/nacos/refresh/NacosContextRefresher.java"
+     data-prob="0.32" data-hop="2.321875" data-rank="7">
+  <div class="card-header" onclick="this.parentElement.classList.toggle('open')">
+    <div class="source-target">
+      <span class="class-badge source" title="spring-cloud-alibaba-starters/spring-alibaba-nacos-config/src/test/java/com.alibaba.cloud.nacos/configdata/NacosConfigDataLoaderTest.java">NacosConfigDataLoaderTest</span>
+      <span class="arrow-icon">→</span>
+      <span class="class-badge target" title="spring-cloud-alibaba-starters/spring-alibaba-nacos-config/src/main/java/com/alibaba/cloud/nacos/refresh/NacosContextRefresher.java">NacosContextRefresher</span>
+    </div>
+    <div class="metrics-mini">
+      <div class="metric-pill rank-m" data-tooltip="Rank in the PROB list.">
+        <span class="val">#7</span><span class="lbl">Rank</span>
+      </div>
+      <div class="metric-pill prob" style="color:var(--orange)"
+           data-tooltip="HyCPA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
+        <span class="val" style="color:var(--orange)">0.3200</span>
+        <span class="lbl">Prob</span>
+      </div>
+      <div class="metric-pill hop"
+           data-tooltip="Number of edges (distance) in the propagation path from the source class to this target.">
+        <span class="val">2.32</span><span class="lbl">Avg Distance</span>
+      </div>
+      <div class="metric-pill health"
+           data-tooltip="Target health.">
+        <span class="val">0.87</span><span class="lbl">Health</span>
+      </div>
+    </div>
+    <span class="toggle-icon">▼</span>
+  </div>
+  <div class="card-body">
+    <h4 style="color:var(--text2);font-size:12px;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:8px;">Propagation Path</h4><div class="path-diagram">
+      <div class="path-node first">
+        <div class="node-circle" title="spring-cloud-alibaba-starters/spring-alibaba-nacos-config/src/test/java/com.alibaba.cloud.nacos/configdata/NacosConfigDataLoaderTest.java">NA</div>
+        <div class="node-label" title="spring-cloud-alibaba-starters/spring-alibaba-nacos-config/src/test/java/com.alibaba.cloud.nacos/configdata/NacosConfigDataLoaderTest.java">NacosConfigDataLoaderTest</div>
+        <div class="node-health" style="color:var(--green)"
+             data-tooltip="Structural health (1 − code smell score from CK metrics). 1.00 (green) = healthy; 0.00 (red) = many CK metrics in the bad zone.">⚕ 0.83</div>
+      </div>
+      <div class="path-edge">
+        <div class="edge-arrow"><span class="line"></span><span class="tip">&#9658;</span></div>
+        <div class="edge-tags">
+          <span class="edge-tag cochange"
+                data-tooltip="Co-change weight: number of times these two classes were committed together in the project history.">co-change: 1</span>
+        </div>
+      </div>
+      <div class="path-node last">
+        <div class="node-circle" title="spring-cloud-alibaba-starters/spring-alibaba-nacos-config/src/main/java/com/alibaba/cloud/nacos/refresh/NacosContextRefresher.java">NA</div>
+        <div class="node-label" title="spring-cloud-alibaba-starters/spring-alibaba-nacos-config/src/main/java/com/alibaba/cloud/nacos/refresh/NacosContextRefresher.java">NacosContextRefresher</div>
+        <div class="node-health" style="color:var(--green)"
+             data-tooltip="Structural health (1 − code smell score from CK metrics). 1.00 (green) = healthy; 0.00 (red) = many CK metrics in the bad zone.">⚕ 0.87</div>
+      </div>
+  </div>
+    <div style="margin-top:10px;font-size:11px;color:var(--text2);font-style:italic">Probabilistic entry — no causal path is available; avg_hop = 2.32 aggregates across runs.</div>
+    <div style="margin-top:16px;font-size:11px;color:var(--text2);">
+      <div><strong>Source:</strong> <code>spring-cloud-alibaba-starters/spring-alibaba-nacos-config/src/test/java/com.alibaba.cloud.nacos/configdata/NacosConfigDataLoaderTest.java</code></div>
+      <div><strong>Target:</strong> <code>spring-cloud-alibaba-starters/spring-alibaba-nacos-config/src/main/java/com/alibaba/cloud/nacos/refresh/NacosContextRefresher.java</code></div>
+    </div>
+    <div class="validation-section" id="validation_prob_6">
+      <h4>📋 Validation — Is this propagation correct?</h4>
+      <div class="vote-buttons">
+        <button class="vote-btn correct"   onclick="selectVote('prob_6','correct',this)">✅ Correct</button>
+        <button class="vote-btn incorrect" onclick="selectVote('prob_6','incorrect',this)">❌ Incorrect</button>
+        <button class="vote-btn unsure"    onclick="selectVote('prob_6','unsure',this)">❓ Unsure</button>
+      </div>
+      <textarea class="validation-comment" id="comment_prob_6"
+                placeholder="Optional comment (e.g., why you think it is incorrect)…"
+                oninput="saveComment('prob_6', this.value)"></textarea>
+      <div class="submit-row">
+        <button class="submit-btn" id="submitBtn_prob_6"
+                onclick="submitVote('prob_6')" disabled>Submit</button>
+        <span class="submit-status" id="status_prob_6"></span>
+      </div>
+      <input type="hidden" id="vote_prob_6"         value="">
+      <input type="hidden" id="meta_kind_prob_6"   value="prob">
+      <input type="hidden" id="meta_source_prob_6" value="spring-cloud-alibaba-starters/spring-alibaba-nacos-config/src/test/java/com.alibaba.cloud.nacos/configdata/NacosConfigDataLoaderTest.java">
+      <input type="hidden" id="meta_target_prob_6" value="spring-cloud-alibaba-starters/spring-alibaba-nacos-config/src/main/java/com/alibaba/cloud/nacos/refresh/NacosContextRefresher.java">
+      <input type="hidden" id="meta_rank_prob_6"   value="7">
+      <input type="hidden" id="meta_prob_prob_6"   value="0.32">
+      <input type="hidden" id="meta_hop_prob_6"    value="2.321875">
+    </div>
+  </div>
+</div><div class="card"
+     data-source="spring-cloud-alibaba-starters/spring-alibaba-nacos-config/src/test/java/com.alibaba.cloud.nacos/configdata/NacosConfigDataLoaderTest.java" data-target="spring-cloud-alibaba-starters/spring-alibaba-nacos-config/src/main/java/com/alibaba/cloud/nacos/client/NacosPropertySourceBuilder.java"
+     data-prob="0.296" data-hop="2.689189189189189" data-rank="8">
+  <div class="card-header" onclick="this.parentElement.classList.toggle('open')">
+    <div class="source-target">
+      <span class="class-badge source" title="spring-cloud-alibaba-starters/spring-alibaba-nacos-config/src/test/java/com.alibaba.cloud.nacos/configdata/NacosConfigDataLoaderTest.java">NacosConfigDataLoaderTest</span>
+      <span class="arrow-icon">→</span>
+      <span class="class-badge target" title="spring-cloud-alibaba-starters/spring-alibaba-nacos-config/src/main/java/com/alibaba/cloud/nacos/client/NacosPropertySourceBuilder.java">NacosPropertySourceBuilder</span>
+    </div>
+    <div class="metrics-mini">
+      <div class="metric-pill rank-m" data-tooltip="Rank in the PROB list.">
+        <span class="val">#8</span><span class="lbl">Rank</span>
+      </div>
+      <div class="metric-pill prob" style="color:var(--green)"
+           data-tooltip="HyCPA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
+        <span class="val" style="color:var(--green)">0.2960</span>
+        <span class="lbl">Prob</span>
+      </div>
+      <div class="metric-pill hop"
+           data-tooltip="Number of edges (distance) in the propagation path from the source class to this target.">
+        <span class="val">2.69</span><span class="lbl">Avg Distance</span>
+      </div>
+      <div class="metric-pill health"
+           data-tooltip="Target health.">
+        <span class="val">0.96</span><span class="lbl">Health</span>
+      </div>
+    </div>
+    <span class="toggle-icon">▼</span>
+  </div>
+  <div class="card-body">
+    <h4 style="color:var(--text2);font-size:12px;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:8px;">Propagation Path</h4><div class="path-diagram">
+      <div class="path-node first">
+        <div class="node-circle" title="spring-cloud-alibaba-starters/spring-alibaba-nacos-config/src/test/java/com.alibaba.cloud.nacos/configdata/NacosConfigDataLoaderTest.java">NA</div>
+        <div class="node-label" title="spring-cloud-alibaba-starters/spring-alibaba-nacos-config/src/test/java/com.alibaba.cloud.nacos/configdata/NacosConfigDataLoaderTest.java">NacosConfigDataLoaderTest</div>
+        <div class="node-health" style="color:var(--green)"
+             data-tooltip="Structural health (1 − code smell score from CK metrics). 1.00 (green) = healthy; 0.00 (red) = many CK metrics in the bad zone.">⚕ 0.83</div>
+      </div>
+      <div class="path-edge">
+        <div class="edge-arrow"><span class="line"></span><span class="tip">&#9658;</span></div>
+        <div class="edge-tags">
+          <span class="edge-tag cochange"
+                data-tooltip="Co-change weight: number of times these two classes were committed together in the project history.">co-change: 1</span>
+        </div>
+      </div>
+      <div class="path-node last">
+        <div class="node-circle" title="spring-cloud-alibaba-starters/spring-alibaba-nacos-config/src/main/java/com/alibaba/cloud/nacos/client/NacosPropertySourceBuilder.java">NA</div>
+        <div class="node-label" title="spring-cloud-alibaba-starters/spring-alibaba-nacos-config/src/main/java/com/alibaba/cloud/nacos/client/NacosPropertySourceBuilder.java">NacosPropertySourceBuilder</div>
+        <div class="node-health" style="color:var(--green)"
+             data-tooltip="Structural health (1 − code smell score from CK metrics). 1.00 (green) = healthy; 0.00 (red) = many CK metrics in the bad zone.">⚕ 0.96</div>
+      </div>
+  </div>
+    <div style="margin-top:10px;font-size:11px;color:var(--text2);font-style:italic">Probabilistic entry — no causal path is available; avg_hop = 2.69 aggregates across runs.</div>
+    <div style="margin-top:16px;font-size:11px;color:var(--text2);">
+      <div><strong>Source:</strong> <code>spring-cloud-alibaba-starters/spring-alibaba-nacos-config/src/test/java/com.alibaba.cloud.nacos/configdata/NacosConfigDataLoaderTest.java</code></div>
+      <div><strong>Target:</strong> <code>spring-cloud-alibaba-starters/spring-alibaba-nacos-config/src/main/java/com/alibaba/cloud/nacos/client/NacosPropertySourceBuilder.java</code></div>
+    </div>
+    <div class="validation-section" id="validation_prob_7">
+      <h4>📋 Validation — Is this propagation correct?</h4>
+      <div class="vote-buttons">
+        <button class="vote-btn correct"   onclick="selectVote('prob_7','correct',this)">✅ Correct</button>
+        <button class="vote-btn incorrect" onclick="selectVote('prob_7','incorrect',this)">❌ Incorrect</button>
+        <button class="vote-btn unsure"    onclick="selectVote('prob_7','unsure',this)">❓ Unsure</button>
+      </div>
+      <textarea class="validation-comment" id="comment_prob_7"
+                placeholder="Optional comment (e.g., why you think it is incorrect)…"
+                oninput="saveComment('prob_7', this.value)"></textarea>
+      <div class="submit-row">
+        <button class="submit-btn" id="submitBtn_prob_7"
+                onclick="submitVote('prob_7')" disabled>Submit</button>
+        <span class="submit-status" id="status_prob_7"></span>
+      </div>
+      <input type="hidden" id="vote_prob_7"         value="">
+      <input type="hidden" id="meta_kind_prob_7"   value="prob">
+      <input type="hidden" id="meta_source_prob_7" value="spring-cloud-alibaba-starters/spring-alibaba-nacos-config/src/test/java/com.alibaba.cloud.nacos/configdata/NacosConfigDataLoaderTest.java">
+      <input type="hidden" id="meta_target_prob_7" value="spring-cloud-alibaba-starters/spring-alibaba-nacos-config/src/main/java/com/alibaba/cloud/nacos/client/NacosPropertySourceBuilder.java">
+      <input type="hidden" id="meta_rank_prob_7"   value="8">
+      <input type="hidden" id="meta_prob_prob_7"   value="0.296">
+      <input type="hidden" id="meta_hop_prob_7"    value="2.689189189189189">
+    </div>
+  </div>
+</div><div class="card"
+     data-source="spring-cloud-alibaba-starters/spring-alibaba-nacos-config/src/test/java/com.alibaba.cloud.nacos/configdata/NacosConfigDataLoaderTest.java" data-target="spring-cloud-alibaba-starters/spring-alibaba-nacos-config/src/main/java/com/alibaba/cloud/nacos/refresh/NacosPropertySourceRefreshListener.java"
+     data-prob="0.104" data-hop="2.105769230769231" data-rank="9">
+  <div class="card-header" onclick="this.parentElement.classList.toggle('open')">
+    <div class="source-target">
+      <span class="class-badge source" title="spring-cloud-alibaba-starters/spring-alibaba-nacos-config/src/test/java/com.alibaba.cloud.nacos/configdata/NacosConfigDataLoaderTest.java">NacosConfigDataLoaderTest</span>
+      <span class="arrow-icon">→</span>
+      <span class="class-badge target" title="spring-cloud-alibaba-starters/spring-alibaba-nacos-config/src/main/java/com/alibaba/cloud/nacos/refresh/NacosPropertySourceRefreshListener.java">NacosPropertySourceRefreshListener</span>
+    </div>
+    <div class="metrics-mini">
+      <div class="metric-pill rank-m" data-tooltip="Rank in the PROB list.">
+        <span class="val">#9</span><span class="lbl">Rank</span>
+      </div>
+      <div class="metric-pill prob" style="color:var(--green)"
+           data-tooltip="HyCPA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
+        <span class="val" style="color:var(--green)">0.1040</span>
+        <span class="lbl">Prob</span>
+      </div>
+      <div class="metric-pill hop"
+           data-tooltip="Number of edges (distance) in the propagation path from the source class to this target.">
+        <span class="val">2.11</span><span class="lbl">Avg Distance</span>
+      </div>
+      <div class="metric-pill health"
+           data-tooltip="Target health.">
+        <span class="val">0.88</span><span class="lbl">Health</span>
+      </div>
+    </div>
+    <span class="toggle-icon">▼</span>
+  </div>
+  <div class="card-body">
+    <h4 style="color:var(--text2);font-size:12px;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:8px;">Propagation Path</h4><div class="path-diagram">
+      <div class="path-node first">
+        <div class="node-circle" title="spring-cloud-alibaba-starters/spring-alibaba-nacos-config/src/test/java/com.alibaba.cloud.nacos/configdata/NacosConfigDataLoaderTest.java">NA</div>
+        <div class="node-label" title="spring-cloud-alibaba-starters/spring-alibaba-nacos-config/src/test/java/com.alibaba.cloud.nacos/configdata/NacosConfigDataLoaderTest.java">NacosConfigDataLoaderTest</div>
+        <div class="node-health" style="color:var(--green)"
+             data-tooltip="Structural health (1 − code smell score from CK metrics). 1.00 (green) = healthy; 0.00 (red) = many CK metrics in the bad zone.">⚕ 0.83</div>
+      </div>
+      <div class="path-edge">
+        <div class="edge-arrow"><span class="line"></span><span class="tip">&#9658;</span></div>
+        <div class="edge-tags">
+          <span class="edge-tag cochange"
+                data-tooltip="Co-change weight: number of times these two classes were committed together in the project history.">co-change: 1</span>
+        </div>
+      </div>
+      <div class="path-node last">
+        <div class="node-circle" title="spring-cloud-alibaba-starters/spring-alibaba-nacos-config/src/main/java/com/alibaba/cloud/nacos/refresh/NacosPropertySourceRefreshListener.java">NA</div>
+        <div class="node-label" title="spring-cloud-alibaba-starters/spring-alibaba-nacos-config/src/main/java/com/alibaba/cloud/nacos/refresh/NacosPropertySourceRefreshListener.java">NacosPropertySourceRefreshListener</div>
+        <div class="node-health" style="color:var(--green)"
+             data-tooltip="Structural health (1 − code smell score from CK metrics). 1.00 (green) = healthy; 0.00 (red) = many CK metrics in the bad zone.">⚕ 0.88</div>
+      </div>
+  </div>
+    <div style="margin-top:10px;font-size:11px;color:var(--text2);font-style:italic">Probabilistic entry — no causal path is available; avg_hop = 2.11 aggregates across runs.</div>
+    <div style="margin-top:16px;font-size:11px;color:var(--text2);">
+      <div><strong>Source:</strong> <code>spring-cloud-alibaba-starters/spring-alibaba-nacos-config/src/test/java/com.alibaba.cloud.nacos/configdata/NacosConfigDataLoaderTest.java</code></div>
+      <div><strong>Target:</strong> <code>spring-cloud-alibaba-starters/spring-alibaba-nacos-config/src/main/java/com/alibaba/cloud/nacos/refresh/NacosPropertySourceRefreshListener.java</code></div>
+    </div>
+    <div class="validation-section" id="validation_prob_8">
+      <h4>📋 Validation — Is this propagation correct?</h4>
+      <div class="vote-buttons">
+        <button class="vote-btn correct"   onclick="selectVote('prob_8','correct',this)">✅ Correct</button>
+        <button class="vote-btn incorrect" onclick="selectVote('prob_8','incorrect',this)">❌ Incorrect</button>
+        <button class="vote-btn unsure"    onclick="selectVote('prob_8','unsure',this)">❓ Unsure</button>
+      </div>
+      <textarea class="validation-comment" id="comment_prob_8"
+                placeholder="Optional comment (e.g., why you think it is incorrect)…"
+                oninput="saveComment('prob_8', this.value)"></textarea>
+      <div class="submit-row">
+        <button class="submit-btn" id="submitBtn_prob_8"
+                onclick="submitVote('prob_8')" disabled>Submit</button>
+        <span class="submit-status" id="status_prob_8"></span>
+      </div>
+      <input type="hidden" id="vote_prob_8"         value="">
+      <input type="hidden" id="meta_kind_prob_8"   value="prob">
+      <input type="hidden" id="meta_source_prob_8" value="spring-cloud-alibaba-starters/spring-alibaba-nacos-config/src/test/java/com.alibaba.cloud.nacos/configdata/NacosConfigDataLoaderTest.java">
+      <input type="hidden" id="meta_target_prob_8" value="spring-cloud-alibaba-starters/spring-alibaba-nacos-config/src/main/java/com/alibaba/cloud/nacos/refresh/NacosPropertySourceRefreshListener.java">
+      <input type="hidden" id="meta_rank_prob_8"   value="9">
+      <input type="hidden" id="meta_prob_prob_8"   value="0.104">
+      <input type="hidden" id="meta_hop_prob_8"    value="2.105769230769231">
+    </div>
+  </div>
+</div><div class="card"
+     data-source="spring-cloud-alibaba-starters/spring-alibaba-nacos-config/src/test/java/com.alibaba.cloud.nacos/configdata/NacosConfigDataLoaderTest.java" data-target="spring-cloud-alibaba-starters/spring-alibaba-nacos-config/src/test/java/com.alibaba.cloud.nacos/refresh/NacosSnapshotConfigManagerTest.java"
+     data-prob="0.101" data-hop="2.118811881188119" data-rank="10">
+  <div class="card-header" onclick="this.parentElement.classList.toggle('open')">
+    <div class="source-target">
+      <span class="class-badge source" title="spring-cloud-alibaba-starters/spring-alibaba-nacos-config/src/test/java/com.alibaba.cloud.nacos/configdata/NacosConfigDataLoaderTest.java">NacosConfigDataLoaderTest</span>
+      <span class="arrow-icon">→</span>
+      <span class="class-badge target" title="spring-cloud-alibaba-starters/spring-alibaba-nacos-config/src/test/java/com.alibaba.cloud.nacos/refresh/NacosSnapshotConfigManagerTest.java">NacosSnapshotConfigManagerTest</span>
+    </div>
+    <div class="metrics-mini">
+      <div class="metric-pill rank-m" data-tooltip="Rank in the PROB list.">
+        <span class="val">#10</span><span class="lbl">Rank</span>
+      </div>
+      <div class="metric-pill prob" style="color:var(--green)"
+           data-tooltip="HyCPA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
+        <span class="val" style="color:var(--green)">0.1010</span>
+        <span class="lbl">Prob</span>
+      </div>
+      <div class="metric-pill hop"
+           data-tooltip="Number of edges (distance) in the propagation path from the source class to this target.">
+        <span class="val">2.12</span><span class="lbl">Avg Distance</span>
+      </div>
+      <div class="metric-pill health"
+           data-tooltip="Target health.">
+        <span class="val">0.90</span><span class="lbl">Health</span>
+      </div>
+    </div>
+    <span class="toggle-icon">▼</span>
+  </div>
+  <div class="card-body">
+    <h4 style="color:var(--text2);font-size:12px;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:8px;">Propagation Path</h4><div class="path-diagram">
+      <div class="path-node first">
+        <div class="node-circle" title="spring-cloud-alibaba-starters/spring-alibaba-nacos-config/src/test/java/com.alibaba.cloud.nacos/configdata/NacosConfigDataLoaderTest.java">NA</div>
+        <div class="node-label" title="spring-cloud-alibaba-starters/spring-alibaba-nacos-config/src/test/java/com.alibaba.cloud.nacos/configdata/NacosConfigDataLoaderTest.java">NacosConfigDataLoaderTest</div>
+        <div class="node-health" style="color:var(--green)"
+             data-tooltip="Structural health (1 − code smell score from CK metrics). 1.00 (green) = healthy; 0.00 (red) = many CK metrics in the bad zone.">⚕ 0.83</div>
+      </div>
+      <div class="path-edge">
+        <div class="edge-arrow"><span class="line"></span><span class="tip">&#9658;</span></div>
+        <div class="edge-tags">
+          <span class="edge-tag cochange"
+                data-tooltip="Co-change weight: number of times these two classes were committed together in the project history.">co-change: 1</span>
+        </div>
+      </div>
+      <div class="path-node last">
+        <div class="node-circle" title="spring-cloud-alibaba-starters/spring-alibaba-nacos-config/src/test/java/com.alibaba.cloud.nacos/refresh/NacosSnapshotConfigManagerTest.java">NA</div>
+        <div class="node-label" title="spring-cloud-alibaba-starters/spring-alibaba-nacos-config/src/test/java/com.alibaba.cloud.nacos/refresh/NacosSnapshotConfigManagerTest.java">NacosSnapshotConfigManagerTest</div>
+        <div class="node-health" style="color:var(--green)"
+             data-tooltip="Structural health (1 − code smell score from CK metrics). 1.00 (green) = healthy; 0.00 (red) = many CK metrics in the bad zone.">⚕ 0.90</div>
+      </div>
+  </div>
+    <div style="margin-top:10px;font-size:11px;color:var(--text2);font-style:italic">Probabilistic entry — no causal path is available; avg_hop = 2.12 aggregates across runs.</div>
+    <div style="margin-top:16px;font-size:11px;color:var(--text2);">
+      <div><strong>Source:</strong> <code>spring-cloud-alibaba-starters/spring-alibaba-nacos-config/src/test/java/com.alibaba.cloud.nacos/configdata/NacosConfigDataLoaderTest.java</code></div>
+      <div><strong>Target:</strong> <code>spring-cloud-alibaba-starters/spring-alibaba-nacos-config/src/test/java/com.alibaba.cloud.nacos/refresh/NacosSnapshotConfigManagerTest.java</code></div>
+    </div>
+    <div class="validation-section" id="validation_prob_9">
+      <h4>📋 Validation — Is this propagation correct?</h4>
+      <div class="vote-buttons">
+        <button class="vote-btn correct"   onclick="selectVote('prob_9','correct',this)">✅ Correct</button>
+        <button class="vote-btn incorrect" onclick="selectVote('prob_9','incorrect',this)">❌ Incorrect</button>
+        <button class="vote-btn unsure"    onclick="selectVote('prob_9','unsure',this)">❓ Unsure</button>
+      </div>
+      <textarea class="validation-comment" id="comment_prob_9"
+                placeholder="Optional comment (e.g., why you think it is incorrect)…"
+                oninput="saveComment('prob_9', this.value)"></textarea>
+      <div class="submit-row">
+        <button class="submit-btn" id="submitBtn_prob_9"
+                onclick="submitVote('prob_9')" disabled>Submit</button>
+        <span class="submit-status" id="status_prob_9"></span>
+      </div>
+      <input type="hidden" id="vote_prob_9"         value="">
+      <input type="hidden" id="meta_kind_prob_9"   value="prob">
+      <input type="hidden" id="meta_source_prob_9" value="spring-cloud-alibaba-starters/spring-alibaba-nacos-config/src/test/java/com.alibaba.cloud.nacos/configdata/NacosConfigDataLoaderTest.java">
+      <input type="hidden" id="meta_target_prob_9" value="spring-cloud-alibaba-starters/spring-alibaba-nacos-config/src/test/java/com.alibaba.cloud.nacos/refresh/NacosSnapshotConfigManagerTest.java">
+      <input type="hidden" id="meta_rank_prob_9"   value="10">
+      <input type="hidden" id="meta_prob_prob_9"   value="0.101">
+      <input type="hidden" id="meta_hop_prob_9"    value="2.118811881188119">
+    </div>
+  </div>
+</div>
+  </div>
+</div>
+
+<script>
+const REPO = "alibaba_spring-cloud-alibaba";
+const SOURCE_SAFE = "spring_cloud_alibaba_starters_spring_alibaba_nacos_config_src_test_java_com_alibaba_cloud_nacos_configdata_NacosConfigDataLoaderTest_java";
+const STORAGE_PREFIX = 'ocpa_vote_' + REPO + '__' + SOURCE_SAFE + '__';
+const FORMSUBMIT_URL = 'https://formsubmit.co/ajax/change.vein@gmail.com';
+document.addEventListener('DOMContentLoaded', () => {
+  const email = localStorage.getItem('email_' + REPO) || '';
+  if (email) document.getElementById('userEmail').value = email;
+  document.querySelectorAll('.validation-comment').forEach(ta => {
+    const id = ta.id.replace('comment_', '');
+    const saved = localStorage.getItem(STORAGE_PREFIX + id + '__comment');
+    if (saved) ta.value = saved;
+  });
+  document.querySelectorAll('.card').forEach(card => {
+    const vBtn = card.querySelector('.vote-btn');
+    if (!vBtn) return;
+    const idMatch = vBtn.getAttribute('onclick').match(/selectVote\('([^']+)'/);
+    if (!idMatch) return;
+    const id = idMatch[1];
+    const stored = localStorage.getItem(STORAGE_PREFIX + id);
+    if (stored) {
+      try {
+        const o = JSON.parse(stored);
+        const btn = card.querySelector('.vote-btn.' + o.Vote);
+        if (btn) { btn.classList.add('selected'); document.getElementById('vote_' + id).value = o.Vote; }
+        const st = document.getElementById('status_' + id);
+        if (st) { st.textContent = '✓ Submitted'; }
+      } catch (e) {}
+    }
+  });
+  switchTab('det');
+});
+
+function saveEmail(v) {
+  localStorage.setItem('email_' + REPO, v);
+  document.getElementById('userEmail').classList.remove('invalid');
+}
+
+function saveComment(id, value) {
+  localStorage.setItem(STORAGE_PREFIX + id + '__comment', value);
+}
+
+function selectVote(id, vote, btn) {
+  btn.parentElement.querySelectorAll('.vote-btn').forEach(b => b.classList.remove('selected'));
+  btn.classList.add('selected');
+  document.getElementById('vote_' + id).value = vote;
+  document.getElementById('submitBtn_' + id).disabled = false;
+}
+
+function switchTab(name) {
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.toggle('active', b.dataset.tab === name));
+  document.querySelectorAll('.tab-pane').forEach(p => p.classList.toggle('active', p.dataset.tab === name));
+}
+
+function applyFilters() {
+  const minP = parseFloat(document.getElementById('fMinProb').value) || 0;
+  const maxH = parseFloat(document.getElementById('fMaxHop').value);
+  const q = document.getElementById('fSearch').value.toLowerCase();
+  document.querySelectorAll('.tab-pane .card').forEach(card => {
+    const p = parseFloat(card.dataset.prob);
+    const h = parseFloat(card.dataset.hop);
+    const t = (card.dataset.target || '').toLowerCase();
+    let show = true;
+    if (p < minP) show = false;
+    if (!isNaN(maxH) && h > maxH) show = false;
+    if (q && !t.includes(q)) show = false;
+    card.style.display = show ? '' : 'none';
+  });
+}
+
+async function submitVote(id) {
+  const vote = document.getElementById('vote_' + id).value;
+  if (!vote) return;
+  const email = document.getElementById('userEmail').value.trim();
+  if (!email || !email.includes('@')) {
+    document.getElementById('userEmail').classList.add('invalid');
+    document.getElementById('userEmail').focus();
+    alert('Please enter a valid email in the header before submitting.');
+    return;
+  }
+  const comment = document.getElementById('comment_' + id).value;
+  const kind    = document.getElementById('meta_kind_' + id).value;
+  const source  = document.getElementById('meta_source_' + id).value;
+  const target  = document.getElementById('meta_target_' + id).value;
+  const rank    = document.getElementById('meta_rank_' + id).value;
+  const prob    = document.getElementById('meta_prob_' + id).value;
+  const hop     = document.getElementById('meta_hop_' + id).value;
+  const statusEl  = document.getElementById('status_'    + id);
+  const submitBtn = document.getElementById('submitBtn_' + id);
+  submitBtn.disabled = true;
+  statusEl.textContent = 'Submitting\u2026';
+  statusEl.className = 'submit-status';
+  const payload = {
+    _subject: '[HyCPA Validation] ' + REPO + ' \u2014 ' + source + ' \u2192 ' + target + ': ' + vote.toUpperCase(),
+    Email: email, Repository: REPO,
+    Source_Class: source, Affected_Class: target,
+    Type: kind, Rank: rank, Prob: prob, Hop: hop,
+    Vote: vote, Comment: comment, Timestamp: new Date().toISOString()
+  };
+  localStorage.setItem(STORAGE_PREFIX + id, JSON.stringify(payload));
+  try {
+    const resp = await fetch(FORMSUBMIT_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+    if (resp.ok) { statusEl.textContent = '\u2713 Submitted'; }
+    else { statusEl.textContent = '\u26a0 Saved locally (server error)'; statusEl.classList.add('error'); }
+  } catch (e) {
+    statusEl.textContent = '\u26a0 Saved locally (offline)';
+    statusEl.classList.add('error');
+  }
+  submitBtn.disabled = false;
+}
+
+</script>
+</body>
+</html>

@@ -1,0 +1,1559 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HyCPA — Community 7 · iBotPeaches/Apktool</title>
+  <style>
+:root {
+  --bg: #0d1117; --surface: #161b22; --surface2: #21262d;
+  --border: #30363d; --text: #e6edf3; --text2: #8b949e;
+  --accent: #58a6ff; --green: #3fb950; --orange: #e3b341; --red: #f85149;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { background: var(--bg); color: var(--text); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif; padding-bottom: 48px; }
+
+/* ── Header ── */
+.page-header { background: var(--surface); border-bottom: 1px solid var(--border); padding: 12px 24px; display: flex; align-items: center; gap: 20px; }
+.back-btn { color: var(--text2); font-size: 12px; text-decoration: none; white-space: nowrap; }
+.back-btn:hover { color: var(--accent); }
+.header-title { font-size: 15px; color: var(--text); }
+.header-title strong { color: var(--accent); }
+
+/* ── Stats pills ── */
+.stats-row { display: flex; gap: 12px; padding: 16px 24px; background: var(--surface); border-bottom: 1px solid var(--border); flex-wrap: wrap; }
+.stat-pill { background: var(--surface2); border: 1px solid var(--border); border-radius: 8px; padding: 10px 20px; display: flex; flex-direction: column; align-items: center; gap: 2px; min-width: 90px; }
+.pill-val { font-size: 22px; font-weight: 700; color: var(--text); line-height: 1; }
+.pill-lbl { font-size: 10px; color: var(--text2); text-transform: uppercase; letter-spacing: 0.5px; margin-top: 2px; }
+
+/* ── Content sections ── */
+.content-section { padding: 24px; }
+.section-title { font-size: 11px; font-weight: 600; color: var(--text2); text-transform: uppercase; letter-spacing: 0.6px; margin-bottom: 14px; display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
+
+/* ── Node table ── */
+.node-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+.node-table th { background: var(--surface); color: var(--text2); font-weight: 600; font-size: 10px; text-transform: uppercase; letter-spacing: 0.5px; padding: 8px 12px; text-align: left; border-bottom: 2px solid var(--border); white-space: nowrap; }
+.node-table td { padding: 7px 12px; border-bottom: 1px solid var(--border); vertical-align: middle; }
+.node-table tbody tr:hover td { background: var(--surface); }
+.health-badge { display: inline-block; padding: 2px 9px; border-radius: 10px; font-size: 11px; font-weight: 700; color: #0d1117; white-space: nowrap; }
+.class-path { font-size: 11px; color: var(--text2); font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', monospace; word-break: break-all; }
+td.num { text-align: right; font-weight: 600; white-space: nowrap; }
+td.overlap { color: var(--accent); }
+
+/* ── Coupling matrix ── */
+.matrix-wrap { overflow: auto; }
+.matrix { border-collapse: collapse; }
+.matrix-corner { min-width: 16px; }
+.matrix-col-hdr { padding: 0 1px 4px 1px; vertical-align: bottom; }
+.matrix-col-hdr span { display: block; writing-mode: vertical-rl; transform: rotate(180deg); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-height: 140px; color: var(--text2); font-weight: 400; font-size: 10px; cursor: default; text-align: left; }
+.matrix-row-hdr { text-align: right; padding: 1px 6px 1px 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 200px; color: var(--text2); font-weight: 400; font-size: 10px; cursor: default; }
+.matrix-cell { width: 16px; height: 16px; min-width: 16px; min-height: 16px; border: 1px solid #1c2129; cursor: default; }
+.matrix-cell.empty { background: transparent; }
+.matrix-cell.self-cell { background: var(--surface2); }
+.matrix-cell.filled { }
+
+/* ── Legend inline ── */
+.legend-inline { display: inline-flex; align-items: center; gap: 6px; font-size: 10px; color: var(--text2); font-weight: 400; text-transform: none; letter-spacing: 0; }
+.li-cell { display: inline-block; width: 10px; height: 10px; border-radius: 2px; vertical-align: middle; flex-shrink: 0; }
+</style>
+</head>
+<body>
+
+<div class="page-header">
+  <a class="back-btn" href="repo_iBotPeaches_Apktool.html">← Back to iBotPeaches/Apktool</a>
+  <span class="header-title">Community <strong>C7</strong> — iBotPeaches/Apktool</span>
+</div>
+
+<div class="stats-row">
+  <div class="stat-pill"><span class="pill-val">20</span><span class="pill-lbl">Nodes</span></div>
+  <div class="stat-pill"><span class="pill-val">151</span><span class="pill-lbl">Arcs</span></div>
+  <div class="stat-pill"><span class="pill-val">16</span><span class="pill-lbl">Overlapping</span></div>
+  <div class="stat-pill"><span class="pill-val">52</span><span class="pill-lbl">Coupled arcs</span></div>
+  <div class="stat-pill"><span class="pill-val">0</span><span class="pill-lbl">Co-change only</span></div>
+</div>
+
+<section class="content-section">
+  <h2 class="section-title">Nodes</h2>
+  <table class="node-table">
+    <thead>
+      <tr>
+        <th>Health</th>
+        <th>Class</th>
+        <th>Degree</th>
+        <th>Communities</th>
+      </tr>
+    </thead>
+    <tbody>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#e3b341">0.500</span></td>
+        <td class="class-path" title="brut.apktool/apktool-lib/src/main/java/brut/androlib/res/decoder/BinaryXmlResourceParser.java">brut.apktool/apktool-lib/src/main/java/brut/androlib/res/decoder/BinaryXmlResourceParser.java</td>
+        <td class="num">18</td>
+        <td class="num overlap">9</td>
+      </tr>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#e3b341">0.519</span></td>
+        <td class="class-path" title="brut.apktool/apktool-lib/src/main/java/brut/androlib/ApkBuilder.java">brut.apktool/apktool-lib/src/main/java/brut/androlib/ApkBuilder.java</td>
+        <td class="num">21</td>
+        <td class="num overlap">8</td>
+      </tr>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#e3b341">0.577</span></td>
+        <td class="class-path" title="brut.apktool/apktool-lib/src/main/java/brut/androlib/res/table/ResTable.java">brut.apktool/apktool-lib/src/main/java/brut/androlib/res/table/ResTable.java</td>
+        <td class="num">18</td>
+        <td class="num overlap">7</td>
+      </tr>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#e3b341">0.596</span></td>
+        <td class="class-path" title="brut.apktool/apktool-lib/src/main/java/brut/androlib/ApkDecoder.java">brut.apktool/apktool-lib/src/main/java/brut/androlib/ApkDecoder.java</td>
+        <td class="num">27</td>
+        <td class="num overlap">9</td>
+      </tr>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#e3b341">0.615</span></td>
+        <td class="class-path" title="brut.apktool/apktool-lib/src/main/java/brut/androlib/res/Framework.java">brut.apktool/apktool-lib/src/main/java/brut/androlib/res/Framework.java</td>
+        <td class="num">17</td>
+        <td class="num overlap">6</td>
+      </tr>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#e3b341">0.635</span></td>
+        <td class="class-path" title="brut.apktool/apktool-lib/src/main/java/brut/androlib/res/xml/ResXmlUtils.java">brut.apktool/apktool-lib/src/main/java/brut/androlib/res/xml/ResXmlUtils.java</td>
+        <td class="num">18</td>
+        <td class="num overlap">4</td>
+      </tr>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#e3b341">0.654</span></td>
+        <td class="class-path" title="brut.apktool/apktool-lib/src/test/java/brut/androlib/BaseTest.java">brut.apktool/apktool-lib/src/test/java/brut/androlib/BaseTest.java</td>
+        <td class="num">31</td>
+        <td class="num overlap">9</td>
+      </tr>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#e3b341">0.673</span></td>
+        <td class="class-path" title="brut.apktool/apktool-lib/src/test/java/brut/androlib/BuildAndDecodeApkTest.java">brut.apktool/apktool-lib/src/test/java/brut/androlib/BuildAndDecodeApkTest.java</td>
+        <td class="num">26</td>
+        <td class="num overlap">4</td>
+      </tr>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#3fb950">0.885</span></td>
+        <td class="class-path" title="brut.apktool/apktool-lib/src/test/java/brut/androlib/DecodeResolveTest.java">brut.apktool/apktool-lib/src/test/java/brut/androlib/DecodeResolveTest.java</td>
+        <td class="num">3</td>
+        <td class="num overlap">2</td>
+      </tr>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#3fb950">0.904</span></td>
+        <td class="class-path" title="brut.apktool/apktool-lib/src/test/java/brut/androlib/NetworkConfigTest.java">brut.apktool/apktool-lib/src/test/java/brut/androlib/NetworkConfigTest.java</td>
+        <td class="num">18</td>
+        <td class="num overlap">3</td>
+      </tr>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#3fb950">0.904</span></td>
+        <td class="class-path" title="brut.apktool/apktool-lib/src/test/java/brut/androlib/NoNetworkConfigTest.java">brut.apktool/apktool-lib/src/test/java/brut/androlib/NoNetworkConfigTest.java</td>
+        <td class="num">15</td>
+        <td class="num overlap">3</td>
+      </tr>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#3fb950">0.923</span></td>
+        <td class="class-path" title="brut.apktool/apktool-lib/src/test/java/brut/androlib/DexStaticFieldValueTest.java">brut.apktool/apktool-lib/src/test/java/brut/androlib/DexStaticFieldValueTest.java</td>
+        <td class="num">4</td>
+        <td class="num">1</td>
+      </tr>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#3fb950">0.942</span></td>
+        <td class="class-path" title="brut.apktool/apktool-lib/src/test/java/brut/androlib/CompactResourceTest.java">brut.apktool/apktool-lib/src/test/java/brut/androlib/CompactResourceTest.java</td>
+        <td class="num">14</td>
+        <td class="num overlap">3</td>
+      </tr>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#3fb950">0.942</span></td>
+        <td class="class-path" title="brut.apktool/apktool-lib/src/test/java/brut/androlib/EmptyArscTest.java">brut.apktool/apktool-lib/src/test/java/brut/androlib/EmptyArscTest.java</td>
+        <td class="num">3</td>
+        <td class="num">1</td>
+      </tr>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#3fb950">0.942</span></td>
+        <td class="class-path" title="brut.apktool/apktool-lib/src/test/java/brut/androlib/FrameworkTest.java">brut.apktool/apktool-lib/src/test/java/brut/androlib/FrameworkTest.java</td>
+        <td class="num">3</td>
+        <td class="num">1</td>
+      </tr>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#3fb950">0.942</span></td>
+        <td class="class-path" title="brut.apktool/apktool-lib/src/test/java/brut/androlib/LargeCompactResourceTest.java">brut.apktool/apktool-lib/src/test/java/brut/androlib/LargeCompactResourceTest.java</td>
+        <td class="num">18</td>
+        <td class="num overlap">3</td>
+      </tr>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#3fb950">0.942</span></td>
+        <td class="class-path" title="brut.apktool/apktool-lib/src/test/java/brut/androlib/SparseFlagTest.java">brut.apktool/apktool-lib/src/test/java/brut/androlib/SparseFlagTest.java</td>
+        <td class="num">5</td>
+        <td class="num overlap">2</td>
+      </tr>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#3fb950">0.942</span></td>
+        <td class="class-path" title="brut.apktool/apktool-lib/src/test/java/brut/androlib/StrippedNamespaceTest.java">brut.apktool/apktool-lib/src/test/java/brut/androlib/StrippedNamespaceTest.java</td>
+        <td class="num">13</td>
+        <td class="num overlap">3</td>
+      </tr>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#3fb950">0.942</span></td>
+        <td class="class-path" title="brut.apktool/apktool-lib/src/test/java/brut/androlib/VectorDrawableTest.java">brut.apktool/apktool-lib/src/test/java/brut/androlib/VectorDrawableTest.java</td>
+        <td class="num">3</td>
+        <td class="num">1</td>
+      </tr>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#3fb950">0.981</span></td>
+        <td class="class-path" title="brut.apktool/apktool-lib/src/main/java/brut/androlib/Config.java">brut.apktool/apktool-lib/src/main/java/brut/androlib/Config.java</td>
+        <td class="num">27</td>
+        <td class="num overlap">5</td>
+      </tr>
+      
+    </tbody>
+  </table>
+</section>
+
+
+<section class="content-section">
+  <h2 class="section-title">Coupling matrix
+    <span class="legend-inline">
+      <span class="li-cell" style="background:#30363d"></span>Co-change only
+      <span class="li-cell" style="background:#3fb950"></span>Weak
+      <span class="li-cell" style="background:#e3b341"></span>Moderate
+      <span class="li-cell" style="background:#f85149"></span>Strong
+    </span>
+  </h2>
+  <div class="matrix-wrap">
+    <table class="matrix">
+      <thead>
+        <tr>
+          <th class="matrix-corner"></th>
+          <th class="matrix-col-hdr" title="brut.apktool/apktool-lib/src/main/java/brut/androlib/res/decoder/BinaryXmlResourceParser.java"><span>BinaryXmlResourceParser</span></th><th class="matrix-col-hdr" title="brut.apktool/apktool-lib/src/main/java/brut/androlib/ApkBuilder.java"><span>ApkBuilder</span></th><th class="matrix-col-hdr" title="brut.apktool/apktool-lib/src/main/java/brut/androlib/res/table/ResTable.java"><span>ResTable</span></th><th class="matrix-col-hdr" title="brut.apktool/apktool-lib/src/main/java/brut/androlib/ApkDecoder.java"><span>ApkDecoder</span></th><th class="matrix-col-hdr" title="brut.apktool/apktool-lib/src/main/java/brut/androlib/res/Framework.java"><span>Framework</span></th><th class="matrix-col-hdr" title="brut.apktool/apktool-lib/src/main/java/brut/androlib/res/xml/ResXmlUtils.java"><span>ResXmlUtils</span></th><th class="matrix-col-hdr" title="brut.apktool/apktool-lib/src/test/java/brut/androlib/BaseTest.java"><span>BaseTest</span></th><th class="matrix-col-hdr" title="brut.apktool/apktool-lib/src/test/java/brut/androlib/BuildAndDecodeApkTest.java"><span>BuildAndDecodeApkTest</span></th><th class="matrix-col-hdr" title="brut.apktool/apktool-lib/src/test/java/brut/androlib/DecodeResolveTest.java"><span>DecodeResolveTest</span></th><th class="matrix-col-hdr" title="brut.apktool/apktool-lib/src/test/java/brut/androlib/NetworkConfigTest.java"><span>NetworkConfigTest</span></th><th class="matrix-col-hdr" title="brut.apktool/apktool-lib/src/test/java/brut/androlib/NoNetworkConfigTest.java"><span>NoNetworkConfigTest</span></th><th class="matrix-col-hdr" title="brut.apktool/apktool-lib/src/test/java/brut/androlib/DexStaticFieldValueTest.java"><span>DexStaticFieldValueTest</span></th><th class="matrix-col-hdr" title="brut.apktool/apktool-lib/src/test/java/brut/androlib/CompactResourceTest.java"><span>CompactResourceTest</span></th><th class="matrix-col-hdr" title="brut.apktool/apktool-lib/src/test/java/brut/androlib/EmptyArscTest.java"><span>EmptyArscTest</span></th><th class="matrix-col-hdr" title="brut.apktool/apktool-lib/src/test/java/brut/androlib/FrameworkTest.java"><span>FrameworkTest</span></th><th class="matrix-col-hdr" title="brut.apktool/apktool-lib/src/test/java/brut/androlib/LargeCompactResourceTest.java"><span>LargeCompactResourceTest</span></th><th class="matrix-col-hdr" title="brut.apktool/apktool-lib/src/test/java/brut/androlib/SparseFlagTest.java"><span>SparseFlagTest</span></th><th class="matrix-col-hdr" title="brut.apktool/apktool-lib/src/test/java/brut/androlib/StrippedNamespaceTest.java"><span>StrippedNamespaceTest</span></th><th class="matrix-col-hdr" title="brut.apktool/apktool-lib/src/test/java/brut/androlib/VectorDrawableTest.java"><span>VectorDrawableTest</span></th><th class="matrix-col-hdr" title="brut.apktool/apktool-lib/src/main/java/brut/androlib/Config.java"><span>Config</span></th>
+        </tr>
+      </thead>
+      <tbody>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="brut.apktool/apktool-lib/src/main/java/brut/androlib/res/decoder/BinaryXmlResourceParser.java">BinaryXmlResourceParser</th>
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="BinaryXmlResourceParser → ApkBuilder · weight: 20 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#17a-20e7a" title="BinaryXmlResourceParser → ResTable · weight: 16 · cw: 4.1015 · CONSTANT, DATA_ABSTRACTION_COUPLING, METHOD_INVOCATION_ATOMIC_PARAMETER, METHOD_INVOCATION_OBJECT_PARAMETER, METHOD_PARAMETER_TYPE, VARIABLE_FIELD_DECLARATION, VARIABLE_SINGLE_DECLARATION"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="BinaryXmlResourceParser → ApkDecoder · weight: 16 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="BinaryXmlResourceParser → Framework · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#80b64a" title="BinaryXmlResourceParser → ResXmlUtils · weight: 16 · cw: 0.2000 · CONSTANT"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="BinaryXmlResourceParser → BaseTest · weight: 9 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="BinaryXmlResourceParser → BuildAndDecodeApkTest · weight: 25 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="BinaryXmlResourceParser → LargeCompactResourceTest · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="BinaryXmlResourceParser → Config · weight: 8 · cw: 0.0000 · co-change only"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="brut.apktool/apktool-lib/src/main/java/brut/androlib/ApkBuilder.java">ApkBuilder</th>
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ApkBuilder → BinaryXmlResourceParser · weight: 20 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ApkBuilder → ResTable · weight: 17 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ApkBuilder → ApkDecoder · weight: 35 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ApkBuilder → Framework · weight: 6 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#eb8b44" title="ApkBuilder → ResXmlUtils · weight: 22 · cw: 0.7024 · METHOD_INVOCATION_OBJECT_PARAMETER"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ApkBuilder → BaseTest · weight: 12 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ApkBuilder → BuildAndDecodeApkTest · weight: 36 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ApkBuilder → NetworkConfigTest · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#16b-1cb75" title="ApkBuilder → Config · weight: 12 · cw: 3.7591 · DATA_ABSTRACTION_COUPLING, METHOD_INVOCATION_ATOMIC_PARAMETER, METHOD_PARAMETER_TYPE, OBJECT_PARAMETER_CLASS, VARIABLE_FIELD_DECLARATION, VARIABLE_SINGLE_DECLARATION"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="brut.apktool/apktool-lib/src/main/java/brut/androlib/res/table/ResTable.java">ResTable</th>
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ResTable → BinaryXmlResourceParser · weight: 16 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ResTable → ApkBuilder · weight: 17 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ResTable → ApkDecoder · weight: 17 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#1031a4d" title="ResTable → Framework · weight: 3 · cw: 1.2770 · METHOD_INVOCATION_ATOMIC_PARAMETER, OBJECT_PARAMETER_COUPLING"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ResTable → ResXmlUtils · weight: 13 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ResTable → BaseTest · weight: 7 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ResTable → BuildAndDecodeApkTest · weight: 18 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ResTable → LargeCompactResourceTest · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#1a4-2d28a" title="ResTable → Config · weight: 6 · cw: 5.0987 · DATA_ABSTRACTION_COUPLING, METHOD_INVOCATION_ATOMIC_PARAMETER, METHOD_PARAMETER_TYPE, METHOD_RETURN_TYPE, OBJECT_PARAMETER_CLASS, VARIABLE_FIELD_DECLARATION, VARIABLE_RETURN_STATEMENT, VARIABLE_SINGLE_DECLARATION"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="brut.apktool/apktool-lib/src/main/java/brut/androlib/ApkDecoder.java">ApkDecoder</th>
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ApkDecoder → BinaryXmlResourceParser · weight: 16 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ApkDecoder → ApkBuilder · weight: 35 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ApkDecoder → ResTable · weight: 17 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ApkDecoder → Framework · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ApkDecoder → ResXmlUtils · weight: 18 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ApkDecoder → BaseTest · weight: 10 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ApkDecoder → BuildAndDecodeApkTest · weight: 27 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ApkDecoder → SparseFlagTest · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#16b-1cb75" title="ApkDecoder → Config · weight: 9 · cw: 3.7591 · DATA_ABSTRACTION_COUPLING, METHOD_INVOCATION_ATOMIC_PARAMETER, METHOD_PARAMETER_TYPE, OBJECT_PARAMETER_CLASS, VARIABLE_FIELD_DECLARATION, VARIABLE_SINGLE_DECLARATION"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="brut.apktool/apktool-lib/src/main/java/brut/androlib/res/Framework.java">Framework</th>
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Framework → BinaryXmlResourceParser · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Framework → ApkBuilder · weight: 6 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#186-2467f" title="Framework → ResTable · weight: 3 · cw: 4.3845 · METHOD_INVOCATION_ATOMIC_PARAMETER, METHOD_RETURN_TYPE, OBJECT_PARAMETER_CLASS, OBJECT_PARAMETER_COUPLING, VARIABLE_CLASS_INSTANCE_CREATION, VARIABLE_DECLARATION_STATEMENT, VARIABLE_RETURN_STATEMENT"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Framework → ApkDecoder · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Framework → ResXmlUtils · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Framework → BaseTest · weight: 2 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Framework → BuildAndDecodeApkTest · weight: 6 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#16b-1cb75" title="Framework → Config · weight: 2 · cw: 3.7591 · DATA_ABSTRACTION_COUPLING, METHOD_INVOCATION_ATOMIC_PARAMETER, METHOD_PARAMETER_TYPE, OBJECT_PARAMETER_CLASS, VARIABLE_FIELD_DECLARATION, VARIABLE_SINGLE_DECLARATION"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="brut.apktool/apktool-lib/src/main/java/brut/androlib/res/xml/ResXmlUtils.java">ResXmlUtils</th>
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ResXmlUtils → BinaryXmlResourceParser · weight: 16 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ResXmlUtils → ApkBuilder · weight: 22 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ResXmlUtils → ResTable · weight: 13 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ResXmlUtils → ApkDecoder · weight: 18 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ResXmlUtils → Framework · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ResXmlUtils → BaseTest · weight: 9 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ResXmlUtils → BuildAndDecodeApkTest · weight: 25 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ResXmlUtils → NetworkConfigTest · weight: 2 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ResXmlUtils → Config · weight: 8 · cw: 0.0000 · co-change only"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="brut.apktool/apktool-lib/src/test/java/brut/androlib/BaseTest.java">BaseTest</th>
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="BaseTest → BinaryXmlResourceParser · weight: 9 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="BaseTest → ApkBuilder · weight: 12 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="BaseTest → ResTable · weight: 7 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="BaseTest → ApkDecoder · weight: 10 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#1031a4d" title="BaseTest → Framework · weight: 2 · cw: 1.2770 · METHOD_INVOCATION_ATOMIC_PARAMETER, OBJECT_PARAMETER_COUPLING"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="BaseTest → ResXmlUtils · weight: 9 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="BaseTest → BuildAndDecodeApkTest · weight: 13 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="BaseTest → NetworkConfigTest · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="BaseTest → NoNetworkConfigTest · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="BaseTest → CompactResourceTest · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="BaseTest → LargeCompactResourceTest · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#12f-b35e" title="BaseTest → Config · weight: 4 · cw: 2.3306 · OBJECT_PARAMETER_CLASS, OBJECT_PARAMETER_COUPLING, VARIABLE_CLASS_INSTANCE_CREATION, VARIABLE_FIELD_DECLARATION"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="brut.apktool/apktool-lib/src/test/java/brut/androlib/BuildAndDecodeApkTest.java">BuildAndDecodeApkTest</th>
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="BuildAndDecodeApkTest → BinaryXmlResourceParser · weight: 25 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#1031d4d" title="BuildAndDecodeApkTest → ApkBuilder · weight: 36 · cw: 1.2631 · METHOD_INVOCATION_OBJECT_PARAMETER, OBJECT_PARAMETER_COUPLING"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="BuildAndDecodeApkTest → ResTable · weight: 18 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#1031d4d" title="BuildAndDecodeApkTest → ApkDecoder · weight: 27 · cw: 1.2631 · METHOD_INVOCATION_OBJECT_PARAMETER, OBJECT_PARAMETER_COUPLING"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="BuildAndDecodeApkTest → Framework · weight: 6 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="BuildAndDecodeApkTest → ResXmlUtils · weight: 25 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#102224c" title="BuildAndDecodeApkTest → BaseTest · weight: 13 · cw: 1.2397 · INHERITANCE, METHOD_INVOCATION_OBJECT_PARAMETER"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="BuildAndDecodeApkTest → NetworkConfigTest · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="BuildAndDecodeApkTest → NoNetworkConfigTest · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="BuildAndDecodeApkTest → CompactResourceTest · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="BuildAndDecodeApkTest → LargeCompactResourceTest · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="BuildAndDecodeApkTest → StrippedNamespaceTest · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#1031a4d" title="BuildAndDecodeApkTest → Config · weight: 12 · cw: 1.2763 · METHOD_INVOCATION_ATOMIC_PARAMETER, OBJECT_PARAMETER_CLASS"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="brut.apktool/apktool-lib/src/test/java/brut/androlib/DecodeResolveTest.java">DecodeResolveTest</th>
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#1031d4d" title="DecodeResolveTest → ApkDecoder · weight: 1 · cw: 1.2631 · METHOD_INVOCATION_OBJECT_PARAMETER, OBJECT_PARAMETER_COUPLING"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#102224c" title="DecodeResolveTest → BaseTest · weight: 1 · cw: 1.2397 · INHERITANCE, METHOD_INVOCATION_OBJECT_PARAMETER"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#1031d4d" title="DecodeResolveTest → Config · weight: 1 · cw: 1.2624 · METHOD_INVOCATION_OBJECT_PARAMETER, OBJECT_PARAMETER_CLASS"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="brut.apktool/apktool-lib/src/test/java/brut/androlib/NetworkConfigTest.java">NetworkConfigTest</th>
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#1031d4d" title="NetworkConfigTest → ApkBuilder · weight: 1 · cw: 1.2631 · METHOD_INVOCATION_OBJECT_PARAMETER, OBJECT_PARAMETER_COUPLING"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#1031d4d" title="NetworkConfigTest → ApkDecoder · weight: 1 · cw: 1.2631 · METHOD_INVOCATION_OBJECT_PARAMETER, OBJECT_PARAMETER_COUPLING"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NetworkConfigTest → ResXmlUtils · weight: 2 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#102224c" title="NetworkConfigTest → BaseTest · weight: 1 · cw: 1.2397 · INHERITANCE, METHOD_INVOCATION_OBJECT_PARAMETER"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NetworkConfigTest → BuildAndDecodeApkTest · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NetworkConfigTest → NoNetworkConfigTest · weight: 2 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NetworkConfigTest → CompactResourceTest · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NetworkConfigTest → LargeCompactResourceTest · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NetworkConfigTest → StrippedNamespaceTest · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#1031a4d" title="NetworkConfigTest → Config · weight: 1 · cw: 1.2763 · METHOD_INVOCATION_ATOMIC_PARAMETER, OBJECT_PARAMETER_CLASS"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="brut.apktool/apktool-lib/src/test/java/brut/androlib/NoNetworkConfigTest.java">NoNetworkConfigTest</th>
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#1031d4d" title="NoNetworkConfigTest → ApkBuilder · weight: 1 · cw: 1.2631 · METHOD_INVOCATION_OBJECT_PARAMETER, OBJECT_PARAMETER_COUPLING"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#1031d4d" title="NoNetworkConfigTest → ApkDecoder · weight: 1 · cw: 1.2631 · METHOD_INVOCATION_OBJECT_PARAMETER, OBJECT_PARAMETER_COUPLING"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#102224c" title="NoNetworkConfigTest → BaseTest · weight: 1 · cw: 1.2397 · INHERITANCE, METHOD_INVOCATION_OBJECT_PARAMETER"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NoNetworkConfigTest → BuildAndDecodeApkTest · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NoNetworkConfigTest → NetworkConfigTest · weight: 2 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NoNetworkConfigTest → CompactResourceTest · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NoNetworkConfigTest → LargeCompactResourceTest · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NoNetworkConfigTest → StrippedNamespaceTest · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#1031a4d" title="NoNetworkConfigTest → Config · weight: 1 · cw: 1.2763 · METHOD_INVOCATION_ATOMIC_PARAMETER, OBJECT_PARAMETER_CLASS"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="brut.apktool/apktool-lib/src/test/java/brut/androlib/DexStaticFieldValueTest.java">DexStaticFieldValueTest</th>
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#1031d4d" title="DexStaticFieldValueTest → ApkBuilder · weight: 1 · cw: 1.2631 · METHOD_INVOCATION_OBJECT_PARAMETER, OBJECT_PARAMETER_COUPLING"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#1031d4d" title="DexStaticFieldValueTest → ApkDecoder · weight: 1 · cw: 1.2631 · METHOD_INVOCATION_OBJECT_PARAMETER, OBJECT_PARAMETER_COUPLING"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#102224c" title="DexStaticFieldValueTest → BaseTest · weight: 1 · cw: 1.2397 · INHERITANCE, METHOD_INVOCATION_OBJECT_PARAMETER"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#1031a4d" title="DexStaticFieldValueTest → Config · weight: 1 · cw: 1.2763 · METHOD_INVOCATION_ATOMIC_PARAMETER, OBJECT_PARAMETER_CLASS"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="brut.apktool/apktool-lib/src/test/java/brut/androlib/CompactResourceTest.java">CompactResourceTest</th>
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#1031d4d" title="CompactResourceTest → ApkDecoder · weight: 1 · cw: 1.2631 · METHOD_INVOCATION_OBJECT_PARAMETER, OBJECT_PARAMETER_COUPLING"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#102224c" title="CompactResourceTest → BaseTest · weight: 1 · cw: 1.2397 · INHERITANCE, METHOD_INVOCATION_OBJECT_PARAMETER"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="CompactResourceTest → BuildAndDecodeApkTest · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="CompactResourceTest → NetworkConfigTest · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="CompactResourceTest → NoNetworkConfigTest · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="CompactResourceTest → LargeCompactResourceTest · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="CompactResourceTest → StrippedNamespaceTest · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#e5a741" title="CompactResourceTest → Config · weight: 1 · cw: 0.5600 · OBJECT_PARAMETER_CLASS"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="brut.apktool/apktool-lib/src/test/java/brut/androlib/EmptyArscTest.java">EmptyArscTest</th>
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#1031d4d" title="EmptyArscTest → ApkDecoder · weight: 1 · cw: 1.2631 · METHOD_INVOCATION_OBJECT_PARAMETER, OBJECT_PARAMETER_COUPLING"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#102224c" title="EmptyArscTest → BaseTest · weight: 1 · cw: 1.2397 · INHERITANCE, METHOD_INVOCATION_OBJECT_PARAMETER"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#e5a741" title="EmptyArscTest → Config · weight: 1 · cw: 0.5600 · OBJECT_PARAMETER_CLASS"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="brut.apktool/apktool-lib/src/test/java/brut/androlib/FrameworkTest.java">FrameworkTest</th>
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#1031d4d" title="FrameworkTest → Framework · weight: 1 · cw: 1.2631 · METHOD_INVOCATION_OBJECT_PARAMETER, OBJECT_PARAMETER_COUPLING"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#102224c" title="FrameworkTest → BaseTest · weight: 1 · cw: 1.2397 · INHERITANCE, METHOD_INVOCATION_OBJECT_PARAMETER"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#1031d4d" title="FrameworkTest → Config · weight: 1 · cw: 1.2624 · METHOD_INVOCATION_OBJECT_PARAMETER, OBJECT_PARAMETER_CLASS"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="brut.apktool/apktool-lib/src/test/java/brut/androlib/LargeCompactResourceTest.java">LargeCompactResourceTest</th>
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="LargeCompactResourceTest → BinaryXmlResourceParser · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="LargeCompactResourceTest → ResTable · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#1031d4d" title="LargeCompactResourceTest → ApkDecoder · weight: 1 · cw: 1.2631 · METHOD_INVOCATION_OBJECT_PARAMETER, OBJECT_PARAMETER_COUPLING"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#102224c" title="LargeCompactResourceTest → BaseTest · weight: 1 · cw: 1.2397 · INHERITANCE, METHOD_INVOCATION_OBJECT_PARAMETER"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="LargeCompactResourceTest → BuildAndDecodeApkTest · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="LargeCompactResourceTest → NetworkConfigTest · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="LargeCompactResourceTest → NoNetworkConfigTest · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="LargeCompactResourceTest → CompactResourceTest · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="LargeCompactResourceTest → StrippedNamespaceTest · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#e5a741" title="LargeCompactResourceTest → Config · weight: 1 · cw: 0.5600 · OBJECT_PARAMETER_CLASS"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="brut.apktool/apktool-lib/src/test/java/brut/androlib/SparseFlagTest.java">SparseFlagTest</th>
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#1031d4d" title="SparseFlagTest → ApkBuilder · weight: 1 · cw: 1.2631 · METHOD_INVOCATION_OBJECT_PARAMETER, OBJECT_PARAMETER_COUPLING"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#153-15b6b" title="SparseFlagTest → ApkDecoder · weight: 1 · cw: 3.1873 · METHOD_INVOCATION_ATOMIC_PARAMETER, METHOD_INVOCATION_OBJECT_PARAMETER, OBJECT_PARAMETER_COUPLING, VARIABLE_CLASS_INSTANCE_CREATION, VARIABLE_DECLARATION_STATEMENT"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#102224c" title="SparseFlagTest → BaseTest · weight: 1 · cw: 1.2397 · INHERITANCE, METHOD_INVOCATION_OBJECT_PARAMETER"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#1031d4d" title="SparseFlagTest → Config · weight: 1 · cw: 1.2624 · METHOD_INVOCATION_OBJECT_PARAMETER, OBJECT_PARAMETER_CLASS"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="brut.apktool/apktool-lib/src/test/java/brut/androlib/StrippedNamespaceTest.java">StrippedNamespaceTest</th>
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#1031d4d" title="StrippedNamespaceTest → ApkDecoder · weight: 1 · cw: 1.2631 · METHOD_INVOCATION_OBJECT_PARAMETER, OBJECT_PARAMETER_COUPLING"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#102224c" title="StrippedNamespaceTest → BaseTest · weight: 1 · cw: 1.2397 · INHERITANCE, METHOD_INVOCATION_OBJECT_PARAMETER"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="StrippedNamespaceTest → BuildAndDecodeApkTest · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="StrippedNamespaceTest → NetworkConfigTest · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="StrippedNamespaceTest → NoNetworkConfigTest · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="StrippedNamespaceTest → CompactResourceTest · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="StrippedNamespaceTest → LargeCompactResourceTest · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#e5a741" title="StrippedNamespaceTest → Config · weight: 1 · cw: 0.5600 · OBJECT_PARAMETER_CLASS"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="brut.apktool/apktool-lib/src/test/java/brut/androlib/VectorDrawableTest.java">VectorDrawableTest</th>
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#1031d4d" title="VectorDrawableTest → ApkDecoder · weight: 1 · cw: 1.2631 · METHOD_INVOCATION_OBJECT_PARAMETER, OBJECT_PARAMETER_COUPLING"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#102224c" title="VectorDrawableTest → BaseTest · weight: 1 · cw: 1.2397 · INHERITANCE, METHOD_INVOCATION_OBJECT_PARAMETER"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#e5a741" title="VectorDrawableTest → Config · weight: 1 · cw: 0.5600 · OBJECT_PARAMETER_CLASS"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="brut.apktool/apktool-lib/src/main/java/brut/androlib/Config.java">Config</th>
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Config → BinaryXmlResourceParser · weight: 8 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Config → ApkBuilder · weight: 12 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Config → ResTable · weight: 6 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Config → ApkDecoder · weight: 9 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Config → Framework · weight: 2 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Config → ResXmlUtils · weight: 8 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Config → BaseTest · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Config → BuildAndDecodeApkTest · weight: 12 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+        </tr>
+        
+      </tbody>
+    </table>
+  </div>
+</section>
+
+
+</body>
+</html>

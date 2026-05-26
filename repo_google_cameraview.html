@@ -1,4 +1,10 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>HyCPA — google/cameraview</title><style>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HyCPA — google/cameraview</title>
+  <style>
 :root {
   --bg: #0d1117; --surface: #161b22; --surface2: #21262d;
   --border: #30363d; --text: #e6edf3; --text2: #8b949e;
@@ -36,21 +42,29 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, Bl
 .comm-chip .cdata { color: var(--text2); }
 
 /* ── Main container ── */
-.container { max-width: 1100px; margin: 0 auto; padding: 28px 32px; }
+.container { max-width: 1600px; margin: 0 auto; padding: 28px 32px; }
 .summary-bar { display: flex; gap: 20px; flex-wrap: wrap; margin-bottom: 24px; }
 .summary-card { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 12px 20px; text-align: center; flex: 1; min-width: 120px; }
 .summary-card .val { font-size: 22px; font-weight: 700; color: var(--accent); }
 .summary-card .lbl { font-size: 11px; color: var(--text2); margin-top: 2px; }
+
+/* ── Sort bar ── */
+.sort-bar { display: flex; align-items: center; gap: 10px; margin-bottom: 16px; flex-wrap: wrap; }
+.sort-bar label { font-size: 13px; color: var(--text2); }
+.sort-bar select { background: var(--surface); color: var(--text); border: 1px solid var(--border); border-radius: 6px; padding: 6px 10px; font-size: 13px; cursor: pointer; }
+.sort-bar select:hover { border-color: var(--accent); }
 
 /* ── Source class accordion ── */
 .src-block { margin-bottom: 10px; }
 .src-header { width: 100%; background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 14px 20px; display: flex; align-items: center; gap: 12px; cursor: pointer; text-align: left; color: var(--text); transition: border-color .2s; }
 .src-header:hover { border-color: var(--accent); }
 .src-header.open { border-bottom-left-radius: 0; border-bottom-right-radius: 0; border-color: var(--accent); }
-.src-name { font-size: 14px; font-weight: 600; flex: 1; word-break: break-all; }
+.src-left  { flex: 1; min-width: 0; display: flex; align-items: center; padding-right: 14px; }
+.src-right { flex: 1; min-width: 0; display: flex; align-items: center; gap: 8px; padding-left: 14px; }
+.src-name { font-size: 14px; font-weight: 600; word-break: break-all; }
 .src-meta { display: flex; gap: 8px; flex-wrap: wrap; }
 .badge { background: var(--surface2); border: 1px solid var(--border); border-radius: 4px; padding: 2px 8px; font-size: 11px; color: var(--text2); white-space: nowrap; }
-.chevron { color: var(--text2); font-size: 12px; transition: transform .2s; flex-shrink: 0; }
+.chevron { color: var(--text2); font-size: 12px; transition: transform .2s; flex-shrink: 0; margin-left: auto; }
 .chevron.open { transform: rotate(90deg); }
 .src-body { background: var(--surface); border: 1px solid var(--accent); border-top: none; border-bottom-left-radius: 10px; border-bottom-right-radius: 10px; padding: 16px 20px; }
 .analysis-row { margin-bottom: 14px; }
@@ -74,560 +88,868 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, Bl
   .container { padding: 16px; }
   .src-meta { display: none; }
 }
-</style></head><body><div class="page-header"><div class="header-title"><a class="back" href="index.html">← Back to repository list</a><h1>📊 google/cameraview</h1></div><div class="header-email"><label>Email <span>*</span> (required)</label><input type="email" id="userEmail" placeholder="your@email.com" oninput="saveEmail(this.value)" /></div><div class="header-actions"><a class="btn" href="help.html">❓ How to read this site</a><button class="btn" onclick="toggleCommunities()">🔗 Show Communities</button><button class="btn btn-primary" onclick="submitAll()">✅ Submit All</button></div></div><div class="communities-panel" id="commPanel"><h3>Communities in this repository</h3><div class="comm-grid" id="commGrid"></div></div><div class="container"><div class="summary-bar"><div class="summary-card"><div class="val">23</div><div class="lbl">Classes Analysed</div></div><div class="summary-card"><div class="val">73</div><div class="lbl">Deterministic Targets</div></div><div class="summary-card"><div class="val">424</div><div class="lbl">Monte-Carlo Targets</div></div><div class="summary-card"><div class="val">0.519</div><div class="lbl">Max Class Code Smell Score</div></div></div>  <div class="src-block" id="src_0">
+</style>
+</head>
+<body>
+<div class="page-header">
+  <div class="header-title">
+    <a class="back" href="index.html">← Back to repository list</a>
+    <h1>📊 google/cameraview</h1>
+  </div>
+  <div class="header-email">
+    <label>Email <span>*</span> (required)</label>
+    <input type="email" id="userEmail" placeholder="your@email.com"
+           oninput="saveEmail(this.value)" />
+  </div>
+  <div class="header-actions">
+    <a class="btn" href="help.html">❓ How to read this site</a>
+    <button class="btn" onclick="toggleCommunities()">🔗 Show Communities</button>
+    <button class="btn btn-primary" onclick="submitAll()">✅ Submit All</button>
+  </div>
+</div>
+
+<div class="communities-panel" id="commPanel">
+  <h3>Communities in this repository</h3>
+  <div class="comm-grid" id="commGrid"></div>
+</div>
+
+<div class="container">
+  <div class="summary-bar">
+    <div class="summary-card">
+      <div class="val">23</div>
+      <div class="lbl">Classes Analysed</div>
+    </div>
+    <div class="summary-card">
+      <div class="val">82</div>
+      <div class="lbl">Deterministic Targets</div>
+    </div>
+    <div class="summary-card">
+      <div class="val">424</div>
+      <div class="lbl">Probabilistic Targets</div>
+    </div>
+    <div class="summary-card">
+      <div class="val">0.833</div>
+      <div class="lbl">Max Class Health Score</div>
+    </div>
+  </div>
+
+  <div class="sort-bar">
+    <label for="sortBy">Sort classes by:</label>
+    <select id="sortBy" onchange="sortSeedBlocks()">
+      <option value="default">Default (Det+Prob, then max prob)</option>
+      <option value="det">Deterministic targets</option>
+      <option value="prob">Probabilistic targets</option>
+      <option value="comms">Number of communities</option>
+      <option value="frag">Health score</option>
+      <option value="name">Class name (A→Z)</option>
+    </select>
+    <select id="sortDir" onchange="sortSeedBlocks()">
+      <option value="desc">Descending</option>
+      <option value="asc">Ascending</option>
+    </select>
+  </div>
+
+  <div id="seedList">
+  <div class="src-block" id="src_0"
+       data-det="9"
+       data-prob="20"
+       data-comms="3"
+       data-frag="0.166667"
+       data-name="library/src/androidTest/java/com/google/android/cameraview/CameraViewTest.java"
+       data-default="0">
     <button class="src-header" onclick="toggleBlock(0)">
-      <span class="src-name">library/src/androidTest/java/com/google/android/cameraview/CameraViewTest.java</span>
-      <span class="src-meta">
-        <span class="badge">Det 10</span>
-        <span class="badge">MC 20</span>
-        <span class="badge">Code Smell 0.135</span>
-        <span class="badge">C0, C5, C6, C7 +1</span>
+      <span class="src-left">
+        <span class="src-name">library/src/androidTest/java/com/google/android/cameraview/CameraViewTest.java</span>
       </span>
-      <span class="chevron" id="chev_0">▶</span>
+      <span class="src-right">
+        <span class="src-meta">
+          <span class="badge">Det 9</span>
+          <span class="badge">Prob 20</span>
+          <span class="badge">Health 0.167</span>
+          <span class="badge">C0, C3, C4</span>
+        </span>
+        <span class="chevron" id="chev_0">▶</span>
+      </span>
     </button>
     <div class="src-body" id="body_0" style="display:none">
       <div class="analysis-row">
         <label>Analysis of <strong>library/src/androidTest/java/com/google/android/cameraview/CameraViewTest.java</strong></label>
         <textarea class="analysis-field" id="analysis_0" rows="3"
-          placeholder="Enter your analysis for this class…"
-          oninput="saveAnalysis('library/src/androidTest/java/com/google/android/cameraview/CameraViewTest.java', this.value)"></textarea>
+                  placeholder="Enter your analysis for this class…"
+                  oninput="saveAnalysis('library/src/androidTest/java/com/google/android/cameraview/CameraViewTest.java', this.value)"></textarea>
       </div>
       <div class="progress-note" id="prog_library_src_androidTest_java_com_google_android_cameraview_CameraViewTest_java"></div>
       <a class="detail-link" href="repo_google_cameraview__library_src_androidTest_java_com_google_android_cameraview_CameraViewTest.java.html">
-        📋 View 10 deterministic / 20 MC targets →
+        📋 View 9 deterministic / 20 probabilistic targets →
       </a>
     </div>
   </div>
-  <div class="src-block" id="src_1">
+  <div class="src-block" id="src_1"
+       data-det="9"
+       data-prob="20"
+       data-comms="3"
+       data-frag="0.333333"
+       data-name="library/src/main/api23/com/google/android/cameraview/Camera2Api23.java"
+       data-default="1">
     <button class="src-header" onclick="toggleBlock(1)">
-      <span class="src-name">demo/src/main/java/com/google/android/cameraview/demo/MainActivity.java</span>
-      <span class="src-meta">
-        <span class="badge">Det 9</span>
-        <span class="badge">MC 20</span>
-        <span class="badge">Code Smell 0.365</span>
-        <span class="badge">C0, C5, C6, C7 +1</span>
+      <span class="src-left">
+        <span class="src-name">library/src/main/api23/com/google/android/cameraview/Camera2Api23.java</span>
       </span>
-      <span class="chevron" id="chev_1">▶</span>
+      <span class="src-right">
+        <span class="src-meta">
+          <span class="badge">Det 9</span>
+          <span class="badge">Prob 20</span>
+          <span class="badge">Health 0.333</span>
+          <span class="badge">C0, C1, C2</span>
+        </span>
+        <span class="chevron" id="chev_1">▶</span>
+      </span>
     </button>
     <div class="src-body" id="body_1" style="display:none">
       <div class="analysis-row">
-        <label>Analysis of <strong>demo/src/main/java/com/google/android/cameraview/demo/MainActivity.java</strong></label>
+        <label>Analysis of <strong>library/src/main/api23/com/google/android/cameraview/Camera2Api23.java</strong></label>
         <textarea class="analysis-field" id="analysis_1" rows="3"
-          placeholder="Enter your analysis for this class…"
-          oninput="saveAnalysis('demo/src/main/java/com/google/android/cameraview/demo/MainActivity.java', this.value)"></textarea>
+                  placeholder="Enter your analysis for this class…"
+                  oninput="saveAnalysis('library/src/main/api23/com/google/android/cameraview/Camera2Api23.java', this.value)"></textarea>
       </div>
-      <div class="progress-note" id="prog_demo_src_main_java_com_google_android_cameraview_demo_MainActivity_java"></div>
-      <a class="detail-link" href="repo_google_cameraview__demo_src_main_java_com_google_android_cameraview_demo_MainActivity.java.html">
-        📋 View 9 deterministic / 20 MC targets →
+      <div class="progress-note" id="prog_library_src_main_api23_com_google_android_cameraview_Camera2Api23_java"></div>
+      <a class="detail-link" href="repo_google_cameraview__library_src_main_api23_com_google_android_cameraview_Camera2Api23.java.html">
+        📋 View 9 deterministic / 20 probabilistic targets →
       </a>
     </div>
   </div>
-  <div class="src-block" id="src_2">
+  <div class="src-block" id="src_2"
+       data-det="9"
+       data-prob="20"
+       data-comms="3"
+       data-frag="0.000000"
+       data-name="library/src/androidTest/java/com/google/android/cameraview/CameraViewActivity.java"
+       data-default="2">
     <button class="src-header" onclick="toggleBlock(2)">
-      <span class="src-name">library/src/androidTest/java/com/google/android/cameraview/CameraViewActivity.java</span>
-      <span class="src-meta">
-        <span class="badge">Det 8</span>
-        <span class="badge">MC 20</span>
-        <span class="badge">Code Smell 0.058</span>
-        <span class="badge">C0, C1, C2, C3 +1</span>
+      <span class="src-left">
+        <span class="src-name">library/src/androidTest/java/com/google/android/cameraview/CameraViewActivity.java</span>
       </span>
-      <span class="chevron" id="chev_2">▶</span>
+      <span class="src-right">
+        <span class="src-meta">
+          <span class="badge">Det 9</span>
+          <span class="badge">Prob 20</span>
+          <span class="badge">Health 0.000</span>
+          <span class="badge">C0, C1, C2</span>
+        </span>
+        <span class="chevron" id="chev_2">▶</span>
+      </span>
     </button>
     <div class="src-body" id="body_2" style="display:none">
       <div class="analysis-row">
         <label>Analysis of <strong>library/src/androidTest/java/com/google/android/cameraview/CameraViewActivity.java</strong></label>
         <textarea class="analysis-field" id="analysis_2" rows="3"
-          placeholder="Enter your analysis for this class…"
-          oninput="saveAnalysis('library/src/androidTest/java/com/google/android/cameraview/CameraViewActivity.java', this.value)"></textarea>
+                  placeholder="Enter your analysis for this class…"
+                  oninput="saveAnalysis('library/src/androidTest/java/com/google/android/cameraview/CameraViewActivity.java', this.value)"></textarea>
       </div>
       <div class="progress-note" id="prog_library_src_androidTest_java_com_google_android_cameraview_CameraViewActivity_java"></div>
       <a class="detail-link" href="repo_google_cameraview__library_src_androidTest_java_com_google_android_cameraview_CameraViewActivity.java.html">
-        📋 View 8 deterministic / 20 MC targets →
+        📋 View 9 deterministic / 20 probabilistic targets →
       </a>
     </div>
   </div>
-  <div class="src-block" id="src_3">
+  <div class="src-block" id="src_3"
+       data-det="8"
+       data-prob="20"
+       data-comms="3"
+       data-frag="0.833333"
+       data-name="demo/src/main/java/com/google/android/cameraview/demo/MainActivity.java"
+       data-default="3">
     <button class="src-header" onclick="toggleBlock(3)">
-      <span class="src-name">library/src/main/java/com/google/android/cameraview/CameraView.java</span>
-      <span class="src-meta">
-        <span class="badge">Det 7</span>
-        <span class="badge">MC 20</span>
-        <span class="badge">Code Smell 0.481</span>
-        <span class="badge">C1, C5, C9, C10 +1</span>
+      <span class="src-left">
+        <span class="src-name">demo/src/main/java/com/google/android/cameraview/demo/MainActivity.java</span>
       </span>
-      <span class="chevron" id="chev_3">▶</span>
+      <span class="src-right">
+        <span class="src-meta">
+          <span class="badge">Det 8</span>
+          <span class="badge">Prob 20</span>
+          <span class="badge">Health 0.833</span>
+          <span class="badge">C0, C3, C4</span>
+        </span>
+        <span class="chevron" id="chev_3">▶</span>
+      </span>
     </button>
     <div class="src-body" id="body_3" style="display:none">
       <div class="analysis-row">
-        <label>Analysis of <strong>library/src/main/java/com/google/android/cameraview/CameraView.java</strong></label>
+        <label>Analysis of <strong>demo/src/main/java/com/google/android/cameraview/demo/MainActivity.java</strong></label>
         <textarea class="analysis-field" id="analysis_3" rows="3"
-          placeholder="Enter your analysis for this class…"
-          oninput="saveAnalysis('library/src/main/java/com/google/android/cameraview/CameraView.java', this.value)"></textarea>
+                  placeholder="Enter your analysis for this class…"
+                  oninput="saveAnalysis('demo/src/main/java/com/google/android/cameraview/demo/MainActivity.java', this.value)"></textarea>
       </div>
-      <div class="progress-note" id="prog_library_src_main_java_com_google_android_cameraview_CameraView_java"></div>
-      <a class="detail-link" href="repo_google_cameraview__library_src_main_java_com_google_android_cameraview_CameraView.java.html">
-        📋 View 7 deterministic / 20 MC targets →
+      <div class="progress-note" id="prog_demo_src_main_java_com_google_android_cameraview_demo_MainActivity_java"></div>
+      <a class="detail-link" href="repo_google_cameraview__demo_src_main_java_com_google_android_cameraview_demo_MainActivity.java.html">
+        📋 View 8 deterministic / 20 probabilistic targets →
       </a>
     </div>
   </div>
-  <div class="src-block" id="src_4">
+  <div class="src-block" id="src_4"
+       data-det="8"
+       data-prob="20"
+       data-comms="3"
+       data-frag="0.500000"
+       data-name="library/src/main/api14/com/google/android/cameraview/Camera1.java"
+       data-default="4">
     <button class="src-header" onclick="toggleBlock(4)">
-      <span class="src-name">library/src/main/api23/com/google/android/cameraview/Camera2Api23.java</span>
-      <span class="src-meta">
-        <span class="badge">Det 6</span>
-        <span class="badge">MC 20</span>
-        <span class="badge">Code Smell 0.096</span>
-        <span class="badge">C0, C1, C2, C3 +1</span>
+      <span class="src-left">
+        <span class="src-name">library/src/main/api14/com/google/android/cameraview/Camera1.java</span>
       </span>
-      <span class="chevron" id="chev_4">▶</span>
+      <span class="src-right">
+        <span class="src-meta">
+          <span class="badge">Det 8</span>
+          <span class="badge">Prob 20</span>
+          <span class="badge">Health 0.500</span>
+          <span class="badge">C2, C4, C5</span>
+        </span>
+        <span class="chevron" id="chev_4">▶</span>
+      </span>
     </button>
     <div class="src-body" id="body_4" style="display:none">
       <div class="analysis-row">
-        <label>Analysis of <strong>library/src/main/api23/com/google/android/cameraview/Camera2Api23.java</strong></label>
-        <textarea class="analysis-field" id="analysis_4" rows="3"
-          placeholder="Enter your analysis for this class…"
-          oninput="saveAnalysis('library/src/main/api23/com/google/android/cameraview/Camera2Api23.java', this.value)"></textarea>
-      </div>
-      <div class="progress-note" id="prog_library_src_main_api23_com_google_android_cameraview_Camera2Api23_java"></div>
-      <a class="detail-link" href="repo_google_cameraview__library_src_main_api23_com_google_android_cameraview_Camera2Api23.java.html">
-        📋 View 6 deterministic / 20 MC targets →
-      </a>
-    </div>
-  </div>
-  <div class="src-block" id="src_5">
-    <button class="src-header" onclick="toggleBlock(5)">
-      <span class="src-name">library/src/main/api14/com/google/android/cameraview/Camera1.java</span>
-      <span class="src-meta">
-        <span class="badge">Det 5</span>
-        <span class="badge">MC 20</span>
-        <span class="badge">Code Smell 0.404</span>
-        <span class="badge">C3, C7, C9, C12</span>
-      </span>
-      <span class="chevron" id="chev_5">▶</span>
-    </button>
-    <div class="src-body" id="body_5" style="display:none">
-      <div class="analysis-row">
         <label>Analysis of <strong>library/src/main/api14/com/google/android/cameraview/Camera1.java</strong></label>
-        <textarea class="analysis-field" id="analysis_5" rows="3"
-          placeholder="Enter your analysis for this class…"
-          oninput="saveAnalysis('library/src/main/api14/com/google/android/cameraview/Camera1.java', this.value)"></textarea>
+        <textarea class="analysis-field" id="analysis_4" rows="3"
+                  placeholder="Enter your analysis for this class…"
+                  oninput="saveAnalysis('library/src/main/api14/com/google/android/cameraview/Camera1.java', this.value)"></textarea>
       </div>
       <div class="progress-note" id="prog_library_src_main_api14_com_google_android_cameraview_Camera1_java"></div>
       <a class="detail-link" href="repo_google_cameraview__library_src_main_api14_com_google_android_cameraview_Camera1.java.html">
-        📋 View 5 deterministic / 20 MC targets →
+        📋 View 8 deterministic / 20 probabilistic targets →
       </a>
     </div>
   </div>
-  <div class="src-block" id="src_6">
-    <button class="src-header" onclick="toggleBlock(6)">
-      <span class="src-name">library/src/main/api21/com/google/android/cameraview/Camera2.java</span>
-      <span class="src-meta">
-        <span class="badge">Det 5</span>
-        <span class="badge">MC 20</span>
-        <span class="badge">Code Smell 0.519</span>
-        <span class="badge">C4, C8, C11, C12</span>
+  <div class="src-block" id="src_5"
+       data-det="8"
+       data-prob="20"
+       data-comms="3"
+       data-frag="0.833333"
+       data-name="library/src/main/api21/com/google/android/cameraview/Camera2.java"
+       data-default="5">
+    <button class="src-header" onclick="toggleBlock(5)">
+      <span class="src-left">
+        <span class="src-name">library/src/main/api21/com/google/android/cameraview/Camera2.java</span>
       </span>
-      <span class="chevron" id="chev_6">▶</span>
+      <span class="src-right">
+        <span class="src-meta">
+          <span class="badge">Det 8</span>
+          <span class="badge">Prob 20</span>
+          <span class="badge">Health 0.833</span>
+          <span class="badge">C2, C4, C5</span>
+        </span>
+        <span class="chevron" id="chev_5">▶</span>
+      </span>
     </button>
-    <div class="src-body" id="body_6" style="display:none">
+    <div class="src-body" id="body_5" style="display:none">
       <div class="analysis-row">
         <label>Analysis of <strong>library/src/main/api21/com/google/android/cameraview/Camera2.java</strong></label>
-        <textarea class="analysis-field" id="analysis_6" rows="3"
-          placeholder="Enter your analysis for this class…"
-          oninput="saveAnalysis('library/src/main/api21/com/google/android/cameraview/Camera2.java', this.value)"></textarea>
+        <textarea class="analysis-field" id="analysis_5" rows="3"
+                  placeholder="Enter your analysis for this class…"
+                  oninput="saveAnalysis('library/src/main/api21/com/google/android/cameraview/Camera2.java', this.value)"></textarea>
       </div>
       <div class="progress-note" id="prog_library_src_main_api21_com_google_android_cameraview_Camera2_java"></div>
       <a class="detail-link" href="repo_google_cameraview__library_src_main_api21_com_google_android_cameraview_Camera2.java.html">
-        📋 View 5 deterministic / 20 MC targets →
+        📋 View 8 deterministic / 20 probabilistic targets →
       </a>
     </div>
   </div>
-  <div class="src-block" id="src_7">
-    <button class="src-header" onclick="toggleBlock(7)">
-      <span class="src-name">library/src/main/base/com/google/android/cameraview/SizeMap.java</span>
-      <span class="src-meta">
-        <span class="badge">Det 2</span>
-        <span class="badge">MC 20</span>
-        <span class="badge">Code Smell 0.077</span>
-        <span class="badge">C1, C5, C9, C10 +2</span>
+  <div class="src-block" id="src_6"
+       data-det="8"
+       data-prob="20"
+       data-comms="3"
+       data-frag="0.833333"
+       data-name="library/src/main/java/com/google/android/cameraview/CameraView.java"
+       data-default="6">
+    <button class="src-header" onclick="toggleBlock(6)">
+      <span class="src-left">
+        <span class="src-name">library/src/main/java/com/google/android/cameraview/CameraView.java</span>
       </span>
-      <span class="chevron" id="chev_7">▶</span>
+      <span class="src-right">
+        <span class="src-meta">
+          <span class="badge">Det 8</span>
+          <span class="badge">Prob 20</span>
+          <span class="badge">Health 0.833</span>
+          <span class="badge">C0, C3, C4</span>
+        </span>
+        <span class="chevron" id="chev_6">▶</span>
+      </span>
+    </button>
+    <div class="src-body" id="body_6" style="display:none">
+      <div class="analysis-row">
+        <label>Analysis of <strong>library/src/main/java/com/google/android/cameraview/CameraView.java</strong></label>
+        <textarea class="analysis-field" id="analysis_6" rows="3"
+                  placeholder="Enter your analysis for this class…"
+                  oninput="saveAnalysis('library/src/main/java/com/google/android/cameraview/CameraView.java', this.value)"></textarea>
+      </div>
+      <div class="progress-note" id="prog_library_src_main_java_com_google_android_cameraview_CameraView_java"></div>
+      <a class="detail-link" href="repo_google_cameraview__library_src_main_java_com_google_android_cameraview_CameraView.java.html">
+        📋 View 8 deterministic / 20 probabilistic targets →
+      </a>
+    </div>
+  </div>
+  <div class="src-block" id="src_7"
+       data-det="2"
+       data-prob="20"
+       data-comms="4"
+       data-frag="0.000000"
+       data-name="library/src/main/base/com/google/android/cameraview/SizeMap.java"
+       data-default="7">
+    <button class="src-header" onclick="toggleBlock(7)">
+      <span class="src-left">
+        <span class="src-name">library/src/main/base/com/google/android/cameraview/SizeMap.java</span>
+      </span>
+      <span class="src-right">
+        <span class="src-meta">
+          <span class="badge">Det 2</span>
+          <span class="badge">Prob 20</span>
+          <span class="badge">Health 0.000</span>
+          <span class="badge">C0, C3, C4, C7</span>
+        </span>
+        <span class="chevron" id="chev_7">▶</span>
+      </span>
     </button>
     <div class="src-body" id="body_7" style="display:none">
       <div class="analysis-row">
         <label>Analysis of <strong>library/src/main/base/com/google/android/cameraview/SizeMap.java</strong></label>
         <textarea class="analysis-field" id="analysis_7" rows="3"
-          placeholder="Enter your analysis for this class…"
-          oninput="saveAnalysis('library/src/main/base/com/google/android/cameraview/SizeMap.java', this.value)"></textarea>
+                  placeholder="Enter your analysis for this class…"
+                  oninput="saveAnalysis('library/src/main/base/com/google/android/cameraview/SizeMap.java', this.value)"></textarea>
       </div>
       <div class="progress-note" id="prog_library_src_main_base_com_google_android_cameraview_SizeMap_java"></div>
       <a class="detail-link" href="repo_google_cameraview__library_src_main_base_com_google_android_cameraview_SizeMap.java.html">
-        📋 View 2 deterministic / 20 MC targets →
+        📋 View 2 deterministic / 20 probabilistic targets →
       </a>
     </div>
   </div>
-  <div class="src-block" id="src_8">
+  <div class="src-block" id="src_8"
+       data-det="2"
+       data-prob="20"
+       data-comms="3"
+       data-frag="0.000000"
+       data-name="demo/src/main/java/com/google/android/cameraview/demo/AspectRatioFragment.java"
+       data-default="8">
     <button class="src-header" onclick="toggleBlock(8)">
-      <span class="src-name">demo/src/main/java/com/google/android/cameraview/demo/AspectRatioFragment.java</span>
-      <span class="src-meta">
-        <span class="badge">Det 2</span>
-        <span class="badge">MC 20</span>
-        <span class="badge">Code Smell 0.019</span>
-        <span class="badge">C0, C1, C2, C3 +1</span>
+      <span class="src-left">
+        <span class="src-name">demo/src/main/java/com/google/android/cameraview/demo/AspectRatioFragment.java</span>
       </span>
-      <span class="chevron" id="chev_8">▶</span>
+      <span class="src-right">
+        <span class="src-meta">
+          <span class="badge">Det 2</span>
+          <span class="badge">Prob 20</span>
+          <span class="badge">Health 0.000</span>
+          <span class="badge">C0, C1, C2</span>
+        </span>
+        <span class="chevron" id="chev_8">▶</span>
+      </span>
     </button>
     <div class="src-body" id="body_8" style="display:none">
       <div class="analysis-row">
         <label>Analysis of <strong>demo/src/main/java/com/google/android/cameraview/demo/AspectRatioFragment.java</strong></label>
         <textarea class="analysis-field" id="analysis_8" rows="3"
-          placeholder="Enter your analysis for this class…"
-          oninput="saveAnalysis('demo/src/main/java/com/google/android/cameraview/demo/AspectRatioFragment.java', this.value)"></textarea>
+                  placeholder="Enter your analysis for this class…"
+                  oninput="saveAnalysis('demo/src/main/java/com/google/android/cameraview/demo/AspectRatioFragment.java', this.value)"></textarea>
       </div>
       <div class="progress-note" id="prog_demo_src_main_java_com_google_android_cameraview_demo_AspectRatioFragment_java"></div>
       <a class="detail-link" href="repo_google_cameraview__demo_src_main_java_com_google_android_cameraview_demo_AspectRatioFragment.java.html">
-        📋 View 2 deterministic / 20 MC targets →
+        📋 View 2 deterministic / 20 probabilistic targets →
       </a>
     </div>
   </div>
-  <div class="src-block" id="src_9">
+  <div class="src-block" id="src_9"
+       data-det="2"
+       data-prob="20"
+       data-comms="3"
+       data-frag="0.166667"
+       data-name="library/src/androidTest/java/com/google/android/cameraview/AspectRatioIsCloseTo.java"
+       data-default="9">
     <button class="src-header" onclick="toggleBlock(9)">
-      <span class="src-name">library/src/androidTest/java/com/google/android/cameraview/AspectRatioIsCloseTo.java</span>
-      <span class="src-meta">
-        <span class="badge">Det 2</span>
-        <span class="badge">MC 20</span>
-        <span class="badge">Code Smell 0.058</span>
-        <span class="badge">C0, C1, C2, C3 +1</span>
+      <span class="src-left">
+        <span class="src-name">library/src/androidTest/java/com/google/android/cameraview/AspectRatioIsCloseTo.java</span>
       </span>
-      <span class="chevron" id="chev_9">▶</span>
+      <span class="src-right">
+        <span class="src-meta">
+          <span class="badge">Det 2</span>
+          <span class="badge">Prob 20</span>
+          <span class="badge">Health 0.167</span>
+          <span class="badge">C0, C1, C2</span>
+        </span>
+        <span class="chevron" id="chev_9">▶</span>
+      </span>
     </button>
     <div class="src-body" id="body_9" style="display:none">
       <div class="analysis-row">
         <label>Analysis of <strong>library/src/androidTest/java/com/google/android/cameraview/AspectRatioIsCloseTo.java</strong></label>
         <textarea class="analysis-field" id="analysis_9" rows="3"
-          placeholder="Enter your analysis for this class…"
-          oninput="saveAnalysis('library/src/androidTest/java/com/google/android/cameraview/AspectRatioIsCloseTo.java', this.value)"></textarea>
+                  placeholder="Enter your analysis for this class…"
+                  oninput="saveAnalysis('library/src/androidTest/java/com/google/android/cameraview/AspectRatioIsCloseTo.java', this.value)"></textarea>
       </div>
       <div class="progress-note" id="prog_library_src_androidTest_java_com_google_android_cameraview_AspectRatioIsCloseTo_java"></div>
       <a class="detail-link" href="repo_google_cameraview__library_src_androidTest_java_com_google_android_cameraview_AspectRatioIsCloseTo.java.html">
-        📋 View 2 deterministic / 20 MC targets →
+        📋 View 2 deterministic / 20 probabilistic targets →
       </a>
     </div>
   </div>
-  <div class="src-block" id="src_10">
+  <div class="src-block" id="src_10"
+       data-det="2"
+       data-prob="20"
+       data-comms="3"
+       data-frag="0.166667"
+       data-name="library/src/main/base/com/google/android/cameraview/CameraViewImpl.java"
+       data-default="10">
     <button class="src-header" onclick="toggleBlock(10)">
-      <span class="src-name">library/src/main/base/com/google/android/cameraview/CameraViewImpl.java</span>
-      <span class="src-meta">
-        <span class="badge">Det 2</span>
-        <span class="badge">MC 20</span>
-        <span class="badge">Code Smell 0.058</span>
-        <span class="badge">C1, C5, C9, C10 +1</span>
+      <span class="src-left">
+        <span class="src-name">library/src/main/base/com/google/android/cameraview/CameraViewImpl.java</span>
       </span>
-      <span class="chevron" id="chev_10">▶</span>
+      <span class="src-right">
+        <span class="src-meta">
+          <span class="badge">Det 2</span>
+          <span class="badge">Prob 20</span>
+          <span class="badge">Health 0.167</span>
+          <span class="badge">C0, C3, C4</span>
+        </span>
+        <span class="chevron" id="chev_10">▶</span>
+      </span>
     </button>
     <div class="src-body" id="body_10" style="display:none">
       <div class="analysis-row">
         <label>Analysis of <strong>library/src/main/base/com/google/android/cameraview/CameraViewImpl.java</strong></label>
         <textarea class="analysis-field" id="analysis_10" rows="3"
-          placeholder="Enter your analysis for this class…"
-          oninput="saveAnalysis('library/src/main/base/com/google/android/cameraview/CameraViewImpl.java', this.value)"></textarea>
+                  placeholder="Enter your analysis for this class…"
+                  oninput="saveAnalysis('library/src/main/base/com/google/android/cameraview/CameraViewImpl.java', this.value)"></textarea>
       </div>
       <div class="progress-note" id="prog_library_src_main_base_com_google_android_cameraview_CameraViewImpl_java"></div>
       <a class="detail-link" href="repo_google_cameraview__library_src_main_base_com_google_android_cameraview_CameraViewImpl.java.html">
-        📋 View 2 deterministic / 20 MC targets →
+        📋 View 2 deterministic / 20 probabilistic targets →
       </a>
     </div>
   </div>
-  <div class="src-block" id="src_11">
+  <div class="src-block" id="src_11"
+       data-det="2"
+       data-prob="20"
+       data-comms="3"
+       data-frag="0.166667"
+       data-name="library/src/test/java/com/google/android/cameraview/AspectRatioTest.java"
+       data-default="11">
     <button class="src-header" onclick="toggleBlock(11)">
-      <span class="src-name">library/src/test/java/com/google/android/cameraview/AspectRatioTest.java</span>
-      <span class="src-meta">
-        <span class="badge">Det 2</span>
-        <span class="badge">MC 20</span>
-        <span class="badge">Code Smell 0.115</span>
-        <span class="badge">C0, C1, C2, C3 +1</span>
+      <span class="src-left">
+        <span class="src-name">library/src/test/java/com/google/android/cameraview/AspectRatioTest.java</span>
       </span>
-      <span class="chevron" id="chev_11">▶</span>
+      <span class="src-right">
+        <span class="src-meta">
+          <span class="badge">Det 2</span>
+          <span class="badge">Prob 20</span>
+          <span class="badge">Health 0.167</span>
+          <span class="badge">C0, C1, C2</span>
+        </span>
+        <span class="chevron" id="chev_11">▶</span>
+      </span>
     </button>
     <div class="src-body" id="body_11" style="display:none">
       <div class="analysis-row">
         <label>Analysis of <strong>library/src/test/java/com/google/android/cameraview/AspectRatioTest.java</strong></label>
         <textarea class="analysis-field" id="analysis_11" rows="3"
-          placeholder="Enter your analysis for this class…"
-          oninput="saveAnalysis('library/src/test/java/com/google/android/cameraview/AspectRatioTest.java', this.value)"></textarea>
+                  placeholder="Enter your analysis for this class…"
+                  oninput="saveAnalysis('library/src/test/java/com/google/android/cameraview/AspectRatioTest.java', this.value)"></textarea>
       </div>
       <div class="progress-note" id="prog_library_src_test_java_com_google_android_cameraview_AspectRatioTest_java"></div>
       <a class="detail-link" href="repo_google_cameraview__library_src_test_java_com_google_android_cameraview_AspectRatioTest.java.html">
-        📋 View 2 deterministic / 20 MC targets →
+        📋 View 2 deterministic / 20 probabilistic targets →
       </a>
     </div>
   </div>
-  <div class="src-block" id="src_12">
+  <div class="src-block" id="src_12"
+       data-det="2"
+       data-prob="20"
+       data-comms="3"
+       data-frag="0.000000"
+       data-name="library/src/androidTest/java/com/google/android/cameraview/AspectRatioInstrumentationTest.java"
+       data-default="12">
     <button class="src-header" onclick="toggleBlock(12)">
-      <span class="src-name">library/src/androidTest/java/com/google/android/cameraview/AspectRatioInstrumentationTest.java</span>
-      <span class="src-meta">
-        <span class="badge">Det 2</span>
-        <span class="badge">MC 20</span>
-        <span class="badge">Code Smell 0.019</span>
-        <span class="badge">C1, C5, C9, C10 +1</span>
+      <span class="src-left">
+        <span class="src-name">library/src/androidTest/java/com/google/android/cameraview/AspectRatioInstrumentationTest.java</span>
       </span>
-      <span class="chevron" id="chev_12">▶</span>
+      <span class="src-right">
+        <span class="src-meta">
+          <span class="badge">Det 2</span>
+          <span class="badge">Prob 20</span>
+          <span class="badge">Health 0.000</span>
+          <span class="badge">C0, C3, C4</span>
+        </span>
+        <span class="chevron" id="chev_12">▶</span>
+      </span>
     </button>
     <div class="src-body" id="body_12" style="display:none">
       <div class="analysis-row">
         <label>Analysis of <strong>library/src/androidTest/java/com/google/android/cameraview/AspectRatioInstrumentationTest.java</strong></label>
         <textarea class="analysis-field" id="analysis_12" rows="3"
-          placeholder="Enter your analysis for this class…"
-          oninput="saveAnalysis('library/src/androidTest/java/com/google/android/cameraview/AspectRatioInstrumentationTest.java', this.value)"></textarea>
+                  placeholder="Enter your analysis for this class…"
+                  oninput="saveAnalysis('library/src/androidTest/java/com/google/android/cameraview/AspectRatioInstrumentationTest.java', this.value)"></textarea>
       </div>
       <div class="progress-note" id="prog_library_src_androidTest_java_com_google_android_cameraview_AspectRatioInstrumentationTest_java"></div>
       <a class="detail-link" href="repo_google_cameraview__library_src_androidTest_java_com_google_android_cameraview_AspectRatioInstrumentationTest.java.html">
-        📋 View 2 deterministic / 20 MC targets →
+        📋 View 2 deterministic / 20 probabilistic targets →
       </a>
     </div>
   </div>
-  <div class="src-block" id="src_13">
+  <div class="src-block" id="src_13"
+       data-det="2"
+       data-prob="20"
+       data-comms="3"
+       data-frag="0.000000"
+       data-name="library/src/main/base/com/google/android/cameraview/Constants.java"
+       data-default="13">
     <button class="src-header" onclick="toggleBlock(13)">
-      <span class="src-name">library/src/main/base/com/google/android/cameraview/Constants.java</span>
-      <span class="src-meta">
-        <span class="badge">Det 2</span>
-        <span class="badge">MC 20</span>
-        <span class="badge">Code Smell 0.077</span>
-        <span class="badge">C0, C1, C2, C3 +1</span>
+      <span class="src-left">
+        <span class="src-name">library/src/main/base/com/google/android/cameraview/Constants.java</span>
       </span>
-      <span class="chevron" id="chev_13">▶</span>
+      <span class="src-right">
+        <span class="src-meta">
+          <span class="badge">Det 2</span>
+          <span class="badge">Prob 20</span>
+          <span class="badge">Health 0.000</span>
+          <span class="badge">C0, C1, C2</span>
+        </span>
+        <span class="chevron" id="chev_13">▶</span>
+      </span>
     </button>
     <div class="src-body" id="body_13" style="display:none">
       <div class="analysis-row">
         <label>Analysis of <strong>library/src/main/base/com/google/android/cameraview/Constants.java</strong></label>
         <textarea class="analysis-field" id="analysis_13" rows="3"
-          placeholder="Enter your analysis for this class…"
-          oninput="saveAnalysis('library/src/main/base/com/google/android/cameraview/Constants.java', this.value)"></textarea>
+                  placeholder="Enter your analysis for this class…"
+                  oninput="saveAnalysis('library/src/main/base/com/google/android/cameraview/Constants.java', this.value)"></textarea>
       </div>
       <div class="progress-note" id="prog_library_src_main_base_com_google_android_cameraview_Constants_java"></div>
       <a class="detail-link" href="repo_google_cameraview__library_src_main_base_com_google_android_cameraview_Constants.java.html">
-        📋 View 2 deterministic / 20 MC targets →
+        📋 View 2 deterministic / 20 probabilistic targets →
       </a>
     </div>
   </div>
-  <div class="src-block" id="src_14">
+  <div class="src-block" id="src_14"
+       data-det="2"
+       data-prob="20"
+       data-comms="3"
+       data-frag="0.000000"
+       data-name="library/src/androidTest/java/com/google/android/cameraview/CameraViewActions.java"
+       data-default="14">
     <button class="src-header" onclick="toggleBlock(14)">
-      <span class="src-name">library/src/androidTest/java/com/google/android/cameraview/CameraViewActions.java</span>
-      <span class="src-meta">
-        <span class="badge">Det 2</span>
-        <span class="badge">MC 20</span>
-        <span class="badge">Code Smell 0.019</span>
-        <span class="badge">C0, C1, C2, C3 +1</span>
+      <span class="src-left">
+        <span class="src-name">library/src/androidTest/java/com/google/android/cameraview/CameraViewActions.java</span>
       </span>
-      <span class="chevron" id="chev_14">▶</span>
+      <span class="src-right">
+        <span class="src-meta">
+          <span class="badge">Det 2</span>
+          <span class="badge">Prob 20</span>
+          <span class="badge">Health 0.000</span>
+          <span class="badge">C0, C1, C2</span>
+        </span>
+        <span class="chevron" id="chev_14">▶</span>
+      </span>
     </button>
     <div class="src-body" id="body_14" style="display:none">
       <div class="analysis-row">
         <label>Analysis of <strong>library/src/androidTest/java/com/google/android/cameraview/CameraViewActions.java</strong></label>
         <textarea class="analysis-field" id="analysis_14" rows="3"
-          placeholder="Enter your analysis for this class…"
-          oninput="saveAnalysis('library/src/androidTest/java/com/google/android/cameraview/CameraViewActions.java', this.value)"></textarea>
+                  placeholder="Enter your analysis for this class…"
+                  oninput="saveAnalysis('library/src/androidTest/java/com/google/android/cameraview/CameraViewActions.java', this.value)"></textarea>
       </div>
       <div class="progress-note" id="prog_library_src_androidTest_java_com_google_android_cameraview_CameraViewActions_java"></div>
       <a class="detail-link" href="repo_google_cameraview__library_src_androidTest_java_com_google_android_cameraview_CameraViewActions.java.html">
-        📋 View 2 deterministic / 20 MC targets →
+        📋 View 2 deterministic / 20 probabilistic targets →
       </a>
     </div>
   </div>
-  <div class="src-block" id="src_15">
+  <div class="src-block" id="src_15"
+       data-det="2"
+       data-prob="20"
+       data-comms="3"
+       data-frag="0.000000"
+       data-name="library/src/androidTest/java/com/google/android/cameraview/CameraViewMatchers.java"
+       data-default="15">
     <button class="src-header" onclick="toggleBlock(15)">
-      <span class="src-name">library/src/androidTest/java/com/google/android/cameraview/CameraViewMatchers.java</span>
-      <span class="src-meta">
-        <span class="badge">Det 2</span>
-        <span class="badge">MC 20</span>
-        <span class="badge">Code Smell 0.019</span>
-        <span class="badge">C0, C1, C2, C3 +1</span>
+      <span class="src-left">
+        <span class="src-name">library/src/androidTest/java/com/google/android/cameraview/CameraViewMatchers.java</span>
       </span>
-      <span class="chevron" id="chev_15">▶</span>
+      <span class="src-right">
+        <span class="src-meta">
+          <span class="badge">Det 2</span>
+          <span class="badge">Prob 20</span>
+          <span class="badge">Health 0.000</span>
+          <span class="badge">C0, C1, C2</span>
+        </span>
+        <span class="chevron" id="chev_15">▶</span>
+      </span>
     </button>
     <div class="src-body" id="body_15" style="display:none">
       <div class="analysis-row">
         <label>Analysis of <strong>library/src/androidTest/java/com/google/android/cameraview/CameraViewMatchers.java</strong></label>
         <textarea class="analysis-field" id="analysis_15" rows="3"
-          placeholder="Enter your analysis for this class…"
-          oninput="saveAnalysis('library/src/androidTest/java/com/google/android/cameraview/CameraViewMatchers.java', this.value)"></textarea>
+                  placeholder="Enter your analysis for this class…"
+                  oninput="saveAnalysis('library/src/androidTest/java/com/google/android/cameraview/CameraViewMatchers.java', this.value)"></textarea>
       </div>
       <div class="progress-note" id="prog_library_src_androidTest_java_com_google_android_cameraview_CameraViewMatchers_java"></div>
       <a class="detail-link" href="repo_google_cameraview__library_src_androidTest_java_com_google_android_cameraview_CameraViewMatchers.java.html">
-        📋 View 2 deterministic / 20 MC targets →
+        📋 View 2 deterministic / 20 probabilistic targets →
       </a>
     </div>
   </div>
-  <div class="src-block" id="src_16">
+  <div class="src-block" id="src_16"
+       data-det="1"
+       data-prob="20"
+       data-comms="4"
+       data-frag="0.333333"
+       data-name="library/src/main/base/com/google/android/cameraview/AspectRatio.java"
+       data-default="16">
     <button class="src-header" onclick="toggleBlock(16)">
-      <span class="src-name">library/src/main/base/com/google/android/cameraview/AspectRatio.java</span>
-      <span class="src-meta">
-        <span class="badge">Det 1</span>
-        <span class="badge">MC 20</span>
-        <span class="badge">Code Smell 0.288</span>
-        <span class="badge">C0, C1, C2, C3 +2</span>
+      <span class="src-left">
+        <span class="src-name">library/src/main/base/com/google/android/cameraview/AspectRatio.java</span>
       </span>
-      <span class="chevron" id="chev_16">▶</span>
+      <span class="src-right">
+        <span class="src-meta">
+          <span class="badge">Det 1</span>
+          <span class="badge">Prob 20</span>
+          <span class="badge">Health 0.333</span>
+          <span class="badge">C0, C1, C2, C6</span>
+        </span>
+        <span class="chevron" id="chev_16">▶</span>
+      </span>
     </button>
     <div class="src-body" id="body_16" style="display:none">
       <div class="analysis-row">
         <label>Analysis of <strong>library/src/main/base/com/google/android/cameraview/AspectRatio.java</strong></label>
         <textarea class="analysis-field" id="analysis_16" rows="3"
-          placeholder="Enter your analysis for this class…"
-          oninput="saveAnalysis('library/src/main/base/com/google/android/cameraview/AspectRatio.java', this.value)"></textarea>
+                  placeholder="Enter your analysis for this class…"
+                  oninput="saveAnalysis('library/src/main/base/com/google/android/cameraview/AspectRatio.java', this.value)"></textarea>
       </div>
       <div class="progress-note" id="prog_library_src_main_base_com_google_android_cameraview_AspectRatio_java"></div>
       <a class="detail-link" href="repo_google_cameraview__library_src_main_base_com_google_android_cameraview_AspectRatio.java.html">
-        📋 View 1 deterministic / 20 MC targets →
+        📋 View 1 deterministic / 20 probabilistic targets →
       </a>
     </div>
   </div>
-  <div class="src-block" id="src_17">
+  <div class="src-block" id="src_17"
+       data-det="0"
+       data-prob="20"
+       data-comms="3"
+       data-frag="0.166667"
+       data-name="library/src/main/api14/com/google/android/cameraview/SurfaceViewPreview.java"
+       data-default="17">
     <button class="src-header" onclick="toggleBlock(17)">
-      <span class="src-name">library/src/main/api14/com/google/android/cameraview/SurfaceViewPreview.java</span>
-      <span class="src-meta">
-        <span class="badge">Det 0</span>
-        <span class="badge">MC 20</span>
-        <span class="badge">Code Smell 0.077</span>
-        <span class="badge">C0, C1, C2, C3 +1</span>
+      <span class="src-left">
+        <span class="src-name">library/src/main/api14/com/google/android/cameraview/SurfaceViewPreview.java</span>
       </span>
-      <span class="chevron" id="chev_17">▶</span>
+      <span class="src-right">
+        <span class="src-meta">
+          <span class="badge">Det 0</span>
+          <span class="badge">Prob 20</span>
+          <span class="badge">Health 0.167</span>
+          <span class="badge">C0, C1, C2</span>
+        </span>
+        <span class="chevron" id="chev_17">▶</span>
+      </span>
     </button>
     <div class="src-body" id="body_17" style="display:none">
       <div class="analysis-row">
         <label>Analysis of <strong>library/src/main/api14/com/google/android/cameraview/SurfaceViewPreview.java</strong></label>
         <textarea class="analysis-field" id="analysis_17" rows="3"
-          placeholder="Enter your analysis for this class…"
-          oninput="saveAnalysis('library/src/main/api14/com/google/android/cameraview/SurfaceViewPreview.java', this.value)"></textarea>
+                  placeholder="Enter your analysis for this class…"
+                  oninput="saveAnalysis('library/src/main/api14/com/google/android/cameraview/SurfaceViewPreview.java', this.value)"></textarea>
       </div>
       <div class="progress-note" id="prog_library_src_main_api14_com_google_android_cameraview_SurfaceViewPreview_java"></div>
       <a class="detail-link" href="repo_google_cameraview__library_src_main_api14_com_google_android_cameraview_SurfaceViewPreview.java.html">
-        📋 View 0 deterministic / 20 MC targets →
+        📋 View 0 deterministic / 20 probabilistic targets →
       </a>
     </div>
   </div>
-  <div class="src-block" id="src_18">
+  <div class="src-block" id="src_18"
+       data-det="0"
+       data-prob="20"
+       data-comms="3"
+       data-frag="0.000000"
+       data-name="library/src/main/api14/com/google/android/cameraview/TextureViewPreview.java"
+       data-default="18">
     <button class="src-header" onclick="toggleBlock(18)">
-      <span class="src-name">library/src/main/api14/com/google/android/cameraview/TextureViewPreview.java</span>
-      <span class="src-meta">
-        <span class="badge">Det 0</span>
-        <span class="badge">MC 20</span>
-        <span class="badge">Code Smell 0.058</span>
-        <span class="badge">C1, C5, C9, C10 +1</span>
+      <span class="src-left">
+        <span class="src-name">library/src/main/api14/com/google/android/cameraview/TextureViewPreview.java</span>
       </span>
-      <span class="chevron" id="chev_18">▶</span>
+      <span class="src-right">
+        <span class="src-meta">
+          <span class="badge">Det 0</span>
+          <span class="badge">Prob 20</span>
+          <span class="badge">Health 0.000</span>
+          <span class="badge">C0, C3, C4</span>
+        </span>
+        <span class="chevron" id="chev_18">▶</span>
+      </span>
     </button>
     <div class="src-body" id="body_18" style="display:none">
       <div class="analysis-row">
         <label>Analysis of <strong>library/src/main/api14/com/google/android/cameraview/TextureViewPreview.java</strong></label>
         <textarea class="analysis-field" id="analysis_18" rows="3"
-          placeholder="Enter your analysis for this class…"
-          oninput="saveAnalysis('library/src/main/api14/com/google/android/cameraview/TextureViewPreview.java', this.value)"></textarea>
+                  placeholder="Enter your analysis for this class…"
+                  oninput="saveAnalysis('library/src/main/api14/com/google/android/cameraview/TextureViewPreview.java', this.value)"></textarea>
       </div>
       <div class="progress-note" id="prog_library_src_main_api14_com_google_android_cameraview_TextureViewPreview_java"></div>
       <a class="detail-link" href="repo_google_cameraview__library_src_main_api14_com_google_android_cameraview_TextureViewPreview.java.html">
-        📋 View 0 deterministic / 20 MC targets →
+        📋 View 0 deterministic / 20 probabilistic targets →
       </a>
     </div>
   </div>
-  <div class="src-block" id="src_19">
+  <div class="src-block" id="src_19"
+       data-det="0"
+       data-prob="20"
+       data-comms="5"
+       data-frag="0.000000"
+       data-name="library/src/main/base/com/google/android/cameraview/Size.java"
+       data-default="19">
     <button class="src-header" onclick="toggleBlock(19)">
-      <span class="src-name">library/src/main/base/com/google/android/cameraview/Size.java</span>
-      <span class="src-meta">
-        <span class="badge">Det 0</span>
-        <span class="badge">MC 20</span>
-        <span class="badge">Code Smell 0.077</span>
-        <span class="badge">C0, C1, C2, C3 +3</span>
+      <span class="src-left">
+        <span class="src-name">library/src/main/base/com/google/android/cameraview/Size.java</span>
       </span>
-      <span class="chevron" id="chev_19">▶</span>
+      <span class="src-right">
+        <span class="src-meta">
+          <span class="badge">Det 0</span>
+          <span class="badge">Prob 20</span>
+          <span class="badge">Health 0.000</span>
+          <span class="badge">C0, C1, C2, C6 +1</span>
+        </span>
+        <span class="chevron" id="chev_19">▶</span>
+      </span>
     </button>
     <div class="src-body" id="body_19" style="display:none">
       <div class="analysis-row">
         <label>Analysis of <strong>library/src/main/base/com/google/android/cameraview/Size.java</strong></label>
         <textarea class="analysis-field" id="analysis_19" rows="3"
-          placeholder="Enter your analysis for this class…"
-          oninput="saveAnalysis('library/src/main/base/com/google/android/cameraview/Size.java', this.value)"></textarea>
+                  placeholder="Enter your analysis for this class…"
+                  oninput="saveAnalysis('library/src/main/base/com/google/android/cameraview/Size.java', this.value)"></textarea>
       </div>
       <div class="progress-note" id="prog_library_src_main_base_com_google_android_cameraview_Size_java"></div>
       <a class="detail-link" href="repo_google_cameraview__library_src_main_base_com_google_android_cameraview_Size.java.html">
-        📋 View 0 deterministic / 20 MC targets →
+        📋 View 0 deterministic / 20 probabilistic targets →
       </a>
     </div>
   </div>
-  <div class="src-block" id="src_20">
+  <div class="src-block" id="src_20"
+       data-det="0"
+       data-prob="20"
+       data-comms="3"
+       data-frag="0.166667"
+       data-name="library/src/main/java/com/google/android/cameraview/DisplayOrientationDetector.java"
+       data-default="20">
     <button class="src-header" onclick="toggleBlock(20)">
-      <span class="src-name">library/src/main/java/com/google/android/cameraview/DisplayOrientationDetector.java</span>
-      <span class="src-meta">
-        <span class="badge">Det 0</span>
-        <span class="badge">MC 20</span>
-        <span class="badge">Code Smell 0.077</span>
-        <span class="badge">C0, C1, C2, C3 +1</span>
+      <span class="src-left">
+        <span class="src-name">library/src/main/java/com/google/android/cameraview/DisplayOrientationDetector.java</span>
       </span>
-      <span class="chevron" id="chev_20">▶</span>
+      <span class="src-right">
+        <span class="src-meta">
+          <span class="badge">Det 0</span>
+          <span class="badge">Prob 20</span>
+          <span class="badge">Health 0.167</span>
+          <span class="badge">C0, C1, C2</span>
+        </span>
+        <span class="chevron" id="chev_20">▶</span>
+      </span>
     </button>
     <div class="src-body" id="body_20" style="display:none">
       <div class="analysis-row">
         <label>Analysis of <strong>library/src/main/java/com/google/android/cameraview/DisplayOrientationDetector.java</strong></label>
         <textarea class="analysis-field" id="analysis_20" rows="3"
-          placeholder="Enter your analysis for this class…"
-          oninput="saveAnalysis('library/src/main/java/com/google/android/cameraview/DisplayOrientationDetector.java', this.value)"></textarea>
+                  placeholder="Enter your analysis for this class…"
+                  oninput="saveAnalysis('library/src/main/java/com/google/android/cameraview/DisplayOrientationDetector.java', this.value)"></textarea>
       </div>
       <div class="progress-note" id="prog_library_src_main_java_com_google_android_cameraview_DisplayOrientationDetector_java"></div>
       <a class="detail-link" href="repo_google_cameraview__library_src_main_java_com_google_android_cameraview_DisplayOrientationDetector.java.html">
-        📋 View 0 deterministic / 20 MC targets →
+        📋 View 0 deterministic / 20 probabilistic targets →
       </a>
     </div>
   </div>
-  <div class="src-block" id="src_21">
+  <div class="src-block" id="src_21"
+       data-det="3"
+       data-prob="3"
+       data-comms="2"
+       data-frag="0.166667"
+       data-name="library/src/test/java/com/google/android/cameraview/SizeMapTest.java"
+       data-default="21">
     <button class="src-header" onclick="toggleBlock(21)">
-      <span class="src-name">library/src/test/java/com/google/android/cameraview/SizeMapTest.java</span>
-      <span class="src-meta">
-        <span class="badge">Det 3</span>
-        <span class="badge">MC 3</span>
-        <span class="badge">Code Smell 0.077</span>
-        <span class="badge">C13, C14</span>
+      <span class="src-left">
+        <span class="src-name">library/src/test/java/com/google/android/cameraview/SizeMapTest.java</span>
       </span>
-      <span class="chevron" id="chev_21">▶</span>
+      <span class="src-right">
+        <span class="src-meta">
+          <span class="badge">Det 3</span>
+          <span class="badge">Prob 3</span>
+          <span class="badge">Health 0.167</span>
+          <span class="badge">C6, C7</span>
+        </span>
+        <span class="chevron" id="chev_21">▶</span>
+      </span>
     </button>
     <div class="src-body" id="body_21" style="display:none">
       <div class="analysis-row">
         <label>Analysis of <strong>library/src/test/java/com/google/android/cameraview/SizeMapTest.java</strong></label>
         <textarea class="analysis-field" id="analysis_21" rows="3"
-          placeholder="Enter your analysis for this class…"
-          oninput="saveAnalysis('library/src/test/java/com/google/android/cameraview/SizeMapTest.java', this.value)"></textarea>
+                  placeholder="Enter your analysis for this class…"
+                  oninput="saveAnalysis('library/src/test/java/com/google/android/cameraview/SizeMapTest.java', this.value)"></textarea>
       </div>
       <div class="progress-note" id="prog_library_src_test_java_com_google_android_cameraview_SizeMapTest_java"></div>
       <a class="detail-link" href="repo_google_cameraview__library_src_test_java_com_google_android_cameraview_SizeMapTest.java.html">
-        📋 View 3 deterministic / 3 MC targets →
+        📋 View 3 deterministic / 3 probabilistic targets →
       </a>
     </div>
   </div>
-  <div class="src-block" id="src_22">
+  <div class="src-block" id="src_22"
+       data-det="1"
+       data-prob="1"
+       data-comms="1"
+       data-frag="0.166667"
+       data-name="library/src/test/java/com/google/android/cameraview/SizeTest.java"
+       data-default="22">
     <button class="src-header" onclick="toggleBlock(22)">
-      <span class="src-name">library/src/test/java/com/google/android/cameraview/SizeTest.java</span>
-      <span class="src-meta">
-        <span class="badge">Det 1</span>
-        <span class="badge">MC 1</span>
-        <span class="badge">Code Smell 0.077</span>
-        <span class="badge">C15</span>
+      <span class="src-left">
+        <span class="src-name">library/src/test/java/com/google/android/cameraview/SizeTest.java</span>
       </span>
-      <span class="chevron" id="chev_22">▶</span>
+      <span class="src-right">
+        <span class="src-meta">
+          <span class="badge">Det 1</span>
+          <span class="badge">Prob 1</span>
+          <span class="badge">Health 0.167</span>
+          <span class="badge">C8</span>
+        </span>
+        <span class="chevron" id="chev_22">▶</span>
+      </span>
     </button>
     <div class="src-body" id="body_22" style="display:none">
       <div class="analysis-row">
         <label>Analysis of <strong>library/src/test/java/com/google/android/cameraview/SizeTest.java</strong></label>
         <textarea class="analysis-field" id="analysis_22" rows="3"
-          placeholder="Enter your analysis for this class…"
-          oninput="saveAnalysis('library/src/test/java/com/google/android/cameraview/SizeTest.java', this.value)"></textarea>
+                  placeholder="Enter your analysis for this class…"
+                  oninput="saveAnalysis('library/src/test/java/com/google/android/cameraview/SizeTest.java', this.value)"></textarea>
       </div>
       <div class="progress-note" id="prog_library_src_test_java_com_google_android_cameraview_SizeTest_java"></div>
       <a class="detail-link" href="repo_google_cameraview__library_src_test_java_com_google_android_cameraview_SizeTest.java.html">
-        📋 View 1 deterministic / 1 MC targets →
+        📋 View 1 deterministic / 1 probabilistic targets →
       </a>
     </div>
   </div>
-<div class="general-section"><h2>📝 General Analysis</h2><textarea id="generalAnalysis" placeholder="Enter your overall analysis and observations for this repository…" oninput="localStorage.setItem('general_' + REPO, this.value)"></textarea><div class="submit-row"><button class="btn" onclick="exportCSV()">📥 Export CSV</button><button class="btn btn-primary" onclick="submitAll()">✅ Submit All</button><span class="submit-status-msg" id="submitStatus" style="display:none"></span></div></div></div><script>const REPO = 'google_cameraview';
-const COMMUNITIES = [{"id": 0, "total": 19, "touched": 19}, {"id": 1, "total": 12, "touched": 12}, {"id": 2, "total": 14, "touched": 14}, {"id": 3, "total": 7, "touched": 7}, {"id": 4, "total": 9, "touched": 9}, {"id": 5, "total": 2, "touched": 2}, {"id": 6, "total": 3, "touched": 3}, {"id": 7, "total": 2, "touched": 2}, {"id": 8, "total": 2, "touched": 2}];
+  </div>
+
+  <div class="general-section">
+    <h2>📝 General Analysis</h2>
+    <textarea id="generalAnalysis"
+              placeholder="Enter your overall analysis and observations for this repository…"
+              oninput="localStorage.setItem('general_' + REPO, this.value)"></textarea>
+    <div class="submit-row">
+      <button class="btn" onclick="exportCSV()">📥 Export CSV</button>
+      <button class="btn btn-primary" onclick="submitAll()">✅ Submit All</button>
+      <span class="submit-status-msg" id="submitStatus" style="display:none"></span>
+    </div>
+  </div>
+</div>
+
+<script>
+const REPO = "google_cameraview";
+const COMMUNITIES = [];
 document.addEventListener('DOMContentLoaded', () => {
   const email = localStorage.getItem('email_' + REPO) || '';
   if (email) document.getElementById('userEmail').value = email;
@@ -654,13 +976,38 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 });
+
 function saveEmail(v) {
   localStorage.setItem('email_' + REPO, v);
   document.getElementById('userEmail').classList.remove('invalid');
 }
+
 function saveAnalysis(srcKey, value) {
   localStorage.setItem('cls_analysis_' + REPO + '__' + srcKey, value);
 }
+
+function sortSeedBlocks() {
+  const list = document.getElementById('seedList');
+  if (!list) return;
+  const key = document.getElementById('sortBy').value;
+  const dir = document.getElementById('sortDir').value === 'asc' ? 1 : -1;
+  const blocks = Array.from(list.querySelectorAll('.src-block'));
+  const numericKeys = { det: 'det', prob: 'prob', comms: 'comms', frag: 'frag' };
+  blocks.sort((a, b) => {
+    if (key === 'default') {
+      return (parseInt(a.dataset.default, 10) - parseInt(b.dataset.default, 10)) * dir;
+    }
+    if (key === 'name') {
+      return a.dataset.name.localeCompare(b.dataset.name) * dir;
+    }
+    const attr = numericKeys[key];
+    const av = parseFloat(a.dataset[attr]) || 0;
+    const bv = parseFloat(b.dataset[attr]) || 0;
+    return (av - bv) * dir;
+  });
+  blocks.forEach(b => list.appendChild(b));
+}
+
 function toggleBlock(idx) {
   const body = document.getElementById('body_' + idx);
   const chev = document.getElementById('chev_' + idx);
@@ -670,6 +1017,7 @@ function toggleBlock(idx) {
   chev.classList.toggle('open', !open);
   hdr.classList.toggle('open', !open);
 }
+
 function toggleCommunities() {
   const panel = document.getElementById('commPanel');
   panel.classList.toggle('open');
@@ -677,6 +1025,7 @@ function toggleCommunities() {
     renderCommunities();
   }
 }
+
 function renderCommunities() {
   const grid = document.getElementById('commGrid');
   if (!COMMUNITIES.length) {
@@ -690,6 +1039,7 @@ function renderCommunities() {
     grid.appendChild(chip);
   });
 }
+
 function submitAll() {
   const email = document.getElementById('userEmail').value.trim();
   if (!email || !email.includes('@')) {
@@ -719,9 +1069,10 @@ function submitAll() {
   status.style.display = 'inline';
   setTimeout(() => { status.style.display = 'none'; }, 3000);
 }
+
 function exportCSV() {
   const email = document.getElementById('userEmail').value.trim();
-  const rows = [['Repository','Email','Source_Class','Analysis','Timestamp']];
+  const rows = [['Repository', 'Email', 'Source_Class', 'Analysis', 'Timestamp']];
   document.querySelectorAll('.src-block').forEach((block, idx) => {
     const srcName = block.querySelector('.src-name').textContent;
     const analysis = document.getElementById('analysis_' + idx)?.value || '';
@@ -736,4 +1087,7 @@ function exportCSV() {
   a.download = 'analysis_' + REPO + '.csv';
   a.click();
 }
-</script></body></html>
+
+</script>
+</body>
+</html>

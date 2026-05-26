@@ -1,0 +1,2990 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HyCPA — Community 62 · alibaba/spring-cloud-alibaba</title>
+  <style>
+:root {
+  --bg: #0d1117; --surface: #161b22; --surface2: #21262d;
+  --border: #30363d; --text: #e6edf3; --text2: #8b949e;
+  --accent: #58a6ff; --green: #3fb950; --orange: #e3b341; --red: #f85149;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { background: var(--bg); color: var(--text); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif; padding-bottom: 48px; }
+
+/* ── Header ── */
+.page-header { background: var(--surface); border-bottom: 1px solid var(--border); padding: 12px 24px; display: flex; align-items: center; gap: 20px; }
+.back-btn { color: var(--text2); font-size: 12px; text-decoration: none; white-space: nowrap; }
+.back-btn:hover { color: var(--accent); }
+.header-title { font-size: 15px; color: var(--text); }
+.header-title strong { color: var(--accent); }
+
+/* ── Stats pills ── */
+.stats-row { display: flex; gap: 12px; padding: 16px 24px; background: var(--surface); border-bottom: 1px solid var(--border); flex-wrap: wrap; }
+.stat-pill { background: var(--surface2); border: 1px solid var(--border); border-radius: 8px; padding: 10px 20px; display: flex; flex-direction: column; align-items: center; gap: 2px; min-width: 90px; }
+.pill-val { font-size: 22px; font-weight: 700; color: var(--text); line-height: 1; }
+.pill-lbl { font-size: 10px; color: var(--text2); text-transform: uppercase; letter-spacing: 0.5px; margin-top: 2px; }
+
+/* ── Content sections ── */
+.content-section { padding: 24px; }
+.section-title { font-size: 11px; font-weight: 600; color: var(--text2); text-transform: uppercase; letter-spacing: 0.6px; margin-bottom: 14px; display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
+
+/* ── Node table ── */
+.node-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+.node-table th { background: var(--surface); color: var(--text2); font-weight: 600; font-size: 10px; text-transform: uppercase; letter-spacing: 0.5px; padding: 8px 12px; text-align: left; border-bottom: 2px solid var(--border); white-space: nowrap; }
+.node-table td { padding: 7px 12px; border-bottom: 1px solid var(--border); vertical-align: middle; }
+.node-table tbody tr:hover td { background: var(--surface); }
+.health-badge { display: inline-block; padding: 2px 9px; border-radius: 10px; font-size: 11px; font-weight: 700; color: #0d1117; white-space: nowrap; }
+.class-path { font-size: 11px; color: var(--text2); font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', monospace; word-break: break-all; }
+td.num { text-align: right; font-weight: 600; white-space: nowrap; }
+td.overlap { color: var(--accent); }
+
+/* ── Coupling matrix ── */
+.matrix-wrap { overflow: auto; }
+.matrix { border-collapse: collapse; }
+.matrix-corner { min-width: 16px; }
+.matrix-col-hdr { padding: 0 1px 4px 1px; vertical-align: bottom; }
+.matrix-col-hdr span { display: block; writing-mode: vertical-rl; transform: rotate(180deg); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-height: 140px; color: var(--text2); font-weight: 400; font-size: 10px; cursor: default; text-align: left; }
+.matrix-row-hdr { text-align: right; padding: 1px 6px 1px 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 200px; color: var(--text2); font-weight: 400; font-size: 10px; cursor: default; }
+.matrix-cell { width: 16px; height: 16px; min-width: 16px; min-height: 16px; border: 1px solid #1c2129; cursor: default; }
+.matrix-cell.empty { background: transparent; }
+.matrix-cell.self-cell { background: var(--surface2); }
+.matrix-cell.filled { }
+
+/* ── Legend inline ── */
+.legend-inline { display: inline-flex; align-items: center; gap: 6px; font-size: 10px; color: var(--text2); font-weight: 400; text-transform: none; letter-spacing: 0; }
+.li-cell { display: inline-block; width: 10px; height: 10px; border-radius: 2px; vertical-align: middle; flex-shrink: 0; }
+</style>
+</head>
+<body>
+
+<div class="page-header">
+  <a class="back-btn" href="repo_alibaba_spring-cloud-alibaba.html">← Back to alibaba/spring-cloud-alibaba</a>
+  <span class="header-title">Community <strong>C62</strong> — alibaba/spring-cloud-alibaba</span>
+</div>
+
+<div class="stats-row">
+  <div class="stat-pill"><span class="pill-val">29</span><span class="pill-lbl">Nodes</span></div>
+  <div class="stat-pill"><span class="pill-val">398</span><span class="pill-lbl">Arcs</span></div>
+  <div class="stat-pill"><span class="pill-val">29</span><span class="pill-lbl">Overlapping</span></div>
+  <div class="stat-pill"><span class="pill-val">43</span><span class="pill-lbl">Coupled arcs</span></div>
+  <div class="stat-pill"><span class="pill-val">0</span><span class="pill-lbl">Co-change only</span></div>
+</div>
+
+<section class="content-section">
+  <h2 class="section-title">Nodes</h2>
+  <table class="node-table">
+    <thead>
+      <tr>
+        <th>Health</th>
+        <th>Class</th>
+        <th>Degree</th>
+        <th>Communities</th>
+      </tr>
+    </thead>
+    <tbody>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#e3b341">0.538</span></td>
+        <td class="class-path" title="spring-cloud-alibaba-starters/spring-cloud-starter-alibaba-nacos-discovery/src/main/java/com/alibaba/cloud/nacos/NacosDiscoveryProperties.java">spring-cloud-alibaba-starters/spring-cloud-starter-alibaba-nacos-discovery/src/main/java/com/alibaba/cloud/nacos/NacosDiscoveryProperties.java</td>
+        <td class="num">38</td>
+        <td class="num overlap">6</td>
+      </tr>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#e3b341">0.654</span></td>
+        <td class="class-path" title="spring-cloud-alibaba-starters/spring-cloud-starter-alibaba-nacos-discovery/src/main/java/com/alibaba/cloud/nacos/loadbalancer/NacosLoadBalancer.java">spring-cloud-alibaba-starters/spring-cloud-starter-alibaba-nacos-discovery/src/main/java/com/alibaba/cloud/nacos/loadbalancer/NacosLoadBalancer.java</td>
+        <td class="num">46</td>
+        <td class="num overlap">2</td>
+      </tr>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#3fb950">0.769</span></td>
+        <td class="class-path" title="spring-cloud-alibaba-starters/spring-cloud-starter-alibaba-nacos-discovery/src/main/java/com/alibaba/cloud/nacos/NacosServiceManager.java">spring-cloud-alibaba-starters/spring-cloud-starter-alibaba-nacos-discovery/src/main/java/com/alibaba/cloud/nacos/NacosServiceManager.java</td>
+        <td class="num">36</td>
+        <td class="num overlap">2</td>
+      </tr>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#3fb950">0.788</span></td>
+        <td class="class-path" title="spring-cloud-alibaba-starters/spring-cloud-starter-alibaba-nacos-discovery/src/main/java/com/alibaba/cloud/nacos/util/InetIPv6Utils.java">spring-cloud-alibaba-starters/spring-cloud-starter-alibaba-nacos-discovery/src/main/java/com/alibaba/cloud/nacos/util/InetIPv6Utils.java</td>
+        <td class="num">36</td>
+        <td class="num overlap">2</td>
+      </tr>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#3fb950">0.788</span></td>
+        <td class="class-path" title="spring-cloud-alibaba-starters/spring-cloud-starter-alibaba-nacos-discovery/src/test/java/com/alibaba/cloud/nacos/loadbalancer/NacosLoadBalancerTests.java">spring-cloud-alibaba-starters/spring-cloud-starter-alibaba-nacos-discovery/src/test/java/com/alibaba/cloud/nacos/loadbalancer/NacosLoadBalancerTests.java</td>
+        <td class="num">5</td>
+        <td class="num overlap">2</td>
+      </tr>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#3fb950">0.808</span></td>
+        <td class="class-path" title="spring-cloud-alibaba-starters/spring-cloud-starter-alibaba-nacos-discovery/src/test/java/com/alibaba/cloud/nacos/loadbalancer/NacosLoadBalancerErrorHandlingTests.java">spring-cloud-alibaba-starters/spring-cloud-starter-alibaba-nacos-discovery/src/test/java/com/alibaba/cloud/nacos/loadbalancer/NacosLoadBalancerErrorHandlingTests.java</td>
+        <td class="num">5</td>
+        <td class="num overlap">2</td>
+      </tr>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#3fb950">0.885</span></td>
+        <td class="class-path" title="spring-cloud-alibaba-starters/spring-cloud-starter-alibaba-nacos-discovery/src/main/java/com/alibaba/cloud/nacos/discovery/NacosDiscoveryHeartBeatPublisher.java">spring-cloud-alibaba-starters/spring-cloud-starter-alibaba-nacos-discovery/src/main/java/com/alibaba/cloud/nacos/discovery/NacosDiscoveryHeartBeatPublisher.java</td>
+        <td class="num">38</td>
+        <td class="num overlap">2</td>
+      </tr>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#3fb950">0.885</span></td>
+        <td class="class-path" title="spring-cloud-alibaba-starters/spring-cloud-starter-alibaba-nacos-discovery/src/main/java/com/alibaba/cloud/nacos/discovery/NacosServiceDiscovery.java">spring-cloud-alibaba-starters/spring-cloud-starter-alibaba-nacos-discovery/src/main/java/com/alibaba/cloud/nacos/discovery/NacosServiceDiscovery.java</td>
+        <td class="num">36</td>
+        <td class="num overlap">2</td>
+      </tr>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#3fb950">0.904</span></td>
+        <td class="class-path" title="spring-cloud-alibaba-starters/spring-cloud-starter-alibaba-nacos-discovery/src/main/java/com/alibaba/cloud/nacos/discovery/reactive/NacosReactiveDiscoveryClient.java">spring-cloud-alibaba-starters/spring-cloud-starter-alibaba-nacos-discovery/src/main/java/com/alibaba/cloud/nacos/discovery/reactive/NacosReactiveDiscoveryClient.java</td>
+        <td class="num">35</td>
+        <td class="num overlap">2</td>
+      </tr>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#3fb950">0.923</span></td>
+        <td class="class-path" title="spring-cloud-alibaba-starters/spring-cloud-starter-alibaba-nacos-discovery/src/main/java/com/alibaba/cloud/nacos/discovery/NacosDiscoveryAutoConfiguration.java">spring-cloud-alibaba-starters/spring-cloud-starter-alibaba-nacos-discovery/src/main/java/com/alibaba/cloud/nacos/discovery/NacosDiscoveryAutoConfiguration.java</td>
+        <td class="num">14</td>
+        <td class="num overlap">3</td>
+      </tr>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#3fb950">0.923</span></td>
+        <td class="class-path" title="spring-cloud-alibaba-starters/spring-cloud-starter-alibaba-nacos-discovery/src/main/java/com/alibaba/cloud/nacos/discovery/NacosDiscoveryClientConfiguration.java">spring-cloud-alibaba-starters/spring-cloud-starter-alibaba-nacos-discovery/src/main/java/com/alibaba/cloud/nacos/discovery/NacosDiscoveryClientConfiguration.java</td>
+        <td class="num">40</td>
+        <td class="num overlap">3</td>
+      </tr>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#3fb950">0.923</span></td>
+        <td class="class-path" title="spring-cloud-alibaba-starters/spring-cloud-starter-alibaba-nacos-discovery/src/main/java/com/alibaba/cloud/nacos/registry/NacosServiceRegistryAutoConfiguration.java">spring-cloud-alibaba-starters/spring-cloud-starter-alibaba-nacos-discovery/src/main/java/com/alibaba/cloud/nacos/registry/NacosServiceRegistryAutoConfiguration.java</td>
+        <td class="num">37</td>
+        <td class="num overlap">4</td>
+      </tr>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#3fb950">0.942</span></td>
+        <td class="class-path" title="spring-cloud-alibaba-starters/spring-cloud-starter-alibaba-nacos-discovery/src/main/java/com/alibaba/cloud/nacos/balancer/NacosBalancer.java">spring-cloud-alibaba-starters/spring-cloud-starter-alibaba-nacos-discovery/src/main/java/com/alibaba/cloud/nacos/balancer/NacosBalancer.java</td>
+        <td class="num">35</td>
+        <td class="num overlap">2</td>
+      </tr>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#3fb950">0.942</span></td>
+        <td class="class-path" title="spring-cloud-alibaba-starters/spring-cloud-starter-alibaba-nacos-discovery/src/main/java/com/alibaba/cloud/nacos/loadbalancer/DefaultLoadBalancerAlgorithm.java">spring-cloud-alibaba-starters/spring-cloud-starter-alibaba-nacos-discovery/src/main/java/com/alibaba/cloud/nacos/loadbalancer/DefaultLoadBalancerAlgorithm.java</td>
+        <td class="num">13</td>
+        <td class="num overlap">2</td>
+      </tr>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#3fb950">0.942</span></td>
+        <td class="class-path" title="spring-cloud-alibaba-starters/spring-cloud-starter-alibaba-nacos-discovery/src/main/java/com/alibaba/cloud/nacos/loadbalancer/LoadBalancerAlgorithm.java">spring-cloud-alibaba-starters/spring-cloud-starter-alibaba-nacos-discovery/src/main/java/com/alibaba/cloud/nacos/loadbalancer/LoadBalancerAlgorithm.java</td>
+        <td class="num">14</td>
+        <td class="num overlap">3</td>
+      </tr>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#3fb950">0.942</span></td>
+        <td class="class-path" title="spring-cloud-alibaba-starters/spring-cloud-starter-alibaba-nacos-discovery/src/main/java/com/alibaba/cloud/nacos/util/UtilIPv6AutoConfiguration.java">spring-cloud-alibaba-starters/spring-cloud-starter-alibaba-nacos-discovery/src/main/java/com/alibaba/cloud/nacos/util/UtilIPv6AutoConfiguration.java</td>
+        <td class="num">36</td>
+        <td class="num overlap">2</td>
+      </tr>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#3fb950">0.942</span></td>
+        <td class="class-path" title="spring-cloud-alibaba-starters/spring-cloud-starter-alibaba-nacos-discovery/src/test/java/com/alibaba/cloud/nacos/discovery/NacosDiscoveryHeartBeatConfigurationTest.java">spring-cloud-alibaba-starters/spring-cloud-starter-alibaba-nacos-discovery/src/test/java/com/alibaba/cloud/nacos/discovery/NacosDiscoveryHeartBeatConfigurationTest.java</td>
+        <td class="num">12</td>
+        <td class="num overlap">2</td>
+      </tr>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#3fb950">0.942</span></td>
+        <td class="class-path" title="spring-cloud-alibaba-starters/spring-cloud-starter-alibaba-nacos-discovery/src/test/java/com/alibaba/cloud/nacos/discovery/NacosDiscoveryLoadBalancerConfigurationTest.java">spring-cloud-alibaba-starters/spring-cloud-starter-alibaba-nacos-discovery/src/test/java/com/alibaba/cloud/nacos/discovery/NacosDiscoveryLoadBalancerConfigurationTest.java</td>
+        <td class="num">17</td>
+        <td class="num overlap">3</td>
+      </tr>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#3fb950">0.942</span></td>
+        <td class="class-path" title="spring-cloud-alibaba-starters/spring-cloud-starter-alibaba-sidecar/src/main/java/com/alibaba/cloud/sidecar/nacos/SidecarNacosAutoConfiguration.java">spring-cloud-alibaba-starters/spring-cloud-starter-alibaba-sidecar/src/main/java/com/alibaba/cloud/sidecar/nacos/SidecarNacosAutoConfiguration.java</td>
+        <td class="num">35</td>
+        <td class="num overlap">2</td>
+      </tr>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#3fb950">0.980</span></td>
+        <td class="class-path" title="spring-cloud-alibaba-starters/spring-cloud-starter-alibaba-nacos-discovery/src/main/java/com/alibaba/cloud/nacos/NacosServiceAutoConfiguration.java">spring-cloud-alibaba-starters/spring-cloud-starter-alibaba-nacos-discovery/src/main/java/com/alibaba/cloud/nacos/NacosServiceAutoConfiguration.java</td>
+        <td class="num">7</td>
+        <td class="num overlap">2</td>
+      </tr>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#3fb950">0.980</span></td>
+        <td class="class-path" title="spring-cloud-alibaba-starters/spring-cloud-starter-alibaba-nacos-discovery/src/main/java/com/alibaba/cloud/nacos/discovery/NacosDiscoveryHeartBeatConfiguration.java">spring-cloud-alibaba-starters/spring-cloud-starter-alibaba-nacos-discovery/src/main/java/com/alibaba/cloud/nacos/discovery/NacosDiscoveryHeartBeatConfiguration.java</td>
+        <td class="num">10</td>
+        <td class="num overlap">2</td>
+      </tr>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#3fb950">0.980</span></td>
+        <td class="class-path" title="spring-cloud-alibaba-starters/spring-cloud-starter-alibaba-nacos-discovery/src/main/java/com/alibaba/cloud/nacos/discovery/reactive/NacosReactiveDiscoveryClientConfiguration.java">spring-cloud-alibaba-starters/spring-cloud-starter-alibaba-nacos-discovery/src/main/java/com/alibaba/cloud/nacos/discovery/reactive/NacosReactiveDiscoveryClientConfiguration.java</td>
+        <td class="num">5</td>
+        <td class="num overlap">2</td>
+      </tr>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#3fb950">0.980</span></td>
+        <td class="class-path" title="spring-cloud-alibaba-starters/spring-cloud-starter-alibaba-nacos-discovery/src/main/java/com/alibaba/cloud/nacos/loadbalancer/LoadBalancerNacosAutoConfiguration.java">spring-cloud-alibaba-starters/spring-cloud-starter-alibaba-nacos-discovery/src/main/java/com/alibaba/cloud/nacos/loadbalancer/LoadBalancerNacosAutoConfiguration.java</td>
+        <td class="num">42</td>
+        <td class="num overlap">2</td>
+      </tr>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#3fb950">0.980</span></td>
+        <td class="class-path" title="spring-cloud-alibaba-starters/spring-cloud-starter-alibaba-nacos-discovery/src/main/java/com/alibaba/cloud/nacos/loadbalancer/NacosLoadBalancerClientConfiguration.java">spring-cloud-alibaba-starters/spring-cloud-starter-alibaba-nacos-discovery/src/main/java/com/alibaba/cloud/nacos/loadbalancer/NacosLoadBalancerClientConfiguration.java</td>
+        <td class="num">42</td>
+        <td class="num overlap">2</td>
+      </tr>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#3fb950">0.980</span></td>
+        <td class="class-path" title="spring-cloud-alibaba-starters/spring-cloud-starter-alibaba-nacos-discovery/src/main/java/com/alibaba/cloud/nacos/loadbalancer/ServiceInstanceFilter.java">spring-cloud-alibaba-starters/spring-cloud-starter-alibaba-nacos-discovery/src/main/java/com/alibaba/cloud/nacos/loadbalancer/ServiceInstanceFilter.java</td>
+        <td class="num">12</td>
+        <td class="num overlap">2</td>
+      </tr>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#3fb950">0.980</span></td>
+        <td class="class-path" title="spring-cloud-alibaba-starters/spring-cloud-starter-alibaba-nacos-discovery/src/test/java/com/alibaba/cloud/nacos/discovery/NacosDiscoveryAutoConfigurationTests.java">spring-cloud-alibaba-starters/spring-cloud-starter-alibaba-nacos-discovery/src/test/java/com/alibaba/cloud/nacos/discovery/NacosDiscoveryAutoConfigurationTests.java</td>
+        <td class="num">36</td>
+        <td class="num overlap">2</td>
+      </tr>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#3fb950">0.980</span></td>
+        <td class="class-path" title="spring-cloud-alibaba-starters/spring-cloud-starter-alibaba-nacos-discovery/src/test/java/com/alibaba/cloud/nacos/discovery/reactive/NacosReactiveDiscoveryClientConfigurationTests.java">spring-cloud-alibaba-starters/spring-cloud-starter-alibaba-nacos-discovery/src/test/java/com/alibaba/cloud/nacos/discovery/reactive/NacosReactiveDiscoveryClientConfigurationTests.java</td>
+        <td class="num">37</td>
+        <td class="num overlap">2</td>
+      </tr>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#3fb950">0.981</span></td>
+        <td class="class-path" title="spring-cloud-alibaba-starters/spring-cloud-starter-alibaba-nacos-discovery/src/main/java/com/alibaba/cloud/nacos/discovery/configclient/NacosDiscoveryClientConfigServiceBootstrapConfiguration.java">spring-cloud-alibaba-starters/spring-cloud-starter-alibaba-nacos-discovery/src/main/java/com/alibaba/cloud/nacos/discovery/configclient/NacosDiscoveryClientConfigServiceBootstrapConfiguration.java</td>
+        <td class="num">37</td>
+        <td class="num overlap">3</td>
+      </tr>
+      
+      <tr>
+        <td><span class="health-badge" style="background:#3fb950">0.981</span></td>
+        <td class="class-path" title="spring-cloud-alibaba-starters/spring-cloud-starter-alibaba-nacos-discovery/src/test/java/com/alibaba/cloud/nacos/discovery/NacosDiscoveryClientConfigurationTest.java">spring-cloud-alibaba-starters/spring-cloud-starter-alibaba-nacos-discovery/src/test/java/com/alibaba/cloud/nacos/discovery/NacosDiscoveryClientConfigurationTest.java</td>
+        <td class="num">40</td>
+        <td class="num overlap">2</td>
+      </tr>
+      
+    </tbody>
+  </table>
+</section>
+
+
+<section class="content-section">
+  <h2 class="section-title">Coupling matrix
+    <span class="legend-inline">
+      <span class="li-cell" style="background:#30363d"></span>Co-change only
+      <span class="li-cell" style="background:#3fb950"></span>Weak
+      <span class="li-cell" style="background:#e3b341"></span>Moderate
+      <span class="li-cell" style="background:#f85149"></span>Strong
+    </span>
+  </h2>
+  <div class="matrix-wrap">
+    <table class="matrix">
+      <thead>
+        <tr>
+          <th class="matrix-corner"></th>
+          <th class="matrix-col-hdr" title="spring-cloud-alibaba-starters/spring-cloud-starter-alibaba-nacos-discovery/src/main/java/com/alibaba/cloud/nacos/NacosDiscoveryProperties.java"><span>NacosDiscoveryProperties</span></th><th class="matrix-col-hdr" title="spring-cloud-alibaba-starters/spring-cloud-starter-alibaba-nacos-discovery/src/main/java/com/alibaba/cloud/nacos/loadbalancer/NacosLoadBalancer.java"><span>NacosLoadBalancer</span></th><th class="matrix-col-hdr" title="spring-cloud-alibaba-starters/spring-cloud-starter-alibaba-nacos-discovery/src/main/java/com/alibaba/cloud/nacos/NacosServiceManager.java"><span>NacosServiceManager</span></th><th class="matrix-col-hdr" title="spring-cloud-alibaba-starters/spring-cloud-starter-alibaba-nacos-discovery/src/main/java/com/alibaba/cloud/nacos/util/InetIPv6Utils.java"><span>InetIPv6Utils</span></th><th class="matrix-col-hdr" title="spring-cloud-alibaba-starters/spring-cloud-starter-alibaba-nacos-discovery/src/test/java/com/alibaba/cloud/nacos/loadbalancer/NacosLoadBalancerTests.java"><span>NacosLoadBalancerTests</span></th><th class="matrix-col-hdr" title="spring-cloud-alibaba-starters/spring-cloud-starter-alibaba-nacos-discovery/src/test/java/com/alibaba/cloud/nacos/loadbalancer/NacosLoadBalancerErrorHandlingTests.java"><span>NacosLoadBalancerErrorHandlingTests</span></th><th class="matrix-col-hdr" title="spring-cloud-alibaba-starters/spring-cloud-starter-alibaba-nacos-discovery/src/main/java/com/alibaba/cloud/nacos/discovery/NacosDiscoveryHeartBeatPublisher.java"><span>NacosDiscoveryHeartBeatPublisher</span></th><th class="matrix-col-hdr" title="spring-cloud-alibaba-starters/spring-cloud-starter-alibaba-nacos-discovery/src/main/java/com/alibaba/cloud/nacos/discovery/NacosServiceDiscovery.java"><span>NacosServiceDiscovery</span></th><th class="matrix-col-hdr" title="spring-cloud-alibaba-starters/spring-cloud-starter-alibaba-nacos-discovery/src/main/java/com/alibaba/cloud/nacos/discovery/reactive/NacosReactiveDiscoveryClient.java"><span>NacosReactiveDiscoveryClient</span></th><th class="matrix-col-hdr" title="spring-cloud-alibaba-starters/spring-cloud-starter-alibaba-nacos-discovery/src/main/java/com/alibaba/cloud/nacos/discovery/NacosDiscoveryAutoConfiguration.java"><span>NacosDiscoveryAutoConfiguration</span></th><th class="matrix-col-hdr" title="spring-cloud-alibaba-starters/spring-cloud-starter-alibaba-nacos-discovery/src/main/java/com/alibaba/cloud/nacos/discovery/NacosDiscoveryClientConfiguration.java"><span>NacosDiscoveryClientConfiguration</span></th><th class="matrix-col-hdr" title="spring-cloud-alibaba-starters/spring-cloud-starter-alibaba-nacos-discovery/src/main/java/com/alibaba/cloud/nacos/registry/NacosServiceRegistryAutoConfiguration.java"><span>NacosServiceRegistryAutoConfiguration</span></th><th class="matrix-col-hdr" title="spring-cloud-alibaba-starters/spring-cloud-starter-alibaba-nacos-discovery/src/main/java/com/alibaba/cloud/nacos/balancer/NacosBalancer.java"><span>NacosBalancer</span></th><th class="matrix-col-hdr" title="spring-cloud-alibaba-starters/spring-cloud-starter-alibaba-nacos-discovery/src/main/java/com/alibaba/cloud/nacos/loadbalancer/DefaultLoadBalancerAlgorithm.java"><span>DefaultLoadBalancerAlgorithm</span></th><th class="matrix-col-hdr" title="spring-cloud-alibaba-starters/spring-cloud-starter-alibaba-nacos-discovery/src/main/java/com/alibaba/cloud/nacos/loadbalancer/LoadBalancerAlgorithm.java"><span>LoadBalancerAlgorithm</span></th><th class="matrix-col-hdr" title="spring-cloud-alibaba-starters/spring-cloud-starter-alibaba-nacos-discovery/src/main/java/com/alibaba/cloud/nacos/util/UtilIPv6AutoConfiguration.java"><span>UtilIPv6AutoConfiguration</span></th><th class="matrix-col-hdr" title="spring-cloud-alibaba-starters/spring-cloud-starter-alibaba-nacos-discovery/src/test/java/com/alibaba/cloud/nacos/discovery/NacosDiscoveryHeartBeatConfigurationTest.java"><span>NacosDiscoveryHeartBeatConfigurationTest</span></th><th class="matrix-col-hdr" title="spring-cloud-alibaba-starters/spring-cloud-starter-alibaba-nacos-discovery/src/test/java/com/alibaba/cloud/nacos/discovery/NacosDiscoveryLoadBalancerConfigurationTest.java"><span>NacosDiscoveryLoadBalancerConfigurationTest</span></th><th class="matrix-col-hdr" title="spring-cloud-alibaba-starters/spring-cloud-starter-alibaba-sidecar/src/main/java/com/alibaba/cloud/sidecar/nacos/SidecarNacosAutoConfiguration.java"><span>SidecarNacosAutoConfiguration</span></th><th class="matrix-col-hdr" title="spring-cloud-alibaba-starters/spring-cloud-starter-alibaba-nacos-discovery/src/main/java/com/alibaba/cloud/nacos/NacosServiceAutoConfiguration.java"><span>NacosServiceAutoConfiguration</span></th><th class="matrix-col-hdr" title="spring-cloud-alibaba-starters/spring-cloud-starter-alibaba-nacos-discovery/src/main/java/com/alibaba/cloud/nacos/discovery/NacosDiscoveryHeartBeatConfiguration.java"><span>NacosDiscoveryHeartBeatConfiguration</span></th><th class="matrix-col-hdr" title="spring-cloud-alibaba-starters/spring-cloud-starter-alibaba-nacos-discovery/src/main/java/com/alibaba/cloud/nacos/discovery/reactive/NacosReactiveDiscoveryClientConfiguration.java"><span>NacosReactiveDiscoveryClientConfiguration</span></th><th class="matrix-col-hdr" title="spring-cloud-alibaba-starters/spring-cloud-starter-alibaba-nacos-discovery/src/main/java/com/alibaba/cloud/nacos/loadbalancer/LoadBalancerNacosAutoConfiguration.java"><span>LoadBalancerNacosAutoConfiguration</span></th><th class="matrix-col-hdr" title="spring-cloud-alibaba-starters/spring-cloud-starter-alibaba-nacos-discovery/src/main/java/com/alibaba/cloud/nacos/loadbalancer/NacosLoadBalancerClientConfiguration.java"><span>NacosLoadBalancerClientConfiguration</span></th><th class="matrix-col-hdr" title="spring-cloud-alibaba-starters/spring-cloud-starter-alibaba-nacos-discovery/src/main/java/com/alibaba/cloud/nacos/loadbalancer/ServiceInstanceFilter.java"><span>ServiceInstanceFilter</span></th><th class="matrix-col-hdr" title="spring-cloud-alibaba-starters/spring-cloud-starter-alibaba-nacos-discovery/src/test/java/com/alibaba/cloud/nacos/discovery/NacosDiscoveryAutoConfigurationTests.java"><span>NacosDiscoveryAutoConfigurationTests</span></th><th class="matrix-col-hdr" title="spring-cloud-alibaba-starters/spring-cloud-starter-alibaba-nacos-discovery/src/test/java/com/alibaba/cloud/nacos/discovery/reactive/NacosReactiveDiscoveryClientConfigurationTests.java"><span>NacosReactiveDiscoveryClientConfigurationTests</span></th><th class="matrix-col-hdr" title="spring-cloud-alibaba-starters/spring-cloud-starter-alibaba-nacos-discovery/src/main/java/com/alibaba/cloud/nacos/discovery/configclient/NacosDiscoveryClientConfigServiceBootstrapConfiguration.java"><span>NacosDiscoveryClientConfigServiceBootstrapConfiguration</span></th><th class="matrix-col-hdr" title="spring-cloud-alibaba-starters/spring-cloud-starter-alibaba-nacos-discovery/src/test/java/com/alibaba/cloud/nacos/discovery/NacosDiscoveryClientConfigurationTest.java"><span>NacosDiscoveryClientConfigurationTest</span></th>
+        </tr>
+      </thead>
+      <tbody>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="spring-cloud-alibaba-starters/spring-cloud-starter-alibaba-nacos-discovery/src/main/java/com/alibaba/cloud/nacos/NacosDiscoveryProperties.java">NacosDiscoveryProperties</th>
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosDiscoveryProperties → NacosLoadBalancer · weight: 11 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#13a-e662" title="NacosDiscoveryProperties → NacosServiceManager · weight: 34 · cw: 2.5886 · DATA_ABSTRACTION_COUPLING, METHOD_INVOCATION_ATOMIC_PARAMETER, METHOD_INVOCATION_OBJECT_PARAMETER, VARIABLE_FIELD_DECLARATION"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#11d-5c57" title="NacosDiscoveryProperties → InetIPv6Utils · weight: 12 · cw: 1.8862 · DATA_ABSTRACTION_COUPLING, METHOD_INVOCATION_ATOMIC_PARAMETER, VARIABLE_FIELD_DECLARATION"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosDiscoveryProperties → NacosDiscoveryHeartBeatPublisher · weight: 33 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosDiscoveryProperties → NacosServiceDiscovery · weight: 60 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosDiscoveryProperties → NacosReactiveDiscoveryClient · weight: 35 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosDiscoveryProperties → NacosDiscoveryClientConfiguration · weight: 68 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosDiscoveryProperties → NacosServiceRegistryAutoConfiguration · weight: 69 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosDiscoveryProperties → NacosBalancer · weight: 11 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosDiscoveryProperties → UtilIPv6AutoConfiguration · weight: 22 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosDiscoveryProperties → SidecarNacosAutoConfiguration · weight: 11 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosDiscoveryProperties → LoadBalancerNacosAutoConfiguration · weight: 22 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosDiscoveryProperties → NacosLoadBalancerClientConfiguration · weight: 22 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosDiscoveryProperties → NacosDiscoveryAutoConfigurationTests · weight: 11 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosDiscoveryProperties → NacosReactiveDiscoveryClientConfigurationTests · weight: 11 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosDiscoveryProperties → NacosDiscoveryClientConfigServiceBootstrapConfiguration · weight: 22 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosDiscoveryProperties → NacosDiscoveryClientConfigurationTest · weight: 33 · cw: 0.0000 · co-change only"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="spring-cloud-alibaba-starters/spring-cloud-starter-alibaba-nacos-discovery/src/main/java/com/alibaba/cloud/nacos/loadbalancer/NacosLoadBalancer.java">NacosLoadBalancer</th>
+          
+            <td class="matrix-cell filled" style="background:#154-15e6c" title="NacosLoadBalancer → NacosDiscoveryProperties · weight: 11 · cw: 3.1991 · DATA_ABSTRACTION_COUPLING, METHOD_INVOCATION_ATOMIC_PARAMETER, METHOD_PARAMETER_TYPE, VARIABLE_FIELD_DECLARATION, VARIABLE_SINGLE_DECLARATION"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosLoadBalancer → NacosServiceManager · weight: 3 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#154-15e6c" title="NacosLoadBalancer → InetIPv6Utils · weight: 1 · cw: 3.1991 · DATA_ABSTRACTION_COUPLING, METHOD_INVOCATION_ATOMIC_PARAMETER, METHOD_PARAMETER_TYPE, VARIABLE_FIELD_DECLARATION, VARIABLE_SINGLE_DECLARATION"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosLoadBalancer → NacosLoadBalancerTests · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosLoadBalancer → NacosLoadBalancerErrorHandlingTests · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosLoadBalancer → NacosDiscoveryHeartBeatPublisher · weight: 3 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosLoadBalancer → NacosServiceDiscovery · weight: 5 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosLoadBalancer → NacosReactiveDiscoveryClient · weight: 3 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosLoadBalancer → NacosDiscoveryClientConfiguration · weight: 6 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosLoadBalancer → NacosServiceRegistryAutoConfiguration · weight: 6 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosLoadBalancer → NacosBalancer · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosLoadBalancer → DefaultLoadBalancerAlgorithm · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#129-955b" title="NacosLoadBalancer → LoadBalancerAlgorithm · weight: 1 · cw: 2.1770 · CONSTANT, METHOD_INVOCATION_OBJECT_PARAMETER, PARAMETERIZED_TYPE, VARIABLE_DECLARATION_STATEMENT"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosLoadBalancer → UtilIPv6AutoConfiguration · weight: 2 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosLoadBalancer → NacosDiscoveryLoadBalancerConfigurationTest · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosLoadBalancer → SidecarNacosAutoConfiguration · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosLoadBalancer → LoadBalancerNacosAutoConfiguration · weight: 3 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosLoadBalancer → NacosLoadBalancerClientConfiguration · weight: 3 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#11c-5956" title="NacosLoadBalancer → ServiceInstanceFilter · weight: 1 · cw: 1.8691 · METHOD_INVOCATION_OBJECT_PARAMETER, PARAMETERIZED_TYPE, VARIABLE_SINGLE_DECLARATION"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosLoadBalancer → NacosDiscoveryAutoConfigurationTests · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosLoadBalancer → NacosReactiveDiscoveryClientConfigurationTests · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosLoadBalancer → NacosDiscoveryClientConfigServiceBootstrapConfiguration · weight: 2 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosLoadBalancer → NacosDiscoveryClientConfigurationTest · weight: 3 · cw: 0.0000 · co-change only"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="spring-cloud-alibaba-starters/spring-cloud-starter-alibaba-nacos-discovery/src/main/java/com/alibaba/cloud/nacos/NacosServiceManager.java">NacosServiceManager</th>
+          
+            <td class="matrix-cell filled" style="background:#18d-26881" title="NacosServiceManager → NacosDiscoveryProperties · weight: 34 · cw: 4.5594 · DATA_ABSTRACTION_COUPLING, METHOD_INVOCATION_ATOMIC_PARAMETER, METHOD_INVOCATION_OBJECT_PARAMETER, METHOD_PARAMETER_TYPE, VARIABLE_DECLARATION_STATEMENT, VARIABLE_FIELD_DECLARATION, VARIABLE_SINGLE_DECLARATION"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosServiceManager → NacosLoadBalancer · weight: 3 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosServiceManager → InetIPv6Utils · weight: 3 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosServiceManager → NacosDiscoveryHeartBeatPublisher · weight: 9 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosServiceManager → NacosServiceDiscovery · weight: 15 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosServiceManager → NacosReactiveDiscoveryClient · weight: 9 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosServiceManager → NacosDiscoveryClientConfiguration · weight: 18 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosServiceManager → NacosServiceRegistryAutoConfiguration · weight: 19 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosServiceManager → NacosBalancer · weight: 3 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosServiceManager → UtilIPv6AutoConfiguration · weight: 6 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosServiceManager → SidecarNacosAutoConfiguration · weight: 3 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosServiceManager → LoadBalancerNacosAutoConfiguration · weight: 6 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosServiceManager → NacosLoadBalancerClientConfiguration · weight: 6 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosServiceManager → NacosDiscoveryAutoConfigurationTests · weight: 3 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosServiceManager → NacosReactiveDiscoveryClientConfigurationTests · weight: 3 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosServiceManager → NacosDiscoveryClientConfigServiceBootstrapConfiguration · weight: 6 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosServiceManager → NacosDiscoveryClientConfigurationTest · weight: 9 · cw: 0.0000 · co-change only"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="spring-cloud-alibaba-starters/spring-cloud-starter-alibaba-nacos-discovery/src/main/java/com/alibaba/cloud/nacos/util/InetIPv6Utils.java">InetIPv6Utils</th>
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="InetIPv6Utils → NacosDiscoveryProperties · weight: 12 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="InetIPv6Utils → NacosLoadBalancer · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="InetIPv6Utils → NacosServiceManager · weight: 3 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="InetIPv6Utils → NacosDiscoveryHeartBeatPublisher · weight: 3 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="InetIPv6Utils → NacosServiceDiscovery · weight: 5 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="InetIPv6Utils → NacosReactiveDiscoveryClient · weight: 3 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="InetIPv6Utils → NacosDiscoveryClientConfiguration · weight: 6 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="InetIPv6Utils → NacosServiceRegistryAutoConfiguration · weight: 6 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="InetIPv6Utils → NacosBalancer · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="InetIPv6Utils → UtilIPv6AutoConfiguration · weight: 2 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="InetIPv6Utils → SidecarNacosAutoConfiguration · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="InetIPv6Utils → LoadBalancerNacosAutoConfiguration · weight: 2 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="InetIPv6Utils → NacosLoadBalancerClientConfiguration · weight: 2 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="InetIPv6Utils → NacosDiscoveryAutoConfigurationTests · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="InetIPv6Utils → NacosReactiveDiscoveryClientConfigurationTests · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="InetIPv6Utils → NacosDiscoveryClientConfigServiceBootstrapConfiguration · weight: 2 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="InetIPv6Utils → NacosDiscoveryClientConfigurationTest · weight: 3 · cw: 0.0000 · co-change only"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="spring-cloud-alibaba-starters/spring-cloud-starter-alibaba-nacos-discovery/src/test/java/com/alibaba/cloud/nacos/loadbalancer/NacosLoadBalancerTests.java">NacosLoadBalancerTests</th>
+          
+            <td class="matrix-cell filled" style="background:#163-1a571" title="NacosLoadBalancerTests → NacosDiscoveryProperties · weight: 1 · cw: 3.5623 · ATOMIC_PARAMETER_COUPLING, DATA_ABSTRACTION_COUPLING, METHOD_INVOCATION_OBJECT_PARAMETER, OBJECT_PARAMETER_CLASS, VARIABLE_CLASS_INSTANCE_CREATION, VARIABLE_FIELD_DECLARATION"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#12d-a95d" title="NacosLoadBalancerTests → NacosLoadBalancer · weight: 1 · cw: 2.2806 · DATA_ABSTRACTION_COUPLING, OBJECT_PARAMETER_COUPLING, VARIABLE_CLASS_INSTANCE_CREATION, VARIABLE_FIELD_DECLARATION"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#116-3e54" title="NacosLoadBalancerTests → InetIPv6Utils · weight: 1 · cw: 1.7299 · DATA_ABSTRACTION_COUPLING, OBJECT_PARAMETER_CLASS, VARIABLE_FIELD_DECLARATION"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#13f-fc64" title="NacosLoadBalancerTests → LoadBalancerAlgorithm · weight: 1 · cw: 2.7029 · CONSTANT, DATA_ABSTRACTION_COUPLING, METHOD_INVOCATION_ATOMIC_PARAMETER, PARAMETERIZED_TYPE, VARIABLE_FIELD_DECLARATION"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="spring-cloud-alibaba-starters/spring-cloud-starter-alibaba-nacos-discovery/src/test/java/com/alibaba/cloud/nacos/loadbalancer/NacosLoadBalancerErrorHandlingTests.java">NacosLoadBalancerErrorHandlingTests</th>
+          
+            <td class="matrix-cell filled" style="background:#146-11b66" title="NacosLoadBalancerErrorHandlingTests → NacosDiscoveryProperties · weight: 1 · cw: 2.8599 · ATOMIC_PARAMETER_COUPLING, DATA_ABSTRACTION_COUPLING, OBJECT_PARAMETER_CLASS, VARIABLE_CLASS_INSTANCE_CREATION, VARIABLE_FIELD_DECLARATION"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#14b-13368" title="NacosLoadBalancerErrorHandlingTests → NacosLoadBalancer · weight: 1 · cw: 2.9830 · DATA_ABSTRACTION_COUPLING, METHOD_INVOCATION_OBJECT_PARAMETER, OBJECT_PARAMETER_COUPLING, VARIABLE_CLASS_INSTANCE_CREATION, VARIABLE_FIELD_DECLARATION"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#116-3e54" title="NacosLoadBalancerErrorHandlingTests → InetIPv6Utils · weight: 1 · cw: 1.7299 · DATA_ABSTRACTION_COUPLING, OBJECT_PARAMETER_CLASS, VARIABLE_FIELD_DECLARATION"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#13f-fc64" title="NacosLoadBalancerErrorHandlingTests → LoadBalancerAlgorithm · weight: 1 · cw: 2.7029 · CONSTANT, DATA_ABSTRACTION_COUPLING, METHOD_INVOCATION_ATOMIC_PARAMETER, PARAMETERIZED_TYPE, VARIABLE_FIELD_DECLARATION"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="spring-cloud-alibaba-starters/spring-cloud-starter-alibaba-nacos-discovery/src/main/java/com/alibaba/cloud/nacos/discovery/NacosDiscoveryHeartBeatPublisher.java">NacosDiscoveryHeartBeatPublisher</th>
+          
+            <td class="matrix-cell filled" style="background:#154-15e6c" title="NacosDiscoveryHeartBeatPublisher → NacosDiscoveryProperties · weight: 33 · cw: 3.1991 · DATA_ABSTRACTION_COUPLING, METHOD_INVOCATION_ATOMIC_PARAMETER, METHOD_PARAMETER_TYPE, VARIABLE_FIELD_DECLARATION, VARIABLE_SINGLE_DECLARATION"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosDiscoveryHeartBeatPublisher → NacosLoadBalancer · weight: 3 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosDiscoveryHeartBeatPublisher → NacosServiceManager · weight: 9 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosDiscoveryHeartBeatPublisher → InetIPv6Utils · weight: 3 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosDiscoveryHeartBeatPublisher → NacosServiceDiscovery · weight: 15 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosDiscoveryHeartBeatPublisher → NacosReactiveDiscoveryClient · weight: 9 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosDiscoveryHeartBeatPublisher → NacosDiscoveryClientConfiguration · weight: 22 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosDiscoveryHeartBeatPublisher → NacosServiceRegistryAutoConfiguration · weight: 18 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosDiscoveryHeartBeatPublisher → NacosBalancer · weight: 3 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosDiscoveryHeartBeatPublisher → UtilIPv6AutoConfiguration · weight: 6 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosDiscoveryHeartBeatPublisher → NacosDiscoveryHeartBeatConfigurationTest · weight: 2 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosDiscoveryHeartBeatPublisher → SidecarNacosAutoConfiguration · weight: 3 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosDiscoveryHeartBeatPublisher → NacosDiscoveryHeartBeatConfiguration · weight: 2 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosDiscoveryHeartBeatPublisher → LoadBalancerNacosAutoConfiguration · weight: 6 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosDiscoveryHeartBeatPublisher → NacosLoadBalancerClientConfiguration · weight: 6 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosDiscoveryHeartBeatPublisher → NacosDiscoveryAutoConfigurationTests · weight: 3 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosDiscoveryHeartBeatPublisher → NacosReactiveDiscoveryClientConfigurationTests · weight: 3 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosDiscoveryHeartBeatPublisher → NacosDiscoveryClientConfigServiceBootstrapConfiguration · weight: 6 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosDiscoveryHeartBeatPublisher → NacosDiscoveryClientConfigurationTest · weight: 12 · cw: 0.0000 · co-change only"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="spring-cloud-alibaba-starters/spring-cloud-starter-alibaba-nacos-discovery/src/main/java/com/alibaba/cloud/nacos/discovery/NacosServiceDiscovery.java">NacosServiceDiscovery</th>
+          
+            <td class="matrix-cell filled" style="background:#154-15e6c" title="NacosServiceDiscovery → NacosDiscoveryProperties · weight: 60 · cw: 3.1991 · DATA_ABSTRACTION_COUPLING, METHOD_INVOCATION_ATOMIC_PARAMETER, METHOD_PARAMETER_TYPE, VARIABLE_FIELD_DECLARATION, VARIABLE_SINGLE_DECLARATION"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosServiceDiscovery → NacosLoadBalancer · weight: 5 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#154-15e6c" title="NacosServiceDiscovery → NacosServiceManager · weight: 15 · cw: 3.1991 · DATA_ABSTRACTION_COUPLING, METHOD_INVOCATION_ATOMIC_PARAMETER, METHOD_PARAMETER_TYPE, VARIABLE_FIELD_DECLARATION, VARIABLE_SINGLE_DECLARATION"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosServiceDiscovery → InetIPv6Utils · weight: 5 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosServiceDiscovery → NacosDiscoveryHeartBeatPublisher · weight: 15 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosServiceDiscovery → NacosReactiveDiscoveryClient · weight: 16 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosServiceDiscovery → NacosDiscoveryClientConfiguration · weight: 32 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosServiceDiscovery → NacosServiceRegistryAutoConfiguration · weight: 30 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosServiceDiscovery → NacosBalancer · weight: 5 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosServiceDiscovery → UtilIPv6AutoConfiguration · weight: 10 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosServiceDiscovery → SidecarNacosAutoConfiguration · weight: 5 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosServiceDiscovery → LoadBalancerNacosAutoConfiguration · weight: 10 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosServiceDiscovery → NacosLoadBalancerClientConfiguration · weight: 10 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosServiceDiscovery → NacosDiscoveryAutoConfigurationTests · weight: 5 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosServiceDiscovery → NacosReactiveDiscoveryClientConfigurationTests · weight: 5 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosServiceDiscovery → NacosDiscoveryClientConfigServiceBootstrapConfiguration · weight: 10 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosServiceDiscovery → NacosDiscoveryClientConfigurationTest · weight: 15 · cw: 0.0000 · co-change only"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="spring-cloud-alibaba-starters/spring-cloud-starter-alibaba-nacos-discovery/src/main/java/com/alibaba/cloud/nacos/discovery/reactive/NacosReactiveDiscoveryClient.java">NacosReactiveDiscoveryClient</th>
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosReactiveDiscoveryClient → NacosDiscoveryProperties · weight: 35 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosReactiveDiscoveryClient → NacosLoadBalancer · weight: 3 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosReactiveDiscoveryClient → NacosServiceManager · weight: 9 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosReactiveDiscoveryClient → InetIPv6Utils · weight: 3 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosReactiveDiscoveryClient → NacosDiscoveryHeartBeatPublisher · weight: 9 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#171-1e777" title="NacosReactiveDiscoveryClient → NacosServiceDiscovery · weight: 16 · cw: 3.9015 · DATA_ABSTRACTION_COUPLING, METHOD_INVOCATION_ATOMIC_PARAMETER, METHOD_INVOCATION_OBJECT_PARAMETER, METHOD_PARAMETER_TYPE, VARIABLE_FIELD_DECLARATION, VARIABLE_SINGLE_DECLARATION"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosReactiveDiscoveryClient → NacosDiscoveryClientConfiguration · weight: 18 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosReactiveDiscoveryClient → NacosServiceRegistryAutoConfiguration · weight: 18 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosReactiveDiscoveryClient → NacosBalancer · weight: 3 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosReactiveDiscoveryClient → UtilIPv6AutoConfiguration · weight: 6 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosReactiveDiscoveryClient → SidecarNacosAutoConfiguration · weight: 3 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosReactiveDiscoveryClient → LoadBalancerNacosAutoConfiguration · weight: 6 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosReactiveDiscoveryClient → NacosLoadBalancerClientConfiguration · weight: 6 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosReactiveDiscoveryClient → NacosDiscoveryAutoConfigurationTests · weight: 3 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosReactiveDiscoveryClient → NacosReactiveDiscoveryClientConfigurationTests · weight: 3 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosReactiveDiscoveryClient → NacosDiscoveryClientConfigServiceBootstrapConfiguration · weight: 6 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosReactiveDiscoveryClient → NacosDiscoveryClientConfigurationTest · weight: 9 · cw: 0.0000 · co-change only"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="spring-cloud-alibaba-starters/spring-cloud-starter-alibaba-nacos-discovery/src/main/java/com/alibaba/cloud/nacos/discovery/NacosDiscoveryAutoConfiguration.java">NacosDiscoveryAutoConfiguration</th>
+          
+            <td class="matrix-cell filled" style="background:#184-23e7e" title="NacosDiscoveryAutoConfiguration → NacosDiscoveryProperties · weight: 1 · cw: 4.3425 · ATOMIC_PARAMETER_COUPLING, METHOD_PARAMETER_TYPE, METHOD_RETURN_TYPE, OBJECT_PARAMETER_CLASS, VARIABLE_CLASS_INSTANCE_CREATION, VARIABLE_RETURN_STATEMENT, VARIABLE_SINGLE_DECLARATION"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#11c-5a56" title="NacosDiscoveryAutoConfiguration → NacosServiceManager · weight: 1 · cw: 1.8729 · METHOD_PARAMETER_TYPE, OBJECT_PARAMETER_CLASS, VARIABLE_SINGLE_DECLARATION"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#134-cb60" title="NacosDiscoveryAutoConfiguration → NacosServiceDiscovery · weight: 1 · cw: 2.4503 · METHOD_RETURN_TYPE, OBJECT_PARAMETER_COUPLING, VARIABLE_CLASS_INSTANCE_CREATION, VARIABLE_RETURN_STATEMENT"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="spring-cloud-alibaba-starters/spring-cloud-starter-alibaba-nacos-discovery/src/main/java/com/alibaba/cloud/nacos/discovery/NacosDiscoveryClientConfiguration.java">NacosDiscoveryClientConfiguration</th>
+          
+            <td class="matrix-cell filled" style="background:#11c-5a56" title="NacosDiscoveryClientConfiguration → NacosDiscoveryProperties · weight: 68 · cw: 1.8729 · METHOD_PARAMETER_TYPE, OBJECT_PARAMETER_CLASS, VARIABLE_SINGLE_DECLARATION"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosDiscoveryClientConfiguration → NacosLoadBalancer · weight: 6 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#11c-5a56" title="NacosDiscoveryClientConfiguration → NacosServiceManager · weight: 18 · cw: 1.8729 · METHOD_PARAMETER_TYPE, OBJECT_PARAMETER_CLASS, VARIABLE_SINGLE_DECLARATION"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosDiscoveryClientConfiguration → InetIPv6Utils · weight: 6 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosDiscoveryClientConfiguration → NacosDiscoveryHeartBeatPublisher · weight: 22 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#11c-5a56" title="NacosDiscoveryClientConfiguration → NacosServiceDiscovery · weight: 32 · cw: 1.8729 · METHOD_PARAMETER_TYPE, OBJECT_PARAMETER_CLASS, VARIABLE_SINGLE_DECLARATION"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosDiscoveryClientConfiguration → NacosReactiveDiscoveryClient · weight: 18 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosDiscoveryClientConfiguration → NacosDiscoveryAutoConfiguration · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosDiscoveryClientConfiguration → NacosServiceRegistryAutoConfiguration · weight: 36 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosDiscoveryClientConfiguration → NacosBalancer · weight: 6 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosDiscoveryClientConfiguration → UtilIPv6AutoConfiguration · weight: 12 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosDiscoveryClientConfiguration → NacosDiscoveryHeartBeatConfigurationTest · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosDiscoveryClientConfiguration → SidecarNacosAutoConfiguration · weight: 6 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosDiscoveryClientConfiguration → NacosDiscoveryHeartBeatConfiguration · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosDiscoveryClientConfiguration → LoadBalancerNacosAutoConfiguration · weight: 12 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosDiscoveryClientConfiguration → NacosLoadBalancerClientConfiguration · weight: 12 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosDiscoveryClientConfiguration → NacosDiscoveryAutoConfigurationTests · weight: 6 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosDiscoveryClientConfiguration → NacosReactiveDiscoveryClientConfigurationTests · weight: 6 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosDiscoveryClientConfiguration → NacosDiscoveryClientConfigServiceBootstrapConfiguration · weight: 12 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosDiscoveryClientConfiguration → NacosDiscoveryClientConfigurationTest · weight: 21 · cw: 0.0000 · co-change only"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="spring-cloud-alibaba-starters/spring-cloud-starter-alibaba-nacos-discovery/src/main/java/com/alibaba/cloud/nacos/registry/NacosServiceRegistryAutoConfiguration.java">NacosServiceRegistryAutoConfiguration</th>
+          
+            <td class="matrix-cell filled" style="background:#11c-5a56" title="NacosServiceRegistryAutoConfiguration → NacosDiscoveryProperties · weight: 69 · cw: 1.8729 · METHOD_PARAMETER_TYPE, OBJECT_PARAMETER_CLASS, VARIABLE_SINGLE_DECLARATION"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosServiceRegistryAutoConfiguration → NacosLoadBalancer · weight: 6 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#11c-5a56" title="NacosServiceRegistryAutoConfiguration → NacosServiceManager · weight: 19 · cw: 1.8729 · METHOD_PARAMETER_TYPE, OBJECT_PARAMETER_CLASS, VARIABLE_SINGLE_DECLARATION"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosServiceRegistryAutoConfiguration → InetIPv6Utils · weight: 6 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosServiceRegistryAutoConfiguration → NacosDiscoveryHeartBeatPublisher · weight: 18 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosServiceRegistryAutoConfiguration → NacosServiceDiscovery · weight: 30 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosServiceRegistryAutoConfiguration → NacosReactiveDiscoveryClient · weight: 18 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosServiceRegistryAutoConfiguration → NacosDiscoveryAutoConfiguration · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosServiceRegistryAutoConfiguration → NacosDiscoveryClientConfiguration · weight: 36 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosServiceRegistryAutoConfiguration → NacosBalancer · weight: 6 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosServiceRegistryAutoConfiguration → UtilIPv6AutoConfiguration · weight: 12 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosServiceRegistryAutoConfiguration → SidecarNacosAutoConfiguration · weight: 6 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosServiceRegistryAutoConfiguration → LoadBalancerNacosAutoConfiguration · weight: 12 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosServiceRegistryAutoConfiguration → NacosLoadBalancerClientConfiguration · weight: 12 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosServiceRegistryAutoConfiguration → NacosDiscoveryAutoConfigurationTests · weight: 6 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosServiceRegistryAutoConfiguration → NacosReactiveDiscoveryClientConfigurationTests · weight: 6 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosServiceRegistryAutoConfiguration → NacosDiscoveryClientConfigServiceBootstrapConfiguration · weight: 12 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosServiceRegistryAutoConfiguration → NacosDiscoveryClientConfigurationTest · weight: 18 · cw: 0.0000 · co-change only"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="spring-cloud-alibaba-starters/spring-cloud-starter-alibaba-nacos-discovery/src/main/java/com/alibaba/cloud/nacos/balancer/NacosBalancer.java">NacosBalancer</th>
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosBalancer → NacosDiscoveryProperties · weight: 11 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosBalancer → NacosLoadBalancer · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosBalancer → NacosServiceManager · weight: 3 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosBalancer → InetIPv6Utils · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosBalancer → NacosDiscoveryHeartBeatPublisher · weight: 3 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosBalancer → NacosServiceDiscovery · weight: 5 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosBalancer → NacosReactiveDiscoveryClient · weight: 3 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosBalancer → NacosDiscoveryClientConfiguration · weight: 6 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosBalancer → NacosServiceRegistryAutoConfiguration · weight: 6 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosBalancer → UtilIPv6AutoConfiguration · weight: 2 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosBalancer → SidecarNacosAutoConfiguration · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosBalancer → LoadBalancerNacosAutoConfiguration · weight: 2 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosBalancer → NacosLoadBalancerClientConfiguration · weight: 2 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosBalancer → NacosDiscoveryAutoConfigurationTests · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosBalancer → NacosReactiveDiscoveryClientConfigurationTests · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosBalancer → NacosDiscoveryClientConfigServiceBootstrapConfiguration · weight: 2 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosBalancer → NacosDiscoveryClientConfigurationTest · weight: 3 · cw: 0.0000 · co-change only"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="spring-cloud-alibaba-starters/spring-cloud-starter-alibaba-nacos-discovery/src/main/java/com/alibaba/cloud/nacos/loadbalancer/DefaultLoadBalancerAlgorithm.java">DefaultLoadBalancerAlgorithm</th>
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="DefaultLoadBalancerAlgorithm → NacosLoadBalancer · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#eb8b44" title="DefaultLoadBalancerAlgorithm → NacosBalancer · weight: 1 · cw: 0.7024 · METHOD_INVOCATION_OBJECT_PARAMETER"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#ea9043" title="DefaultLoadBalancerAlgorithm → LoadBalancerAlgorithm · weight: 1 · cw: 0.6784 · CONSTANT, INTERFACE"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="DefaultLoadBalancerAlgorithm → NacosDiscoveryLoadBalancerConfigurationTest · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="DefaultLoadBalancerAlgorithm → LoadBalancerNacosAutoConfiguration · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="DefaultLoadBalancerAlgorithm → NacosLoadBalancerClientConfiguration · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="DefaultLoadBalancerAlgorithm → ServiceInstanceFilter · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="spring-cloud-alibaba-starters/spring-cloud-starter-alibaba-nacos-discovery/src/main/java/com/alibaba/cloud/nacos/loadbalancer/LoadBalancerAlgorithm.java">LoadBalancerAlgorithm</th>
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="LoadBalancerAlgorithm → NacosLoadBalancer · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="LoadBalancerAlgorithm → DefaultLoadBalancerAlgorithm · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="LoadBalancerAlgorithm → NacosDiscoveryLoadBalancerConfigurationTest · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="LoadBalancerAlgorithm → LoadBalancerNacosAutoConfiguration · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="LoadBalancerAlgorithm → NacosLoadBalancerClientConfiguration · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="LoadBalancerAlgorithm → ServiceInstanceFilter · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="spring-cloud-alibaba-starters/spring-cloud-starter-alibaba-nacos-discovery/src/main/java/com/alibaba/cloud/nacos/util/UtilIPv6AutoConfiguration.java">UtilIPv6AutoConfiguration</th>
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="UtilIPv6AutoConfiguration → NacosDiscoveryProperties · weight: 22 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="UtilIPv6AutoConfiguration → NacosLoadBalancer · weight: 2 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="UtilIPv6AutoConfiguration → NacosServiceManager · weight: 6 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#134-cb60" title="UtilIPv6AutoConfiguration → InetIPv6Utils · weight: 2 · cw: 2.4503 · METHOD_RETURN_TYPE, OBJECT_PARAMETER_COUPLING, VARIABLE_CLASS_INSTANCE_CREATION, VARIABLE_RETURN_STATEMENT"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="UtilIPv6AutoConfiguration → NacosDiscoveryHeartBeatPublisher · weight: 6 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="UtilIPv6AutoConfiguration → NacosServiceDiscovery · weight: 10 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="UtilIPv6AutoConfiguration → NacosReactiveDiscoveryClient · weight: 6 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="UtilIPv6AutoConfiguration → NacosDiscoveryClientConfiguration · weight: 12 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="UtilIPv6AutoConfiguration → NacosServiceRegistryAutoConfiguration · weight: 12 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="UtilIPv6AutoConfiguration → NacosBalancer · weight: 2 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="UtilIPv6AutoConfiguration → SidecarNacosAutoConfiguration · weight: 2 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="UtilIPv6AutoConfiguration → LoadBalancerNacosAutoConfiguration · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="UtilIPv6AutoConfiguration → NacosLoadBalancerClientConfiguration · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="UtilIPv6AutoConfiguration → NacosDiscoveryAutoConfigurationTests · weight: 2 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="UtilIPv6AutoConfiguration → NacosReactiveDiscoveryClientConfigurationTests · weight: 2 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="UtilIPv6AutoConfiguration → NacosDiscoveryClientConfigServiceBootstrapConfiguration · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="UtilIPv6AutoConfiguration → NacosDiscoveryClientConfigurationTest · weight: 6 · cw: 0.0000 · co-change only"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="spring-cloud-alibaba-starters/spring-cloud-starter-alibaba-nacos-discovery/src/test/java/com/alibaba/cloud/nacos/discovery/NacosDiscoveryHeartBeatConfigurationTest.java">NacosDiscoveryHeartBeatConfigurationTest</th>
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosDiscoveryHeartBeatConfigurationTest → NacosDiscoveryHeartBeatPublisher · weight: 2 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosDiscoveryHeartBeatConfigurationTest → NacosDiscoveryAutoConfiguration · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosDiscoveryHeartBeatConfigurationTest → NacosDiscoveryClientConfiguration · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosDiscoveryHeartBeatConfigurationTest → NacosServiceRegistryAutoConfiguration · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosDiscoveryHeartBeatConfigurationTest → UtilIPv6AutoConfiguration · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosDiscoveryHeartBeatConfigurationTest → NacosServiceAutoConfiguration · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosDiscoveryHeartBeatConfigurationTest → NacosDiscoveryHeartBeatConfiguration · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosDiscoveryHeartBeatConfigurationTest → NacosDiscoveryClientConfigurationTest · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="spring-cloud-alibaba-starters/spring-cloud-starter-alibaba-nacos-discovery/src/test/java/com/alibaba/cloud/nacos/discovery/NacosDiscoveryLoadBalancerConfigurationTest.java">NacosDiscoveryLoadBalancerConfigurationTest</th>
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosDiscoveryLoadBalancerConfigurationTest → NacosLoadBalancer · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosDiscoveryLoadBalancerConfigurationTest → NacosDiscoveryAutoConfiguration · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosDiscoveryLoadBalancerConfigurationTest → NacosDiscoveryClientConfiguration · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosDiscoveryLoadBalancerConfigurationTest → NacosServiceRegistryAutoConfiguration · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosDiscoveryLoadBalancerConfigurationTest → DefaultLoadBalancerAlgorithm · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosDiscoveryLoadBalancerConfigurationTest → LoadBalancerAlgorithm · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosDiscoveryLoadBalancerConfigurationTest → UtilIPv6AutoConfiguration · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosDiscoveryLoadBalancerConfigurationTest → NacosServiceAutoConfiguration · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosDiscoveryLoadBalancerConfigurationTest → LoadBalancerNacosAutoConfiguration · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosDiscoveryLoadBalancerConfigurationTest → NacosLoadBalancerClientConfiguration · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosDiscoveryLoadBalancerConfigurationTest → ServiceInstanceFilter · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="spring-cloud-alibaba-starters/spring-cloud-starter-alibaba-sidecar/src/main/java/com/alibaba/cloud/sidecar/nacos/SidecarNacosAutoConfiguration.java">SidecarNacosAutoConfiguration</th>
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="SidecarNacosAutoConfiguration → NacosDiscoveryProperties · weight: 11 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="SidecarNacosAutoConfiguration → NacosLoadBalancer · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#11c-5a56" title="SidecarNacosAutoConfiguration → NacosServiceManager · weight: 3 · cw: 1.8729 · METHOD_PARAMETER_TYPE, OBJECT_PARAMETER_CLASS, VARIABLE_SINGLE_DECLARATION"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="SidecarNacosAutoConfiguration → InetIPv6Utils · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="SidecarNacosAutoConfiguration → NacosDiscoveryHeartBeatPublisher · weight: 3 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="SidecarNacosAutoConfiguration → NacosServiceDiscovery · weight: 5 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="SidecarNacosAutoConfiguration → NacosReactiveDiscoveryClient · weight: 3 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="SidecarNacosAutoConfiguration → NacosDiscoveryAutoConfiguration · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="SidecarNacosAutoConfiguration → NacosDiscoveryClientConfiguration · weight: 6 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="SidecarNacosAutoConfiguration → NacosServiceRegistryAutoConfiguration · weight: 6 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="SidecarNacosAutoConfiguration → NacosBalancer · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="SidecarNacosAutoConfiguration → UtilIPv6AutoConfiguration · weight: 2 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="SidecarNacosAutoConfiguration → LoadBalancerNacosAutoConfiguration · weight: 2 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="SidecarNacosAutoConfiguration → NacosLoadBalancerClientConfiguration · weight: 2 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="SidecarNacosAutoConfiguration → NacosDiscoveryAutoConfigurationTests · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="SidecarNacosAutoConfiguration → NacosReactiveDiscoveryClientConfigurationTests · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="SidecarNacosAutoConfiguration → NacosDiscoveryClientConfigServiceBootstrapConfiguration · weight: 2 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="SidecarNacosAutoConfiguration → NacosDiscoveryClientConfigurationTest · weight: 3 · cw: 0.0000 · co-change only"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="spring-cloud-alibaba-starters/spring-cloud-starter-alibaba-nacos-discovery/src/main/java/com/alibaba/cloud/nacos/NacosServiceAutoConfiguration.java">NacosServiceAutoConfiguration</th>
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#135-cf60" title="NacosServiceAutoConfiguration → NacosServiceManager · weight: 1 · cw: 2.4696 · ATOMIC_PARAMETER_COUPLING, METHOD_RETURN_TYPE, VARIABLE_CLASS_INSTANCE_CREATION, VARIABLE_RETURN_STATEMENT"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="spring-cloud-alibaba-starters/spring-cloud-starter-alibaba-nacos-discovery/src/main/java/com/alibaba/cloud/nacos/discovery/NacosDiscoveryHeartBeatConfiguration.java">NacosDiscoveryHeartBeatConfiguration</th>
+          
+            <td class="matrix-cell filled" style="background:#11c-5a56" title="NacosDiscoveryHeartBeatConfiguration → NacosDiscoveryProperties · weight: 1 · cw: 1.8729 · METHOD_PARAMETER_TYPE, OBJECT_PARAMETER_CLASS, VARIABLE_SINGLE_DECLARATION"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#134-cb60" title="NacosDiscoveryHeartBeatConfiguration → NacosDiscoveryHeartBeatPublisher · weight: 2 · cw: 2.4503 · METHOD_RETURN_TYPE, OBJECT_PARAMETER_COUPLING, VARIABLE_CLASS_INSTANCE_CREATION, VARIABLE_RETURN_STATEMENT"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosDiscoveryHeartBeatConfiguration → NacosDiscoveryAutoConfiguration · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosDiscoveryHeartBeatConfiguration → NacosDiscoveryClientConfiguration · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosDiscoveryHeartBeatConfiguration → NacosDiscoveryHeartBeatConfigurationTest · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosDiscoveryHeartBeatConfiguration → NacosDiscoveryClientConfigurationTest · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="spring-cloud-alibaba-starters/spring-cloud-starter-alibaba-nacos-discovery/src/main/java/com/alibaba/cloud/nacos/discovery/reactive/NacosReactiveDiscoveryClientConfiguration.java">NacosReactiveDiscoveryClientConfiguration</th>
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#11c-5a56" title="NacosReactiveDiscoveryClientConfiguration → NacosServiceDiscovery · weight: 1 · cw: 1.8729 · METHOD_PARAMETER_TYPE, OBJECT_PARAMETER_CLASS, VARIABLE_SINGLE_DECLARATION"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#134-cb60" title="NacosReactiveDiscoveryClientConfiguration → NacosReactiveDiscoveryClient · weight: 1 · cw: 2.4503 · METHOD_RETURN_TYPE, OBJECT_PARAMETER_COUPLING, VARIABLE_CLASS_INSTANCE_CREATION, VARIABLE_RETURN_STATEMENT"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosReactiveDiscoveryClientConfiguration → NacosDiscoveryAutoConfiguration · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="spring-cloud-alibaba-starters/spring-cloud-starter-alibaba-nacos-discovery/src/main/java/com/alibaba/cloud/nacos/loadbalancer/LoadBalancerNacosAutoConfiguration.java">LoadBalancerNacosAutoConfiguration</th>
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="LoadBalancerNacosAutoConfiguration → NacosDiscoveryProperties · weight: 22 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="LoadBalancerNacosAutoConfiguration → NacosLoadBalancer · weight: 3 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="LoadBalancerNacosAutoConfiguration → NacosServiceManager · weight: 6 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="LoadBalancerNacosAutoConfiguration → InetIPv6Utils · weight: 2 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="LoadBalancerNacosAutoConfiguration → NacosDiscoveryHeartBeatPublisher · weight: 6 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="LoadBalancerNacosAutoConfiguration → NacosServiceDiscovery · weight: 10 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="LoadBalancerNacosAutoConfiguration → NacosReactiveDiscoveryClient · weight: 6 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="LoadBalancerNacosAutoConfiguration → NacosDiscoveryClientConfiguration · weight: 12 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="LoadBalancerNacosAutoConfiguration → NacosServiceRegistryAutoConfiguration · weight: 12 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="LoadBalancerNacosAutoConfiguration → NacosBalancer · weight: 2 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#118-4455" title="LoadBalancerNacosAutoConfiguration → DefaultLoadBalancerAlgorithm · weight: 1 · cw: 1.7639 · ATOMIC_PARAMETER_COUPLING, VARIABLE_CLASS_INSTANCE_CREATION, VARIABLE_RETURN_STATEMENT"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#eb8a44" title="LoadBalancerNacosAutoConfiguration → LoadBalancerAlgorithm · weight: 1 · cw: 0.7057 · METHOD_RETURN_TYPE"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="LoadBalancerNacosAutoConfiguration → UtilIPv6AutoConfiguration · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="LoadBalancerNacosAutoConfiguration → NacosDiscoveryLoadBalancerConfigurationTest · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="LoadBalancerNacosAutoConfiguration → SidecarNacosAutoConfiguration · weight: 2 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="LoadBalancerNacosAutoConfiguration → NacosLoadBalancerClientConfiguration · weight: 5 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="LoadBalancerNacosAutoConfiguration → ServiceInstanceFilter · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="LoadBalancerNacosAutoConfiguration → NacosDiscoveryAutoConfigurationTests · weight: 2 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="LoadBalancerNacosAutoConfiguration → NacosReactiveDiscoveryClientConfigurationTests · weight: 2 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="LoadBalancerNacosAutoConfiguration → NacosDiscoveryClientConfigServiceBootstrapConfiguration · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="LoadBalancerNacosAutoConfiguration → NacosDiscoveryClientConfigurationTest · weight: 6 · cw: 0.0000 · co-change only"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="spring-cloud-alibaba-starters/spring-cloud-starter-alibaba-nacos-discovery/src/main/java/com/alibaba/cloud/nacos/loadbalancer/NacosLoadBalancerClientConfiguration.java">NacosLoadBalancerClientConfiguration</th>
+          
+            <td class="matrix-cell filled" style="background:#11c-5a56" title="NacosLoadBalancerClientConfiguration → NacosDiscoveryProperties · weight: 22 · cw: 1.8729 · METHOD_PARAMETER_TYPE, OBJECT_PARAMETER_CLASS, VARIABLE_SINGLE_DECLARATION"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#117-4054" title="NacosLoadBalancerClientConfiguration → NacosLoadBalancer · weight: 3 · cw: 1.7446 · OBJECT_PARAMETER_COUPLING, VARIABLE_CLASS_INSTANCE_CREATION, VARIABLE_RETURN_STATEMENT"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosLoadBalancerClientConfiguration → NacosServiceManager · weight: 6 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#11c-5a56" title="NacosLoadBalancerClientConfiguration → InetIPv6Utils · weight: 2 · cw: 1.8729 · METHOD_PARAMETER_TYPE, OBJECT_PARAMETER_CLASS, VARIABLE_SINGLE_DECLARATION"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosLoadBalancerClientConfiguration → NacosDiscoveryHeartBeatPublisher · weight: 6 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosLoadBalancerClientConfiguration → NacosServiceDiscovery · weight: 10 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosLoadBalancerClientConfiguration → NacosReactiveDiscoveryClient · weight: 6 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosLoadBalancerClientConfiguration → NacosDiscoveryClientConfiguration · weight: 12 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosLoadBalancerClientConfiguration → NacosServiceRegistryAutoConfiguration · weight: 12 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosLoadBalancerClientConfiguration → NacosBalancer · weight: 2 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosLoadBalancerClientConfiguration → DefaultLoadBalancerAlgorithm · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#1050f4e" title="NacosLoadBalancerClientConfiguration → LoadBalancerAlgorithm · weight: 1 · cw: 1.3330 · METHOD_INVOCATION_ATOMIC_PARAMETER, PARAMETERIZED_TYPE"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosLoadBalancerClientConfiguration → UtilIPv6AutoConfiguration · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosLoadBalancerClientConfiguration → NacosDiscoveryLoadBalancerConfigurationTest · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosLoadBalancerClientConfiguration → SidecarNacosAutoConfiguration · weight: 2 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosLoadBalancerClientConfiguration → LoadBalancerNacosAutoConfiguration · weight: 5 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#e79c42" title="NacosLoadBalancerClientConfiguration → ServiceInstanceFilter · weight: 1 · cw: 0.6167 · PARAMETERIZED_TYPE"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosLoadBalancerClientConfiguration → NacosDiscoveryAutoConfigurationTests · weight: 2 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosLoadBalancerClientConfiguration → NacosReactiveDiscoveryClientConfigurationTests · weight: 2 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosLoadBalancerClientConfiguration → NacosDiscoveryClientConfigServiceBootstrapConfiguration · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosLoadBalancerClientConfiguration → NacosDiscoveryClientConfigurationTest · weight: 6 · cw: 0.0000 · co-change only"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="spring-cloud-alibaba-starters/spring-cloud-starter-alibaba-nacos-discovery/src/main/java/com/alibaba/cloud/nacos/loadbalancer/ServiceInstanceFilter.java">ServiceInstanceFilter</th>
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ServiceInstanceFilter → NacosLoadBalancer · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ServiceInstanceFilter → DefaultLoadBalancerAlgorithm · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ServiceInstanceFilter → LoadBalancerAlgorithm · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ServiceInstanceFilter → NacosDiscoveryLoadBalancerConfigurationTest · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ServiceInstanceFilter → LoadBalancerNacosAutoConfiguration · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ServiceInstanceFilter → NacosLoadBalancerClientConfiguration · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="spring-cloud-alibaba-starters/spring-cloud-starter-alibaba-nacos-discovery/src/test/java/com/alibaba/cloud/nacos/discovery/NacosDiscoveryAutoConfigurationTests.java">NacosDiscoveryAutoConfigurationTests</th>
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosDiscoveryAutoConfigurationTests → NacosDiscoveryProperties · weight: 11 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosDiscoveryAutoConfigurationTests → NacosLoadBalancer · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosDiscoveryAutoConfigurationTests → NacosServiceManager · weight: 3 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosDiscoveryAutoConfigurationTests → InetIPv6Utils · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosDiscoveryAutoConfigurationTests → NacosDiscoveryHeartBeatPublisher · weight: 3 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosDiscoveryAutoConfigurationTests → NacosServiceDiscovery · weight: 5 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosDiscoveryAutoConfigurationTests → NacosReactiveDiscoveryClient · weight: 3 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosDiscoveryAutoConfigurationTests → NacosDiscoveryAutoConfiguration · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosDiscoveryAutoConfigurationTests → NacosDiscoveryClientConfiguration · weight: 6 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosDiscoveryAutoConfigurationTests → NacosServiceRegistryAutoConfiguration · weight: 6 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosDiscoveryAutoConfigurationTests → NacosBalancer · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosDiscoveryAutoConfigurationTests → UtilIPv6AutoConfiguration · weight: 2 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosDiscoveryAutoConfigurationTests → SidecarNacosAutoConfiguration · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosDiscoveryAutoConfigurationTests → NacosServiceAutoConfiguration · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosDiscoveryAutoConfigurationTests → LoadBalancerNacosAutoConfiguration · weight: 2 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosDiscoveryAutoConfigurationTests → NacosLoadBalancerClientConfiguration · weight: 2 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosDiscoveryAutoConfigurationTests → NacosReactiveDiscoveryClientConfigurationTests · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosDiscoveryAutoConfigurationTests → NacosDiscoveryClientConfigServiceBootstrapConfiguration · weight: 2 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosDiscoveryAutoConfigurationTests → NacosDiscoveryClientConfigurationTest · weight: 3 · cw: 0.0000 · co-change only"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="spring-cloud-alibaba-starters/spring-cloud-starter-alibaba-nacos-discovery/src/test/java/com/alibaba/cloud/nacos/discovery/reactive/NacosReactiveDiscoveryClientConfigurationTests.java">NacosReactiveDiscoveryClientConfigurationTests</th>
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosReactiveDiscoveryClientConfigurationTests → NacosDiscoveryProperties · weight: 11 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosReactiveDiscoveryClientConfigurationTests → NacosLoadBalancer · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosReactiveDiscoveryClientConfigurationTests → NacosServiceManager · weight: 3 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosReactiveDiscoveryClientConfigurationTests → InetIPv6Utils · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosReactiveDiscoveryClientConfigurationTests → NacosDiscoveryHeartBeatPublisher · weight: 3 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosReactiveDiscoveryClientConfigurationTests → NacosServiceDiscovery · weight: 5 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosReactiveDiscoveryClientConfigurationTests → NacosReactiveDiscoveryClient · weight: 3 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosReactiveDiscoveryClientConfigurationTests → NacosDiscoveryAutoConfiguration · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosReactiveDiscoveryClientConfigurationTests → NacosDiscoveryClientConfiguration · weight: 6 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosReactiveDiscoveryClientConfigurationTests → NacosServiceRegistryAutoConfiguration · weight: 6 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosReactiveDiscoveryClientConfigurationTests → NacosBalancer · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosReactiveDiscoveryClientConfigurationTests → UtilIPv6AutoConfiguration · weight: 2 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosReactiveDiscoveryClientConfigurationTests → SidecarNacosAutoConfiguration · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosReactiveDiscoveryClientConfigurationTests → NacosServiceAutoConfiguration · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosReactiveDiscoveryClientConfigurationTests → NacosReactiveDiscoveryClientConfiguration · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosReactiveDiscoveryClientConfigurationTests → LoadBalancerNacosAutoConfiguration · weight: 2 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosReactiveDiscoveryClientConfigurationTests → NacosLoadBalancerClientConfiguration · weight: 2 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosReactiveDiscoveryClientConfigurationTests → NacosDiscoveryAutoConfigurationTests · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosReactiveDiscoveryClientConfigurationTests → NacosDiscoveryClientConfigServiceBootstrapConfiguration · weight: 2 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosReactiveDiscoveryClientConfigurationTests → NacosDiscoveryClientConfigurationTest · weight: 3 · cw: 0.0000 · co-change only"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="spring-cloud-alibaba-starters/spring-cloud-starter-alibaba-nacos-discovery/src/main/java/com/alibaba/cloud/nacos/discovery/configclient/NacosDiscoveryClientConfigServiceBootstrapConfiguration.java">NacosDiscoveryClientConfigServiceBootstrapConfiguration</th>
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosDiscoveryClientConfigServiceBootstrapConfiguration → NacosDiscoveryProperties · weight: 22 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosDiscoveryClientConfigServiceBootstrapConfiguration → NacosLoadBalancer · weight: 2 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosDiscoveryClientConfigServiceBootstrapConfiguration → NacosServiceManager · weight: 6 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosDiscoveryClientConfigServiceBootstrapConfiguration → InetIPv6Utils · weight: 2 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosDiscoveryClientConfigServiceBootstrapConfiguration → NacosDiscoveryHeartBeatPublisher · weight: 6 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosDiscoveryClientConfigServiceBootstrapConfiguration → NacosServiceDiscovery · weight: 10 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosDiscoveryClientConfigServiceBootstrapConfiguration → NacosReactiveDiscoveryClient · weight: 6 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosDiscoveryClientConfigServiceBootstrapConfiguration → NacosDiscoveryAutoConfiguration · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosDiscoveryClientConfigServiceBootstrapConfiguration → NacosDiscoveryClientConfiguration · weight: 12 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosDiscoveryClientConfigServiceBootstrapConfiguration → NacosServiceRegistryAutoConfiguration · weight: 12 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosDiscoveryClientConfigServiceBootstrapConfiguration → NacosBalancer · weight: 2 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosDiscoveryClientConfigServiceBootstrapConfiguration → UtilIPv6AutoConfiguration · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosDiscoveryClientConfigServiceBootstrapConfiguration → SidecarNacosAutoConfiguration · weight: 2 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosDiscoveryClientConfigServiceBootstrapConfiguration → NacosServiceAutoConfiguration · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosDiscoveryClientConfigServiceBootstrapConfiguration → NacosReactiveDiscoveryClientConfiguration · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosDiscoveryClientConfigServiceBootstrapConfiguration → LoadBalancerNacosAutoConfiguration · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosDiscoveryClientConfigServiceBootstrapConfiguration → NacosLoadBalancerClientConfiguration · weight: 4 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosDiscoveryClientConfigServiceBootstrapConfiguration → NacosDiscoveryAutoConfigurationTests · weight: 2 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosDiscoveryClientConfigServiceBootstrapConfiguration → NacosReactiveDiscoveryClientConfigurationTests · weight: 2 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosDiscoveryClientConfigServiceBootstrapConfiguration → NacosDiscoveryClientConfigurationTest · weight: 6 · cw: 0.0000 · co-change only"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="spring-cloud-alibaba-starters/spring-cloud-starter-alibaba-nacos-discovery/src/test/java/com/alibaba/cloud/nacos/discovery/NacosDiscoveryClientConfigurationTest.java">NacosDiscoveryClientConfigurationTest</th>
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosDiscoveryClientConfigurationTest → NacosDiscoveryProperties · weight: 33 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosDiscoveryClientConfigurationTest → NacosLoadBalancer · weight: 3 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosDiscoveryClientConfigurationTest → NacosServiceManager · weight: 9 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosDiscoveryClientConfigurationTest → InetIPv6Utils · weight: 3 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosDiscoveryClientConfigurationTest → NacosDiscoveryHeartBeatPublisher · weight: 12 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosDiscoveryClientConfigurationTest → NacosServiceDiscovery · weight: 15 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosDiscoveryClientConfigurationTest → NacosReactiveDiscoveryClient · weight: 9 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosDiscoveryClientConfigurationTest → NacosDiscoveryAutoConfiguration · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosDiscoveryClientConfigurationTest → NacosDiscoveryClientConfiguration · weight: 21 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosDiscoveryClientConfigurationTest → NacosServiceRegistryAutoConfiguration · weight: 18 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosDiscoveryClientConfigurationTest → NacosBalancer · weight: 3 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosDiscoveryClientConfigurationTest → UtilIPv6AutoConfiguration · weight: 6 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosDiscoveryClientConfigurationTest → NacosDiscoveryHeartBeatConfigurationTest · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosDiscoveryClientConfigurationTest → SidecarNacosAutoConfiguration · weight: 3 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosDiscoveryClientConfigurationTest → NacosServiceAutoConfiguration · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosDiscoveryClientConfigurationTest → NacosDiscoveryHeartBeatConfiguration · weight: 1 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosDiscoveryClientConfigurationTest → LoadBalancerNacosAutoConfiguration · weight: 6 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosDiscoveryClientConfigurationTest → NacosLoadBalancerClientConfiguration · weight: 6 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosDiscoveryClientConfigurationTest → NacosDiscoveryAutoConfigurationTests · weight: 3 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosDiscoveryClientConfigurationTest → NacosReactiveDiscoveryClientConfigurationTests · weight: 3 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NacosDiscoveryClientConfigurationTest → NacosDiscoveryClientConfigServiceBootstrapConfiguration · weight: 6 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+        </tr>
+        
+      </tbody>
+    </table>
+  </div>
+</section>
+
+
+</body>
+</html>
