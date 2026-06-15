@@ -17334,9 +17334,9 @@ async function submitAll() {
   status.style.color = '';
   status.style.display = 'inline';
 
-  // Build a multipart/form-data payload so FormSubmit can attach the full
-  // per-class breakdown as a downloadable JSON file instead of dumping the
-  // serialized text into the email body.
+  // Build the full payload as a JSON object and send it via the AJAX endpoint.
+  // FormSubmit's AJAX endpoint does not support file attachments, so the full
+  // per-class breakdown is included inline as a JSON string field.
   const jsonPayload = {
     Email: email,
     Repository: REPO,
@@ -17348,35 +17348,30 @@ async function submitAll() {
       Analysis: e.analysis
     }))
   };
-  const jsonBlob = new Blob(
-    [JSON.stringify(jsonPayload, null, 2)],
-    { type: 'application/json' }
-  );
+
   const safeRepo = REPO.replace(/[^\w.-]+/g, '_');
   const safeEmail = email.replace(/[^\w.-]+/g, '_');
   const safeTs = ts.replace(/[:.]/g, '-');
   const fileName = 'hycpa_' + safeRepo + '_' + safeEmail + '_' + safeTs + '.json';
 
-  const form = new FormData();
-  form.append('_subject', '[HyCPA Validation] ' + REPO + ' \u2014 Submit All (' +
-              classEntries.length + ' class analyses)');
-  form.append('Email', email);
-  form.append('Repository', REPO);
-  form.append('Type', 'submit_all');
-  form.append('Timestamp', ts);
-  form.append('General_Analysis', general);
-  form.append('Summary', classEntries.length +
-              ' class analyses submitted. See attached JSON file (' + fileName + ').');
-  // FormSubmit looks for the "attachment" field name to attach files.
-  form.append('attachment', jsonBlob, fileName);
+  const payload = {
+    _subject: '[HyCPA Validation] ' + REPO + ' \u2014 Submit All (' +
+              classEntries.length + ' class analyses)',
+    Email: email,
+    Repository: REPO,
+    Type: 'submit_all',
+    Timestamp: ts,
+    General_Analysis: general,
+    Summary: classEntries.length + ' class analyses submitted.',
+    JSON_Filename: fileName,
+    JSON_Data: JSON.stringify(jsonPayload, null, 2)
+  };
 
   try {
-    // NOTE: do not set Content-Type manually — the browser must add the
-    // multipart boundary itself when sending FormData.
     const resp = await fetch(FORMSUBMIT_URL, {
       method: 'POST',
-      headers: { 'Accept': 'application/json' },
-      body: form
+      headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+      body: JSON.stringify(payload)
     });
     if (resp.ok) {
       status.textContent = '\u2713 Submitted!';
