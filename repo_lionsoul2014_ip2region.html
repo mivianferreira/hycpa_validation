@@ -1528,6 +1528,7 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, Bl
 <script>
 const REPO = "lionsoul2014_ip2region";
 const COMMUNITIES = [{"id": 0, "page": "comm_lionsoul2014_ip2region__0.html", "total": 36, "touched": 36}, {"id": 1, "page": "comm_lionsoul2014_ip2region__1.html", "total": 11, "touched": 11}, {"id": 2, "page": "comm_lionsoul2014_ip2region__2.html", "total": 2, "touched": 2}, {"id": 3, "page": "comm_lionsoul2014_ip2region__3.html", "total": 2, "touched": 2}, {"id": 4, "page": "comm_lionsoul2014_ip2region__4.html", "total": 2, "touched": 2}, {"id": 5, "page": "comm_lionsoul2014_ip2region__5.html", "total": 14, "touched": 14}, {"id": 6, "page": "comm_lionsoul2014_ip2region__6.html", "total": 2, "touched": 2}];
+const FORMSUBMIT_URL = 'https://formsubmit.co/ajax/ferreira.mivian.marques@gmail.com';
 document.addEventListener('DOMContentLoaded', () => {
   const email = localStorage.getItem('email_' + REPO) || '';
   if (email) document.getElementById('userEmail').value = email;
@@ -1623,7 +1624,7 @@ function renderCommunities() {
   });
 }
 
-function submitAll() {
+async function submitAll() {
   const email = document.getElementById('userEmail').value.trim();
   if (!email || !email.includes('@')) {
     document.getElementById('userEmail').classList.add('invalid');
@@ -1631,26 +1632,75 @@ function submitAll() {
     alert('Please fill in a valid email before submitting.');
     return;
   }
+
   const general = document.getElementById('generalAnalysis').value;
   const ts = new Date().toISOString();
-  localStorage.setItem('ocpa_vote_' + REPO + '__general', JSON.stringify({
-    Email: email, Repository: REPO, Type: 'general',
-    Comment: general, Timestamp: ts
-  }));
+
+  // Collect per-class analyses (only non-empty ones).
+  const classEntries = [];
   document.querySelectorAll('.src-block').forEach((block, idx) => {
     const srcName = block.querySelector('.src-name').textContent;
     const analysis = document.getElementById('analysis_' + idx)?.value || '';
     if (analysis.trim()) {
-      localStorage.setItem('ocpa_vote_' + REPO + '__cls__' + idx, JSON.stringify({
-        Email: email, Repository: REPO, Source_Class: srcName,
-        Type: 'class', Comment: analysis, Timestamp: ts
-      }));
+      classEntries.push({ idx, srcName, analysis });
     }
   });
+
+  // Always cache to localStorage first (offline-safe).
+  localStorage.setItem('ocpa_vote_' + REPO + '__general', JSON.stringify({
+    Email: email, Repository: REPO, Type: 'general',
+    Comment: general, Timestamp: ts
+  }));
+  classEntries.forEach(({ idx, srcName, analysis }) => {
+    localStorage.setItem('ocpa_vote_' + REPO + '__cls__' + idx, JSON.stringify({
+      Email: email, Repository: REPO, Source_Class: srcName,
+      Type: 'class', Comment: analysis, Timestamp: ts
+    }));
+  });
+
   const status = document.getElementById('submitStatus');
-  status.textContent = '✓ Saved locally!';
+  const buttons = document.querySelectorAll('button[onclick="submitAll()"]');
+  buttons.forEach(b => { b.disabled = true; });
+  status.textContent = 'Submitting\u2026';
+  status.style.color = '';
   status.style.display = 'inline';
-  setTimeout(() => { status.style.display = 'none'; }, 3000);
+
+  // Build one consolidated payload: general analysis + each class analysis,
+  // serialized as JSON so FormSubmit emails the full content in one message.
+  const payload = {
+    _subject: '[HyCPA Validation] ' + REPO + ' \u2014 Submit All (' +
+              classEntries.length + ' class analyses)',
+    Email: email,
+    Repository: REPO,
+    Type: 'submit_all',
+    Timestamp: ts,
+    General_Analysis: general,
+    Class_Analyses: JSON.stringify(
+      classEntries.map(e => ({ Source_Class: e.srcName, Analysis: e.analysis })),
+      null, 2
+    )
+  };
+
+  try {
+    const resp = await fetch(FORMSUBMIT_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+    if (resp.ok) {
+      status.textContent = '\u2713 Submitted!';
+      status.style.color = 'var(--green)';
+    } else {
+      status.textContent = '\u26a0 Saved locally (server error ' + resp.status + ')';
+      status.style.color = 'var(--red)';
+    }
+  } catch (e) {
+    status.textContent = '\u26a0 Saved locally (offline)';
+    status.style.color = 'var(--red)';
+  } finally {
+    buttons.forEach(b => { b.disabled = false; });
+    setTimeout(() => { status.style.display = 'none'; }, 4000);
+  }
 }
 
 function exportCSV() {
