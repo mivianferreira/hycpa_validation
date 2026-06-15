@@ -1557,7 +1557,7 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, Bl
 <script>
 const REPO = "lionsoul2014_ip2region";
 const COMMUNITIES = [{"id": 0, "page": "comm_lionsoul2014_ip2region__0.html", "total": 36, "touched": 36}, {"id": 1, "page": "comm_lionsoul2014_ip2region__1.html", "total": 11, "touched": 11}, {"id": 2, "page": "comm_lionsoul2014_ip2region__2.html", "total": 2, "touched": 2}, {"id": 3, "page": "comm_lionsoul2014_ip2region__3.html", "total": 2, "touched": 2}, {"id": 4, "page": "comm_lionsoul2014_ip2region__4.html", "total": 2, "touched": 2}, {"id": 5, "page": "comm_lionsoul2014_ip2region__5.html", "total": 14, "touched": 14}, {"id": 6, "page": "comm_lionsoul2014_ip2region__6.html", "total": 2, "touched": 2}];
-const FORMSUBMIT_URL = 'https://formsubmit.co/ajax/ferreira.mivian.marques@gmail.com';
+const GAS_URL = 'https://script.google.com/macros/s/AKfycbyEa8safloV6dpS-8XaB4-UyFss7vDa-fKfVsddCCDAwlVSY-QD9KPKBLSBrXA2wEGS/exec';
 document.addEventListener('DOMContentLoaded', () => {
   const email = localStorage.getItem('email_' + REPO) || '';
   if (email) document.getElementById('userEmail').value = email;
@@ -1694,44 +1694,25 @@ async function submitAll() {
   status.style.color = '';
   status.style.display = 'inline';
 
-  // Build the full payload as a JSON object and send it via the AJAX endpoint.
-  // FormSubmit's AJAX endpoint does not support file attachments, so the full
-  // per-class breakdown is included inline as a JSON string field.
+  // Build the full payload as a JSON object and send it to Google Apps Script.
   const jsonPayload = {
     Email: email,
     Repository: REPO,
     Type: 'submit_all',
     Timestamp: ts,
     General_Analysis: general,
+    Summary: classEntries.length + ' class analyses submitted.',
     Class_Analyses: classEntries.map(e => ({
       Source_Class: e.srcName,
       Analysis: e.analysis
     }))
   };
 
-  const safeRepo = REPO.replace(/[^\w.-]+/g, '_');
-  const safeEmail = email.replace(/[^\w.-]+/g, '_');
-  const safeTs = ts.replace(/[:.]/g, '-');
-  const fileName = 'hycpa_' + safeRepo + '_' + safeEmail + '_' + safeTs + '.json';
-
-  const payload = {
-    _subject: '[HyCPA Validation] ' + REPO + ' \u2014 Submit All (' +
-              classEntries.length + ' class analyses)',
-    Email: email,
-    Repository: REPO,
-    Type: 'submit_all',
-    Timestamp: ts,
-    General_Analysis: general,
-    Summary: classEntries.length + ' class analyses submitted.',
-    JSON_Filename: fileName,
-    JSON_Data: JSON.stringify(jsonPayload, null, 2)
-  };
-
   try {
-    const resp = await fetch(FORMSUBMIT_URL, {
+    const resp = await fetch(GAS_URL, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-      body: JSON.stringify(payload)
+      body: JSON.stringify(jsonPayload)
     });
     if (resp.ok) {
       status.textContent = '\u2713 Submitted!';

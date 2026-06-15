@@ -24571,7 +24571,7 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, Bl
 const REPO = "alibaba_spring-cloud-alibaba";
 const SOURCE_SAFE = "spring_cloud_alibaba_starters_spring_cloud_starter_alibaba_sidecar_src_main_java_com_alibaba_cloud_sidecar_nacos_SidecarNacosAutoConfiguration_java";
 const STORAGE_PREFIX = 'ocpa_vote_' + REPO + '__' + SOURCE_SAFE + '__';
-const FORMSUBMIT_URL = 'https://formsubmit.co/ajax/ferreira.mivian.marques@gmail.com';
+const GAS_URL = 'https://script.google.com/macros/s/AKfycbyEa8safloV6dpS-8XaB4-UyFss7vDa-fKfVsddCCDAwlVSY-QD9KPKBLSBrXA2wEGS/exec';
 document.addEventListener('DOMContentLoaded', () => {
   const email = localStorage.getItem('email_' + REPO) || '';
   if (email) document.getElementById('userEmail').value = email;
@@ -24660,7 +24660,7 @@ async function submitVote(id) {
   statusEl.textContent = 'Submitting\u2026';
   statusEl.className = 'submit-status';
   const payload = {
-    _subject: '[HyCPA Validation] ' + REPO + ' \u2014 ' + source + ' \u2192 ' + target + ': ' + vote.toUpperCase(),
+
     Email: email, Repository: REPO,
     Source_Class: source, Affected_Class: target,
     Type: kind, Rank: rank, Prob: prob, Hop: hop,
@@ -24668,7 +24668,7 @@ async function submitVote(id) {
   };
   localStorage.setItem(STORAGE_PREFIX + id, JSON.stringify(payload));
   try {
-    const resp = await fetch(FORMSUBMIT_URL, {
+    const resp = await fetch(GAS_URL, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
       body: JSON.stringify(payload)
