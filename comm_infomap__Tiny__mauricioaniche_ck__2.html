@@ -1,0 +1,3179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HyCPA — Community 2 · infomap · Tiny · mauricioaniche/ck</title>
+  <style>
+:root {
+  --bg: #0d1117; --surface: #161b22; --surface2: #21262d;
+  --border: #30363d; --text: #e6edf3; --text2: #8b949e;
+  --accent: #58a6ff; --green: #3fb950; --orange: #e3b341; --red: #f85149;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { background: var(--bg); color: var(--text); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif; padding-bottom: 48px; }
+
+/* ── Header ── */
+.page-header { background: var(--surface); border-bottom: 1px solid var(--border); padding: 12px 24px; display: flex; align-items: center; gap: 20px; }
+.back-btn { color: var(--text2); font-size: 12px; text-decoration: none; white-space: nowrap; }
+.back-btn:hover { color: var(--accent); }
+.header-title { font-size: 15px; color: var(--text); }
+.header-title strong { color: var(--accent); }
+
+/* ── Stats pills ── */
+.stats-row { display: flex; gap: 12px; padding: 16px 24px; background: var(--surface); border-bottom: 1px solid var(--border); flex-wrap: wrap; }
+.stat-pill { background: var(--surface2); border: 1px solid var(--border); border-radius: 8px; padding: 10px 20px; display: flex; flex-direction: column; align-items: center; gap: 2px; min-width: 90px; }
+.pill-val { font-size: 22px; font-weight: 700; color: var(--text); line-height: 1; }
+.pill-lbl { font-size: 10px; color: var(--text2); text-transform: uppercase; letter-spacing: 0.5px; margin-top: 2px; }
+
+/* ── Content sections ── */
+.content-section { padding: 24px; }
+.section-title { font-size: 11px; font-weight: 600; color: var(--text2); text-transform: uppercase; letter-spacing: 0.6px; margin-bottom: 14px; display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
+
+/* ── Node table ── */
+.node-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+.node-table th { background: var(--surface); color: var(--text2); font-weight: 600; font-size: 10px; text-transform: uppercase; letter-spacing: 0.5px; padding: 8px 12px; text-align: left; border-bottom: 2px solid var(--border); white-space: nowrap; }
+.node-table td { padding: 7px 12px; border-bottom: 1px solid var(--border); vertical-align: middle; }
+.node-table tbody tr:hover td { background: var(--surface); }
+.risk-badge { display: inline-block; padding: 2px 9px; border-radius: 10px; font-size: 11px; font-weight: 700; color: #0d1117; white-space: nowrap; }
+.class-path { font-size: 11px; color: var(--text2); font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', monospace; word-break: break-all; }
+td.num { text-align: right; font-weight: 600; white-space: nowrap; }
+td.overlap { color: var(--accent); }
+
+/* ── Coupling matrix ── */
+.matrix-wrap { overflow: auto; }
+.matrix { border-collapse: collapse; }
+.matrix-corner { min-width: 16px; }
+.matrix-col-hdr { padding: 0 1px 4px 1px; vertical-align: bottom; }
+.matrix-col-hdr span { display: block; writing-mode: vertical-rl; transform: rotate(180deg); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-height: 140px; color: var(--text2); font-weight: 400; font-size: 10px; cursor: default; text-align: left; }
+.matrix-row-hdr { text-align: right; padding: 1px 6px 1px 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 200px; color: var(--text2); font-weight: 400; font-size: 10px; cursor: default; }
+.matrix-cell { width: 16px; height: 16px; min-width: 16px; min-height: 16px; border: 1px solid #1c2129; cursor: default; }
+.matrix-cell.empty { background: transparent; }
+.matrix-cell.self-cell { background: var(--surface2); }
+.matrix-cell.filled { }
+
+/* ── Legend inline ── */
+.legend-inline { display: inline-flex; align-items: center; gap: 6px; font-size: 10px; color: var(--text2); font-weight: 400; text-transform: none; letter-spacing: 0; }
+.li-cell { display: inline-block; width: 10px; height: 10px; border-radius: 2px; vertical-align: middle; flex-shrink: 0; }
+</style>
+</head>
+<body>
+
+<div class="page-header">
+  <a class="back-btn" href="repo_infomap__Tiny__mauricioaniche_ck.html">← Back to infomap · Tiny · mauricioaniche/ck</a>
+  <span class="header-title">Community <strong>C2</strong> — infomap · Tiny · mauricioaniche/ck</span>
+</div>
+
+<div class="stats-row">
+  <div class="stat-pill"><span class="pill-val">30</span><span class="pill-lbl">Nodes</span></div>
+  <div class="stat-pill"><span class="pill-val">498</span><span class="pill-lbl">Arcs</span></div>
+  <div class="stat-pill"><span class="pill-val">0</span><span class="pill-lbl">Overlapping</span></div>
+  <div class="stat-pill"><span class="pill-val">5</span><span class="pill-lbl">Coupled arcs</span></div>
+  <div class="stat-pill"><span class="pill-val">493</span><span class="pill-lbl">Co-change only</span></div>
+</div>
+
+<section class="content-section">
+  <h2 class="section-title">Nodes</h2>
+  <table class="node-table">
+    <thead>
+      <tr>
+        <th>Risk</th>
+        <th>Class</th>
+        <th>Degree</th>
+        <th>Communities</th>
+      </tr>
+    </thead>
+    <tbody>
+      
+      <tr>
+        <td><span class="risk-badge" style="background:#e3b341">0.380</span></td>
+        <td class="class-path" title="com.github.mauricioaniche.ck.util.JDTUtils">com.github.mauricioaniche.ck.util.JDTUtils</td>
+        <td class="num">54</td>
+        <td class="num">1</td>
+      </tr>
+      
+      <tr>
+        <td><span class="risk-badge" style="background:#e3b341">0.284</span></td>
+        <td class="class-path" title="com.github.mauricioaniche.ck.metric.TightClassCohesion">com.github.mauricioaniche.ck.metric.TightClassCohesion</td>
+        <td class="num">42</td>
+        <td class="num">1</td>
+      </tr>
+      
+      <tr>
+        <td><span class="risk-badge" style="background:#e3b341">0.272</span></td>
+        <td class="class-path" title="com.github.mauricioaniche.ck.MethodInvocationsTest">com.github.mauricioaniche.ck.MethodInvocationsTest</td>
+        <td class="num">42</td>
+        <td class="num">1</td>
+      </tr>
+      
+      <tr>
+        <td><span class="risk-badge" style="background:#e3b341">0.261</span></td>
+        <td class="class-path" title="VisibleMethods.VisibleMethods">VisibleMethods.VisibleMethods</td>
+        <td class="num">30</td>
+        <td class="num">1</td>
+      </tr>
+      
+      <tr>
+        <td><span class="risk-badge" style="background:#e3b341">0.250</span></td>
+        <td class="class-path" title="fieldusage.FieldUsage">fieldusage.FieldUsage</td>
+        <td class="num">54</td>
+        <td class="num">1</td>
+      </tr>
+      
+      <tr>
+        <td><span class="risk-badge" style="background:#3fb950">0.196</span></td>
+        <td class="class-path" title="com.github.mauricioaniche.ck.metric.NumberOfMethods">com.github.mauricioaniche.ck.metric.NumberOfMethods</td>
+        <td class="num">30</td>
+        <td class="num">1</td>
+      </tr>
+      
+      <tr>
+        <td><span class="risk-badge" style="background:#3fb950">0.196</span></td>
+        <td class="class-path" title="com.github.mauricioaniche.ck.LocalFieldsAccessedTest">com.github.mauricioaniche.ck.LocalFieldsAccessedTest</td>
+        <td class="num">52</td>
+        <td class="num">1</td>
+      </tr>
+      
+      <tr>
+        <td><span class="risk-badge" style="background:#3fb950">0.196</span></td>
+        <td class="class-path" title="com.github.mauricioaniche.ck.metric.NumberOfFields">com.github.mauricioaniche.ck.metric.NumberOfFields</td>
+        <td class="num">50</td>
+        <td class="num">1</td>
+      </tr>
+      
+      <tr>
+        <td><span class="risk-badge" style="background:#3fb950">0.196</span></td>
+        <td class="class-path" title="MethodInvocation.Complex1">MethodInvocation.Complex1</td>
+        <td class="num">32</td>
+        <td class="num">1</td>
+      </tr>
+      
+      <tr>
+        <td><span class="risk-badge" style="background:#3fb950">0.185</span></td>
+        <td class="class-path" title="com.github.mauricioaniche.ck.FieldUsageTest">com.github.mauricioaniche.ck.FieldUsageTest</td>
+        <td class="num">32</td>
+        <td class="num">1</td>
+      </tr>
+      
+      <tr>
+        <td><span class="risk-badge" style="background:#3fb950">0.182</span></td>
+        <td class="class-path" title="com.github.mauricioaniche.ck.metric.MethodInvocationsLocal">com.github.mauricioaniche.ck.metric.MethodInvocationsLocal</td>
+        <td class="num">20</td>
+        <td class="num">1</td>
+      </tr>
+      
+      <tr>
+        <td><span class="risk-badge" style="background:#3fb950">0.163</span></td>
+        <td class="class-path" title="com.github.mauricioaniche.ck.LooseClassCohesionTest">com.github.mauricioaniche.ck.LooseClassCohesionTest</td>
+        <td class="num">16</td>
+        <td class="num">1</td>
+      </tr>
+      
+      <tr>
+        <td><span class="risk-badge" style="background:#3fb950">0.163</span></td>
+        <td class="class-path" title="com.github.mauricioaniche.ck.TightClassCohesionTest">com.github.mauricioaniche.ck.TightClassCohesionTest</td>
+        <td class="num">36</td>
+        <td class="num">1</td>
+      </tr>
+      
+      <tr>
+        <td><span class="risk-badge" style="background:#3fb950">0.130</span></td>
+        <td class="class-path" title="com.github.mauricioaniche.ck.VisibleMethodsTest">com.github.mauricioaniche.ck.VisibleMethodsTest</td>
+        <td class="num">36</td>
+        <td class="num">1</td>
+      </tr>
+      
+      <tr>
+        <td><span class="risk-badge" style="background:#3fb950">0.098</span></td>
+        <td class="class-path" title="ClassCohesion.HighCohesion">ClassCohesion.HighCohesion</td>
+        <td class="num">34</td>
+        <td class="num">1</td>
+      </tr>
+      
+      <tr>
+        <td><span class="risk-badge" style="background:#3fb950">0.098</span></td>
+        <td class="class-path" title="VariableDeclaration.VariableDeclaration">VariableDeclaration.VariableDeclaration</td>
+        <td class="num">30</td>
+        <td class="num">1</td>
+      </tr>
+      
+      <tr>
+        <td><span class="risk-badge" style="background:#3fb950">0.098</span></td>
+        <td class="class-path" title="ClassCohesion.Simple1">ClassCohesion.Simple1</td>
+        <td class="num">30</td>
+        <td class="num">1</td>
+      </tr>
+      
+      <tr>
+        <td><span class="risk-badge" style="background:#3fb950">0.076</span></td>
+        <td class="class-path" title="com.github.mauricioaniche.ck.VariableNameExtractionTest">com.github.mauricioaniche.ck.VariableNameExtractionTest</td>
+        <td class="num">34</td>
+        <td class="num">1</td>
+      </tr>
+      
+      <tr>
+        <td><span class="risk-badge" style="background:#3fb950">0.076</span></td>
+        <td class="class-path" title="com.github.mauricioaniche.ck.LocalFieldsTest">com.github.mauricioaniche.ck.LocalFieldsTest</td>
+        <td class="num">28</td>
+        <td class="num">1</td>
+      </tr>
+      
+      <tr>
+        <td><span class="risk-badge" style="background:#3fb950">0.065</span></td>
+        <td class="class-path" title="ClassCohesion.MediumCohesion">ClassCohesion.MediumCohesion</td>
+        <td class="num">30</td>
+        <td class="num">1</td>
+      </tr>
+      
+      <tr>
+        <td><span class="risk-badge" style="background:#3fb950">0.065</span></td>
+        <td class="class-path" title="MethodInvocation.Simple2">MethodInvocation.Simple2</td>
+        <td class="num">12</td>
+        <td class="num">1</td>
+      </tr>
+      
+      <tr>
+        <td><span class="risk-badge" style="background:#3fb950">0.065</span></td>
+        <td class="class-path" title="MethodInvocation.GO2">MethodInvocation.GO2</td>
+        <td class="num">32</td>
+        <td class="num">1</td>
+      </tr>
+      
+      <tr>
+        <td><span class="risk-badge" style="background:#3fb950">0.054</span></td>
+        <td class="class-path" title="fieldusage.FieldUsage2">fieldusage.FieldUsage2</td>
+        <td class="num">28</td>
+        <td class="num">1</td>
+      </tr>
+      
+      <tr>
+        <td><span class="risk-badge" style="background:#3fb950">0.054</span></td>
+        <td class="class-path" title="ClassCohesion.NoCohesion">ClassCohesion.NoCohesion</td>
+        <td class="num">34</td>
+        <td class="num">1</td>
+      </tr>
+      
+      <tr>
+        <td><span class="risk-badge" style="background:#3fb950">0.043</span></td>
+        <td class="class-path" title="ClassCohesion.NoVisibleMethods">ClassCohesion.NoVisibleMethods</td>
+        <td class="num">12</td>
+        <td class="num">1</td>
+      </tr>
+      
+      <tr>
+        <td><span class="risk-badge" style="background:#8b949e">—</span></td>
+        <td class="class-path" title="com.github.mauricioaniche.ck.util.JDTUtilsTest">com.github.mauricioaniche.ck.util.JDTUtilsTest</td>
+        <td class="num">32</td>
+        <td class="num">1</td>
+      </tr>
+      
+      <tr>
+        <td><span class="risk-badge" style="background:#8b949e">—</span></td>
+        <td class="class-path" title="com.github.mauricioaniche.ck.util.StringUtils">com.github.mauricioaniche.ck.util.StringUtils</td>
+        <td class="num">50</td>
+        <td class="num">1</td>
+      </tr>
+      
+      <tr>
+        <td><span class="risk-badge" style="background:#8b949e">—</span></td>
+        <td class="class-path" title="MethodInvocation.GO">MethodInvocation.GO</td>
+        <td class="num">28</td>
+        <td class="num">1</td>
+      </tr>
+      
+      <tr>
+        <td><span class="risk-badge" style="background:#8b949e">—</span></td>
+        <td class="class-path" title="MethodInvocation.GO3">MethodInvocation.GO3</td>
+        <td class="num">28</td>
+        <td class="num">1</td>
+      </tr>
+      
+      <tr>
+        <td><span class="risk-badge" style="background:#8b949e">—</span></td>
+        <td class="class-path" title="MethodInvocation.Simple1">MethodInvocation.Simple1</td>
+        <td class="num">28</td>
+        <td class="num">1</td>
+      </tr>
+      
+    </tbody>
+  </table>
+</section>
+
+
+<section class="content-section">
+  <h2 class="section-title">Coupling matrix
+    <span class="legend-inline">
+      <span class="li-cell" style="background:#30363d"></span>Co-change only
+      <span class="li-cell" style="background:#3fb950"></span>Weak
+      <span class="li-cell" style="background:#e3b341"></span>Moderate
+      <span class="li-cell" style="background:#f85149"></span>Strong
+    </span>
+  </h2>
+  <div class="matrix-wrap">
+    <table class="matrix">
+      <thead>
+        <tr>
+          <th class="matrix-corner"></th>
+          <th class="matrix-col-hdr" title="com.github.mauricioaniche.ck.util.JDTUtils"><span>JDTUtils</span></th><th class="matrix-col-hdr" title="com.github.mauricioaniche.ck.metric.TightClassCohesion"><span>TightClassCohesion</span></th><th class="matrix-col-hdr" title="com.github.mauricioaniche.ck.MethodInvocationsTest"><span>MethodInvocationsTest</span></th><th class="matrix-col-hdr" title="VisibleMethods.VisibleMethods"><span>VisibleMethods</span></th><th class="matrix-col-hdr" title="fieldusage.FieldUsage"><span>FieldUsage</span></th><th class="matrix-col-hdr" title="com.github.mauricioaniche.ck.metric.NumberOfMethods"><span>NumberOfMethods</span></th><th class="matrix-col-hdr" title="com.github.mauricioaniche.ck.LocalFieldsAccessedTest"><span>LocalFieldsAccessedTest</span></th><th class="matrix-col-hdr" title="com.github.mauricioaniche.ck.metric.NumberOfFields"><span>NumberOfFields</span></th><th class="matrix-col-hdr" title="MethodInvocation.Complex1"><span>Complex1</span></th><th class="matrix-col-hdr" title="com.github.mauricioaniche.ck.FieldUsageTest"><span>FieldUsageTest</span></th><th class="matrix-col-hdr" title="com.github.mauricioaniche.ck.metric.MethodInvocationsLocal"><span>MethodInvocationsLocal</span></th><th class="matrix-col-hdr" title="com.github.mauricioaniche.ck.LooseClassCohesionTest"><span>LooseClassCohesionTest</span></th><th class="matrix-col-hdr" title="com.github.mauricioaniche.ck.TightClassCohesionTest"><span>TightClassCohesionTest</span></th><th class="matrix-col-hdr" title="com.github.mauricioaniche.ck.VisibleMethodsTest"><span>VisibleMethodsTest</span></th><th class="matrix-col-hdr" title="ClassCohesion.HighCohesion"><span>HighCohesion</span></th><th class="matrix-col-hdr" title="VariableDeclaration.VariableDeclaration"><span>VariableDeclaration</span></th><th class="matrix-col-hdr" title="ClassCohesion.Simple1"><span>Simple1</span></th><th class="matrix-col-hdr" title="com.github.mauricioaniche.ck.VariableNameExtractionTest"><span>VariableNameExtractionTest</span></th><th class="matrix-col-hdr" title="com.github.mauricioaniche.ck.LocalFieldsTest"><span>LocalFieldsTest</span></th><th class="matrix-col-hdr" title="ClassCohesion.MediumCohesion"><span>MediumCohesion</span></th><th class="matrix-col-hdr" title="MethodInvocation.Simple2"><span>Simple2</span></th><th class="matrix-col-hdr" title="MethodInvocation.GO2"><span>GO2</span></th><th class="matrix-col-hdr" title="fieldusage.FieldUsage2"><span>FieldUsage2</span></th><th class="matrix-col-hdr" title="ClassCohesion.NoCohesion"><span>NoCohesion</span></th><th class="matrix-col-hdr" title="ClassCohesion.NoVisibleMethods"><span>NoVisibleMethods</span></th><th class="matrix-col-hdr" title="com.github.mauricioaniche.ck.util.JDTUtilsTest"><span>JDTUtilsTest</span></th><th class="matrix-col-hdr" title="com.github.mauricioaniche.ck.util.StringUtils"><span>StringUtils</span></th><th class="matrix-col-hdr" title="MethodInvocation.GO"><span>GO</span></th><th class="matrix-col-hdr" title="MethodInvocation.GO3"><span>GO3</span></th><th class="matrix-col-hdr" title="MethodInvocation.Simple1"><span>Simple1</span></th>
+        </tr>
+      </thead>
+      <tbody>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="com.github.mauricioaniche.ck.util.JDTUtils">JDTUtils</th>
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JDTUtils → TightClassCohesion · weight: 2.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JDTUtils → MethodInvocationsTest · weight: 3.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JDTUtils → VisibleMethods · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JDTUtils → FieldUsage · weight: 5.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JDTUtils → NumberOfMethods · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JDTUtils → LocalFieldsAccessedTest · weight: 3.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#eb8b44" title="JDTUtils → NumberOfFields · weight: 2.0 · cw: 0.7024 · METHOD_INVOCATION_OBJECT_PARAMETER"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JDTUtils → Complex1 · weight: 2.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JDTUtils → FieldUsageTest · weight: 3.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JDTUtils → MethodInvocationsLocal · weight: 2.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JDTUtils → TightClassCohesionTest · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JDTUtils → VisibleMethodsTest · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JDTUtils → HighCohesion · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JDTUtils → VariableDeclaration · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JDTUtils → Simple1 · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JDTUtils → VariableNameExtractionTest · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JDTUtils → LocalFieldsTest · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JDTUtils → MediumCohesion · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JDTUtils → Simple2 · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JDTUtils → GO2 · weight: 2.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JDTUtils → FieldUsage2 · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JDTUtils → NoCohesion · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JDTUtils → JDTUtilsTest · weight: 3.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JDTUtils → StringUtils · weight: 3.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JDTUtils → GO · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JDTUtils → GO3 · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JDTUtils → Simple1 · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="com.github.mauricioaniche.ck.metric.TightClassCohesion">TightClassCohesion</th>
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="TightClassCohesion → JDTUtils · weight: 2.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="TightClassCohesion → MethodInvocationsTest · weight: 3.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="TightClassCohesion → VisibleMethods · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="TightClassCohesion → FieldUsage · weight: 2.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="TightClassCohesion → NumberOfMethods · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="TightClassCohesion → LocalFieldsAccessedTest · weight: 2.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="TightClassCohesion → NumberOfFields · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="TightClassCohesion → FieldUsageTest · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="TightClassCohesion → MethodInvocationsLocal · weight: 3.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="TightClassCohesion → LooseClassCohesionTest · weight: 3.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="TightClassCohesion → TightClassCohesionTest · weight: 4.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="TightClassCohesion → VisibleMethodsTest · weight: 4.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="TightClassCohesion → HighCohesion · weight: 2.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="TightClassCohesion → VariableDeclaration · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="TightClassCohesion → Simple1 · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="TightClassCohesion → VariableNameExtractionTest · weight: 3.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="TightClassCohesion → MediumCohesion · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="TightClassCohesion → NoCohesion · weight: 2.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="TightClassCohesion → NoVisibleMethods · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="TightClassCohesion → JDTUtilsTest · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="TightClassCohesion → StringUtils · weight: 2.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="com.github.mauricioaniche.ck.MethodInvocationsTest">MethodInvocationsTest</th>
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="MethodInvocationsTest → JDTUtils · weight: 3.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="MethodInvocationsTest → TightClassCohesion · weight: 3.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="MethodInvocationsTest → FieldUsage · weight: 3.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="MethodInvocationsTest → LocalFieldsAccessedTest · weight: 2.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="MethodInvocationsTest → NumberOfFields · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="MethodInvocationsTest → Complex1 · weight: 2.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="MethodInvocationsTest → FieldUsageTest · weight: 2.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="MethodInvocationsTest → MethodInvocationsLocal · weight: 2.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="MethodInvocationsTest → LooseClassCohesionTest · weight: 2.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="MethodInvocationsTest → TightClassCohesionTest · weight: 2.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="MethodInvocationsTest → VisibleMethodsTest · weight: 2.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="MethodInvocationsTest → VariableNameExtractionTest · weight: 2.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="MethodInvocationsTest → LocalFieldsTest · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="MethodInvocationsTest → Simple2 · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="MethodInvocationsTest → GO2 · weight: 2.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="MethodInvocationsTest → FieldUsage2 · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="MethodInvocationsTest → JDTUtilsTest · weight: 2.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="MethodInvocationsTest → StringUtils · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="MethodInvocationsTest → GO · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="MethodInvocationsTest → GO3 · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="MethodInvocationsTest → Simple1 · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="VisibleMethods.VisibleMethods">VisibleMethods</th>
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="VisibleMethods → JDTUtils · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="VisibleMethods → TightClassCohesion · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="VisibleMethods → FieldUsage · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="VisibleMethods → NumberOfMethods · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="VisibleMethods → LocalFieldsAccessedTest · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="VisibleMethods → NumberOfFields · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="VisibleMethods → TightClassCohesionTest · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="VisibleMethods → VisibleMethodsTest · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="VisibleMethods → HighCohesion · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="VisibleMethods → VariableDeclaration · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="VisibleMethods → Simple1 · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="VisibleMethods → VariableNameExtractionTest · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="VisibleMethods → MediumCohesion · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="VisibleMethods → NoCohesion · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="VisibleMethods → StringUtils · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="fieldusage.FieldUsage">FieldUsage</th>
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="FieldUsage → JDTUtils · weight: 5.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="FieldUsage → TightClassCohesion · weight: 2.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="FieldUsage → MethodInvocationsTest · weight: 3.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="FieldUsage → VisibleMethods · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="FieldUsage → NumberOfMethods · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="FieldUsage → LocalFieldsAccessedTest · weight: 3.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="FieldUsage → NumberOfFields · weight: 2.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="FieldUsage → Complex1 · weight: 2.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="FieldUsage → FieldUsageTest · weight: 3.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="FieldUsage → MethodInvocationsLocal · weight: 2.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="FieldUsage → TightClassCohesionTest · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="FieldUsage → VisibleMethodsTest · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="FieldUsage → HighCohesion · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="FieldUsage → VariableDeclaration · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="FieldUsage → Simple1 · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="FieldUsage → VariableNameExtractionTest · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="FieldUsage → LocalFieldsTest · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="FieldUsage → MediumCohesion · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="FieldUsage → Simple2 · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="FieldUsage → GO2 · weight: 2.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#e7a042" title="FieldUsage → FieldUsage2 · weight: 1.0 · cw: 0.5960 · ATOMIC_PARAMETER_COUPLING, VARIABLE_DECLARATION_STATEMENT, VARIABLE_CLASS_INSTANCE_CREATION"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="FieldUsage → NoCohesion · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="FieldUsage → JDTUtilsTest · weight: 2.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="FieldUsage → StringUtils · weight: 2.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="FieldUsage → GO · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="FieldUsage → GO3 · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="FieldUsage → Simple1 · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="com.github.mauricioaniche.ck.metric.NumberOfMethods">NumberOfMethods</th>
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NumberOfMethods → JDTUtils · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NumberOfMethods → TightClassCohesion · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NumberOfMethods → VisibleMethods · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NumberOfMethods → FieldUsage · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NumberOfMethods → LocalFieldsAccessedTest · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NumberOfMethods → NumberOfFields · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NumberOfMethods → TightClassCohesionTest · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NumberOfMethods → VisibleMethodsTest · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NumberOfMethods → HighCohesion · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NumberOfMethods → VariableDeclaration · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NumberOfMethods → Simple1 · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NumberOfMethods → VariableNameExtractionTest · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NumberOfMethods → MediumCohesion · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NumberOfMethods → NoCohesion · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NumberOfMethods → StringUtils · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="com.github.mauricioaniche.ck.LocalFieldsAccessedTest">LocalFieldsAccessedTest</th>
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="LocalFieldsAccessedTest → JDTUtils · weight: 3.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="LocalFieldsAccessedTest → TightClassCohesion · weight: 2.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="LocalFieldsAccessedTest → MethodInvocationsTest · weight: 2.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="LocalFieldsAccessedTest → VisibleMethods · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="LocalFieldsAccessedTest → FieldUsage · weight: 3.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="LocalFieldsAccessedTest → NumberOfMethods · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="LocalFieldsAccessedTest → NumberOfFields · weight: 2.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="LocalFieldsAccessedTest → Complex1 · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="LocalFieldsAccessedTest → FieldUsageTest · weight: 2.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="LocalFieldsAccessedTest → MethodInvocationsLocal · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="LocalFieldsAccessedTest → TightClassCohesionTest · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="LocalFieldsAccessedTest → VisibleMethodsTest · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="LocalFieldsAccessedTest → HighCohesion · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="LocalFieldsAccessedTest → VariableDeclaration · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="LocalFieldsAccessedTest → Simple1 · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="LocalFieldsAccessedTest → VariableNameExtractionTest · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="LocalFieldsAccessedTest → LocalFieldsTest · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="LocalFieldsAccessedTest → MediumCohesion · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="LocalFieldsAccessedTest → GO2 · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="LocalFieldsAccessedTest → FieldUsage2 · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="LocalFieldsAccessedTest → NoCohesion · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="LocalFieldsAccessedTest → JDTUtilsTest · weight: 2.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="LocalFieldsAccessedTest → StringUtils · weight: 2.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="LocalFieldsAccessedTest → GO · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="LocalFieldsAccessedTest → GO3 · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="LocalFieldsAccessedTest → Simple1 · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="com.github.mauricioaniche.ck.metric.NumberOfFields">NumberOfFields</th>
+          
+            <td class="matrix-cell filled" style="background:#eb8b44" title="NumberOfFields → JDTUtils · weight: 2.0 · cw: 0.7024 · METHOD_INVOCATION_OBJECT_PARAMETER"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NumberOfFields → TightClassCohesion · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NumberOfFields → MethodInvocationsTest · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NumberOfFields → VisibleMethods · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NumberOfFields → FieldUsage · weight: 2.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NumberOfFields → NumberOfMethods · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NumberOfFields → LocalFieldsAccessedTest · weight: 2.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NumberOfFields → Complex1 · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NumberOfFields → FieldUsageTest · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NumberOfFields → TightClassCohesionTest · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NumberOfFields → VisibleMethodsTest · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NumberOfFields → HighCohesion · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NumberOfFields → VariableDeclaration · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NumberOfFields → Simple1 · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NumberOfFields → VariableNameExtractionTest · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NumberOfFields → LocalFieldsTest · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NumberOfFields → MediumCohesion · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NumberOfFields → GO2 · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NumberOfFields → FieldUsage2 · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NumberOfFields → NoCohesion · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NumberOfFields → JDTUtilsTest · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NumberOfFields → StringUtils · weight: 2.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NumberOfFields → GO · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NumberOfFields → GO3 · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NumberOfFields → Simple1 · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="MethodInvocation.Complex1">Complex1</th>
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Complex1 → JDTUtils · weight: 2.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Complex1 → MethodInvocationsTest · weight: 2.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Complex1 → FieldUsage · weight: 2.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Complex1 → LocalFieldsAccessedTest · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Complex1 → NumberOfFields · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Complex1 → FieldUsageTest · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Complex1 → MethodInvocationsLocal · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Complex1 → LocalFieldsTest · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#e89a43" title="Complex1 → Simple2 · weight: 1.0 · cw: 0.6260 · ATOMIC_PARAMETER_COUPLING, METHOD_INVOCATION_ATOMIC_PARAMETER, VARIABLE_DECLARATION_STATEMENT, VARIABLE_CLASS_INSTANCE_CREATION"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#e89a43" title="Complex1 → GO2 · weight: 2.0 · cw: 0.6268 · METHOD_INVOCATION_ATOMIC_PARAMETER, INHERITANCE"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Complex1 → FieldUsage2 · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Complex1 → JDTUtilsTest · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Complex1 → StringUtils · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Complex1 → GO · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Complex1 → GO3 · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Complex1 → Simple1 · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="com.github.mauricioaniche.ck.FieldUsageTest">FieldUsageTest</th>
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="FieldUsageTest → JDTUtils · weight: 3.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="FieldUsageTest → TightClassCohesion · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="FieldUsageTest → MethodInvocationsTest · weight: 2.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="FieldUsageTest → FieldUsage · weight: 3.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="FieldUsageTest → LocalFieldsAccessedTest · weight: 2.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="FieldUsageTest → NumberOfFields · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="FieldUsageTest → Complex1 · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="FieldUsageTest → MethodInvocationsLocal · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="FieldUsageTest → LocalFieldsTest · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="FieldUsageTest → GO2 · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="FieldUsageTest → FieldUsage2 · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="FieldUsageTest → JDTUtilsTest · weight: 2.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="FieldUsageTest → StringUtils · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="FieldUsageTest → GO · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="FieldUsageTest → GO3 · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="FieldUsageTest → Simple1 · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="com.github.mauricioaniche.ck.metric.MethodInvocationsLocal">MethodInvocationsLocal</th>
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="MethodInvocationsLocal → JDTUtils · weight: 2.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="MethodInvocationsLocal → TightClassCohesion · weight: 3.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="MethodInvocationsLocal → MethodInvocationsTest · weight: 2.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="MethodInvocationsLocal → FieldUsage · weight: 2.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="MethodInvocationsLocal → LocalFieldsAccessedTest · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="MethodInvocationsLocal → Complex1 · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="MethodInvocationsLocal → FieldUsageTest · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="MethodInvocationsLocal → Simple2 · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="MethodInvocationsLocal → GO2 · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="MethodInvocationsLocal → JDTUtilsTest · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="com.github.mauricioaniche.ck.LooseClassCohesionTest">LooseClassCohesionTest</th>
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="LooseClassCohesionTest → TightClassCohesion · weight: 3.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="LooseClassCohesionTest → MethodInvocationsTest · weight: 2.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="LooseClassCohesionTest → TightClassCohesionTest · weight: 3.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="LooseClassCohesionTest → VisibleMethodsTest · weight: 3.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="LooseClassCohesionTest → HighCohesion · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="LooseClassCohesionTest → VariableNameExtractionTest · weight: 2.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="LooseClassCohesionTest → NoCohesion · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="LooseClassCohesionTest → NoVisibleMethods · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="com.github.mauricioaniche.ck.TightClassCohesionTest">TightClassCohesionTest</th>
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="TightClassCohesionTest → JDTUtils · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="TightClassCohesionTest → TightClassCohesion · weight: 4.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="TightClassCohesionTest → MethodInvocationsTest · weight: 2.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="TightClassCohesionTest → VisibleMethods · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="TightClassCohesionTest → FieldUsage · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="TightClassCohesionTest → NumberOfMethods · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="TightClassCohesionTest → LocalFieldsAccessedTest · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="TightClassCohesionTest → NumberOfFields · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="TightClassCohesionTest → LooseClassCohesionTest · weight: 3.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="TightClassCohesionTest → VisibleMethodsTest · weight: 4.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="TightClassCohesionTest → HighCohesion · weight: 2.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="TightClassCohesionTest → VariableDeclaration · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="TightClassCohesionTest → Simple1 · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="TightClassCohesionTest → VariableNameExtractionTest · weight: 3.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="TightClassCohesionTest → MediumCohesion · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="TightClassCohesionTest → NoCohesion · weight: 2.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="TightClassCohesionTest → NoVisibleMethods · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="TightClassCohesionTest → StringUtils · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="com.github.mauricioaniche.ck.VisibleMethodsTest">VisibleMethodsTest</th>
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="VisibleMethodsTest → JDTUtils · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="VisibleMethodsTest → TightClassCohesion · weight: 4.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="VisibleMethodsTest → MethodInvocationsTest · weight: 2.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="VisibleMethodsTest → VisibleMethods · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="VisibleMethodsTest → FieldUsage · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="VisibleMethodsTest → NumberOfMethods · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="VisibleMethodsTest → LocalFieldsAccessedTest · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="VisibleMethodsTest → NumberOfFields · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="VisibleMethodsTest → LooseClassCohesionTest · weight: 3.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="VisibleMethodsTest → TightClassCohesionTest · weight: 4.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="VisibleMethodsTest → HighCohesion · weight: 2.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="VisibleMethodsTest → VariableDeclaration · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="VisibleMethodsTest → Simple1 · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="VisibleMethodsTest → VariableNameExtractionTest · weight: 3.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="VisibleMethodsTest → MediumCohesion · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="VisibleMethodsTest → NoCohesion · weight: 2.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="VisibleMethodsTest → NoVisibleMethods · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="VisibleMethodsTest → StringUtils · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="ClassCohesion.HighCohesion">HighCohesion</th>
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="HighCohesion → JDTUtils · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="HighCohesion → TightClassCohesion · weight: 2.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="HighCohesion → VisibleMethods · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="HighCohesion → FieldUsage · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="HighCohesion → NumberOfMethods · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="HighCohesion → LocalFieldsAccessedTest · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="HighCohesion → NumberOfFields · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="HighCohesion → LooseClassCohesionTest · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="HighCohesion → TightClassCohesionTest · weight: 2.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="HighCohesion → VisibleMethodsTest · weight: 2.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="HighCohesion → VariableDeclaration · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="HighCohesion → Simple1 · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="HighCohesion → VariableNameExtractionTest · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="HighCohesion → MediumCohesion · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="HighCohesion → NoCohesion · weight: 2.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="HighCohesion → NoVisibleMethods · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="HighCohesion → StringUtils · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="VariableDeclaration.VariableDeclaration">VariableDeclaration</th>
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="VariableDeclaration → JDTUtils · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="VariableDeclaration → TightClassCohesion · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="VariableDeclaration → VisibleMethods · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="VariableDeclaration → FieldUsage · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="VariableDeclaration → NumberOfMethods · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="VariableDeclaration → LocalFieldsAccessedTest · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="VariableDeclaration → NumberOfFields · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="VariableDeclaration → TightClassCohesionTest · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="VariableDeclaration → VisibleMethodsTest · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="VariableDeclaration → HighCohesion · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="VariableDeclaration → Simple1 · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="VariableDeclaration → VariableNameExtractionTest · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="VariableDeclaration → MediumCohesion · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="VariableDeclaration → NoCohesion · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="VariableDeclaration → StringUtils · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="ClassCohesion.Simple1">Simple1</th>
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Simple1 → JDTUtils · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Simple1 → TightClassCohesion · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Simple1 → VisibleMethods · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Simple1 → FieldUsage · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Simple1 → NumberOfMethods · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Simple1 → LocalFieldsAccessedTest · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Simple1 → NumberOfFields · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Simple1 → TightClassCohesionTest · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Simple1 → VisibleMethodsTest · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Simple1 → HighCohesion · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Simple1 → VariableDeclaration · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Simple1 → VariableNameExtractionTest · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Simple1 → MediumCohesion · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Simple1 → NoCohesion · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Simple1 → StringUtils · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="com.github.mauricioaniche.ck.VariableNameExtractionTest">VariableNameExtractionTest</th>
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="VariableNameExtractionTest → JDTUtils · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="VariableNameExtractionTest → TightClassCohesion · weight: 3.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="VariableNameExtractionTest → MethodInvocationsTest · weight: 2.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="VariableNameExtractionTest → VisibleMethods · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="VariableNameExtractionTest → FieldUsage · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="VariableNameExtractionTest → NumberOfMethods · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="VariableNameExtractionTest → LocalFieldsAccessedTest · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="VariableNameExtractionTest → NumberOfFields · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="VariableNameExtractionTest → LooseClassCohesionTest · weight: 2.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="VariableNameExtractionTest → TightClassCohesionTest · weight: 3.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="VariableNameExtractionTest → VisibleMethodsTest · weight: 3.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="VariableNameExtractionTest → HighCohesion · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="VariableNameExtractionTest → VariableDeclaration · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="VariableNameExtractionTest → Simple1 · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="VariableNameExtractionTest → MediumCohesion · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="VariableNameExtractionTest → NoCohesion · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="VariableNameExtractionTest → StringUtils · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="com.github.mauricioaniche.ck.LocalFieldsTest">LocalFieldsTest</th>
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="LocalFieldsTest → JDTUtils · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="LocalFieldsTest → MethodInvocationsTest · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="LocalFieldsTest → FieldUsage · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="LocalFieldsTest → LocalFieldsAccessedTest · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="LocalFieldsTest → NumberOfFields · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="LocalFieldsTest → Complex1 · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="LocalFieldsTest → FieldUsageTest · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="LocalFieldsTest → GO2 · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="LocalFieldsTest → FieldUsage2 · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="LocalFieldsTest → JDTUtilsTest · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="LocalFieldsTest → StringUtils · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="LocalFieldsTest → GO · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="LocalFieldsTest → GO3 · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="LocalFieldsTest → Simple1 · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="ClassCohesion.MediumCohesion">MediumCohesion</th>
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="MediumCohesion → JDTUtils · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="MediumCohesion → TightClassCohesion · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="MediumCohesion → VisibleMethods · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="MediumCohesion → FieldUsage · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="MediumCohesion → NumberOfMethods · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="MediumCohesion → LocalFieldsAccessedTest · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="MediumCohesion → NumberOfFields · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="MediumCohesion → TightClassCohesionTest · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="MediumCohesion → VisibleMethodsTest · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="MediumCohesion → HighCohesion · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="MediumCohesion → VariableDeclaration · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="MediumCohesion → Simple1 · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="MediumCohesion → VariableNameExtractionTest · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="MediumCohesion → NoCohesion · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="MediumCohesion → StringUtils · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="MethodInvocation.Simple2">Simple2</th>
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Simple2 → JDTUtils · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Simple2 → MethodInvocationsTest · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Simple2 → FieldUsage · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Simple2 → Complex1 · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Simple2 → MethodInvocationsLocal · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Simple2 → GO2 · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="MethodInvocation.GO2">GO2</th>
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GO2 → JDTUtils · weight: 2.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GO2 → MethodInvocationsTest · weight: 2.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GO2 → FieldUsage · weight: 2.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GO2 → LocalFieldsAccessedTest · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GO2 → NumberOfFields · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GO2 → Complex1 · weight: 2.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GO2 → FieldUsageTest · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GO2 → MethodInvocationsLocal · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GO2 → LocalFieldsTest · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GO2 → Simple2 · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GO2 → FieldUsage2 · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GO2 → JDTUtilsTest · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GO2 → StringUtils · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GO2 → GO · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GO2 → GO3 · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GO2 → Simple1 · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="fieldusage.FieldUsage2">FieldUsage2</th>
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="FieldUsage2 → JDTUtils · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="FieldUsage2 → MethodInvocationsTest · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="FieldUsage2 → FieldUsage · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="FieldUsage2 → LocalFieldsAccessedTest · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="FieldUsage2 → NumberOfFields · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="FieldUsage2 → Complex1 · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="FieldUsage2 → FieldUsageTest · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="FieldUsage2 → LocalFieldsTest · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="FieldUsage2 → GO2 · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="FieldUsage2 → JDTUtilsTest · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="FieldUsage2 → StringUtils · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="FieldUsage2 → GO · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="FieldUsage2 → GO3 · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="FieldUsage2 → Simple1 · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="ClassCohesion.NoCohesion">NoCohesion</th>
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NoCohesion → JDTUtils · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NoCohesion → TightClassCohesion · weight: 2.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NoCohesion → VisibleMethods · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NoCohesion → FieldUsage · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NoCohesion → NumberOfMethods · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NoCohesion → LocalFieldsAccessedTest · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NoCohesion → NumberOfFields · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NoCohesion → LooseClassCohesionTest · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NoCohesion → TightClassCohesionTest · weight: 2.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NoCohesion → VisibleMethodsTest · weight: 2.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NoCohesion → HighCohesion · weight: 2.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NoCohesion → VariableDeclaration · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NoCohesion → Simple1 · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NoCohesion → VariableNameExtractionTest · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NoCohesion → MediumCohesion · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NoCohesion → NoVisibleMethods · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NoCohesion → StringUtils · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="ClassCohesion.NoVisibleMethods">NoVisibleMethods</th>
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NoVisibleMethods → TightClassCohesion · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NoVisibleMethods → LooseClassCohesionTest · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NoVisibleMethods → TightClassCohesionTest · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NoVisibleMethods → VisibleMethodsTest · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NoVisibleMethods → HighCohesion · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NoVisibleMethods → NoCohesion · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="com.github.mauricioaniche.ck.util.JDTUtilsTest">JDTUtilsTest</th>
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JDTUtilsTest → JDTUtils · weight: 3.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JDTUtilsTest → TightClassCohesion · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JDTUtilsTest → MethodInvocationsTest · weight: 2.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JDTUtilsTest → FieldUsage · weight: 2.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JDTUtilsTest → LocalFieldsAccessedTest · weight: 2.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JDTUtilsTest → NumberOfFields · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JDTUtilsTest → Complex1 · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JDTUtilsTest → FieldUsageTest · weight: 2.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JDTUtilsTest → MethodInvocationsLocal · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JDTUtilsTest → LocalFieldsTest · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JDTUtilsTest → GO2 · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JDTUtilsTest → FieldUsage2 · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JDTUtilsTest → StringUtils · weight: 2.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JDTUtilsTest → GO · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JDTUtilsTest → GO3 · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="JDTUtilsTest → Simple1 · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="com.github.mauricioaniche.ck.util.StringUtils">StringUtils</th>
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="StringUtils → JDTUtils · weight: 3.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="StringUtils → TightClassCohesion · weight: 2.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="StringUtils → MethodInvocationsTest · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="StringUtils → VisibleMethods · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="StringUtils → FieldUsage · weight: 2.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="StringUtils → NumberOfMethods · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="StringUtils → LocalFieldsAccessedTest · weight: 2.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="StringUtils → NumberOfFields · weight: 2.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="StringUtils → Complex1 · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="StringUtils → FieldUsageTest · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="StringUtils → TightClassCohesionTest · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="StringUtils → VisibleMethodsTest · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="StringUtils → HighCohesion · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="StringUtils → VariableDeclaration · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="StringUtils → Simple1 · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="StringUtils → VariableNameExtractionTest · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="StringUtils → LocalFieldsTest · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="StringUtils → MediumCohesion · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="StringUtils → GO2 · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="StringUtils → FieldUsage2 · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="StringUtils → NoCohesion · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="StringUtils → JDTUtilsTest · weight: 2.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="StringUtils → GO · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="StringUtils → GO3 · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="StringUtils → Simple1 · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="MethodInvocation.GO">GO</th>
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GO → JDTUtils · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GO → MethodInvocationsTest · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GO → FieldUsage · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GO → LocalFieldsAccessedTest · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GO → NumberOfFields · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GO → Complex1 · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GO → FieldUsageTest · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GO → LocalFieldsTest · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GO → GO2 · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GO → FieldUsage2 · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GO → JDTUtilsTest · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GO → StringUtils · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GO → GO3 · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GO → Simple1 · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="MethodInvocation.GO3">GO3</th>
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GO3 → JDTUtils · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GO3 → MethodInvocationsTest · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GO3 → FieldUsage · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GO3 → LocalFieldsAccessedTest · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GO3 → NumberOfFields · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GO3 → Complex1 · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GO3 → FieldUsageTest · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GO3 → LocalFieldsTest · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GO3 → GO2 · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GO3 → FieldUsage2 · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GO3 → JDTUtilsTest · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GO3 → StringUtils · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GO3 → GO · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="GO3 → Simple1 · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="MethodInvocation.Simple1">Simple1</th>
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Simple1 → JDTUtils · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Simple1 → MethodInvocationsTest · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Simple1 → FieldUsage · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Simple1 → LocalFieldsAccessedTest · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Simple1 → NumberOfFields · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Simple1 → Complex1 · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Simple1 → FieldUsageTest · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Simple1 → LocalFieldsTest · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Simple1 → GO2 · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Simple1 → FieldUsage2 · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell empty"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Simple1 → JDTUtilsTest · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Simple1 → StringUtils · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Simple1 → GO · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Simple1 → GO3 · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+        </tr>
+        
+      </tbody>
+    </table>
+  </div>
+</section>
+
+
+</body>
+</html>

@@ -1,0 +1,1982 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HyCPA — Community 425 · link · Tiny · mauricioaniche/ck</title>
+  <style>
+:root {
+  --bg: #0d1117; --surface: #161b22; --surface2: #21262d;
+  --border: #30363d; --text: #e6edf3; --text2: #8b949e;
+  --accent: #58a6ff; --green: #3fb950; --orange: #e3b341; --red: #f85149;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { background: var(--bg); color: var(--text); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif; padding-bottom: 48px; }
+
+/* ── Header ── */
+.page-header { background: var(--surface); border-bottom: 1px solid var(--border); padding: 12px 24px; display: flex; align-items: center; gap: 20px; }
+.back-btn { color: var(--text2); font-size: 12px; text-decoration: none; white-space: nowrap; }
+.back-btn:hover { color: var(--accent); }
+.header-title { font-size: 15px; color: var(--text); }
+.header-title strong { color: var(--accent); }
+
+/* ── Stats pills ── */
+.stats-row { display: flex; gap: 12px; padding: 16px 24px; background: var(--surface); border-bottom: 1px solid var(--border); flex-wrap: wrap; }
+.stat-pill { background: var(--surface2); border: 1px solid var(--border); border-radius: 8px; padding: 10px 20px; display: flex; flex-direction: column; align-items: center; gap: 2px; min-width: 90px; }
+.pill-val { font-size: 22px; font-weight: 700; color: var(--text); line-height: 1; }
+.pill-lbl { font-size: 10px; color: var(--text2); text-transform: uppercase; letter-spacing: 0.5px; margin-top: 2px; }
+
+/* ── Content sections ── */
+.content-section { padding: 24px; }
+.section-title { font-size: 11px; font-weight: 600; color: var(--text2); text-transform: uppercase; letter-spacing: 0.6px; margin-bottom: 14px; display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
+
+/* ── Node table ── */
+.node-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+.node-table th { background: var(--surface); color: var(--text2); font-weight: 600; font-size: 10px; text-transform: uppercase; letter-spacing: 0.5px; padding: 8px 12px; text-align: left; border-bottom: 2px solid var(--border); white-space: nowrap; }
+.node-table td { padding: 7px 12px; border-bottom: 1px solid var(--border); vertical-align: middle; }
+.node-table tbody tr:hover td { background: var(--surface); }
+.risk-badge { display: inline-block; padding: 2px 9px; border-radius: 10px; font-size: 11px; font-weight: 700; color: #0d1117; white-space: nowrap; }
+.class-path { font-size: 11px; color: var(--text2); font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', monospace; word-break: break-all; }
+td.num { text-align: right; font-weight: 600; white-space: nowrap; }
+td.overlap { color: var(--accent); }
+
+/* ── Coupling matrix ── */
+.matrix-wrap { overflow: auto; }
+.matrix { border-collapse: collapse; }
+.matrix-corner { min-width: 16px; }
+.matrix-col-hdr { padding: 0 1px 4px 1px; vertical-align: bottom; }
+.matrix-col-hdr span { display: block; writing-mode: vertical-rl; transform: rotate(180deg); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-height: 140px; color: var(--text2); font-weight: 400; font-size: 10px; cursor: default; text-align: left; }
+.matrix-row-hdr { text-align: right; padding: 1px 6px 1px 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 200px; color: var(--text2); font-weight: 400; font-size: 10px; cursor: default; }
+.matrix-cell { width: 16px; height: 16px; min-width: 16px; min-height: 16px; border: 1px solid #1c2129; cursor: default; }
+.matrix-cell.empty { background: transparent; }
+.matrix-cell.self-cell { background: var(--surface2); }
+.matrix-cell.filled { }
+
+/* ── Legend inline ── */
+.legend-inline { display: inline-flex; align-items: center; gap: 6px; font-size: 10px; color: var(--text2); font-weight: 400; text-transform: none; letter-spacing: 0; }
+.li-cell { display: inline-block; width: 10px; height: 10px; border-radius: 2px; vertical-align: middle; flex-shrink: 0; }
+</style>
+</head>
+<body>
+
+<div class="page-header">
+  <a class="back-btn" href="repo_link__Tiny__mauricioaniche_ck.html">← Back to link · Tiny · mauricioaniche/ck</a>
+  <span class="header-title">Community <strong>C425</strong> — link · Tiny · mauricioaniche/ck</span>
+</div>
+
+<div class="stats-row">
+  <div class="stat-pill"><span class="pill-val">23</span><span class="pill-lbl">Nodes</span></div>
+  <div class="stat-pill"><span class="pill-val">506</span><span class="pill-lbl">Arcs</span></div>
+  <div class="stat-pill"><span class="pill-val">23</span><span class="pill-lbl">Overlapping</span></div>
+  <div class="stat-pill"><span class="pill-val">1</span><span class="pill-lbl">Coupled arcs</span></div>
+  <div class="stat-pill"><span class="pill-val">505</span><span class="pill-lbl">Co-change only</span></div>
+</div>
+
+<section class="content-section">
+  <h2 class="section-title">Nodes</h2>
+  <table class="node-table">
+    <thead>
+      <tr>
+        <th>Risk</th>
+        <th>Class</th>
+        <th>Degree</th>
+        <th>Communities</th>
+      </tr>
+    </thead>
+    <tbody>
+      
+      <tr>
+        <td><span class="risk-badge" style="background:#3fb950">0.152</span></td>
+        <td class="class-path" title="nestedblocks.NestedBlocks">nestedblocks.NestedBlocks</td>
+        <td class="num">44</td>
+        <td class="num overlap">9</td>
+      </tr>
+      
+      <tr>
+        <td><span class="risk-badge" style="background:#3fb950">0.141</span></td>
+        <td class="class-path" title="loop.Loop">loop.Loop</td>
+        <td class="num">44</td>
+        <td class="num overlap">9</td>
+      </tr>
+      
+      <tr>
+        <td><span class="risk-badge" style="background:#3fb950">0.130</span></td>
+        <td class="class-path" title="comparison.Comparison">comparison.Comparison</td>
+        <td class="num">44</td>
+        <td class="num overlap">14</td>
+      </tr>
+      
+      <tr>
+        <td><span class="risk-badge" style="background:#3fb950">0.120</span></td>
+        <td class="class-path" title="com.github.mauricioaniche.ck.NumberOfAssignmentsTest">com.github.mauricioaniche.ck.NumberOfAssignmentsTest</td>
+        <td class="num">44</td>
+        <td class="num overlap">9</td>
+      </tr>
+      
+      <tr>
+        <td><span class="risk-badge" style="background:#3fb950">0.109</span></td>
+        <td class="class-path" title="com.github.mauricioaniche.ck.metric.NumberOfAssignments">com.github.mauricioaniche.ck.metric.NumberOfAssignments</td>
+        <td class="num">44</td>
+        <td class="num overlap">11</td>
+      </tr>
+      
+      <tr>
+        <td><span class="risk-badge" style="background:#3fb950">0.109</span></td>
+        <td class="class-path" title="math.Math">math.Math</td>
+        <td class="num">44</td>
+        <td class="num overlap">9</td>
+      </tr>
+      
+      <tr>
+        <td><span class="risk-badge" style="background:#3fb950">0.098</span></td>
+        <td class="class-path" title="com.github.mauricioaniche.ck.metric.NumberOfStringLiterals">com.github.mauricioaniche.ck.metric.NumberOfStringLiterals</td>
+        <td class="num">44</td>
+        <td class="num overlap">11</td>
+      </tr>
+      
+      <tr>
+        <td><span class="risk-badge" style="background:#3fb950">0.087</span></td>
+        <td class="class-path" title="com.github.mauricioaniche.ck.NumberOfComparisonsTest">com.github.mauricioaniche.ck.NumberOfComparisonsTest</td>
+        <td class="num">44</td>
+        <td class="num overlap">14</td>
+      </tr>
+      
+      <tr>
+        <td><span class="risk-badge" style="background:#3fb950">0.087</span></td>
+        <td class="class-path" title="com.github.mauricioaniche.ck.NumberOfNumbersTest">com.github.mauricioaniche.ck.NumberOfNumbersTest</td>
+        <td class="num">44</td>
+        <td class="num overlap">9</td>
+      </tr>
+      
+      <tr>
+        <td><span class="risk-badge" style="background:#3fb950">0.087</span></td>
+        <td class="class-path" title="com.github.mauricioaniche.ck.NumberOfTryCatchesTest">com.github.mauricioaniche.ck.NumberOfTryCatchesTest</td>
+        <td class="num">44</td>
+        <td class="num overlap">9</td>
+      </tr>
+      
+      <tr>
+        <td><span class="risk-badge" style="background:#3fb950">0.087</span></td>
+        <td class="class-path" title="com.github.mauricioaniche.ck.NumberOfMathOperationsTest">com.github.mauricioaniche.ck.NumberOfMathOperationsTest</td>
+        <td class="num">44</td>
+        <td class="num overlap">9</td>
+      </tr>
+      
+      <tr>
+        <td><span class="risk-badge" style="background:#3fb950">0.087</span></td>
+        <td class="class-path" title="com.github.mauricioaniche.ck.NumberOfStringsTest">com.github.mauricioaniche.ck.NumberOfStringsTest</td>
+        <td class="num">44</td>
+        <td class="num overlap">9</td>
+      </tr>
+      
+      <tr>
+        <td><span class="risk-badge" style="background:#3fb950">0.087</span></td>
+        <td class="class-path" title="com.github.mauricioaniche.ck.NumberOfVariablesTest">com.github.mauricioaniche.ck.NumberOfVariablesTest</td>
+        <td class="num">44</td>
+        <td class="num overlap">9</td>
+      </tr>
+      
+      <tr>
+        <td><span class="risk-badge" style="background:#3fb950">0.087</span></td>
+        <td class="class-path" title="assignments.Assignments">assignments.Assignments</td>
+        <td class="num">44</td>
+        <td class="num overlap">9</td>
+      </tr>
+      
+      <tr>
+        <td><span class="risk-badge" style="background:#3fb950">0.087</span></td>
+        <td class="class-path" title="trycatch.TryCatch">trycatch.TryCatch</td>
+        <td class="num">44</td>
+        <td class="num overlap">9</td>
+      </tr>
+      
+      <tr>
+        <td><span class="risk-badge" style="background:#3fb950">0.076</span></td>
+        <td class="class-path" title="variables.Variables">variables.Variables</td>
+        <td class="num">44</td>
+        <td class="num overlap">9</td>
+      </tr>
+      
+      <tr>
+        <td><span class="risk-badge" style="background:#3fb950">0.065</span></td>
+        <td class="class-path" title="numbers.Numbers">numbers.Numbers</td>
+        <td class="num">44</td>
+        <td class="num overlap">9</td>
+      </tr>
+      
+      <tr>
+        <td><span class="risk-badge" style="background:#3fb950">0.065</span></td>
+        <td class="class-path" title="strings.Strings">strings.Strings</td>
+        <td class="num">44</td>
+        <td class="num overlap">9</td>
+      </tr>
+      
+      <tr>
+        <td><span class="risk-badge" style="background:#3fb950">0.022</span></td>
+        <td class="class-path" title="variables.OtherClass">variables.OtherClass</td>
+        <td class="num">44</td>
+        <td class="num overlap">9</td>
+      </tr>
+      
+      <tr>
+        <td><span class="risk-badge" style="background:#8b949e">—</span></td>
+        <td class="class-path" title="com.github.mauricioaniche.ck.metric.MethodLevelVisitor">com.github.mauricioaniche.ck.metric.MethodLevelVisitor</td>
+        <td class="num">44</td>
+        <td class="num overlap">38</td>
+      </tr>
+      
+      <tr>
+        <td><span class="risk-badge" style="background:#8b949e">—</span></td>
+        <td class="class-path" title="com.github.mauricioaniche.ck.metric.IgnoreSubClasses">com.github.mauricioaniche.ck.metric.IgnoreSubClasses</td>
+        <td class="num">44</td>
+        <td class="num overlap">9</td>
+      </tr>
+      
+      <tr>
+        <td><span class="risk-badge" style="background:#8b949e">—</span></td>
+        <td class="class-path" title="com.github.mauricioaniche.ck.metric.ClassLevelWordsAndCharsCounter">com.github.mauricioaniche.ck.metric.ClassLevelWordsAndCharsCounter</td>
+        <td class="num">44</td>
+        <td class="num overlap">9</td>
+      </tr>
+      
+      <tr>
+        <td><span class="risk-badge" style="background:#8b949e">—</span></td>
+        <td class="class-path" title="com.github.mauricioaniche.ck.metric.MethodLevelWordsAndCharsCounter">com.github.mauricioaniche.ck.metric.MethodLevelWordsAndCharsCounter</td>
+        <td class="num">44</td>
+        <td class="num overlap">9</td>
+      </tr>
+      
+    </tbody>
+  </table>
+</section>
+
+
+<section class="content-section">
+  <h2 class="section-title">Coupling matrix
+    <span class="legend-inline">
+      <span class="li-cell" style="background:#30363d"></span>Co-change only
+      <span class="li-cell" style="background:#3fb950"></span>Weak
+      <span class="li-cell" style="background:#e3b341"></span>Moderate
+      <span class="li-cell" style="background:#f85149"></span>Strong
+    </span>
+  </h2>
+  <div class="matrix-wrap">
+    <table class="matrix">
+      <thead>
+        <tr>
+          <th class="matrix-corner"></th>
+          <th class="matrix-col-hdr" title="nestedblocks.NestedBlocks"><span>NestedBlocks</span></th><th class="matrix-col-hdr" title="loop.Loop"><span>Loop</span></th><th class="matrix-col-hdr" title="comparison.Comparison"><span>Comparison</span></th><th class="matrix-col-hdr" title="com.github.mauricioaniche.ck.NumberOfAssignmentsTest"><span>NumberOfAssignmentsTest</span></th><th class="matrix-col-hdr" title="com.github.mauricioaniche.ck.metric.NumberOfAssignments"><span>NumberOfAssignments</span></th><th class="matrix-col-hdr" title="math.Math"><span>Math</span></th><th class="matrix-col-hdr" title="com.github.mauricioaniche.ck.metric.NumberOfStringLiterals"><span>NumberOfStringLiterals</span></th><th class="matrix-col-hdr" title="com.github.mauricioaniche.ck.NumberOfComparisonsTest"><span>NumberOfComparisonsTest</span></th><th class="matrix-col-hdr" title="com.github.mauricioaniche.ck.NumberOfNumbersTest"><span>NumberOfNumbersTest</span></th><th class="matrix-col-hdr" title="com.github.mauricioaniche.ck.NumberOfTryCatchesTest"><span>NumberOfTryCatchesTest</span></th><th class="matrix-col-hdr" title="com.github.mauricioaniche.ck.NumberOfMathOperationsTest"><span>NumberOfMathOperationsTest</span></th><th class="matrix-col-hdr" title="com.github.mauricioaniche.ck.NumberOfStringsTest"><span>NumberOfStringsTest</span></th><th class="matrix-col-hdr" title="com.github.mauricioaniche.ck.NumberOfVariablesTest"><span>NumberOfVariablesTest</span></th><th class="matrix-col-hdr" title="assignments.Assignments"><span>Assignments</span></th><th class="matrix-col-hdr" title="trycatch.TryCatch"><span>TryCatch</span></th><th class="matrix-col-hdr" title="variables.Variables"><span>Variables</span></th><th class="matrix-col-hdr" title="numbers.Numbers"><span>Numbers</span></th><th class="matrix-col-hdr" title="strings.Strings"><span>Strings</span></th><th class="matrix-col-hdr" title="variables.OtherClass"><span>OtherClass</span></th><th class="matrix-col-hdr" title="com.github.mauricioaniche.ck.metric.MethodLevelVisitor"><span>MethodLevelVisitor</span></th><th class="matrix-col-hdr" title="com.github.mauricioaniche.ck.metric.IgnoreSubClasses"><span>IgnoreSubClasses</span></th><th class="matrix-col-hdr" title="com.github.mauricioaniche.ck.metric.ClassLevelWordsAndCharsCounter"><span>ClassLevelWordsAndCharsCounter</span></th><th class="matrix-col-hdr" title="com.github.mauricioaniche.ck.metric.MethodLevelWordsAndCharsCounter"><span>MethodLevelWordsAndCharsCounter</span></th>
+        </tr>
+      </thead>
+      <tbody>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="nestedblocks.NestedBlocks">NestedBlocks</th>
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NestedBlocks → Loop · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NestedBlocks → Comparison · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NestedBlocks → NumberOfAssignmentsTest · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NestedBlocks → NumberOfAssignments · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NestedBlocks → Math · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NestedBlocks → NumberOfStringLiterals · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NestedBlocks → NumberOfComparisonsTest · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NestedBlocks → NumberOfNumbersTest · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NestedBlocks → NumberOfTryCatchesTest · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NestedBlocks → NumberOfMathOperationsTest · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NestedBlocks → NumberOfStringsTest · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NestedBlocks → NumberOfVariablesTest · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NestedBlocks → Assignments · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NestedBlocks → TryCatch · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NestedBlocks → Variables · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NestedBlocks → Numbers · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NestedBlocks → Strings · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NestedBlocks → OtherClass · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NestedBlocks → MethodLevelVisitor · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NestedBlocks → IgnoreSubClasses · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NestedBlocks → ClassLevelWordsAndCharsCounter · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NestedBlocks → MethodLevelWordsAndCharsCounter · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="loop.Loop">Loop</th>
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Loop → NestedBlocks · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Loop → Comparison · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Loop → NumberOfAssignmentsTest · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Loop → NumberOfAssignments · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Loop → Math · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Loop → NumberOfStringLiterals · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Loop → NumberOfComparisonsTest · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Loop → NumberOfNumbersTest · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Loop → NumberOfTryCatchesTest · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Loop → NumberOfMathOperationsTest · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Loop → NumberOfStringsTest · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Loop → NumberOfVariablesTest · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Loop → Assignments · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Loop → TryCatch · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Loop → Variables · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Loop → Numbers · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Loop → Strings · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Loop → OtherClass · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Loop → MethodLevelVisitor · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Loop → IgnoreSubClasses · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Loop → ClassLevelWordsAndCharsCounter · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Loop → MethodLevelWordsAndCharsCounter · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="comparison.Comparison">Comparison</th>
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Comparison → NestedBlocks · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Comparison → Loop · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Comparison → NumberOfAssignmentsTest · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Comparison → NumberOfAssignments · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Comparison → Math · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Comparison → NumberOfStringLiterals · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Comparison → NumberOfComparisonsTest · weight: 2.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Comparison → NumberOfNumbersTest · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Comparison → NumberOfTryCatchesTest · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Comparison → NumberOfMathOperationsTest · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Comparison → NumberOfStringsTest · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Comparison → NumberOfVariablesTest · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Comparison → Assignments · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Comparison → TryCatch · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Comparison → Variables · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Comparison → Numbers · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Comparison → Strings · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Comparison → OtherClass · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Comparison → MethodLevelVisitor · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Comparison → IgnoreSubClasses · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Comparison → ClassLevelWordsAndCharsCounter · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Comparison → MethodLevelWordsAndCharsCounter · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="com.github.mauricioaniche.ck.NumberOfAssignmentsTest">NumberOfAssignmentsTest</th>
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NumberOfAssignmentsTest → NestedBlocks · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NumberOfAssignmentsTest → Loop · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NumberOfAssignmentsTest → Comparison · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NumberOfAssignmentsTest → NumberOfAssignments · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NumberOfAssignmentsTest → Math · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NumberOfAssignmentsTest → NumberOfStringLiterals · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NumberOfAssignmentsTest → NumberOfComparisonsTest · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NumberOfAssignmentsTest → NumberOfNumbersTest · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NumberOfAssignmentsTest → NumberOfTryCatchesTest · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NumberOfAssignmentsTest → NumberOfMathOperationsTest · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NumberOfAssignmentsTest → NumberOfStringsTest · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NumberOfAssignmentsTest → NumberOfVariablesTest · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NumberOfAssignmentsTest → Assignments · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NumberOfAssignmentsTest → TryCatch · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NumberOfAssignmentsTest → Variables · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NumberOfAssignmentsTest → Numbers · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NumberOfAssignmentsTest → Strings · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NumberOfAssignmentsTest → OtherClass · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NumberOfAssignmentsTest → MethodLevelVisitor · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NumberOfAssignmentsTest → IgnoreSubClasses · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NumberOfAssignmentsTest → ClassLevelWordsAndCharsCounter · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NumberOfAssignmentsTest → MethodLevelWordsAndCharsCounter · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="com.github.mauricioaniche.ck.metric.NumberOfAssignments">NumberOfAssignments</th>
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NumberOfAssignments → NestedBlocks · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NumberOfAssignments → Loop · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NumberOfAssignments → Comparison · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NumberOfAssignments → NumberOfAssignmentsTest · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NumberOfAssignments → Math · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NumberOfAssignments → NumberOfStringLiterals · weight: 2.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NumberOfAssignments → NumberOfComparisonsTest · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NumberOfAssignments → NumberOfNumbersTest · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NumberOfAssignments → NumberOfTryCatchesTest · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NumberOfAssignments → NumberOfMathOperationsTest · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NumberOfAssignments → NumberOfStringsTest · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NumberOfAssignments → NumberOfVariablesTest · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NumberOfAssignments → Assignments · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NumberOfAssignments → TryCatch · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NumberOfAssignments → Variables · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NumberOfAssignments → Numbers · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NumberOfAssignments → Strings · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NumberOfAssignments → OtherClass · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NumberOfAssignments → MethodLevelVisitor · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NumberOfAssignments → IgnoreSubClasses · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NumberOfAssignments → ClassLevelWordsAndCharsCounter · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NumberOfAssignments → MethodLevelWordsAndCharsCounter · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="math.Math">Math</th>
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Math → NestedBlocks · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Math → Loop · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Math → Comparison · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Math → NumberOfAssignmentsTest · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Math → NumberOfAssignments · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Math → NumberOfStringLiterals · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Math → NumberOfComparisonsTest · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Math → NumberOfNumbersTest · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Math → NumberOfTryCatchesTest · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Math → NumberOfMathOperationsTest · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Math → NumberOfStringsTest · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Math → NumberOfVariablesTest · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Math → Assignments · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Math → TryCatch · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Math → Variables · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Math → Numbers · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Math → Strings · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Math → OtherClass · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Math → MethodLevelVisitor · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Math → IgnoreSubClasses · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Math → ClassLevelWordsAndCharsCounter · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Math → MethodLevelWordsAndCharsCounter · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="com.github.mauricioaniche.ck.metric.NumberOfStringLiterals">NumberOfStringLiterals</th>
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NumberOfStringLiterals → NestedBlocks · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NumberOfStringLiterals → Loop · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NumberOfStringLiterals → Comparison · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NumberOfStringLiterals → NumberOfAssignmentsTest · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NumberOfStringLiterals → NumberOfAssignments · weight: 2.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NumberOfStringLiterals → Math · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NumberOfStringLiterals → NumberOfComparisonsTest · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NumberOfStringLiterals → NumberOfNumbersTest · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NumberOfStringLiterals → NumberOfTryCatchesTest · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NumberOfStringLiterals → NumberOfMathOperationsTest · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NumberOfStringLiterals → NumberOfStringsTest · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NumberOfStringLiterals → NumberOfVariablesTest · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NumberOfStringLiterals → Assignments · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NumberOfStringLiterals → TryCatch · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NumberOfStringLiterals → Variables · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NumberOfStringLiterals → Numbers · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NumberOfStringLiterals → Strings · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NumberOfStringLiterals → OtherClass · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NumberOfStringLiterals → MethodLevelVisitor · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NumberOfStringLiterals → IgnoreSubClasses · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NumberOfStringLiterals → ClassLevelWordsAndCharsCounter · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NumberOfStringLiterals → MethodLevelWordsAndCharsCounter · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="com.github.mauricioaniche.ck.NumberOfComparisonsTest">NumberOfComparisonsTest</th>
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NumberOfComparisonsTest → NestedBlocks · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NumberOfComparisonsTest → Loop · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NumberOfComparisonsTest → Comparison · weight: 2.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NumberOfComparisonsTest → NumberOfAssignmentsTest · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NumberOfComparisonsTest → NumberOfAssignments · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NumberOfComparisonsTest → Math · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NumberOfComparisonsTest → NumberOfStringLiterals · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NumberOfComparisonsTest → NumberOfNumbersTest · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NumberOfComparisonsTest → NumberOfTryCatchesTest · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NumberOfComparisonsTest → NumberOfMathOperationsTest · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NumberOfComparisonsTest → NumberOfStringsTest · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NumberOfComparisonsTest → NumberOfVariablesTest · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NumberOfComparisonsTest → Assignments · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NumberOfComparisonsTest → TryCatch · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NumberOfComparisonsTest → Variables · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NumberOfComparisonsTest → Numbers · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NumberOfComparisonsTest → Strings · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NumberOfComparisonsTest → OtherClass · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NumberOfComparisonsTest → MethodLevelVisitor · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NumberOfComparisonsTest → IgnoreSubClasses · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NumberOfComparisonsTest → ClassLevelWordsAndCharsCounter · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NumberOfComparisonsTest → MethodLevelWordsAndCharsCounter · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="com.github.mauricioaniche.ck.NumberOfNumbersTest">NumberOfNumbersTest</th>
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NumberOfNumbersTest → NestedBlocks · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NumberOfNumbersTest → Loop · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NumberOfNumbersTest → Comparison · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NumberOfNumbersTest → NumberOfAssignmentsTest · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NumberOfNumbersTest → NumberOfAssignments · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NumberOfNumbersTest → Math · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NumberOfNumbersTest → NumberOfStringLiterals · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NumberOfNumbersTest → NumberOfComparisonsTest · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NumberOfNumbersTest → NumberOfTryCatchesTest · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NumberOfNumbersTest → NumberOfMathOperationsTest · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NumberOfNumbersTest → NumberOfStringsTest · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NumberOfNumbersTest → NumberOfVariablesTest · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NumberOfNumbersTest → Assignments · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NumberOfNumbersTest → TryCatch · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NumberOfNumbersTest → Variables · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NumberOfNumbersTest → Numbers · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NumberOfNumbersTest → Strings · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NumberOfNumbersTest → OtherClass · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NumberOfNumbersTest → MethodLevelVisitor · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NumberOfNumbersTest → IgnoreSubClasses · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NumberOfNumbersTest → ClassLevelWordsAndCharsCounter · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NumberOfNumbersTest → MethodLevelWordsAndCharsCounter · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="com.github.mauricioaniche.ck.NumberOfTryCatchesTest">NumberOfTryCatchesTest</th>
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NumberOfTryCatchesTest → NestedBlocks · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NumberOfTryCatchesTest → Loop · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NumberOfTryCatchesTest → Comparison · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NumberOfTryCatchesTest → NumberOfAssignmentsTest · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NumberOfTryCatchesTest → NumberOfAssignments · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NumberOfTryCatchesTest → Math · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NumberOfTryCatchesTest → NumberOfStringLiterals · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NumberOfTryCatchesTest → NumberOfComparisonsTest · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NumberOfTryCatchesTest → NumberOfNumbersTest · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NumberOfTryCatchesTest → NumberOfMathOperationsTest · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NumberOfTryCatchesTest → NumberOfStringsTest · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NumberOfTryCatchesTest → NumberOfVariablesTest · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NumberOfTryCatchesTest → Assignments · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NumberOfTryCatchesTest → TryCatch · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NumberOfTryCatchesTest → Variables · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NumberOfTryCatchesTest → Numbers · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NumberOfTryCatchesTest → Strings · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NumberOfTryCatchesTest → OtherClass · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NumberOfTryCatchesTest → MethodLevelVisitor · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NumberOfTryCatchesTest → IgnoreSubClasses · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NumberOfTryCatchesTest → ClassLevelWordsAndCharsCounter · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NumberOfTryCatchesTest → MethodLevelWordsAndCharsCounter · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="com.github.mauricioaniche.ck.NumberOfMathOperationsTest">NumberOfMathOperationsTest</th>
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NumberOfMathOperationsTest → NestedBlocks · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NumberOfMathOperationsTest → Loop · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NumberOfMathOperationsTest → Comparison · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NumberOfMathOperationsTest → NumberOfAssignmentsTest · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NumberOfMathOperationsTest → NumberOfAssignments · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NumberOfMathOperationsTest → Math · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NumberOfMathOperationsTest → NumberOfStringLiterals · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NumberOfMathOperationsTest → NumberOfComparisonsTest · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NumberOfMathOperationsTest → NumberOfNumbersTest · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NumberOfMathOperationsTest → NumberOfTryCatchesTest · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NumberOfMathOperationsTest → NumberOfStringsTest · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NumberOfMathOperationsTest → NumberOfVariablesTest · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NumberOfMathOperationsTest → Assignments · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NumberOfMathOperationsTest → TryCatch · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NumberOfMathOperationsTest → Variables · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NumberOfMathOperationsTest → Numbers · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NumberOfMathOperationsTest → Strings · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NumberOfMathOperationsTest → OtherClass · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NumberOfMathOperationsTest → MethodLevelVisitor · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NumberOfMathOperationsTest → IgnoreSubClasses · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NumberOfMathOperationsTest → ClassLevelWordsAndCharsCounter · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NumberOfMathOperationsTest → MethodLevelWordsAndCharsCounter · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="com.github.mauricioaniche.ck.NumberOfStringsTest">NumberOfStringsTest</th>
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NumberOfStringsTest → NestedBlocks · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NumberOfStringsTest → Loop · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NumberOfStringsTest → Comparison · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NumberOfStringsTest → NumberOfAssignmentsTest · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NumberOfStringsTest → NumberOfAssignments · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NumberOfStringsTest → Math · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NumberOfStringsTest → NumberOfStringLiterals · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NumberOfStringsTest → NumberOfComparisonsTest · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NumberOfStringsTest → NumberOfNumbersTest · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NumberOfStringsTest → NumberOfTryCatchesTest · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NumberOfStringsTest → NumberOfMathOperationsTest · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NumberOfStringsTest → NumberOfVariablesTest · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NumberOfStringsTest → Assignments · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NumberOfStringsTest → TryCatch · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NumberOfStringsTest → Variables · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NumberOfStringsTest → Numbers · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NumberOfStringsTest → Strings · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NumberOfStringsTest → OtherClass · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NumberOfStringsTest → MethodLevelVisitor · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NumberOfStringsTest → IgnoreSubClasses · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NumberOfStringsTest → ClassLevelWordsAndCharsCounter · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NumberOfStringsTest → MethodLevelWordsAndCharsCounter · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="com.github.mauricioaniche.ck.NumberOfVariablesTest">NumberOfVariablesTest</th>
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NumberOfVariablesTest → NestedBlocks · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NumberOfVariablesTest → Loop · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NumberOfVariablesTest → Comparison · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NumberOfVariablesTest → NumberOfAssignmentsTest · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NumberOfVariablesTest → NumberOfAssignments · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NumberOfVariablesTest → Math · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NumberOfVariablesTest → NumberOfStringLiterals · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NumberOfVariablesTest → NumberOfComparisonsTest · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NumberOfVariablesTest → NumberOfNumbersTest · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NumberOfVariablesTest → NumberOfTryCatchesTest · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NumberOfVariablesTest → NumberOfMathOperationsTest · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NumberOfVariablesTest → NumberOfStringsTest · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NumberOfVariablesTest → Assignments · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NumberOfVariablesTest → TryCatch · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NumberOfVariablesTest → Variables · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NumberOfVariablesTest → Numbers · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NumberOfVariablesTest → Strings · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NumberOfVariablesTest → OtherClass · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NumberOfVariablesTest → MethodLevelVisitor · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NumberOfVariablesTest → IgnoreSubClasses · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NumberOfVariablesTest → ClassLevelWordsAndCharsCounter · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NumberOfVariablesTest → MethodLevelWordsAndCharsCounter · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="assignments.Assignments">Assignments</th>
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Assignments → NestedBlocks · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Assignments → Loop · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Assignments → Comparison · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Assignments → NumberOfAssignmentsTest · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Assignments → NumberOfAssignments · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Assignments → Math · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Assignments → NumberOfStringLiterals · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Assignments → NumberOfComparisonsTest · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Assignments → NumberOfNumbersTest · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Assignments → NumberOfTryCatchesTest · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Assignments → NumberOfMathOperationsTest · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Assignments → NumberOfStringsTest · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Assignments → NumberOfVariablesTest · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Assignments → TryCatch · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Assignments → Variables · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Assignments → Numbers · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Assignments → Strings · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Assignments → OtherClass · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Assignments → MethodLevelVisitor · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Assignments → IgnoreSubClasses · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Assignments → ClassLevelWordsAndCharsCounter · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Assignments → MethodLevelWordsAndCharsCounter · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="trycatch.TryCatch">TryCatch</th>
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="TryCatch → NestedBlocks · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="TryCatch → Loop · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="TryCatch → Comparison · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="TryCatch → NumberOfAssignmentsTest · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="TryCatch → NumberOfAssignments · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="TryCatch → Math · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="TryCatch → NumberOfStringLiterals · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="TryCatch → NumberOfComparisonsTest · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="TryCatch → NumberOfNumbersTest · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="TryCatch → NumberOfTryCatchesTest · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="TryCatch → NumberOfMathOperationsTest · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="TryCatch → NumberOfStringsTest · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="TryCatch → NumberOfVariablesTest · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="TryCatch → Assignments · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="TryCatch → Variables · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="TryCatch → Numbers · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="TryCatch → Strings · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="TryCatch → OtherClass · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="TryCatch → MethodLevelVisitor · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="TryCatch → IgnoreSubClasses · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="TryCatch → ClassLevelWordsAndCharsCounter · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="TryCatch → MethodLevelWordsAndCharsCounter · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="variables.Variables">Variables</th>
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Variables → NestedBlocks · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Variables → Loop · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Variables → Comparison · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Variables → NumberOfAssignmentsTest · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Variables → NumberOfAssignments · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Variables → Math · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Variables → NumberOfStringLiterals · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Variables → NumberOfComparisonsTest · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Variables → NumberOfNumbersTest · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Variables → NumberOfTryCatchesTest · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Variables → NumberOfMathOperationsTest · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Variables → NumberOfStringsTest · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Variables → NumberOfVariablesTest · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Variables → Assignments · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Variables → TryCatch · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Variables → Numbers · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Variables → Strings · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#e99443" title="Variables → OtherClass · weight: 1.0 · cw: 0.6579 · VARIABLE_DECLARATION_STATEMENT"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Variables → MethodLevelVisitor · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Variables → IgnoreSubClasses · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Variables → ClassLevelWordsAndCharsCounter · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Variables → MethodLevelWordsAndCharsCounter · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="numbers.Numbers">Numbers</th>
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Numbers → NestedBlocks · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Numbers → Loop · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Numbers → Comparison · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Numbers → NumberOfAssignmentsTest · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Numbers → NumberOfAssignments · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Numbers → Math · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Numbers → NumberOfStringLiterals · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Numbers → NumberOfComparisonsTest · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Numbers → NumberOfNumbersTest · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Numbers → NumberOfTryCatchesTest · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Numbers → NumberOfMathOperationsTest · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Numbers → NumberOfStringsTest · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Numbers → NumberOfVariablesTest · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Numbers → Assignments · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Numbers → TryCatch · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Numbers → Variables · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Numbers → Strings · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Numbers → OtherClass · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Numbers → MethodLevelVisitor · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Numbers → IgnoreSubClasses · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Numbers → ClassLevelWordsAndCharsCounter · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Numbers → MethodLevelWordsAndCharsCounter · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="strings.Strings">Strings</th>
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Strings → NestedBlocks · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Strings → Loop · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Strings → Comparison · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Strings → NumberOfAssignmentsTest · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Strings → NumberOfAssignments · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Strings → Math · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Strings → NumberOfStringLiterals · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Strings → NumberOfComparisonsTest · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Strings → NumberOfNumbersTest · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Strings → NumberOfTryCatchesTest · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Strings → NumberOfMathOperationsTest · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Strings → NumberOfStringsTest · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Strings → NumberOfVariablesTest · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Strings → Assignments · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Strings → TryCatch · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Strings → Variables · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Strings → Numbers · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Strings → OtherClass · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Strings → MethodLevelVisitor · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Strings → IgnoreSubClasses · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Strings → ClassLevelWordsAndCharsCounter · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Strings → MethodLevelWordsAndCharsCounter · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="variables.OtherClass">OtherClass</th>
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="OtherClass → NestedBlocks · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="OtherClass → Loop · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="OtherClass → Comparison · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="OtherClass → NumberOfAssignmentsTest · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="OtherClass → NumberOfAssignments · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="OtherClass → Math · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="OtherClass → NumberOfStringLiterals · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="OtherClass → NumberOfComparisonsTest · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="OtherClass → NumberOfNumbersTest · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="OtherClass → NumberOfTryCatchesTest · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="OtherClass → NumberOfMathOperationsTest · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="OtherClass → NumberOfStringsTest · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="OtherClass → NumberOfVariablesTest · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="OtherClass → Assignments · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="OtherClass → TryCatch · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="OtherClass → Variables · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="OtherClass → Numbers · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="OtherClass → Strings · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="OtherClass → MethodLevelVisitor · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="OtherClass → IgnoreSubClasses · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="OtherClass → ClassLevelWordsAndCharsCounter · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="OtherClass → MethodLevelWordsAndCharsCounter · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="com.github.mauricioaniche.ck.metric.MethodLevelVisitor">MethodLevelVisitor</th>
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="MethodLevelVisitor → NestedBlocks · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="MethodLevelVisitor → Loop · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="MethodLevelVisitor → Comparison · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="MethodLevelVisitor → NumberOfAssignmentsTest · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="MethodLevelVisitor → NumberOfAssignments · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="MethodLevelVisitor → Math · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="MethodLevelVisitor → NumberOfStringLiterals · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="MethodLevelVisitor → NumberOfComparisonsTest · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="MethodLevelVisitor → NumberOfNumbersTest · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="MethodLevelVisitor → NumberOfTryCatchesTest · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="MethodLevelVisitor → NumberOfMathOperationsTest · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="MethodLevelVisitor → NumberOfStringsTest · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="MethodLevelVisitor → NumberOfVariablesTest · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="MethodLevelVisitor → Assignments · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="MethodLevelVisitor → TryCatch · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="MethodLevelVisitor → Variables · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="MethodLevelVisitor → Numbers · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="MethodLevelVisitor → Strings · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="MethodLevelVisitor → OtherClass · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="MethodLevelVisitor → IgnoreSubClasses · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="MethodLevelVisitor → ClassLevelWordsAndCharsCounter · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="MethodLevelVisitor → MethodLevelWordsAndCharsCounter · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="com.github.mauricioaniche.ck.metric.IgnoreSubClasses">IgnoreSubClasses</th>
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="IgnoreSubClasses → NestedBlocks · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="IgnoreSubClasses → Loop · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="IgnoreSubClasses → Comparison · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="IgnoreSubClasses → NumberOfAssignmentsTest · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="IgnoreSubClasses → NumberOfAssignments · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="IgnoreSubClasses → Math · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="IgnoreSubClasses → NumberOfStringLiterals · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="IgnoreSubClasses → NumberOfComparisonsTest · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="IgnoreSubClasses → NumberOfNumbersTest · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="IgnoreSubClasses → NumberOfTryCatchesTest · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="IgnoreSubClasses → NumberOfMathOperationsTest · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="IgnoreSubClasses → NumberOfStringsTest · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="IgnoreSubClasses → NumberOfVariablesTest · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="IgnoreSubClasses → Assignments · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="IgnoreSubClasses → TryCatch · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="IgnoreSubClasses → Variables · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="IgnoreSubClasses → Numbers · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="IgnoreSubClasses → Strings · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="IgnoreSubClasses → OtherClass · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="IgnoreSubClasses → MethodLevelVisitor · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="IgnoreSubClasses → ClassLevelWordsAndCharsCounter · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="IgnoreSubClasses → MethodLevelWordsAndCharsCounter · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="com.github.mauricioaniche.ck.metric.ClassLevelWordsAndCharsCounter">ClassLevelWordsAndCharsCounter</th>
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ClassLevelWordsAndCharsCounter → NestedBlocks · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ClassLevelWordsAndCharsCounter → Loop · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ClassLevelWordsAndCharsCounter → Comparison · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ClassLevelWordsAndCharsCounter → NumberOfAssignmentsTest · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ClassLevelWordsAndCharsCounter → NumberOfAssignments · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ClassLevelWordsAndCharsCounter → Math · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ClassLevelWordsAndCharsCounter → NumberOfStringLiterals · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ClassLevelWordsAndCharsCounter → NumberOfComparisonsTest · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ClassLevelWordsAndCharsCounter → NumberOfNumbersTest · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ClassLevelWordsAndCharsCounter → NumberOfTryCatchesTest · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ClassLevelWordsAndCharsCounter → NumberOfMathOperationsTest · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ClassLevelWordsAndCharsCounter → NumberOfStringsTest · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ClassLevelWordsAndCharsCounter → NumberOfVariablesTest · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ClassLevelWordsAndCharsCounter → Assignments · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ClassLevelWordsAndCharsCounter → TryCatch · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ClassLevelWordsAndCharsCounter → Variables · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ClassLevelWordsAndCharsCounter → Numbers · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ClassLevelWordsAndCharsCounter → Strings · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ClassLevelWordsAndCharsCounter → OtherClass · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ClassLevelWordsAndCharsCounter → MethodLevelVisitor · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ClassLevelWordsAndCharsCounter → IgnoreSubClasses · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ClassLevelWordsAndCharsCounter → MethodLevelWordsAndCharsCounter · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="com.github.mauricioaniche.ck.metric.MethodLevelWordsAndCharsCounter">MethodLevelWordsAndCharsCounter</th>
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="MethodLevelWordsAndCharsCounter → NestedBlocks · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="MethodLevelWordsAndCharsCounter → Loop · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="MethodLevelWordsAndCharsCounter → Comparison · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="MethodLevelWordsAndCharsCounter → NumberOfAssignmentsTest · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="MethodLevelWordsAndCharsCounter → NumberOfAssignments · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="MethodLevelWordsAndCharsCounter → Math · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="MethodLevelWordsAndCharsCounter → NumberOfStringLiterals · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="MethodLevelWordsAndCharsCounter → NumberOfComparisonsTest · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="MethodLevelWordsAndCharsCounter → NumberOfNumbersTest · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="MethodLevelWordsAndCharsCounter → NumberOfTryCatchesTest · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="MethodLevelWordsAndCharsCounter → NumberOfMathOperationsTest · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="MethodLevelWordsAndCharsCounter → NumberOfStringsTest · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="MethodLevelWordsAndCharsCounter → NumberOfVariablesTest · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="MethodLevelWordsAndCharsCounter → Assignments · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="MethodLevelWordsAndCharsCounter → TryCatch · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="MethodLevelWordsAndCharsCounter → Variables · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="MethodLevelWordsAndCharsCounter → Numbers · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="MethodLevelWordsAndCharsCounter → Strings · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="MethodLevelWordsAndCharsCounter → OtherClass · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="MethodLevelWordsAndCharsCounter → MethodLevelVisitor · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="MethodLevelWordsAndCharsCounter → IgnoreSubClasses · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="MethodLevelWordsAndCharsCounter → ClassLevelWordsAndCharsCounter · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+        </tr>
+        
+      </tbody>
+    </table>
+  </div>
+</section>
+
+
+</body>
+</html>

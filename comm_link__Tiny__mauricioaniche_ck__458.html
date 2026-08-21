@@ -1,0 +1,875 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HyCPA — Community 458 · link · Tiny · mauricioaniche/ck</title>
+  <style>
+:root {
+  --bg: #0d1117; --surface: #161b22; --surface2: #21262d;
+  --border: #30363d; --text: #e6edf3; --text2: #8b949e;
+  --accent: #58a6ff; --green: #3fb950; --orange: #e3b341; --red: #f85149;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { background: var(--bg); color: var(--text); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif; padding-bottom: 48px; }
+
+/* ── Header ── */
+.page-header { background: var(--surface); border-bottom: 1px solid var(--border); padding: 12px 24px; display: flex; align-items: center; gap: 20px; }
+.back-btn { color: var(--text2); font-size: 12px; text-decoration: none; white-space: nowrap; }
+.back-btn:hover { color: var(--accent); }
+.header-title { font-size: 15px; color: var(--text); }
+.header-title strong { color: var(--accent); }
+
+/* ── Stats pills ── */
+.stats-row { display: flex; gap: 12px; padding: 16px 24px; background: var(--surface); border-bottom: 1px solid var(--border); flex-wrap: wrap; }
+.stat-pill { background: var(--surface2); border: 1px solid var(--border); border-radius: 8px; padding: 10px 20px; display: flex; flex-direction: column; align-items: center; gap: 2px; min-width: 90px; }
+.pill-val { font-size: 22px; font-weight: 700; color: var(--text); line-height: 1; }
+.pill-lbl { font-size: 10px; color: var(--text2); text-transform: uppercase; letter-spacing: 0.5px; margin-top: 2px; }
+
+/* ── Content sections ── */
+.content-section { padding: 24px; }
+.section-title { font-size: 11px; font-weight: 600; color: var(--text2); text-transform: uppercase; letter-spacing: 0.6px; margin-bottom: 14px; display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
+
+/* ── Node table ── */
+.node-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+.node-table th { background: var(--surface); color: var(--text2); font-weight: 600; font-size: 10px; text-transform: uppercase; letter-spacing: 0.5px; padding: 8px 12px; text-align: left; border-bottom: 2px solid var(--border); white-space: nowrap; }
+.node-table td { padding: 7px 12px; border-bottom: 1px solid var(--border); vertical-align: middle; }
+.node-table tbody tr:hover td { background: var(--surface); }
+.risk-badge { display: inline-block; padding: 2px 9px; border-radius: 10px; font-size: 11px; font-weight: 700; color: #0d1117; white-space: nowrap; }
+.class-path { font-size: 11px; color: var(--text2); font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', monospace; word-break: break-all; }
+td.num { text-align: right; font-weight: 600; white-space: nowrap; }
+td.overlap { color: var(--accent); }
+
+/* ── Coupling matrix ── */
+.matrix-wrap { overflow: auto; }
+.matrix { border-collapse: collapse; }
+.matrix-corner { min-width: 16px; }
+.matrix-col-hdr { padding: 0 1px 4px 1px; vertical-align: bottom; }
+.matrix-col-hdr span { display: block; writing-mode: vertical-rl; transform: rotate(180deg); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-height: 140px; color: var(--text2); font-weight: 400; font-size: 10px; cursor: default; text-align: left; }
+.matrix-row-hdr { text-align: right; padding: 1px 6px 1px 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 200px; color: var(--text2); font-weight: 400; font-size: 10px; cursor: default; }
+.matrix-cell { width: 16px; height: 16px; min-width: 16px; min-height: 16px; border: 1px solid #1c2129; cursor: default; }
+.matrix-cell.empty { background: transparent; }
+.matrix-cell.self-cell { background: var(--surface2); }
+.matrix-cell.filled { }
+
+/* ── Legend inline ── */
+.legend-inline { display: inline-flex; align-items: center; gap: 6px; font-size: 10px; color: var(--text2); font-weight: 400; text-transform: none; letter-spacing: 0; }
+.li-cell { display: inline-block; width: 10px; height: 10px; border-radius: 2px; vertical-align: middle; flex-shrink: 0; }
+</style>
+</head>
+<body>
+
+<div class="page-header">
+  <a class="back-btn" href="repo_link__Tiny__mauricioaniche_ck.html">← Back to link · Tiny · mauricioaniche/ck</a>
+  <span class="header-title">Community <strong>C458</strong> — link · Tiny · mauricioaniche/ck</span>
+</div>
+
+<div class="stats-row">
+  <div class="stat-pill"><span class="pill-val">14</span><span class="pill-lbl">Nodes</span></div>
+  <div class="stat-pill"><span class="pill-val">182</span><span class="pill-lbl">Arcs</span></div>
+  <div class="stat-pill"><span class="pill-val">14</span><span class="pill-lbl">Overlapping</span></div>
+  <div class="stat-pill"><span class="pill-val">5</span><span class="pill-lbl">Coupled arcs</span></div>
+  <div class="stat-pill"><span class="pill-val">177</span><span class="pill-lbl">Co-change only</span></div>
+</div>
+
+<section class="content-section">
+  <h2 class="section-title">Nodes</h2>
+  <table class="node-table">
+    <thead>
+      <tr>
+        <th>Risk</th>
+        <th>Class</th>
+        <th>Degree</th>
+        <th>Communities</th>
+      </tr>
+    </thead>
+    <tbody>
+      
+      <tr>
+        <td><span class="risk-badge" style="background:#3fb950">0.185</span></td>
+        <td class="class-path" title="com.github.mauricioaniche.ck.metric.LCOM">com.github.mauricioaniche.ck.metric.LCOM</td>
+        <td class="num">26</td>
+        <td class="num overlap">15</td>
+      </tr>
+      
+      <tr>
+        <td><span class="risk-badge" style="background:#3fb950">0.163</span></td>
+        <td class="class-path" title="com.github.mauricioaniche.ck.metric.NOC">com.github.mauricioaniche.ck.metric.NOC</td>
+        <td class="num">26</td>
+        <td class="num overlap">19</td>
+      </tr>
+      
+      <tr>
+        <td><span class="risk-badge" style="background:#3fb950">0.109</span></td>
+        <td class="class-path" title="wmc.CC2">wmc.CC2</td>
+        <td class="num">26</td>
+        <td class="num overlap">12</td>
+      </tr>
+      
+      <tr>
+        <td><span class="risk-badge" style="background:#3fb950">0.109</span></td>
+        <td class="class-path" title="wmc.CC1">wmc.CC1</td>
+        <td class="num">26</td>
+        <td class="num overlap">12</td>
+      </tr>
+      
+      <tr>
+        <td><span class="risk-badge" style="background:#3fb950">0.065</span></td>
+        <td class="class-path" title="com.github.mauricioaniche.ck.metric.DIT">com.github.mauricioaniche.ck.metric.DIT</td>
+        <td class="num">26</td>
+        <td class="num overlap">14</td>
+      </tr>
+      
+      <tr>
+        <td><span class="risk-badge" style="background:#3fb950">0.057</span></td>
+        <td class="class-path" title="cbo.Coupling1">cbo.Coupling1</td>
+        <td class="num">26</td>
+        <td class="num overlap">12</td>
+      </tr>
+      
+      <tr>
+        <td><span class="risk-badge" style="background:#3fb950">0.054</span></td>
+        <td class="class-path" title="cbo.Coupling2">cbo.Coupling2</td>
+        <td class="num">26</td>
+        <td class="num overlap">12</td>
+      </tr>
+      
+      <tr>
+        <td><span class="risk-badge" style="background:#3fb950">0.043</span></td>
+        <td class="class-path" title="dit.C2">dit.C2</td>
+        <td class="num">26</td>
+        <td class="num overlap">11</td>
+      </tr>
+      
+      <tr>
+        <td><span class="risk-badge" style="background:#3fb950">0.034</span></td>
+        <td class="class-path" title="cbo.CouplingHelper">cbo.CouplingHelper</td>
+        <td class="num">26</td>
+        <td class="num overlap">11</td>
+      </tr>
+      
+      <tr>
+        <td><span class="risk-badge" style="background:#3fb950">0.022</span></td>
+        <td class="class-path" title="cbo.CInterface">cbo.CInterface</td>
+        <td class="num">26</td>
+        <td class="num overlap">10</td>
+      </tr>
+      
+      <tr>
+        <td><span class="risk-badge" style="background:#8b949e">—</span></td>
+        <td class="class-path" title="br.aniche.ck.metric.Metric">br.aniche.ck.metric.Metric</td>
+        <td class="num">26</td>
+        <td class="num overlap">11</td>
+      </tr>
+      
+      <tr>
+        <td><span class="risk-badge" style="background:#8b949e">—</span></td>
+        <td class="class-path" title="br.aniche.ck.CKReport">br.aniche.ck.CKReport</td>
+        <td class="num">26</td>
+        <td class="num overlap">10</td>
+      </tr>
+      
+      <tr>
+        <td><span class="risk-badge" style="background:#8b949e">—</span></td>
+        <td class="class-path" title="br.aniche.ck.metric.ClassInfo">br.aniche.ck.metric.ClassInfo</td>
+        <td class="num">26</td>
+        <td class="num overlap">10</td>
+      </tr>
+      
+      <tr>
+        <td><span class="risk-badge" style="background:#8b949e">—</span></td>
+        <td class="class-path" title="br.aniche.ck.metric.NOCTest">br.aniche.ck.metric.NOCTest</td>
+        <td class="num">26</td>
+        <td class="num overlap">10</td>
+      </tr>
+      
+    </tbody>
+  </table>
+</section>
+
+
+<section class="content-section">
+  <h2 class="section-title">Coupling matrix
+    <span class="legend-inline">
+      <span class="li-cell" style="background:#30363d"></span>Co-change only
+      <span class="li-cell" style="background:#3fb950"></span>Weak
+      <span class="li-cell" style="background:#e3b341"></span>Moderate
+      <span class="li-cell" style="background:#f85149"></span>Strong
+    </span>
+  </h2>
+  <div class="matrix-wrap">
+    <table class="matrix">
+      <thead>
+        <tr>
+          <th class="matrix-corner"></th>
+          <th class="matrix-col-hdr" title="com.github.mauricioaniche.ck.metric.LCOM"><span>LCOM</span></th><th class="matrix-col-hdr" title="com.github.mauricioaniche.ck.metric.NOC"><span>NOC</span></th><th class="matrix-col-hdr" title="wmc.CC2"><span>CC2</span></th><th class="matrix-col-hdr" title="wmc.CC1"><span>CC1</span></th><th class="matrix-col-hdr" title="com.github.mauricioaniche.ck.metric.DIT"><span>DIT</span></th><th class="matrix-col-hdr" title="cbo.Coupling1"><span>Coupling1</span></th><th class="matrix-col-hdr" title="cbo.Coupling2"><span>Coupling2</span></th><th class="matrix-col-hdr" title="dit.C2"><span>C2</span></th><th class="matrix-col-hdr" title="cbo.CouplingHelper"><span>CouplingHelper</span></th><th class="matrix-col-hdr" title="cbo.CInterface"><span>CInterface</span></th><th class="matrix-col-hdr" title="br.aniche.ck.metric.Metric"><span>Metric</span></th><th class="matrix-col-hdr" title="br.aniche.ck.CKReport"><span>CKReport</span></th><th class="matrix-col-hdr" title="br.aniche.ck.metric.ClassInfo"><span>ClassInfo</span></th><th class="matrix-col-hdr" title="br.aniche.ck.metric.NOCTest"><span>NOCTest</span></th>
+        </tr>
+      </thead>
+      <tbody>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="com.github.mauricioaniche.ck.metric.LCOM">LCOM</th>
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="LCOM → NOC · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="LCOM → CC2 · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="LCOM → CC1 · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="LCOM → DIT · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="LCOM → Coupling1 · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="LCOM → Coupling2 · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="LCOM → C2 · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="LCOM → CouplingHelper · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="LCOM → CInterface · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="LCOM → Metric · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="LCOM → CKReport · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="LCOM → ClassInfo · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="LCOM → NOCTest · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="com.github.mauricioaniche.ck.metric.NOC">NOC</th>
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NOC → LCOM · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NOC → CC2 · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NOC → CC1 · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NOC → DIT · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NOC → Coupling1 · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NOC → Coupling2 · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NOC → C2 · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NOC → CouplingHelper · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NOC → CInterface · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NOC → Metric · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NOC → CKReport · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NOC → ClassInfo · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NOC → NOCTest · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="wmc.CC2">CC2</th>
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="CC2 → LCOM · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="CC2 → NOC · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="CC2 → CC1 · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="CC2 → DIT · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="CC2 → Coupling1 · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="CC2 → Coupling2 · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="CC2 → C2 · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="CC2 → CouplingHelper · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="CC2 → CInterface · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="CC2 → Metric · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="CC2 → CKReport · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="CC2 → ClassInfo · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="CC2 → NOCTest · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="wmc.CC1">CC1</th>
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="CC1 → LCOM · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="CC1 → NOC · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="CC1 → CC2 · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="CC1 → DIT · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="CC1 → Coupling1 · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="CC1 → Coupling2 · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="CC1 → C2 · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="CC1 → CouplingHelper · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="CC1 → CInterface · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="CC1 → Metric · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="CC1 → CKReport · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="CC1 → ClassInfo · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="CC1 → NOCTest · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="com.github.mauricioaniche.ck.metric.DIT">DIT</th>
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="DIT → LCOM · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="DIT → NOC · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="DIT → CC2 · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="DIT → CC1 · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="DIT → Coupling1 · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="DIT → Coupling2 · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="DIT → C2 · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="DIT → CouplingHelper · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="DIT → CInterface · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="DIT → Metric · weight: 2.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="DIT → CKReport · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="DIT → ClassInfo · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="DIT → NOCTest · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="cbo.Coupling1">Coupling1</th>
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Coupling1 → LCOM · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Coupling1 → NOC · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Coupling1 → CC2 · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Coupling1 → CC1 · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Coupling1 → DIT · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Coupling1 → Coupling2 · weight: 2.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Coupling1 → C2 · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#e89a43" title="Coupling1 → CouplingHelper · weight: 1.0 · cw: 0.6260 · ATOMIC_PARAMETER_COUPLING, METHOD_INVOCATION_ATOMIC_PARAMETER, VARIABLE_DECLARATION_STATEMENT, VARIABLE_CLASS_INSTANCE_CREATION"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Coupling1 → CInterface · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Coupling1 → Metric · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Coupling1 → CKReport · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Coupling1 → ClassInfo · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Coupling1 → NOCTest · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="cbo.Coupling2">Coupling2</th>
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Coupling2 → LCOM · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Coupling2 → NOC · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Coupling2 → CC2 · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Coupling2 → CC1 · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Coupling2 → DIT · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Coupling2 → Coupling1 · weight: 2.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Coupling2 → C2 · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Coupling2 → CouplingHelper · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#dbb341" title="Coupling2 → CInterface · weight: 1.0 · cw: 0.4784 · INTERFACE"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Coupling2 → Metric · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Coupling2 → CKReport · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Coupling2 → ClassInfo · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Coupling2 → NOCTest · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="dit.C2">C2</th>
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="C2 → LCOM · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="C2 → NOC · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="C2 → CC2 · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="C2 → CC1 · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="C2 → DIT · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="C2 → Coupling1 · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="C2 → Coupling2 · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#e79b42" title="C2 → CouplingHelper · weight: 1.0 · cw: 0.6174 · ATOMIC_PARAMETER_COUPLING, METHOD_RETURN_TYPE, VARIABLE_RETURN_STATEMENT, VARIABLE_CLASS_INSTANCE_CREATION"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="C2 → CInterface · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="C2 → Metric · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="C2 → CKReport · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="C2 → ClassInfo · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="C2 → NOCTest · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="cbo.CouplingHelper">CouplingHelper</th>
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="CouplingHelper → LCOM · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="CouplingHelper → NOC · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="CouplingHelper → CC2 · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="CouplingHelper → CC1 · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="CouplingHelper → DIT · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#e89a43" title="CouplingHelper → Coupling1 · weight: 1.0 · cw: 0.6260 · ATOMIC_PARAMETER_COUPLING, METHOD_INVOCATION_ATOMIC_PARAMETER, VARIABLE_DECLARATION_STATEMENT, VARIABLE_CLASS_INSTANCE_CREATION"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="CouplingHelper → Coupling2 · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#e79b42" title="CouplingHelper → C2 · weight: 1.0 · cw: 0.6174 · ATOMIC_PARAMETER_COUPLING, METHOD_RETURN_TYPE, VARIABLE_RETURN_STATEMENT, VARIABLE_CLASS_INSTANCE_CREATION"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="CouplingHelper → CInterface · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="CouplingHelper → Metric · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="CouplingHelper → CKReport · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="CouplingHelper → ClassInfo · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="CouplingHelper → NOCTest · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="cbo.CInterface">CInterface</th>
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="CInterface → LCOM · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="CInterface → NOC · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="CInterface → CC2 · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="CInterface → CC1 · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="CInterface → DIT · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="CInterface → Coupling1 · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="CInterface → Coupling2 · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="CInterface → C2 · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="CInterface → CouplingHelper · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="CInterface → Metric · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="CInterface → CKReport · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="CInterface → ClassInfo · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="CInterface → NOCTest · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="br.aniche.ck.metric.Metric">Metric</th>
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Metric → LCOM · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Metric → NOC · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Metric → CC2 · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Metric → CC1 · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Metric → DIT · weight: 2.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Metric → Coupling1 · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Metric → Coupling2 · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Metric → C2 · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Metric → CouplingHelper · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Metric → CInterface · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Metric → CKReport · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Metric → ClassInfo · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Metric → NOCTest · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="br.aniche.ck.CKReport">CKReport</th>
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="CKReport → LCOM · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="CKReport → NOC · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="CKReport → CC2 · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="CKReport → CC1 · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="CKReport → DIT · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="CKReport → Coupling1 · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="CKReport → Coupling2 · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="CKReport → C2 · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="CKReport → CouplingHelper · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="CKReport → CInterface · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="CKReport → Metric · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="CKReport → ClassInfo · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="CKReport → NOCTest · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="br.aniche.ck.metric.ClassInfo">ClassInfo</th>
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ClassInfo → LCOM · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ClassInfo → NOC · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ClassInfo → CC2 · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ClassInfo → CC1 · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ClassInfo → DIT · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ClassInfo → Coupling1 · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ClassInfo → Coupling2 · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ClassInfo → C2 · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ClassInfo → CouplingHelper · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ClassInfo → CInterface · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ClassInfo → Metric · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ClassInfo → CKReport · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="ClassInfo → NOCTest · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="br.aniche.ck.metric.NOCTest">NOCTest</th>
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NOCTest → LCOM · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NOCTest → NOC · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NOCTest → CC2 · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NOCTest → CC1 · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NOCTest → DIT · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NOCTest → Coupling1 · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NOCTest → Coupling2 · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NOCTest → C2 · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NOCTest → CouplingHelper · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NOCTest → CInterface · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NOCTest → Metric · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NOCTest → CKReport · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NOCTest → ClassInfo · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+        </tr>
+        
+      </tbody>
+    </table>
+  </div>
+</section>
+
+
+</body>
+</html>

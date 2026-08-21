@@ -1,0 +1,614 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HyCPA — Community 712 · link · Tiny · mauricioaniche/ck</title>
+  <style>
+:root {
+  --bg: #0d1117; --surface: #161b22; --surface2: #21262d;
+  --border: #30363d; --text: #e6edf3; --text2: #8b949e;
+  --accent: #58a6ff; --green: #3fb950; --orange: #e3b341; --red: #f85149;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { background: var(--bg); color: var(--text); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif; padding-bottom: 48px; }
+
+/* ── Header ── */
+.page-header { background: var(--surface); border-bottom: 1px solid var(--border); padding: 12px 24px; display: flex; align-items: center; gap: 20px; }
+.back-btn { color: var(--text2); font-size: 12px; text-decoration: none; white-space: nowrap; }
+.back-btn:hover { color: var(--accent); }
+.header-title { font-size: 15px; color: var(--text); }
+.header-title strong { color: var(--accent); }
+
+/* ── Stats pills ── */
+.stats-row { display: flex; gap: 12px; padding: 16px 24px; background: var(--surface); border-bottom: 1px solid var(--border); flex-wrap: wrap; }
+.stat-pill { background: var(--surface2); border: 1px solid var(--border); border-radius: 8px; padding: 10px 20px; display: flex; flex-direction: column; align-items: center; gap: 2px; min-width: 90px; }
+.pill-val { font-size: 22px; font-weight: 700; color: var(--text); line-height: 1; }
+.pill-lbl { font-size: 10px; color: var(--text2); text-transform: uppercase; letter-spacing: 0.5px; margin-top: 2px; }
+
+/* ── Content sections ── */
+.content-section { padding: 24px; }
+.section-title { font-size: 11px; font-weight: 600; color: var(--text2); text-transform: uppercase; letter-spacing: 0.6px; margin-bottom: 14px; display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
+
+/* ── Node table ── */
+.node-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+.node-table th { background: var(--surface); color: var(--text2); font-weight: 600; font-size: 10px; text-transform: uppercase; letter-spacing: 0.5px; padding: 8px 12px; text-align: left; border-bottom: 2px solid var(--border); white-space: nowrap; }
+.node-table td { padding: 7px 12px; border-bottom: 1px solid var(--border); vertical-align: middle; }
+.node-table tbody tr:hover td { background: var(--surface); }
+.risk-badge { display: inline-block; padding: 2px 9px; border-radius: 10px; font-size: 11px; font-weight: 700; color: #0d1117; white-space: nowrap; }
+.class-path { font-size: 11px; color: var(--text2); font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', monospace; word-break: break-all; }
+td.num { text-align: right; font-weight: 600; white-space: nowrap; }
+td.overlap { color: var(--accent); }
+
+/* ── Coupling matrix ── */
+.matrix-wrap { overflow: auto; }
+.matrix { border-collapse: collapse; }
+.matrix-corner { min-width: 16px; }
+.matrix-col-hdr { padding: 0 1px 4px 1px; vertical-align: bottom; }
+.matrix-col-hdr span { display: block; writing-mode: vertical-rl; transform: rotate(180deg); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-height: 140px; color: var(--text2); font-weight: 400; font-size: 10px; cursor: default; text-align: left; }
+.matrix-row-hdr { text-align: right; padding: 1px 6px 1px 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 200px; color: var(--text2); font-weight: 400; font-size: 10px; cursor: default; }
+.matrix-cell { width: 16px; height: 16px; min-width: 16px; min-height: 16px; border: 1px solid #1c2129; cursor: default; }
+.matrix-cell.empty { background: transparent; }
+.matrix-cell.self-cell { background: var(--surface2); }
+.matrix-cell.filled { }
+
+/* ── Legend inline ── */
+.legend-inline { display: inline-flex; align-items: center; gap: 6px; font-size: 10px; color: var(--text2); font-weight: 400; text-transform: none; letter-spacing: 0; }
+.li-cell { display: inline-block; width: 10px; height: 10px; border-radius: 2px; vertical-align: middle; flex-shrink: 0; }
+</style>
+</head>
+<body>
+
+<div class="page-header">
+  <a class="back-btn" href="repo_link__Tiny__mauricioaniche_ck.html">← Back to link · Tiny · mauricioaniche/ck</a>
+  <span class="header-title">Community <strong>C712</strong> — link · Tiny · mauricioaniche/ck</span>
+</div>
+
+<div class="stats-row">
+  <div class="stat-pill"><span class="pill-val">11</span><span class="pill-lbl">Nodes</span></div>
+  <div class="stat-pill"><span class="pill-val">110</span><span class="pill-lbl">Arcs</span></div>
+  <div class="stat-pill"><span class="pill-val">11</span><span class="pill-lbl">Overlapping</span></div>
+  <div class="stat-pill"><span class="pill-val">0</span><span class="pill-lbl">Coupled arcs</span></div>
+  <div class="stat-pill"><span class="pill-val">110</span><span class="pill-lbl">Co-change only</span></div>
+</div>
+
+<section class="content-section">
+  <h2 class="section-title">Nodes</h2>
+  <table class="node-table">
+    <thead>
+      <tr>
+        <th>Risk</th>
+        <th>Class</th>
+        <th>Degree</th>
+        <th>Communities</th>
+      </tr>
+    </thead>
+    <tbody>
+      
+      <tr>
+        <td><span class="risk-badge" style="background:#e3b341">0.261</span></td>
+        <td class="class-path" title="VisibleMethods.VisibleMethods">VisibleMethods.VisibleMethods</td>
+        <td class="num">20</td>
+        <td class="num overlap">7</td>
+      </tr>
+      
+      <tr>
+        <td><span class="risk-badge" style="background:#3fb950">0.196</span></td>
+        <td class="class-path" title="com.github.mauricioaniche.ck.metric.NumberOfMethods">com.github.mauricioaniche.ck.metric.NumberOfMethods</td>
+        <td class="num">20</td>
+        <td class="num overlap">10</td>
+      </tr>
+      
+      <tr>
+        <td><span class="risk-badge" style="background:#3fb950">0.163</span></td>
+        <td class="class-path" title="com.github.mauricioaniche.ck.TightClassCohesionTest">com.github.mauricioaniche.ck.TightClassCohesionTest</td>
+        <td class="num">20</td>
+        <td class="num overlap">15</td>
+      </tr>
+      
+      <tr>
+        <td><span class="risk-badge" style="background:#3fb950">0.130</span></td>
+        <td class="class-path" title="com.github.mauricioaniche.ck.VisibleMethodsTest">com.github.mauricioaniche.ck.VisibleMethodsTest</td>
+        <td class="num">20</td>
+        <td class="num overlap">13</td>
+      </tr>
+      
+      <tr>
+        <td><span class="risk-badge" style="background:#3fb950">0.098</span></td>
+        <td class="class-path" title="ClassCohesion.HighCohesion">ClassCohesion.HighCohesion</td>
+        <td class="num">20</td>
+        <td class="num overlap">10</td>
+      </tr>
+      
+      <tr>
+        <td><span class="risk-badge" style="background:#3fb950">0.098</span></td>
+        <td class="class-path" title="VariableDeclaration.VariableDeclaration">VariableDeclaration.VariableDeclaration</td>
+        <td class="num">20</td>
+        <td class="num overlap">7</td>
+      </tr>
+      
+      <tr>
+        <td><span class="risk-badge" style="background:#3fb950">0.098</span></td>
+        <td class="class-path" title="ClassCohesion.Simple1">ClassCohesion.Simple1</td>
+        <td class="num">20</td>
+        <td class="num overlap">7</td>
+      </tr>
+      
+      <tr>
+        <td><span class="risk-badge" style="background:#3fb950">0.076</span></td>
+        <td class="class-path" title="com.github.mauricioaniche.ck.VariableNameExtractionTest">com.github.mauricioaniche.ck.VariableNameExtractionTest</td>
+        <td class="num">20</td>
+        <td class="num overlap">11</td>
+      </tr>
+      
+      <tr>
+        <td><span class="risk-badge" style="background:#3fb950">0.065</span></td>
+        <td class="class-path" title="ClassCohesion.MediumCohesion">ClassCohesion.MediumCohesion</td>
+        <td class="num">20</td>
+        <td class="num overlap">7</td>
+      </tr>
+      
+      <tr>
+        <td><span class="risk-badge" style="background:#3fb950">0.054</span></td>
+        <td class="class-path" title="ClassCohesion.NoCohesion">ClassCohesion.NoCohesion</td>
+        <td class="num">20</td>
+        <td class="num overlap">10</td>
+      </tr>
+      
+      <tr>
+        <td><span class="risk-badge" style="background:#8b949e">—</span></td>
+        <td class="class-path" title="com.github.mauricioaniche.ck.util.StringUtils">com.github.mauricioaniche.ck.util.StringUtils</td>
+        <td class="num">20</td>
+        <td class="num overlap">22</td>
+      </tr>
+      
+    </tbody>
+  </table>
+</section>
+
+
+<section class="content-section">
+  <h2 class="section-title">Coupling matrix
+    <span class="legend-inline">
+      <span class="li-cell" style="background:#30363d"></span>Co-change only
+      <span class="li-cell" style="background:#3fb950"></span>Weak
+      <span class="li-cell" style="background:#e3b341"></span>Moderate
+      <span class="li-cell" style="background:#f85149"></span>Strong
+    </span>
+  </h2>
+  <div class="matrix-wrap">
+    <table class="matrix">
+      <thead>
+        <tr>
+          <th class="matrix-corner"></th>
+          <th class="matrix-col-hdr" title="VisibleMethods.VisibleMethods"><span>VisibleMethods</span></th><th class="matrix-col-hdr" title="com.github.mauricioaniche.ck.metric.NumberOfMethods"><span>NumberOfMethods</span></th><th class="matrix-col-hdr" title="com.github.mauricioaniche.ck.TightClassCohesionTest"><span>TightClassCohesionTest</span></th><th class="matrix-col-hdr" title="com.github.mauricioaniche.ck.VisibleMethodsTest"><span>VisibleMethodsTest</span></th><th class="matrix-col-hdr" title="ClassCohesion.HighCohesion"><span>HighCohesion</span></th><th class="matrix-col-hdr" title="VariableDeclaration.VariableDeclaration"><span>VariableDeclaration</span></th><th class="matrix-col-hdr" title="ClassCohesion.Simple1"><span>Simple1</span></th><th class="matrix-col-hdr" title="com.github.mauricioaniche.ck.VariableNameExtractionTest"><span>VariableNameExtractionTest</span></th><th class="matrix-col-hdr" title="ClassCohesion.MediumCohesion"><span>MediumCohesion</span></th><th class="matrix-col-hdr" title="ClassCohesion.NoCohesion"><span>NoCohesion</span></th><th class="matrix-col-hdr" title="com.github.mauricioaniche.ck.util.StringUtils"><span>StringUtils</span></th>
+        </tr>
+      </thead>
+      <tbody>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="VisibleMethods.VisibleMethods">VisibleMethods</th>
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="VisibleMethods → NumberOfMethods · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="VisibleMethods → TightClassCohesionTest · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="VisibleMethods → VisibleMethodsTest · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="VisibleMethods → HighCohesion · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="VisibleMethods → VariableDeclaration · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="VisibleMethods → Simple1 · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="VisibleMethods → VariableNameExtractionTest · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="VisibleMethods → MediumCohesion · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="VisibleMethods → NoCohesion · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="VisibleMethods → StringUtils · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="com.github.mauricioaniche.ck.metric.NumberOfMethods">NumberOfMethods</th>
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NumberOfMethods → VisibleMethods · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NumberOfMethods → TightClassCohesionTest · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NumberOfMethods → VisibleMethodsTest · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NumberOfMethods → HighCohesion · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NumberOfMethods → VariableDeclaration · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NumberOfMethods → Simple1 · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NumberOfMethods → VariableNameExtractionTest · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NumberOfMethods → MediumCohesion · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NumberOfMethods → NoCohesion · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NumberOfMethods → StringUtils · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="com.github.mauricioaniche.ck.TightClassCohesionTest">TightClassCohesionTest</th>
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="TightClassCohesionTest → VisibleMethods · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="TightClassCohesionTest → NumberOfMethods · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="TightClassCohesionTest → VisibleMethodsTest · weight: 4.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="TightClassCohesionTest → HighCohesion · weight: 2.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="TightClassCohesionTest → VariableDeclaration · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="TightClassCohesionTest → Simple1 · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="TightClassCohesionTest → VariableNameExtractionTest · weight: 3.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="TightClassCohesionTest → MediumCohesion · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="TightClassCohesionTest → NoCohesion · weight: 2.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="TightClassCohesionTest → StringUtils · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="com.github.mauricioaniche.ck.VisibleMethodsTest">VisibleMethodsTest</th>
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="VisibleMethodsTest → VisibleMethods · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="VisibleMethodsTest → NumberOfMethods · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="VisibleMethodsTest → TightClassCohesionTest · weight: 4.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="VisibleMethodsTest → HighCohesion · weight: 2.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="VisibleMethodsTest → VariableDeclaration · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="VisibleMethodsTest → Simple1 · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="VisibleMethodsTest → VariableNameExtractionTest · weight: 3.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="VisibleMethodsTest → MediumCohesion · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="VisibleMethodsTest → NoCohesion · weight: 2.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="VisibleMethodsTest → StringUtils · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="ClassCohesion.HighCohesion">HighCohesion</th>
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="HighCohesion → VisibleMethods · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="HighCohesion → NumberOfMethods · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="HighCohesion → TightClassCohesionTest · weight: 2.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="HighCohesion → VisibleMethodsTest · weight: 2.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="HighCohesion → VariableDeclaration · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="HighCohesion → Simple1 · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="HighCohesion → VariableNameExtractionTest · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="HighCohesion → MediumCohesion · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="HighCohesion → NoCohesion · weight: 2.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="HighCohesion → StringUtils · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="VariableDeclaration.VariableDeclaration">VariableDeclaration</th>
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="VariableDeclaration → VisibleMethods · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="VariableDeclaration → NumberOfMethods · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="VariableDeclaration → TightClassCohesionTest · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="VariableDeclaration → VisibleMethodsTest · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="VariableDeclaration → HighCohesion · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="VariableDeclaration → Simple1 · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="VariableDeclaration → VariableNameExtractionTest · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="VariableDeclaration → MediumCohesion · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="VariableDeclaration → NoCohesion · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="VariableDeclaration → StringUtils · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="ClassCohesion.Simple1">Simple1</th>
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Simple1 → VisibleMethods · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Simple1 → NumberOfMethods · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Simple1 → TightClassCohesionTest · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Simple1 → VisibleMethodsTest · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Simple1 → HighCohesion · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Simple1 → VariableDeclaration · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Simple1 → VariableNameExtractionTest · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Simple1 → MediumCohesion · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Simple1 → NoCohesion · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="Simple1 → StringUtils · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="com.github.mauricioaniche.ck.VariableNameExtractionTest">VariableNameExtractionTest</th>
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="VariableNameExtractionTest → VisibleMethods · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="VariableNameExtractionTest → NumberOfMethods · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="VariableNameExtractionTest → TightClassCohesionTest · weight: 3.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="VariableNameExtractionTest → VisibleMethodsTest · weight: 3.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="VariableNameExtractionTest → HighCohesion · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="VariableNameExtractionTest → VariableDeclaration · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="VariableNameExtractionTest → Simple1 · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="VariableNameExtractionTest → MediumCohesion · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="VariableNameExtractionTest → NoCohesion · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="VariableNameExtractionTest → StringUtils · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="ClassCohesion.MediumCohesion">MediumCohesion</th>
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="MediumCohesion → VisibleMethods · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="MediumCohesion → NumberOfMethods · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="MediumCohesion → TightClassCohesionTest · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="MediumCohesion → VisibleMethodsTest · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="MediumCohesion → HighCohesion · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="MediumCohesion → VariableDeclaration · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="MediumCohesion → Simple1 · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="MediumCohesion → VariableNameExtractionTest · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="MediumCohesion → NoCohesion · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="MediumCohesion → StringUtils · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="ClassCohesion.NoCohesion">NoCohesion</th>
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NoCohesion → VisibleMethods · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NoCohesion → NumberOfMethods · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NoCohesion → TightClassCohesionTest · weight: 2.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NoCohesion → VisibleMethodsTest · weight: 2.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NoCohesion → HighCohesion · weight: 2.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NoCohesion → VariableDeclaration · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NoCohesion → Simple1 · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NoCohesion → VariableNameExtractionTest · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NoCohesion → MediumCohesion · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="NoCohesion → StringUtils · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="com.github.mauricioaniche.ck.util.StringUtils">StringUtils</th>
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="StringUtils → VisibleMethods · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="StringUtils → NumberOfMethods · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="StringUtils → TightClassCohesionTest · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="StringUtils → VisibleMethodsTest · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="StringUtils → HighCohesion · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="StringUtils → VariableDeclaration · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="StringUtils → Simple1 · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="StringUtils → VariableNameExtractionTest · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="StringUtils → MediumCohesion · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="StringUtils → NoCohesion · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+        </tr>
+        
+      </tbody>
+    </table>
+  </div>
+</section>
+
+
+</body>
+</html>

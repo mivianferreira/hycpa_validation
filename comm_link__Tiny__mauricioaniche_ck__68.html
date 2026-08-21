@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HyCPA — Community 68 · link · Tiny · mauricioaniche/ck</title>
+  <style>
+:root {
+  --bg: #0d1117; --surface: #161b22; --surface2: #21262d;
+  --border: #30363d; --text: #e6edf3; --text2: #8b949e;
+  --accent: #58a6ff; --green: #3fb950; --orange: #e3b341; --red: #f85149;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { background: var(--bg); color: var(--text); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif; padding-bottom: 48px; }
+
+/* ── Header ── */
+.page-header { background: var(--surface); border-bottom: 1px solid var(--border); padding: 12px 24px; display: flex; align-items: center; gap: 20px; }
+.back-btn { color: var(--text2); font-size: 12px; text-decoration: none; white-space: nowrap; }
+.back-btn:hover { color: var(--accent); }
+.header-title { font-size: 15px; color: var(--text); }
+.header-title strong { color: var(--accent); }
+
+/* ── Stats pills ── */
+.stats-row { display: flex; gap: 12px; padding: 16px 24px; background: var(--surface); border-bottom: 1px solid var(--border); flex-wrap: wrap; }
+.stat-pill { background: var(--surface2); border: 1px solid var(--border); border-radius: 8px; padding: 10px 20px; display: flex; flex-direction: column; align-items: center; gap: 2px; min-width: 90px; }
+.pill-val { font-size: 22px; font-weight: 700; color: var(--text); line-height: 1; }
+.pill-lbl { font-size: 10px; color: var(--text2); text-transform: uppercase; letter-spacing: 0.5px; margin-top: 2px; }
+
+/* ── Content sections ── */
+.content-section { padding: 24px; }
+.section-title { font-size: 11px; font-weight: 600; color: var(--text2); text-transform: uppercase; letter-spacing: 0.6px; margin-bottom: 14px; display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
+
+/* ── Node table ── */
+.node-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+.node-table th { background: var(--surface); color: var(--text2); font-weight: 600; font-size: 10px; text-transform: uppercase; letter-spacing: 0.5px; padding: 8px 12px; text-align: left; border-bottom: 2px solid var(--border); white-space: nowrap; }
+.node-table td { padding: 7px 12px; border-bottom: 1px solid var(--border); vertical-align: middle; }
+.node-table tbody tr:hover td { background: var(--surface); }
+.risk-badge { display: inline-block; padding: 2px 9px; border-radius: 10px; font-size: 11px; font-weight: 700; color: #0d1117; white-space: nowrap; }
+.class-path { font-size: 11px; color: var(--text2); font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', monospace; word-break: break-all; }
+td.num { text-align: right; font-weight: 600; white-space: nowrap; }
+td.overlap { color: var(--accent); }
+
+/* ── Coupling matrix ── */
+.matrix-wrap { overflow: auto; }
+.matrix { border-collapse: collapse; }
+.matrix-corner { min-width: 16px; }
+.matrix-col-hdr { padding: 0 1px 4px 1px; vertical-align: bottom; }
+.matrix-col-hdr span { display: block; writing-mode: vertical-rl; transform: rotate(180deg); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-height: 140px; color: var(--text2); font-weight: 400; font-size: 10px; cursor: default; text-align: left; }
+.matrix-row-hdr { text-align: right; padding: 1px 6px 1px 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 200px; color: var(--text2); font-weight: 400; font-size: 10px; cursor: default; }
+.matrix-cell { width: 16px; height: 16px; min-width: 16px; min-height: 16px; border: 1px solid #1c2129; cursor: default; }
+.matrix-cell.empty { background: transparent; }
+.matrix-cell.self-cell { background: var(--surface2); }
+.matrix-cell.filled { }
+
+/* ── Legend inline ── */
+.legend-inline { display: inline-flex; align-items: center; gap: 6px; font-size: 10px; color: var(--text2); font-weight: 400; text-transform: none; letter-spacing: 0; }
+.li-cell { display: inline-block; width: 10px; height: 10px; border-radius: 2px; vertical-align: middle; flex-shrink: 0; }
+</style>
+</head>
+<body>
+
+<div class="page-header">
+  <a class="back-btn" href="repo_link__Tiny__mauricioaniche_ck.html">← Back to link · Tiny · mauricioaniche/ck</a>
+  <span class="header-title">Community <strong>C68</strong> — link · Tiny · mauricioaniche/ck</span>
+</div>
+
+<div class="stats-row">
+  <div class="stat-pill"><span class="pill-val">2</span><span class="pill-lbl">Nodes</span></div>
+  <div class="stat-pill"><span class="pill-val">2</span><span class="pill-lbl">Arcs</span></div>
+  <div class="stat-pill"><span class="pill-val">2</span><span class="pill-lbl">Overlapping</span></div>
+  <div class="stat-pill"><span class="pill-val">0</span><span class="pill-lbl">Coupled arcs</span></div>
+  <div class="stat-pill"><span class="pill-val">2</span><span class="pill-lbl">Co-change only</span></div>
+</div>
+
+<section class="content-section">
+  <h2 class="section-title">Nodes</h2>
+  <table class="node-table">
+    <thead>
+      <tr>
+        <th>Risk</th>
+        <th>Class</th>
+        <th>Degree</th>
+        <th>Communities</th>
+      </tr>
+    </thead>
+    <tbody>
+      
+      <tr>
+        <td><span class="risk-badge" style="background:#e3b341">0.326</span></td>
+        <td class="class-path" title="com.github.mauricioaniche.ck.CK">com.github.mauricioaniche.ck.CK</td>
+        <td class="num">2</td>
+        <td class="num overlap">45</td>
+      </tr>
+      
+      <tr>
+        <td><span class="risk-badge" style="background:#3fb950">0.120</span></td>
+        <td class="class-path" title="pcount.A">pcount.A</td>
+        <td class="num">2</td>
+        <td class="num overlap">13</td>
+      </tr>
+      
+    </tbody>
+  </table>
+</section>
+
+
+<section class="content-section">
+  <h2 class="section-title">Coupling matrix
+    <span class="legend-inline">
+      <span class="li-cell" style="background:#30363d"></span>Co-change only
+      <span class="li-cell" style="background:#3fb950"></span>Weak
+      <span class="li-cell" style="background:#e3b341"></span>Moderate
+      <span class="li-cell" style="background:#f85149"></span>Strong
+    </span>
+  </h2>
+  <div class="matrix-wrap">
+    <table class="matrix">
+      <thead>
+        <tr>
+          <th class="matrix-corner"></th>
+          <th class="matrix-col-hdr" title="com.github.mauricioaniche.ck.CK"><span>CK</span></th><th class="matrix-col-hdr" title="pcount.A"><span>A</span></th>
+        </tr>
+      </thead>
+      <tbody>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="com.github.mauricioaniche.ck.CK">CK</th>
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="CK → A · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+        </tr>
+        
+        <tr>
+          <th class="matrix-row-hdr" title="pcount.A">A</th>
+          
+            <td class="matrix-cell filled" style="background:#30363d" title="A → CK · weight: 1.0 · cw: 0.0000 · co-change only"></td>
+            
+          
+            <td class="matrix-cell self-cell"></td>
+            
+          
+        </tr>
+        
+      </tbody>
+    </table>
+  </div>
+</section>
+
+
+</body>
+</html>
