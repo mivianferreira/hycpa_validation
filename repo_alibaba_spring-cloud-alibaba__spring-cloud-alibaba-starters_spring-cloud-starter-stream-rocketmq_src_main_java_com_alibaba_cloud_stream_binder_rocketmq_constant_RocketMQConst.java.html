@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>HyCPA — spring-cloud-alibaba-starters/spring-cloud-starter-stream-rocketmq/src/main/java/com/alibaba/cloud/stream/binder/rocketmq/constant/RocketMQConst.java</title>
+  <title>HYCIA — spring-cloud-alibaba-starters/spring-cloud-starter-stream-rocketmq/src/main/java/com/alibaba/cloud/stream/binder/rocketmq/constant/RocketMQConst.java</title>
   <style>
 :root {
   --bg: #0d1117; --surface: #161b22; --surface2: #21262d;
@@ -103,7 +103,7 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, Bl
 .already-sent { display: flex; align-items: center; gap: 8px; padding: 10px 16px; border-radius: 8px; background: rgba(63,185,80,0.1); border: 1px solid rgba(63,185,80,0.25); color: var(--green); font-size: 13px; }
 
 /* ── Submission toast (success / error feedback) ── */
-.hycpa-toast {
+.HYCIA-toast {
   position: fixed; top: 24px; left: 50%; transform: translateX(-50%) translateY(-20px);
   min-width: 320px; max-width: 90vw;
   background: var(--surface); color: var(--text);
@@ -117,19 +117,19 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, Bl
   transition: opacity .25s ease, transform .25s ease;
   z-index: 10000;
 }
-.hycpa-toast.show { opacity: 1; transform: translateX(-50%) translateY(0); pointer-events: auto; }
-.hycpa-toast.error { border-left-color: var(--red); }
-.hycpa-toast .toast-icon { font-size: 22px; line-height: 1; }
-.hycpa-toast .toast-body { flex: 1; }
-.hycpa-toast .toast-title { font-weight: 700; margin-bottom: 4px; }
-.hycpa-toast.success .toast-title { color: var(--green); }
-.hycpa-toast.error .toast-title { color: var(--red); }
-.hycpa-toast .toast-msg { color: var(--text2); font-size: 13px; }
-.hycpa-toast .toast-close {
+.HYCIA-toast.show { opacity: 1; transform: translateX(-50%) translateY(0); pointer-events: auto; }
+.HYCIA-toast.error { border-left-color: var(--red); }
+.HYCIA-toast .toast-icon { font-size: 22px; line-height: 1; }
+.HYCIA-toast .toast-body { flex: 1; }
+.HYCIA-toast .toast-title { font-weight: 700; margin-bottom: 4px; }
+.HYCIA-toast.success .toast-title { color: var(--green); }
+.HYCIA-toast.error .toast-title { color: var(--red); }
+.HYCIA-toast .toast-msg { color: var(--text2); font-size: 13px; }
+.HYCIA-toast .toast-close {
   background: transparent; border: none; color: var(--text2);
   cursor: pointer; font-size: 18px; line-height: 1; padding: 0 4px;
 }
-.hycpa-toast .toast-close:hover { color: var(--text); }
+.HYCIA-toast .toast-close:hover { color: var(--text); }
 
 /* ── Tooltips ── */
 [data-tooltip] { position: relative; cursor: default; }
@@ -143,7 +143,7 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, Bl
   .page-header { padding: 12px 16px; }
 }
 
-/* ── HyCPA tabs ── */
+/* ── HYCIA tabs ── */
 .tabs { display: flex; gap: 4px; border-bottom: 1px solid var(--border); margin-bottom: 16px; }
 .tab-btn { background: transparent; border: none; color: var(--text2); padding: 10px 18px; font-size: 13px; font-weight: 600; cursor: pointer; border-bottom: 2px solid transparent; }
 .tab-btn:hover { color: var(--text); }
@@ -218,7 +218,7 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, Bl
         <span class="val">#1</span><span class="lbl">Rank</span>
       </div>
       <div class="metric-pill prob" style="color:var(--red)"
-           data-tooltip="HyCPA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
+           data-tooltip="HYCIA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
         <span class="val" style="color:var(--red)">1.0000</span>
         <span class="lbl">Prob</span>
       </div>
@@ -298,7 +298,7 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, Bl
         <span class="val">#2</span><span class="lbl">Rank</span>
       </div>
       <div class="metric-pill prob" style="color:var(--red)"
-           data-tooltip="HyCPA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
+           data-tooltip="HYCIA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
         <span class="val" style="color:var(--red)">1.0000</span>
         <span class="lbl">Prob</span>
       </div>
@@ -378,7 +378,7 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, Bl
         <span class="val">#3</span><span class="lbl">Rank</span>
       </div>
       <div class="metric-pill prob" style="color:var(--red)"
-           data-tooltip="HyCPA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
+           data-tooltip="HYCIA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
         <span class="val" style="color:var(--red)">1.0000</span>
         <span class="lbl">Prob</span>
       </div>
@@ -458,7 +458,7 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, Bl
         <span class="val">#4</span><span class="lbl">Rank</span>
       </div>
       <div class="metric-pill prob" style="color:var(--red)"
-           data-tooltip="HyCPA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
+           data-tooltip="HYCIA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
         <span class="val" style="color:var(--red)">1.0000</span>
         <span class="lbl">Prob</span>
       </div>
@@ -538,7 +538,7 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, Bl
         <span class="val">#5</span><span class="lbl">Rank</span>
       </div>
       <div class="metric-pill prob" style="color:var(--red)"
-           data-tooltip="HyCPA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
+           data-tooltip="HYCIA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
         <span class="val" style="color:var(--red)">1.0000</span>
         <span class="lbl">Prob</span>
       </div>
@@ -618,7 +618,7 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, Bl
         <span class="val">#6</span><span class="lbl">Rank</span>
       </div>
       <div class="metric-pill prob" style="color:var(--red)"
-           data-tooltip="HyCPA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
+           data-tooltip="HYCIA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
         <span class="val" style="color:var(--red)">1.0000</span>
         <span class="lbl">Prob</span>
       </div>
@@ -698,7 +698,7 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, Bl
         <span class="val">#7</span><span class="lbl">Rank</span>
       </div>
       <div class="metric-pill prob" style="color:var(--red)"
-           data-tooltip="HyCPA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
+           data-tooltip="HYCIA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
         <span class="val" style="color:var(--red)">1.0000</span>
         <span class="lbl">Prob</span>
       </div>
@@ -778,7 +778,7 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, Bl
         <span class="val">#8</span><span class="lbl">Rank</span>
       </div>
       <div class="metric-pill prob" style="color:var(--red)"
-           data-tooltip="HyCPA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
+           data-tooltip="HYCIA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
         <span class="val" style="color:var(--red)">1.0000</span>
         <span class="lbl">Prob</span>
       </div>
@@ -858,7 +858,7 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, Bl
         <span class="val">#9</span><span class="lbl">Rank</span>
       </div>
       <div class="metric-pill prob" style="color:var(--red)"
-           data-tooltip="HyCPA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
+           data-tooltip="HYCIA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
         <span class="val" style="color:var(--red)">1.0000</span>
         <span class="lbl">Prob</span>
       </div>
@@ -938,7 +938,7 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, Bl
         <span class="val">#10</span><span class="lbl">Rank</span>
       </div>
       <div class="metric-pill prob" style="color:var(--red)"
-           data-tooltip="HyCPA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
+           data-tooltip="HYCIA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
         <span class="val" style="color:var(--red)">1.0000</span>
         <span class="lbl">Prob</span>
       </div>
@@ -1018,7 +1018,7 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, Bl
         <span class="val">#11</span><span class="lbl">Rank</span>
       </div>
       <div class="metric-pill prob" style="color:var(--red)"
-           data-tooltip="HyCPA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
+           data-tooltip="HYCIA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
         <span class="val" style="color:var(--red)">1.0000</span>
         <span class="lbl">Prob</span>
       </div>
@@ -1098,7 +1098,7 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, Bl
         <span class="val">#12</span><span class="lbl">Rank</span>
       </div>
       <div class="metric-pill prob" style="color:var(--red)"
-           data-tooltip="HyCPA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
+           data-tooltip="HYCIA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
         <span class="val" style="color:var(--red)">1.0000</span>
         <span class="lbl">Prob</span>
       </div>
@@ -1178,7 +1178,7 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, Bl
         <span class="val">#13</span><span class="lbl">Rank</span>
       </div>
       <div class="metric-pill prob" style="color:var(--red)"
-           data-tooltip="HyCPA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
+           data-tooltip="HYCIA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
         <span class="val" style="color:var(--red)">1.0000</span>
         <span class="lbl">Prob</span>
       </div>
@@ -1258,7 +1258,7 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, Bl
         <span class="val">#14</span><span class="lbl">Rank</span>
       </div>
       <div class="metric-pill prob" style="color:var(--red)"
-           data-tooltip="HyCPA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
+           data-tooltip="HYCIA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
         <span class="val" style="color:var(--red)">1.0000</span>
         <span class="lbl">Prob</span>
       </div>
@@ -1338,7 +1338,7 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, Bl
         <span class="val">#15</span><span class="lbl">Rank</span>
       </div>
       <div class="metric-pill prob" style="color:var(--red)"
-           data-tooltip="HyCPA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
+           data-tooltip="HYCIA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
         <span class="val" style="color:var(--red)">1.0000</span>
         <span class="lbl">Prob</span>
       </div>
@@ -1418,7 +1418,7 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, Bl
         <span class="val">#16</span><span class="lbl">Rank</span>
       </div>
       <div class="metric-pill prob" style="color:var(--red)"
-           data-tooltip="HyCPA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
+           data-tooltip="HYCIA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
         <span class="val" style="color:var(--red)">1.0000</span>
         <span class="lbl">Prob</span>
       </div>
@@ -1498,7 +1498,7 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, Bl
         <span class="val">#17</span><span class="lbl">Rank</span>
       </div>
       <div class="metric-pill prob" style="color:var(--red)"
-           data-tooltip="HyCPA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
+           data-tooltip="HYCIA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
         <span class="val" style="color:var(--red)">1.0000</span>
         <span class="lbl">Prob</span>
       </div>
@@ -1578,7 +1578,7 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, Bl
         <span class="val">#18</span><span class="lbl">Rank</span>
       </div>
       <div class="metric-pill prob" style="color:var(--red)"
-           data-tooltip="HyCPA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
+           data-tooltip="HYCIA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
         <span class="val" style="color:var(--red)">1.0000</span>
         <span class="lbl">Prob</span>
       </div>
@@ -1658,7 +1658,7 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, Bl
         <span class="val">#19</span><span class="lbl">Rank</span>
       </div>
       <div class="metric-pill prob" style="color:var(--red)"
-           data-tooltip="HyCPA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
+           data-tooltip="HYCIA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
         <span class="val" style="color:var(--red)">1.0000</span>
         <span class="lbl">Prob</span>
       </div>
@@ -1738,7 +1738,7 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, Bl
         <span class="val">#20</span><span class="lbl">Rank</span>
       </div>
       <div class="metric-pill prob" style="color:var(--red)"
-           data-tooltip="HyCPA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
+           data-tooltip="HYCIA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
         <span class="val" style="color:var(--red)">1.0000</span>
         <span class="lbl">Prob</span>
       </div>
@@ -1818,7 +1818,7 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, Bl
         <span class="val">#21</span><span class="lbl">Rank</span>
       </div>
       <div class="metric-pill prob" style="color:var(--red)"
-           data-tooltip="HyCPA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
+           data-tooltip="HYCIA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
         <span class="val" style="color:var(--red)">1.0000</span>
         <span class="lbl">Prob</span>
       </div>
@@ -1898,7 +1898,7 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, Bl
         <span class="val">#22</span><span class="lbl">Rank</span>
       </div>
       <div class="metric-pill prob" style="color:var(--red)"
-           data-tooltip="HyCPA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
+           data-tooltip="HYCIA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
         <span class="val" style="color:var(--red)">1.0000</span>
         <span class="lbl">Prob</span>
       </div>
@@ -1978,7 +1978,7 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, Bl
         <span class="val">#23</span><span class="lbl">Rank</span>
       </div>
       <div class="metric-pill prob" style="color:var(--red)"
-           data-tooltip="HyCPA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
+           data-tooltip="HYCIA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
         <span class="val" style="color:var(--red)">1.0000</span>
         <span class="lbl">Prob</span>
       </div>
@@ -2058,7 +2058,7 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, Bl
         <span class="val">#24</span><span class="lbl">Rank</span>
       </div>
       <div class="metric-pill prob" style="color:var(--red)"
-           data-tooltip="HyCPA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
+           data-tooltip="HYCIA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
         <span class="val" style="color:var(--red)">1.0000</span>
         <span class="lbl">Prob</span>
       </div>
@@ -2138,7 +2138,7 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, Bl
         <span class="val">#25</span><span class="lbl">Rank</span>
       </div>
       <div class="metric-pill prob" style="color:var(--red)"
-           data-tooltip="HyCPA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
+           data-tooltip="HYCIA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
         <span class="val" style="color:var(--red)">1.0000</span>
         <span class="lbl">Prob</span>
       </div>
@@ -2218,7 +2218,7 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, Bl
         <span class="val">#26</span><span class="lbl">Rank</span>
       </div>
       <div class="metric-pill prob" style="color:var(--red)"
-           data-tooltip="HyCPA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
+           data-tooltip="HYCIA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
         <span class="val" style="color:var(--red)">1.0000</span>
         <span class="lbl">Prob</span>
       </div>
@@ -2298,7 +2298,7 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, Bl
         <span class="val">#27</span><span class="lbl">Rank</span>
       </div>
       <div class="metric-pill prob" style="color:var(--red)"
-           data-tooltip="HyCPA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
+           data-tooltip="HYCIA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
         <span class="val" style="color:var(--red)">1.0000</span>
         <span class="lbl">Prob</span>
       </div>
@@ -2378,7 +2378,7 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, Bl
         <span class="val">#28</span><span class="lbl">Rank</span>
       </div>
       <div class="metric-pill prob" style="color:var(--red)"
-           data-tooltip="HyCPA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
+           data-tooltip="HYCIA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
         <span class="val" style="color:var(--red)">1.0000</span>
         <span class="lbl">Prob</span>
       </div>
@@ -2458,7 +2458,7 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, Bl
         <span class="val">#29</span><span class="lbl">Rank</span>
       </div>
       <div class="metric-pill prob" style="color:var(--red)"
-           data-tooltip="HyCPA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
+           data-tooltip="HYCIA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
         <span class="val" style="color:var(--red)">1.0000</span>
         <span class="lbl">Prob</span>
       </div>
@@ -2538,7 +2538,7 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, Bl
         <span class="val">#30</span><span class="lbl">Rank</span>
       </div>
       <div class="metric-pill prob" style="color:var(--red)"
-           data-tooltip="HyCPA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
+           data-tooltip="HYCIA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
         <span class="val" style="color:var(--red)">1.0000</span>
         <span class="lbl">Prob</span>
       </div>
@@ -2618,7 +2618,7 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, Bl
         <span class="val">#31</span><span class="lbl">Rank</span>
       </div>
       <div class="metric-pill prob" style="color:var(--red)"
-           data-tooltip="HyCPA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
+           data-tooltip="HYCIA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
         <span class="val" style="color:var(--red)">1.0000</span>
         <span class="lbl">Prob</span>
       </div>
@@ -2698,7 +2698,7 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, Bl
         <span class="val">#32</span><span class="lbl">Rank</span>
       </div>
       <div class="metric-pill prob" style="color:var(--red)"
-           data-tooltip="HyCPA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
+           data-tooltip="HYCIA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
         <span class="val" style="color:var(--red)">1.0000</span>
         <span class="lbl">Prob</span>
       </div>
@@ -2778,7 +2778,7 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, Bl
         <span class="val">#33</span><span class="lbl">Rank</span>
       </div>
       <div class="metric-pill prob" style="color:var(--red)"
-           data-tooltip="HyCPA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
+           data-tooltip="HYCIA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
         <span class="val" style="color:var(--red)">1.0000</span>
         <span class="lbl">Prob</span>
       </div>
@@ -2858,7 +2858,7 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, Bl
         <span class="val">#34</span><span class="lbl">Rank</span>
       </div>
       <div class="metric-pill prob" style="color:var(--red)"
-           data-tooltip="HyCPA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
+           data-tooltip="HYCIA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
         <span class="val" style="color:var(--red)">1.0000</span>
         <span class="lbl">Prob</span>
       </div>
@@ -2938,7 +2938,7 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, Bl
         <span class="val">#35</span><span class="lbl">Rank</span>
       </div>
       <div class="metric-pill prob" style="color:var(--red)"
-           data-tooltip="HyCPA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
+           data-tooltip="HYCIA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
         <span class="val" style="color:var(--red)">1.0000</span>
         <span class="lbl">Prob</span>
       </div>
@@ -3018,7 +3018,7 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, Bl
         <span class="val">#36</span><span class="lbl">Rank</span>
       </div>
       <div class="metric-pill prob" style="color:var(--red)"
-           data-tooltip="HyCPA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
+           data-tooltip="HYCIA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
         <span class="val" style="color:var(--red)">1.0000</span>
         <span class="lbl">Prob</span>
       </div>
@@ -3098,7 +3098,7 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, Bl
         <span class="val">#37</span><span class="lbl">Rank</span>
       </div>
       <div class="metric-pill prob" style="color:var(--red)"
-           data-tooltip="HyCPA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
+           data-tooltip="HYCIA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
         <span class="val" style="color:var(--red)">1.0000</span>
         <span class="lbl">Prob</span>
       </div>
@@ -3178,7 +3178,7 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, Bl
         <span class="val">#38</span><span class="lbl">Rank</span>
       </div>
       <div class="metric-pill prob" style="color:var(--red)"
-           data-tooltip="HyCPA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
+           data-tooltip="HYCIA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
         <span class="val" style="color:var(--red)">1.0000</span>
         <span class="lbl">Prob</span>
       </div>
@@ -3258,7 +3258,7 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, Bl
         <span class="val">#39</span><span class="lbl">Rank</span>
       </div>
       <div class="metric-pill prob" style="color:var(--red)"
-           data-tooltip="HyCPA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
+           data-tooltip="HYCIA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
         <span class="val" style="color:var(--red)">1.0000</span>
         <span class="lbl">Prob</span>
       </div>
@@ -3338,7 +3338,7 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, Bl
         <span class="val">#40</span><span class="lbl">Rank</span>
       </div>
       <div class="metric-pill prob" style="color:var(--red)"
-           data-tooltip="HyCPA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
+           data-tooltip="HYCIA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
         <span class="val" style="color:var(--red)">1.0000</span>
         <span class="lbl">Prob</span>
       </div>
@@ -3418,7 +3418,7 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, Bl
         <span class="val">#41</span><span class="lbl">Rank</span>
       </div>
       <div class="metric-pill prob" style="color:var(--red)"
-           data-tooltip="HyCPA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
+           data-tooltip="HYCIA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
         <span class="val" style="color:var(--red)">1.0000</span>
         <span class="lbl">Prob</span>
       </div>
@@ -3498,7 +3498,7 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, Bl
         <span class="val">#42</span><span class="lbl">Rank</span>
       </div>
       <div class="metric-pill prob" style="color:var(--red)"
-           data-tooltip="HyCPA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
+           data-tooltip="HYCIA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
         <span class="val" style="color:var(--red)">1.0000</span>
         <span class="lbl">Prob</span>
       </div>
@@ -3578,7 +3578,7 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, Bl
         <span class="val">#43</span><span class="lbl">Rank</span>
       </div>
       <div class="metric-pill prob" style="color:var(--red)"
-           data-tooltip="HyCPA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
+           data-tooltip="HYCIA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
         <span class="val" style="color:var(--red)">1.0000</span>
         <span class="lbl">Prob</span>
       </div>
@@ -3658,7 +3658,7 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, Bl
         <span class="val">#44</span><span class="lbl">Rank</span>
       </div>
       <div class="metric-pill prob" style="color:var(--red)"
-           data-tooltip="HyCPA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
+           data-tooltip="HYCIA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
         <span class="val" style="color:var(--red)">1.0000</span>
         <span class="lbl">Prob</span>
       </div>
@@ -3738,7 +3738,7 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, Bl
         <span class="val">#45</span><span class="lbl">Rank</span>
       </div>
       <div class="metric-pill prob" style="color:var(--red)"
-           data-tooltip="HyCPA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
+           data-tooltip="HYCIA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
         <span class="val" style="color:var(--red)">1.0000</span>
         <span class="lbl">Prob</span>
       </div>
@@ -3818,7 +3818,7 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, Bl
         <span class="val">#46</span><span class="lbl">Rank</span>
       </div>
       <div class="metric-pill prob" style="color:var(--red)"
-           data-tooltip="HyCPA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
+           data-tooltip="HYCIA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
         <span class="val" style="color:var(--red)">1.0000</span>
         <span class="lbl">Prob</span>
       </div>
@@ -3898,7 +3898,7 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, Bl
         <span class="val">#47</span><span class="lbl">Rank</span>
       </div>
       <div class="metric-pill prob" style="color:var(--red)"
-           data-tooltip="HyCPA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
+           data-tooltip="HYCIA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
         <span class="val" style="color:var(--red)">1.0000</span>
         <span class="lbl">Prob</span>
       </div>
@@ -3978,7 +3978,7 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, Bl
         <span class="val">#48</span><span class="lbl">Rank</span>
       </div>
       <div class="metric-pill prob" style="color:var(--red)"
-           data-tooltip="HyCPA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
+           data-tooltip="HYCIA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
         <span class="val" style="color:var(--red)">1.0000</span>
         <span class="lbl">Prob</span>
       </div>
@@ -4058,7 +4058,7 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, Bl
         <span class="val">#49</span><span class="lbl">Rank</span>
       </div>
       <div class="metric-pill prob" style="color:var(--red)"
-           data-tooltip="HyCPA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
+           data-tooltip="HYCIA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
         <span class="val" style="color:var(--red)">1.0000</span>
         <span class="lbl">Prob</span>
       </div>
@@ -4138,7 +4138,7 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, Bl
         <span class="val">#50</span><span class="lbl">Rank</span>
       </div>
       <div class="metric-pill prob" style="color:var(--red)"
-           data-tooltip="HyCPA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
+           data-tooltip="HYCIA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
         <span class="val" style="color:var(--red)">1.0000</span>
         <span class="lbl">Prob</span>
       </div>
@@ -4218,7 +4218,7 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, Bl
         <span class="val">#51</span><span class="lbl">Rank</span>
       </div>
       <div class="metric-pill prob" style="color:var(--red)"
-           data-tooltip="HyCPA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
+           data-tooltip="HYCIA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
         <span class="val" style="color:var(--red)">1.0000</span>
         <span class="lbl">Prob</span>
       </div>
@@ -4298,7 +4298,7 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, Bl
         <span class="val">#52</span><span class="lbl">Rank</span>
       </div>
       <div class="metric-pill prob" style="color:var(--red)"
-           data-tooltip="HyCPA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
+           data-tooltip="HYCIA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
         <span class="val" style="color:var(--red)">1.0000</span>
         <span class="lbl">Prob</span>
       </div>
@@ -4378,7 +4378,7 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, Bl
         <span class="val">#53</span><span class="lbl">Rank</span>
       </div>
       <div class="metric-pill prob" style="color:var(--red)"
-           data-tooltip="HyCPA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
+           data-tooltip="HYCIA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
         <span class="val" style="color:var(--red)">1.0000</span>
         <span class="lbl">Prob</span>
       </div>
@@ -4458,7 +4458,7 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, Bl
         <span class="val">#54</span><span class="lbl">Rank</span>
       </div>
       <div class="metric-pill prob" style="color:var(--red)"
-           data-tooltip="HyCPA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
+           data-tooltip="HYCIA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
         <span class="val" style="color:var(--red)">1.0000</span>
         <span class="lbl">Prob</span>
       </div>
@@ -4538,7 +4538,7 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, Bl
         <span class="val">#55</span><span class="lbl">Rank</span>
       </div>
       <div class="metric-pill prob" style="color:var(--red)"
-           data-tooltip="HyCPA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
+           data-tooltip="HYCIA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
         <span class="val" style="color:var(--red)">1.0000</span>
         <span class="lbl">Prob</span>
       </div>
@@ -4618,7 +4618,7 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, Bl
         <span class="val">#56</span><span class="lbl">Rank</span>
       </div>
       <div class="metric-pill prob" style="color:var(--red)"
-           data-tooltip="HyCPA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
+           data-tooltip="HYCIA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
         <span class="val" style="color:var(--red)">1.0000</span>
         <span class="lbl">Prob</span>
       </div>
@@ -4698,7 +4698,7 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, Bl
         <span class="val">#57</span><span class="lbl">Rank</span>
       </div>
       <div class="metric-pill prob" style="color:var(--red)"
-           data-tooltip="HyCPA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
+           data-tooltip="HYCIA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
         <span class="val" style="color:var(--red)">1.0000</span>
         <span class="lbl">Prob</span>
       </div>
@@ -4778,7 +4778,7 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, Bl
         <span class="val">#58</span><span class="lbl">Rank</span>
       </div>
       <div class="metric-pill prob" style="color:var(--red)"
-           data-tooltip="HyCPA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
+           data-tooltip="HYCIA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
         <span class="val" style="color:var(--red)">1.0000</span>
         <span class="lbl">Prob</span>
       </div>
@@ -4858,7 +4858,7 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, Bl
         <span class="val">#59</span><span class="lbl">Rank</span>
       </div>
       <div class="metric-pill prob" style="color:var(--red)"
-           data-tooltip="HyCPA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
+           data-tooltip="HYCIA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
         <span class="val" style="color:var(--red)">1.0000</span>
         <span class="lbl">Prob</span>
       </div>
@@ -4938,7 +4938,7 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, Bl
         <span class="val">#60</span><span class="lbl">Rank</span>
       </div>
       <div class="metric-pill prob" style="color:var(--red)"
-           data-tooltip="HyCPA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
+           data-tooltip="HYCIA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
         <span class="val" style="color:var(--red)">1.0000</span>
         <span class="lbl">Prob</span>
       </div>
@@ -5018,7 +5018,7 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, Bl
         <span class="val">#61</span><span class="lbl">Rank</span>
       </div>
       <div class="metric-pill prob" style="color:var(--red)"
-           data-tooltip="HyCPA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
+           data-tooltip="HYCIA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
         <span class="val" style="color:var(--red)">1.0000</span>
         <span class="lbl">Prob</span>
       </div>
@@ -5098,7 +5098,7 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, Bl
         <span class="val">#62</span><span class="lbl">Rank</span>
       </div>
       <div class="metric-pill prob" style="color:var(--red)"
-           data-tooltip="HyCPA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
+           data-tooltip="HYCIA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
         <span class="val" style="color:var(--red)">1.0000</span>
         <span class="lbl">Prob</span>
       </div>
@@ -5178,7 +5178,7 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, Bl
         <span class="val">#63</span><span class="lbl">Rank</span>
       </div>
       <div class="metric-pill prob" style="color:var(--red)"
-           data-tooltip="HyCPA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
+           data-tooltip="HYCIA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
         <span class="val" style="color:var(--red)">1.0000</span>
         <span class="lbl">Prob</span>
       </div>
@@ -5258,7 +5258,7 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, Bl
         <span class="val">#64</span><span class="lbl">Rank</span>
       </div>
       <div class="metric-pill prob" style="color:var(--red)"
-           data-tooltip="HyCPA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
+           data-tooltip="HYCIA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
         <span class="val" style="color:var(--red)">1.0000</span>
         <span class="lbl">Prob</span>
       </div>
@@ -5338,7 +5338,7 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, Bl
         <span class="val">#65</span><span class="lbl">Rank</span>
       </div>
       <div class="metric-pill prob" style="color:var(--red)"
-           data-tooltip="HyCPA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
+           data-tooltip="HYCIA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
         <span class="val" style="color:var(--red)">1.0000</span>
         <span class="lbl">Prob</span>
       </div>
@@ -5418,7 +5418,7 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, Bl
         <span class="val">#66</span><span class="lbl">Rank</span>
       </div>
       <div class="metric-pill prob" style="color:var(--red)"
-           data-tooltip="HyCPA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
+           data-tooltip="HYCIA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
         <span class="val" style="color:var(--red)">1.0000</span>
         <span class="lbl">Prob</span>
       </div>
@@ -5498,7 +5498,7 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, Bl
         <span class="val">#67</span><span class="lbl">Rank</span>
       </div>
       <div class="metric-pill prob" style="color:var(--red)"
-           data-tooltip="HyCPA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
+           data-tooltip="HYCIA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
         <span class="val" style="color:var(--red)">1.0000</span>
         <span class="lbl">Prob</span>
       </div>
@@ -5578,7 +5578,7 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, Bl
         <span class="val">#68</span><span class="lbl">Rank</span>
       </div>
       <div class="metric-pill prob" style="color:var(--red)"
-           data-tooltip="HyCPA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
+           data-tooltip="HYCIA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
         <span class="val" style="color:var(--red)">1.0000</span>
         <span class="lbl">Prob</span>
       </div>
@@ -5658,7 +5658,7 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, Bl
         <span class="val">#69</span><span class="lbl">Rank</span>
       </div>
       <div class="metric-pill prob" style="color:var(--red)"
-           data-tooltip="HyCPA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
+           data-tooltip="HYCIA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
         <span class="val" style="color:var(--red)">1.0000</span>
         <span class="lbl">Prob</span>
       </div>
@@ -5738,7 +5738,7 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, Bl
         <span class="val">#70</span><span class="lbl">Rank</span>
       </div>
       <div class="metric-pill prob" style="color:var(--red)"
-           data-tooltip="HyCPA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
+           data-tooltip="HYCIA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
         <span class="val" style="color:var(--red)">1.0000</span>
         <span class="lbl">Prob</span>
       </div>
@@ -5818,7 +5818,7 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, Bl
         <span class="val">#71</span><span class="lbl">Rank</span>
       </div>
       <div class="metric-pill prob" style="color:var(--red)"
-           data-tooltip="HyCPA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
+           data-tooltip="HYCIA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
         <span class="val" style="color:var(--red)">1.0000</span>
         <span class="lbl">Prob</span>
       </div>
@@ -5898,7 +5898,7 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, Bl
         <span class="val">#72</span><span class="lbl">Rank</span>
       </div>
       <div class="metric-pill prob" style="color:var(--red)"
-           data-tooltip="HyCPA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
+           data-tooltip="HYCIA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
         <span class="val" style="color:var(--red)">1.0000</span>
         <span class="lbl">Prob</span>
       </div>
@@ -5978,7 +5978,7 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, Bl
         <span class="val">#73</span><span class="lbl">Rank</span>
       </div>
       <div class="metric-pill prob" style="color:var(--red)"
-           data-tooltip="HyCPA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
+           data-tooltip="HYCIA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
         <span class="val" style="color:var(--red)">1.0000</span>
         <span class="lbl">Prob</span>
       </div>
@@ -6058,7 +6058,7 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, Bl
         <span class="val">#74</span><span class="lbl">Rank</span>
       </div>
       <div class="metric-pill prob" style="color:var(--red)"
-           data-tooltip="HyCPA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
+           data-tooltip="HYCIA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
         <span class="val" style="color:var(--red)">1.0000</span>
         <span class="lbl">Prob</span>
       </div>
@@ -6138,7 +6138,7 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, Bl
         <span class="val">#75</span><span class="lbl">Rank</span>
       </div>
       <div class="metric-pill prob" style="color:var(--red)"
-           data-tooltip="HyCPA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
+           data-tooltip="HYCIA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
         <span class="val" style="color:var(--red)">1.0000</span>
         <span class="lbl">Prob</span>
       </div>
@@ -6218,7 +6218,7 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, Bl
         <span class="val">#76</span><span class="lbl">Rank</span>
       </div>
       <div class="metric-pill prob" style="color:var(--red)"
-           data-tooltip="HyCPA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
+           data-tooltip="HYCIA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
         <span class="val" style="color:var(--red)">1.0000</span>
         <span class="lbl">Prob</span>
       </div>
@@ -6298,7 +6298,7 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, Bl
         <span class="val">#77</span><span class="lbl">Rank</span>
       </div>
       <div class="metric-pill prob" style="color:var(--red)"
-           data-tooltip="HyCPA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
+           data-tooltip="HYCIA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
         <span class="val" style="color:var(--red)">1.0000</span>
         <span class="lbl">Prob</span>
       </div>
@@ -6378,7 +6378,7 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, Bl
         <span class="val">#78</span><span class="lbl">Rank</span>
       </div>
       <div class="metric-pill prob" style="color:var(--red)"
-           data-tooltip="HyCPA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
+           data-tooltip="HYCIA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
         <span class="val" style="color:var(--red)">1.0000</span>
         <span class="lbl">Prob</span>
       </div>
@@ -6458,7 +6458,7 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, Bl
         <span class="val">#79</span><span class="lbl">Rank</span>
       </div>
       <div class="metric-pill prob" style="color:var(--red)"
-           data-tooltip="HyCPA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
+           data-tooltip="HYCIA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
         <span class="val" style="color:var(--red)">1.0000</span>
         <span class="lbl">Prob</span>
       </div>
@@ -6538,7 +6538,7 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, Bl
         <span class="val">#80</span><span class="lbl">Rank</span>
       </div>
       <div class="metric-pill prob" style="color:var(--red)"
-           data-tooltip="HyCPA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
+           data-tooltip="HYCIA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
         <span class="val" style="color:var(--red)">1.0000</span>
         <span class="lbl">Prob</span>
       </div>
@@ -6618,7 +6618,7 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, Bl
         <span class="val">#81</span><span class="lbl">Rank</span>
       </div>
       <div class="metric-pill prob" style="color:var(--red)"
-           data-tooltip="HyCPA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
+           data-tooltip="HYCIA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
         <span class="val" style="color:var(--red)">1.0000</span>
         <span class="lbl">Prob</span>
       </div>
@@ -6698,7 +6698,7 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, Bl
         <span class="val">#82</span><span class="lbl">Rank</span>
       </div>
       <div class="metric-pill prob" style="color:var(--red)"
-           data-tooltip="HyCPA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
+           data-tooltip="HYCIA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
         <span class="val" style="color:var(--red)">1.0000</span>
         <span class="lbl">Prob</span>
       </div>
@@ -6778,7 +6778,7 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, Bl
         <span class="val">#83</span><span class="lbl">Rank</span>
       </div>
       <div class="metric-pill prob" style="color:var(--red)"
-           data-tooltip="HyCPA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
+           data-tooltip="HYCIA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
         <span class="val" style="color:var(--red)">1.0000</span>
         <span class="lbl">Prob</span>
       </div>
@@ -6858,7 +6858,7 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, Bl
         <span class="val">#84</span><span class="lbl">Rank</span>
       </div>
       <div class="metric-pill prob" style="color:var(--red)"
-           data-tooltip="HyCPA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
+           data-tooltip="HYCIA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
         <span class="val" style="color:var(--red)">1.0000</span>
         <span class="lbl">Prob</span>
       </div>
@@ -6938,7 +6938,7 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, Bl
         <span class="val">#85</span><span class="lbl">Rank</span>
       </div>
       <div class="metric-pill prob" style="color:var(--red)"
-           data-tooltip="HyCPA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
+           data-tooltip="HYCIA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
         <span class="val" style="color:var(--red)">1.0000</span>
         <span class="lbl">Prob</span>
       </div>
@@ -7018,7 +7018,7 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, Bl
         <span class="val">#86</span><span class="lbl">Rank</span>
       </div>
       <div class="metric-pill prob" style="color:var(--red)"
-           data-tooltip="HyCPA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
+           data-tooltip="HYCIA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
         <span class="val" style="color:var(--red)">1.0000</span>
         <span class="lbl">Prob</span>
       </div>
@@ -7098,7 +7098,7 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, Bl
         <span class="val">#87</span><span class="lbl">Rank</span>
       </div>
       <div class="metric-pill prob" style="color:var(--red)"
-           data-tooltip="HyCPA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
+           data-tooltip="HYCIA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
         <span class="val" style="color:var(--red)">1.0000</span>
         <span class="lbl">Prob</span>
       </div>
@@ -7178,7 +7178,7 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, Bl
         <span class="val">#88</span><span class="lbl">Rank</span>
       </div>
       <div class="metric-pill prob" style="color:var(--red)"
-           data-tooltip="HyCPA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
+           data-tooltip="HYCIA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
         <span class="val" style="color:var(--red)">1.0000</span>
         <span class="lbl">Prob</span>
       </div>
@@ -7258,7 +7258,7 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, Bl
         <span class="val">#89</span><span class="lbl">Rank</span>
       </div>
       <div class="metric-pill prob" style="color:var(--red)"
-           data-tooltip="HyCPA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
+           data-tooltip="HYCIA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
         <span class="val" style="color:var(--red)">1.0000</span>
         <span class="lbl">Prob</span>
       </div>
@@ -7338,7 +7338,7 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, Bl
         <span class="val">#90</span><span class="lbl">Rank</span>
       </div>
       <div class="metric-pill prob" style="color:var(--red)"
-           data-tooltip="HyCPA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
+           data-tooltip="HYCIA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
         <span class="val" style="color:var(--red)">1.0000</span>
         <span class="lbl">Prob</span>
       </div>
@@ -7418,7 +7418,7 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, Bl
         <span class="val">#91</span><span class="lbl">Rank</span>
       </div>
       <div class="metric-pill prob" style="color:var(--red)"
-           data-tooltip="HyCPA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
+           data-tooltip="HYCIA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
         <span class="val" style="color:var(--red)">1.0000</span>
         <span class="lbl">Prob</span>
       </div>
@@ -7498,7 +7498,7 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, Bl
         <span class="val">#92</span><span class="lbl">Rank</span>
       </div>
       <div class="metric-pill prob" style="color:var(--red)"
-           data-tooltip="HyCPA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
+           data-tooltip="HYCIA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
         <span class="val" style="color:var(--red)">1.0000</span>
         <span class="lbl">Prob</span>
       </div>
@@ -7578,7 +7578,7 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, Bl
         <span class="val">#93</span><span class="lbl">Rank</span>
       </div>
       <div class="metric-pill prob" style="color:var(--red)"
-           data-tooltip="HyCPA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
+           data-tooltip="HYCIA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
         <span class="val" style="color:var(--red)">1.0000</span>
         <span class="lbl">Prob</span>
       </div>
@@ -7658,7 +7658,7 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, Bl
         <span class="val">#94</span><span class="lbl">Rank</span>
       </div>
       <div class="metric-pill prob" style="color:var(--red)"
-           data-tooltip="HyCPA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
+           data-tooltip="HYCIA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
         <span class="val" style="color:var(--red)">1.0000</span>
         <span class="lbl">Prob</span>
       </div>
@@ -7738,7 +7738,7 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, Bl
         <span class="val">#95</span><span class="lbl">Rank</span>
       </div>
       <div class="metric-pill prob" style="color:var(--red)"
-           data-tooltip="HyCPA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
+           data-tooltip="HYCIA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
         <span class="val" style="color:var(--red)">1.0000</span>
         <span class="lbl">Prob</span>
       </div>
@@ -7818,7 +7818,7 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, Bl
         <span class="val">#96</span><span class="lbl">Rank</span>
       </div>
       <div class="metric-pill prob" style="color:var(--red)"
-           data-tooltip="HyCPA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
+           data-tooltip="HYCIA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
         <span class="val" style="color:var(--red)">1.0000</span>
         <span class="lbl">Prob</span>
       </div>
@@ -7898,7 +7898,7 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, Bl
         <span class="val">#97</span><span class="lbl">Rank</span>
       </div>
       <div class="metric-pill prob" style="color:var(--red)"
-           data-tooltip="HyCPA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
+           data-tooltip="HYCIA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
         <span class="val" style="color:var(--red)">1.0000</span>
         <span class="lbl">Prob</span>
       </div>
@@ -7978,7 +7978,7 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, Bl
         <span class="val">#98</span><span class="lbl">Rank</span>
       </div>
       <div class="metric-pill prob" style="color:var(--red)"
-           data-tooltip="HyCPA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
+           data-tooltip="HYCIA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
         <span class="val" style="color:var(--red)">1.0000</span>
         <span class="lbl">Prob</span>
       </div>
@@ -8058,7 +8058,7 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, Bl
         <span class="val">#99</span><span class="lbl">Rank</span>
       </div>
       <div class="metric-pill prob" style="color:var(--red)"
-           data-tooltip="HyCPA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
+           data-tooltip="HYCIA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
         <span class="val" style="color:var(--red)">1.0000</span>
         <span class="lbl">Prob</span>
       </div>
@@ -8138,7 +8138,7 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, Bl
         <span class="val">#100</span><span class="lbl">Rank</span>
       </div>
       <div class="metric-pill prob" style="color:var(--red)"
-           data-tooltip="HyCPA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
+           data-tooltip="HYCIA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
         <span class="val" style="color:var(--red)">1.0000</span>
         <span class="lbl">Prob</span>
       </div>
@@ -8218,7 +8218,7 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, Bl
         <span class="val">#101</span><span class="lbl">Rank</span>
       </div>
       <div class="metric-pill prob" style="color:var(--red)"
-           data-tooltip="HyCPA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
+           data-tooltip="HYCIA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
         <span class="val" style="color:var(--red)">1.0000</span>
         <span class="lbl">Prob</span>
       </div>
@@ -8298,7 +8298,7 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, Bl
         <span class="val">#102</span><span class="lbl">Rank</span>
       </div>
       <div class="metric-pill prob" style="color:var(--red)"
-           data-tooltip="HyCPA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
+           data-tooltip="HYCIA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
         <span class="val" style="color:var(--red)">1.0000</span>
         <span class="lbl">Prob</span>
       </div>
@@ -8378,7 +8378,7 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, Bl
         <span class="val">#103</span><span class="lbl">Rank</span>
       </div>
       <div class="metric-pill prob" style="color:var(--red)"
-           data-tooltip="HyCPA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
+           data-tooltip="HYCIA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
         <span class="val" style="color:var(--red)">1.0000</span>
         <span class="lbl">Prob</span>
       </div>
@@ -8458,7 +8458,7 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, Bl
         <span class="val">#104</span><span class="lbl">Rank</span>
       </div>
       <div class="metric-pill prob" style="color:var(--red)"
-           data-tooltip="HyCPA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
+           data-tooltip="HYCIA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
         <span class="val" style="color:var(--red)">1.0000</span>
         <span class="lbl">Prob</span>
       </div>
@@ -8538,7 +8538,7 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, Bl
         <span class="val">#105</span><span class="lbl">Rank</span>
       </div>
       <div class="metric-pill prob" style="color:var(--red)"
-           data-tooltip="HyCPA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
+           data-tooltip="HYCIA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
         <span class="val" style="color:var(--red)">1.0000</span>
         <span class="lbl">Prob</span>
       </div>
@@ -8618,7 +8618,7 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, Bl
         <span class="val">#106</span><span class="lbl">Rank</span>
       </div>
       <div class="metric-pill prob" style="color:var(--red)"
-           data-tooltip="HyCPA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
+           data-tooltip="HYCIA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
         <span class="val" style="color:var(--red)">1.0000</span>
         <span class="lbl">Prob</span>
       </div>
@@ -8698,7 +8698,7 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, Bl
         <span class="val">#107</span><span class="lbl">Rank</span>
       </div>
       <div class="metric-pill prob" style="color:var(--red)"
-           data-tooltip="HyCPA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
+           data-tooltip="HYCIA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
         <span class="val" style="color:var(--red)">1.0000</span>
         <span class="lbl">Prob</span>
       </div>
@@ -8778,7 +8778,7 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, Bl
         <span class="val">#108</span><span class="lbl">Rank</span>
       </div>
       <div class="metric-pill prob" style="color:var(--red)"
-           data-tooltip="HyCPA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
+           data-tooltip="HYCIA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
         <span class="val" style="color:var(--red)">1.0000</span>
         <span class="lbl">Prob</span>
       </div>
@@ -8858,7 +8858,7 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, Bl
         <span class="val">#109</span><span class="lbl">Rank</span>
       </div>
       <div class="metric-pill prob" style="color:var(--red)"
-           data-tooltip="HyCPA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
+           data-tooltip="HYCIA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
         <span class="val" style="color:var(--red)">1.0000</span>
         <span class="lbl">Prob</span>
       </div>
@@ -8938,7 +8938,7 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, Bl
         <span class="val">#110</span><span class="lbl">Rank</span>
       </div>
       <div class="metric-pill prob" style="color:var(--red)"
-           data-tooltip="HyCPA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
+           data-tooltip="HYCIA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
         <span class="val" style="color:var(--red)">1.0000</span>
         <span class="lbl">Prob</span>
       </div>
@@ -9018,7 +9018,7 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, Bl
         <span class="val">#111</span><span class="lbl">Rank</span>
       </div>
       <div class="metric-pill prob" style="color:var(--red)"
-           data-tooltip="HyCPA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
+           data-tooltip="HYCIA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
         <span class="val" style="color:var(--red)">1.0000</span>
         <span class="lbl">Prob</span>
       </div>
@@ -9098,7 +9098,7 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, Bl
         <span class="val">#112</span><span class="lbl">Rank</span>
       </div>
       <div class="metric-pill prob" style="color:var(--red)"
-           data-tooltip="HyCPA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
+           data-tooltip="HYCIA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
         <span class="val" style="color:var(--red)">1.0000</span>
         <span class="lbl">Prob</span>
       </div>
@@ -9178,7 +9178,7 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, Bl
         <span class="val">#113</span><span class="lbl">Rank</span>
       </div>
       <div class="metric-pill prob" style="color:var(--red)"
-           data-tooltip="HyCPA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
+           data-tooltip="HYCIA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
         <span class="val" style="color:var(--red)">1.0000</span>
         <span class="lbl">Prob</span>
       </div>
@@ -9258,7 +9258,7 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, Bl
         <span class="val">#114</span><span class="lbl">Rank</span>
       </div>
       <div class="metric-pill prob" style="color:var(--red)"
-           data-tooltip="HyCPA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
+           data-tooltip="HYCIA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
         <span class="val" style="color:var(--red)">1.0000</span>
         <span class="lbl">Prob</span>
       </div>
@@ -9338,7 +9338,7 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, Bl
         <span class="val">#115</span><span class="lbl">Rank</span>
       </div>
       <div class="metric-pill prob" style="color:var(--red)"
-           data-tooltip="HyCPA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
+           data-tooltip="HYCIA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
         <span class="val" style="color:var(--red)">1.0000</span>
         <span class="lbl">Prob</span>
       </div>
@@ -9418,7 +9418,7 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, Bl
         <span class="val">#116</span><span class="lbl">Rank</span>
       </div>
       <div class="metric-pill prob" style="color:var(--red)"
-           data-tooltip="HyCPA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
+           data-tooltip="HYCIA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
         <span class="val" style="color:var(--red)">1.0000</span>
         <span class="lbl">Prob</span>
       </div>
@@ -9498,7 +9498,7 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, Bl
         <span class="val">#117</span><span class="lbl">Rank</span>
       </div>
       <div class="metric-pill prob" style="color:var(--red)"
-           data-tooltip="HyCPA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
+           data-tooltip="HYCIA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
         <span class="val" style="color:var(--red)">1.0000</span>
         <span class="lbl">Prob</span>
       </div>
@@ -9578,7 +9578,7 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, Bl
         <span class="val">#118</span><span class="lbl">Rank</span>
       </div>
       <div class="metric-pill prob" style="color:var(--red)"
-           data-tooltip="HyCPA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
+           data-tooltip="HYCIA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
         <span class="val" style="color:var(--red)">1.0000</span>
         <span class="lbl">Prob</span>
       </div>
@@ -9658,7 +9658,7 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, Bl
         <span class="val">#119</span><span class="lbl">Rank</span>
       </div>
       <div class="metric-pill prob" style="color:var(--red)"
-           data-tooltip="HyCPA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
+           data-tooltip="HYCIA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
         <span class="val" style="color:var(--red)">1.0000</span>
         <span class="lbl">Prob</span>
       </div>
@@ -9738,7 +9738,7 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, Bl
         <span class="val">#120</span><span class="lbl">Rank</span>
       </div>
       <div class="metric-pill prob" style="color:var(--red)"
-           data-tooltip="HyCPA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
+           data-tooltip="HYCIA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
         <span class="val" style="color:var(--red)">1.0000</span>
         <span class="lbl">Prob</span>
       </div>
@@ -9818,7 +9818,7 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, Bl
         <span class="val">#121</span><span class="lbl">Rank</span>
       </div>
       <div class="metric-pill prob" style="color:var(--red)"
-           data-tooltip="HyCPA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
+           data-tooltip="HYCIA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
         <span class="val" style="color:var(--red)">1.0000</span>
         <span class="lbl">Prob</span>
       </div>
@@ -9898,7 +9898,7 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, Bl
         <span class="val">#122</span><span class="lbl">Rank</span>
       </div>
       <div class="metric-pill prob" style="color:var(--red)"
-           data-tooltip="HyCPA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
+           data-tooltip="HYCIA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
         <span class="val" style="color:var(--red)">1.0000</span>
         <span class="lbl">Prob</span>
       </div>
@@ -9978,7 +9978,7 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, Bl
         <span class="val">#123</span><span class="lbl">Rank</span>
       </div>
       <div class="metric-pill prob" style="color:var(--red)"
-           data-tooltip="HyCPA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
+           data-tooltip="HYCIA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
         <span class="val" style="color:var(--red)">1.0000</span>
         <span class="lbl">Prob</span>
       </div>
@@ -10058,7 +10058,7 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, Bl
         <span class="val">#124</span><span class="lbl">Rank</span>
       </div>
       <div class="metric-pill prob" style="color:var(--red)"
-           data-tooltip="HyCPA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
+           data-tooltip="HYCIA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
         <span class="val" style="color:var(--red)">1.0000</span>
         <span class="lbl">Prob</span>
       </div>
@@ -10138,7 +10138,7 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, Bl
         <span class="val">#125</span><span class="lbl">Rank</span>
       </div>
       <div class="metric-pill prob" style="color:var(--red)"
-           data-tooltip="HyCPA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
+           data-tooltip="HYCIA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
         <span class="val" style="color:var(--red)">1.0000</span>
         <span class="lbl">Prob</span>
       </div>
@@ -10218,7 +10218,7 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, Bl
         <span class="val">#126</span><span class="lbl">Rank</span>
       </div>
       <div class="metric-pill prob" style="color:var(--red)"
-           data-tooltip="HyCPA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
+           data-tooltip="HYCIA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
         <span class="val" style="color:var(--red)">1.0000</span>
         <span class="lbl">Prob</span>
       </div>
@@ -10298,7 +10298,7 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, Bl
         <span class="val">#127</span><span class="lbl">Rank</span>
       </div>
       <div class="metric-pill prob" style="color:var(--red)"
-           data-tooltip="HyCPA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
+           data-tooltip="HYCIA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
         <span class="val" style="color:var(--red)">1.0000</span>
         <span class="lbl">Prob</span>
       </div>
@@ -10378,7 +10378,7 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, Bl
         <span class="val">#128</span><span class="lbl">Rank</span>
       </div>
       <div class="metric-pill prob" style="color:var(--red)"
-           data-tooltip="HyCPA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
+           data-tooltip="HYCIA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
         <span class="val" style="color:var(--red)">1.0000</span>
         <span class="lbl">Prob</span>
       </div>
@@ -10458,7 +10458,7 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, Bl
         <span class="val">#129</span><span class="lbl">Rank</span>
       </div>
       <div class="metric-pill prob" style="color:var(--red)"
-           data-tooltip="HyCPA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
+           data-tooltip="HYCIA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
         <span class="val" style="color:var(--red)">1.0000</span>
         <span class="lbl">Prob</span>
       </div>
@@ -10538,7 +10538,7 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, Bl
         <span class="val">#130</span><span class="lbl">Rank</span>
       </div>
       <div class="metric-pill prob" style="color:var(--red)"
-           data-tooltip="HyCPA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
+           data-tooltip="HYCIA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
         <span class="val" style="color:var(--red)">1.0000</span>
         <span class="lbl">Prob</span>
       </div>
@@ -10618,7 +10618,7 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, Bl
         <span class="val">#131</span><span class="lbl">Rank</span>
       </div>
       <div class="metric-pill prob" style="color:var(--red)"
-           data-tooltip="HyCPA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
+           data-tooltip="HYCIA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
         <span class="val" style="color:var(--red)">1.0000</span>
         <span class="lbl">Prob</span>
       </div>
@@ -10698,7 +10698,7 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, Bl
         <span class="val">#132</span><span class="lbl">Rank</span>
       </div>
       <div class="metric-pill prob" style="color:var(--red)"
-           data-tooltip="HyCPA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
+           data-tooltip="HYCIA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
         <span class="val" style="color:var(--red)">1.0000</span>
         <span class="lbl">Prob</span>
       </div>
@@ -10778,7 +10778,7 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, Bl
         <span class="val">#133</span><span class="lbl">Rank</span>
       </div>
       <div class="metric-pill prob" style="color:var(--red)"
-           data-tooltip="HyCPA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
+           data-tooltip="HYCIA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
         <span class="val" style="color:var(--red)">1.0000</span>
         <span class="lbl">Prob</span>
       </div>
@@ -10858,7 +10858,7 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, Bl
         <span class="val">#134</span><span class="lbl">Rank</span>
       </div>
       <div class="metric-pill prob" style="color:var(--red)"
-           data-tooltip="HyCPA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
+           data-tooltip="HYCIA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
         <span class="val" style="color:var(--red)">1.0000</span>
         <span class="lbl">Prob</span>
       </div>
@@ -10938,7 +10938,7 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, Bl
         <span class="val">#135</span><span class="lbl">Rank</span>
       </div>
       <div class="metric-pill prob" style="color:var(--red)"
-           data-tooltip="HyCPA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
+           data-tooltip="HYCIA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
         <span class="val" style="color:var(--red)">1.0000</span>
         <span class="lbl">Prob</span>
       </div>
@@ -11018,7 +11018,7 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, Bl
         <span class="val">#136</span><span class="lbl">Rank</span>
       </div>
       <div class="metric-pill prob" style="color:var(--red)"
-           data-tooltip="HyCPA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
+           data-tooltip="HYCIA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
         <span class="val" style="color:var(--red)">1.0000</span>
         <span class="lbl">Prob</span>
       </div>
@@ -11098,7 +11098,7 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, Bl
         <span class="val">#137</span><span class="lbl">Rank</span>
       </div>
       <div class="metric-pill prob" style="color:var(--red)"
-           data-tooltip="HyCPA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
+           data-tooltip="HYCIA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
         <span class="val" style="color:var(--red)">1.0000</span>
         <span class="lbl">Prob</span>
       </div>
@@ -11178,7 +11178,7 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, Bl
         <span class="val">#138</span><span class="lbl">Rank</span>
       </div>
       <div class="metric-pill prob" style="color:var(--red)"
-           data-tooltip="HyCPA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
+           data-tooltip="HYCIA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
         <span class="val" style="color:var(--red)">1.0000</span>
         <span class="lbl">Prob</span>
       </div>
@@ -11258,7 +11258,7 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, Bl
         <span class="val">#139</span><span class="lbl">Rank</span>
       </div>
       <div class="metric-pill prob" style="color:var(--red)"
-           data-tooltip="HyCPA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
+           data-tooltip="HYCIA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
         <span class="val" style="color:var(--red)">1.0000</span>
         <span class="lbl">Prob</span>
       </div>
@@ -11338,7 +11338,7 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, Bl
         <span class="val">#140</span><span class="lbl">Rank</span>
       </div>
       <div class="metric-pill prob" style="color:var(--red)"
-           data-tooltip="HyCPA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
+           data-tooltip="HYCIA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
         <span class="val" style="color:var(--red)">1.0000</span>
         <span class="lbl">Prob</span>
       </div>
@@ -11418,7 +11418,7 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, Bl
         <span class="val">#141</span><span class="lbl">Rank</span>
       </div>
       <div class="metric-pill prob" style="color:var(--red)"
-           data-tooltip="HyCPA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
+           data-tooltip="HYCIA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
         <span class="val" style="color:var(--red)">1.0000</span>
         <span class="lbl">Prob</span>
       </div>
@@ -11498,7 +11498,7 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, Bl
         <span class="val">#142</span><span class="lbl">Rank</span>
       </div>
       <div class="metric-pill prob" style="color:var(--red)"
-           data-tooltip="HyCPA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
+           data-tooltip="HYCIA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
         <span class="val" style="color:var(--red)">1.0000</span>
         <span class="lbl">Prob</span>
       </div>
@@ -11578,7 +11578,7 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, Bl
         <span class="val">#143</span><span class="lbl">Rank</span>
       </div>
       <div class="metric-pill prob" style="color:var(--red)"
-           data-tooltip="HyCPA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
+           data-tooltip="HYCIA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
         <span class="val" style="color:var(--red)">1.0000</span>
         <span class="lbl">Prob</span>
       </div>
@@ -11658,7 +11658,7 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, Bl
         <span class="val">#144</span><span class="lbl">Rank</span>
       </div>
       <div class="metric-pill prob" style="color:var(--red)"
-           data-tooltip="HyCPA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
+           data-tooltip="HYCIA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
         <span class="val" style="color:var(--red)">1.0000</span>
         <span class="lbl">Prob</span>
       </div>
@@ -11738,7 +11738,7 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, Bl
         <span class="val">#145</span><span class="lbl">Rank</span>
       </div>
       <div class="metric-pill prob" style="color:var(--red)"
-           data-tooltip="HyCPA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
+           data-tooltip="HYCIA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
         <span class="val" style="color:var(--red)">1.0000</span>
         <span class="lbl">Prob</span>
       </div>
@@ -11818,7 +11818,7 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, Bl
         <span class="val">#146</span><span class="lbl">Rank</span>
       </div>
       <div class="metric-pill prob" style="color:var(--red)"
-           data-tooltip="HyCPA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
+           data-tooltip="HYCIA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
         <span class="val" style="color:var(--red)">1.0000</span>
         <span class="lbl">Prob</span>
       </div>
@@ -11898,7 +11898,7 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, Bl
         <span class="val">#147</span><span class="lbl">Rank</span>
       </div>
       <div class="metric-pill prob" style="color:var(--red)"
-           data-tooltip="HyCPA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
+           data-tooltip="HYCIA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
         <span class="val" style="color:var(--red)">1.0000</span>
         <span class="lbl">Prob</span>
       </div>
@@ -11978,7 +11978,7 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, Bl
         <span class="val">#148</span><span class="lbl">Rank</span>
       </div>
       <div class="metric-pill prob" style="color:var(--red)"
-           data-tooltip="HyCPA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
+           data-tooltip="HYCIA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
         <span class="val" style="color:var(--red)">1.0000</span>
         <span class="lbl">Prob</span>
       </div>
@@ -12058,7 +12058,7 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, Bl
         <span class="val">#149</span><span class="lbl">Rank</span>
       </div>
       <div class="metric-pill prob" style="color:var(--red)"
-           data-tooltip="HyCPA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
+           data-tooltip="HYCIA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
         <span class="val" style="color:var(--red)">1.0000</span>
         <span class="lbl">Prob</span>
       </div>
@@ -12138,7 +12138,7 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, Bl
         <span class="val">#150</span><span class="lbl">Rank</span>
       </div>
       <div class="metric-pill prob" style="color:var(--red)"
-           data-tooltip="HyCPA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
+           data-tooltip="HYCIA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
         <span class="val" style="color:var(--red)">1.0000</span>
         <span class="lbl">Prob</span>
       </div>
@@ -12218,7 +12218,7 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, Bl
         <span class="val">#151</span><span class="lbl">Rank</span>
       </div>
       <div class="metric-pill prob" style="color:var(--red)"
-           data-tooltip="HyCPA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
+           data-tooltip="HYCIA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
         <span class="val" style="color:var(--red)">1.0000</span>
         <span class="lbl">Prob</span>
       </div>
@@ -12298,7 +12298,7 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, Bl
         <span class="val">#152</span><span class="lbl">Rank</span>
       </div>
       <div class="metric-pill prob" style="color:var(--red)"
-           data-tooltip="HyCPA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
+           data-tooltip="HYCIA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
         <span class="val" style="color:var(--red)">1.0000</span>
         <span class="lbl">Prob</span>
       </div>
@@ -12378,7 +12378,7 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, Bl
         <span class="val">#153</span><span class="lbl">Rank</span>
       </div>
       <div class="metric-pill prob" style="color:var(--red)"
-           data-tooltip="HyCPA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
+           data-tooltip="HYCIA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
         <span class="val" style="color:var(--red)">1.0000</span>
         <span class="lbl">Prob</span>
       </div>
@@ -12458,7 +12458,7 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, Bl
         <span class="val">#154</span><span class="lbl">Rank</span>
       </div>
       <div class="metric-pill prob" style="color:var(--red)"
-           data-tooltip="HyCPA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
+           data-tooltip="HYCIA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
         <span class="val" style="color:var(--red)">0.9990</span>
         <span class="lbl">Prob</span>
       </div>
@@ -12538,7 +12538,7 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, Bl
         <span class="val">#155</span><span class="lbl">Rank</span>
       </div>
       <div class="metric-pill prob" style="color:var(--red)"
-           data-tooltip="HyCPA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
+           data-tooltip="HYCIA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
         <span class="val" style="color:var(--red)">0.9990</span>
         <span class="lbl">Prob</span>
       </div>
@@ -12618,7 +12618,7 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, Bl
         <span class="val">#156</span><span class="lbl">Rank</span>
       </div>
       <div class="metric-pill prob" style="color:var(--red)"
-           data-tooltip="HyCPA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
+           data-tooltip="HYCIA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
         <span class="val" style="color:var(--red)">0.9990</span>
         <span class="lbl">Prob</span>
       </div>
@@ -12698,7 +12698,7 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, Bl
         <span class="val">#157</span><span class="lbl">Rank</span>
       </div>
       <div class="metric-pill prob" style="color:var(--red)"
-           data-tooltip="HyCPA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
+           data-tooltip="HYCIA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
         <span class="val" style="color:var(--red)">0.9990</span>
         <span class="lbl">Prob</span>
       </div>
@@ -12778,7 +12778,7 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, Bl
         <span class="val">#158</span><span class="lbl">Rank</span>
       </div>
       <div class="metric-pill prob" style="color:var(--red)"
-           data-tooltip="HyCPA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
+           data-tooltip="HYCIA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
         <span class="val" style="color:var(--red)">0.9990</span>
         <span class="lbl">Prob</span>
       </div>
@@ -12858,7 +12858,7 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, Bl
         <span class="val">#159</span><span class="lbl">Rank</span>
       </div>
       <div class="metric-pill prob" style="color:var(--red)"
-           data-tooltip="HyCPA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
+           data-tooltip="HYCIA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
         <span class="val" style="color:var(--red)">0.9990</span>
         <span class="lbl">Prob</span>
       </div>
@@ -12938,7 +12938,7 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, Bl
         <span class="val">#160</span><span class="lbl">Rank</span>
       </div>
       <div class="metric-pill prob" style="color:var(--red)"
-           data-tooltip="HyCPA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
+           data-tooltip="HYCIA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
         <span class="val" style="color:var(--red)">0.9990</span>
         <span class="lbl">Prob</span>
       </div>
@@ -13018,7 +13018,7 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, Bl
         <span class="val">#161</span><span class="lbl">Rank</span>
       </div>
       <div class="metric-pill prob" style="color:var(--red)"
-           data-tooltip="HyCPA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
+           data-tooltip="HYCIA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
         <span class="val" style="color:var(--red)">0.9990</span>
         <span class="lbl">Prob</span>
       </div>
@@ -13098,7 +13098,7 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, Bl
         <span class="val">#162</span><span class="lbl">Rank</span>
       </div>
       <div class="metric-pill prob" style="color:var(--red)"
-           data-tooltip="HyCPA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
+           data-tooltip="HYCIA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
         <span class="val" style="color:var(--red)">0.9990</span>
         <span class="lbl">Prob</span>
       </div>
@@ -13178,7 +13178,7 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, Bl
         <span class="val">#163</span><span class="lbl">Rank</span>
       </div>
       <div class="metric-pill prob" style="color:var(--red)"
-           data-tooltip="HyCPA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
+           data-tooltip="HYCIA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
         <span class="val" style="color:var(--red)">0.9990</span>
         <span class="lbl">Prob</span>
       </div>
@@ -13258,7 +13258,7 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, Bl
         <span class="val">#164</span><span class="lbl">Rank</span>
       </div>
       <div class="metric-pill prob" style="color:var(--red)"
-           data-tooltip="HyCPA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
+           data-tooltip="HYCIA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
         <span class="val" style="color:var(--red)">0.9990</span>
         <span class="lbl">Prob</span>
       </div>
@@ -13338,7 +13338,7 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, Bl
         <span class="val">#165</span><span class="lbl">Rank</span>
       </div>
       <div class="metric-pill prob" style="color:var(--red)"
-           data-tooltip="HyCPA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
+           data-tooltip="HYCIA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
         <span class="val" style="color:var(--red)">0.9980</span>
         <span class="lbl">Prob</span>
       </div>
@@ -13418,7 +13418,7 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, Bl
         <span class="val">#166</span><span class="lbl">Rank</span>
       </div>
       <div class="metric-pill prob" style="color:var(--red)"
-           data-tooltip="HyCPA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
+           data-tooltip="HYCIA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
         <span class="val" style="color:var(--red)">0.9980</span>
         <span class="lbl">Prob</span>
       </div>
@@ -13498,7 +13498,7 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, Bl
         <span class="val">#167</span><span class="lbl">Rank</span>
       </div>
       <div class="metric-pill prob" style="color:var(--red)"
-           data-tooltip="HyCPA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
+           data-tooltip="HYCIA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
         <span class="val" style="color:var(--red)">0.9980</span>
         <span class="lbl">Prob</span>
       </div>
@@ -13578,7 +13578,7 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, Bl
         <span class="val">#168</span><span class="lbl">Rank</span>
       </div>
       <div class="metric-pill prob" style="color:var(--red)"
-           data-tooltip="HyCPA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
+           data-tooltip="HYCIA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
         <span class="val" style="color:var(--red)">0.9970</span>
         <span class="lbl">Prob</span>
       </div>
@@ -13658,7 +13658,7 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, Bl
         <span class="val">#169</span><span class="lbl">Rank</span>
       </div>
       <div class="metric-pill prob" style="color:var(--red)"
-           data-tooltip="HyCPA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
+           data-tooltip="HYCIA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
         <span class="val" style="color:var(--red)">0.9970</span>
         <span class="lbl">Prob</span>
       </div>
@@ -13738,7 +13738,7 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, Bl
         <span class="val">#170</span><span class="lbl">Rank</span>
       </div>
       <div class="metric-pill prob" style="color:var(--red)"
-           data-tooltip="HyCPA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
+           data-tooltip="HYCIA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
         <span class="val" style="color:var(--red)">0.9970</span>
         <span class="lbl">Prob</span>
       </div>
@@ -13818,7 +13818,7 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, Bl
         <span class="val">#171</span><span class="lbl">Rank</span>
       </div>
       <div class="metric-pill prob" style="color:var(--red)"
-           data-tooltip="HyCPA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
+           data-tooltip="HYCIA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
         <span class="val" style="color:var(--red)">0.9970</span>
         <span class="lbl">Prob</span>
       </div>
@@ -13898,7 +13898,7 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, Bl
         <span class="val">#172</span><span class="lbl">Rank</span>
       </div>
       <div class="metric-pill prob" style="color:var(--red)"
-           data-tooltip="HyCPA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
+           data-tooltip="HYCIA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
         <span class="val" style="color:var(--red)">0.9970</span>
         <span class="lbl">Prob</span>
       </div>
@@ -13978,7 +13978,7 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, Bl
         <span class="val">#173</span><span class="lbl">Rank</span>
       </div>
       <div class="metric-pill prob" style="color:var(--red)"
-           data-tooltip="HyCPA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
+           data-tooltip="HYCIA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
         <span class="val" style="color:var(--red)">0.9970</span>
         <span class="lbl">Prob</span>
       </div>
@@ -14058,7 +14058,7 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, Bl
         <span class="val">#174</span><span class="lbl">Rank</span>
       </div>
       <div class="metric-pill prob" style="color:var(--red)"
-           data-tooltip="HyCPA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
+           data-tooltip="HYCIA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
         <span class="val" style="color:var(--red)">0.9960</span>
         <span class="lbl">Prob</span>
       </div>
@@ -14138,7 +14138,7 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, Bl
         <span class="val">#175</span><span class="lbl">Rank</span>
       </div>
       <div class="metric-pill prob" style="color:var(--red)"
-           data-tooltip="HyCPA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
+           data-tooltip="HYCIA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
         <span class="val" style="color:var(--red)">0.9940</span>
         <span class="lbl">Prob</span>
       </div>
@@ -14218,7 +14218,7 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, Bl
         <span class="val">#176</span><span class="lbl">Rank</span>
       </div>
       <div class="metric-pill prob" style="color:var(--red)"
-           data-tooltip="HyCPA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
+           data-tooltip="HYCIA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
         <span class="val" style="color:var(--red)">0.9900</span>
         <span class="lbl">Prob</span>
       </div>
@@ -14298,7 +14298,7 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, Bl
         <span class="val">#177</span><span class="lbl">Rank</span>
       </div>
       <div class="metric-pill prob" style="color:var(--red)"
-           data-tooltip="HyCPA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
+           data-tooltip="HYCIA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
         <span class="val" style="color:var(--red)">0.9890</span>
         <span class="lbl">Prob</span>
       </div>
@@ -14378,7 +14378,7 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, Bl
         <span class="val">#178</span><span class="lbl">Rank</span>
       </div>
       <div class="metric-pill prob" style="color:var(--red)"
-           data-tooltip="HyCPA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
+           data-tooltip="HYCIA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
         <span class="val" style="color:var(--red)">0.9890</span>
         <span class="lbl">Prob</span>
       </div>
@@ -14458,7 +14458,7 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, Bl
         <span class="val">#179</span><span class="lbl">Rank</span>
       </div>
       <div class="metric-pill prob" style="color:var(--red)"
-           data-tooltip="HyCPA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
+           data-tooltip="HYCIA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
         <span class="val" style="color:var(--red)">0.9880</span>
         <span class="lbl">Prob</span>
       </div>
@@ -14538,7 +14538,7 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, Bl
         <span class="val">#180</span><span class="lbl">Rank</span>
       </div>
       <div class="metric-pill prob" style="color:var(--red)"
-           data-tooltip="HyCPA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
+           data-tooltip="HYCIA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
         <span class="val" style="color:var(--red)">0.9850</span>
         <span class="lbl">Prob</span>
       </div>
@@ -14618,7 +14618,7 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, Bl
         <span class="val">#181</span><span class="lbl">Rank</span>
       </div>
       <div class="metric-pill prob" style="color:var(--red)"
-           data-tooltip="HyCPA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
+           data-tooltip="HYCIA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
         <span class="val" style="color:var(--red)">0.9850</span>
         <span class="lbl">Prob</span>
       </div>
@@ -14698,7 +14698,7 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, Bl
         <span class="val">#182</span><span class="lbl">Rank</span>
       </div>
       <div class="metric-pill prob" style="color:var(--red)"
-           data-tooltip="HyCPA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
+           data-tooltip="HYCIA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
         <span class="val" style="color:var(--red)">0.9830</span>
         <span class="lbl">Prob</span>
       </div>
@@ -14778,7 +14778,7 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, Bl
         <span class="val">#183</span><span class="lbl">Rank</span>
       </div>
       <div class="metric-pill prob" style="color:var(--red)"
-           data-tooltip="HyCPA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
+           data-tooltip="HYCIA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
         <span class="val" style="color:var(--red)">0.9830</span>
         <span class="lbl">Prob</span>
       </div>
@@ -14858,7 +14858,7 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, Bl
         <span class="val">#184</span><span class="lbl">Rank</span>
       </div>
       <div class="metric-pill prob" style="color:var(--red)"
-           data-tooltip="HyCPA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
+           data-tooltip="HYCIA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
         <span class="val" style="color:var(--red)">0.9830</span>
         <span class="lbl">Prob</span>
       </div>
@@ -14938,7 +14938,7 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, Bl
         <span class="val">#185</span><span class="lbl">Rank</span>
       </div>
       <div class="metric-pill prob" style="color:var(--red)"
-           data-tooltip="HyCPA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
+           data-tooltip="HYCIA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
         <span class="val" style="color:var(--red)">0.9830</span>
         <span class="lbl">Prob</span>
       </div>
@@ -15018,7 +15018,7 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, Bl
         <span class="val">#186</span><span class="lbl">Rank</span>
       </div>
       <div class="metric-pill prob" style="color:var(--red)"
-           data-tooltip="HyCPA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
+           data-tooltip="HYCIA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
         <span class="val" style="color:var(--red)">0.9830</span>
         <span class="lbl">Prob</span>
       </div>
@@ -15098,7 +15098,7 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, Bl
         <span class="val">#187</span><span class="lbl">Rank</span>
       </div>
       <div class="metric-pill prob" style="color:var(--red)"
-           data-tooltip="HyCPA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
+           data-tooltip="HYCIA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
         <span class="val" style="color:var(--red)">0.9800</span>
         <span class="lbl">Prob</span>
       </div>
@@ -15178,7 +15178,7 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, Bl
         <span class="val">#188</span><span class="lbl">Rank</span>
       </div>
       <div class="metric-pill prob" style="color:var(--red)"
-           data-tooltip="HyCPA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
+           data-tooltip="HYCIA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
         <span class="val" style="color:var(--red)">0.9780</span>
         <span class="lbl">Prob</span>
       </div>
@@ -15258,7 +15258,7 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, Bl
         <span class="val">#189</span><span class="lbl">Rank</span>
       </div>
       <div class="metric-pill prob" style="color:var(--red)"
-           data-tooltip="HyCPA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
+           data-tooltip="HYCIA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
         <span class="val" style="color:var(--red)">0.9780</span>
         <span class="lbl">Prob</span>
       </div>
@@ -15338,7 +15338,7 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, Bl
         <span class="val">#190</span><span class="lbl">Rank</span>
       </div>
       <div class="metric-pill prob" style="color:var(--red)"
-           data-tooltip="HyCPA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
+           data-tooltip="HYCIA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
         <span class="val" style="color:var(--red)">0.9760</span>
         <span class="lbl">Prob</span>
       </div>
@@ -15418,7 +15418,7 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, Bl
         <span class="val">#191</span><span class="lbl">Rank</span>
       </div>
       <div class="metric-pill prob" style="color:var(--red)"
-           data-tooltip="HyCPA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
+           data-tooltip="HYCIA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
         <span class="val" style="color:var(--red)">0.9760</span>
         <span class="lbl">Prob</span>
       </div>
@@ -15498,7 +15498,7 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, Bl
         <span class="val">#192</span><span class="lbl">Rank</span>
       </div>
       <div class="metric-pill prob" style="color:var(--red)"
-           data-tooltip="HyCPA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
+           data-tooltip="HYCIA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
         <span class="val" style="color:var(--red)">0.9760</span>
         <span class="lbl">Prob</span>
       </div>
@@ -15578,7 +15578,7 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, Bl
         <span class="val">#193</span><span class="lbl">Rank</span>
       </div>
       <div class="metric-pill prob" style="color:var(--red)"
-           data-tooltip="HyCPA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
+           data-tooltip="HYCIA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
         <span class="val" style="color:var(--red)">0.9760</span>
         <span class="lbl">Prob</span>
       </div>
@@ -15658,7 +15658,7 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, Bl
         <span class="val">#194</span><span class="lbl">Rank</span>
       </div>
       <div class="metric-pill prob" style="color:var(--red)"
-           data-tooltip="HyCPA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
+           data-tooltip="HYCIA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
         <span class="val" style="color:var(--red)">0.9740</span>
         <span class="lbl">Prob</span>
       </div>
@@ -15738,7 +15738,7 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, Bl
         <span class="val">#195</span><span class="lbl">Rank</span>
       </div>
       <div class="metric-pill prob" style="color:var(--red)"
-           data-tooltip="HyCPA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
+           data-tooltip="HYCIA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
         <span class="val" style="color:var(--red)">0.9730</span>
         <span class="lbl">Prob</span>
       </div>
@@ -15818,7 +15818,7 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, Bl
         <span class="val">#196</span><span class="lbl">Rank</span>
       </div>
       <div class="metric-pill prob" style="color:var(--red)"
-           data-tooltip="HyCPA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
+           data-tooltip="HYCIA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
         <span class="val" style="color:var(--red)">0.9720</span>
         <span class="lbl">Prob</span>
       </div>
@@ -15898,7 +15898,7 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, Bl
         <span class="val">#197</span><span class="lbl">Rank</span>
       </div>
       <div class="metric-pill prob" style="color:var(--red)"
-           data-tooltip="HyCPA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
+           data-tooltip="HYCIA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
         <span class="val" style="color:var(--red)">0.9680</span>
         <span class="lbl">Prob</span>
       </div>
@@ -15978,7 +15978,7 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, Bl
         <span class="val">#198</span><span class="lbl">Rank</span>
       </div>
       <div class="metric-pill prob" style="color:var(--red)"
-           data-tooltip="HyCPA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
+           data-tooltip="HYCIA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
         <span class="val" style="color:var(--red)">0.9600</span>
         <span class="lbl">Prob</span>
       </div>
@@ -16058,7 +16058,7 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, Bl
         <span class="val">#199</span><span class="lbl">Rank</span>
       </div>
       <div class="metric-pill prob" style="color:var(--red)"
-           data-tooltip="HyCPA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
+           data-tooltip="HYCIA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
         <span class="val" style="color:var(--red)">0.9560</span>
         <span class="lbl">Prob</span>
       </div>
@@ -16138,7 +16138,7 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, Bl
         <span class="val">#200</span><span class="lbl">Rank</span>
       </div>
       <div class="metric-pill prob" style="color:var(--red)"
-           data-tooltip="HyCPA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
+           data-tooltip="HYCIA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
         <span class="val" style="color:var(--red)">0.9510</span>
         <span class="lbl">Prob</span>
       </div>
@@ -16218,7 +16218,7 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, Bl
         <span class="val">#201</span><span class="lbl">Rank</span>
       </div>
       <div class="metric-pill prob" style="color:var(--red)"
-           data-tooltip="HyCPA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
+           data-tooltip="HYCIA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
         <span class="val" style="color:var(--red)">0.9490</span>
         <span class="lbl">Prob</span>
       </div>
@@ -16298,7 +16298,7 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, Bl
         <span class="val">#202</span><span class="lbl">Rank</span>
       </div>
       <div class="metric-pill prob" style="color:var(--red)"
-           data-tooltip="HyCPA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
+           data-tooltip="HYCIA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
         <span class="val" style="color:var(--red)">0.9350</span>
         <span class="lbl">Prob</span>
       </div>
@@ -16378,7 +16378,7 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, Bl
         <span class="val">#203</span><span class="lbl">Rank</span>
       </div>
       <div class="metric-pill prob" style="color:var(--red)"
-           data-tooltip="HyCPA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
+           data-tooltip="HYCIA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
         <span class="val" style="color:var(--red)">0.9170</span>
         <span class="lbl">Prob</span>
       </div>
@@ -16458,7 +16458,7 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, Bl
         <span class="val">#204</span><span class="lbl">Rank</span>
       </div>
       <div class="metric-pill prob" style="color:var(--red)"
-           data-tooltip="HyCPA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
+           data-tooltip="HYCIA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
         <span class="val" style="color:var(--red)">0.9160</span>
         <span class="lbl">Prob</span>
       </div>
@@ -16538,7 +16538,7 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, Bl
         <span class="val">#205</span><span class="lbl">Rank</span>
       </div>
       <div class="metric-pill prob" style="color:var(--red)"
-           data-tooltip="HyCPA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
+           data-tooltip="HYCIA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
         <span class="val" style="color:var(--red)">0.9120</span>
         <span class="lbl">Prob</span>
       </div>
@@ -16618,7 +16618,7 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, Bl
         <span class="val">#206</span><span class="lbl">Rank</span>
       </div>
       <div class="metric-pill prob" style="color:var(--red)"
-           data-tooltip="HyCPA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
+           data-tooltip="HYCIA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
         <span class="val" style="color:var(--red)">0.9110</span>
         <span class="lbl">Prob</span>
       </div>
@@ -16698,7 +16698,7 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, Bl
         <span class="val">#207</span><span class="lbl">Rank</span>
       </div>
       <div class="metric-pill prob" style="color:var(--red)"
-           data-tooltip="HyCPA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
+           data-tooltip="HYCIA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
         <span class="val" style="color:var(--red)">0.9090</span>
         <span class="lbl">Prob</span>
       </div>
@@ -16778,7 +16778,7 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, Bl
         <span class="val">#208</span><span class="lbl">Rank</span>
       </div>
       <div class="metric-pill prob" style="color:var(--red)"
-           data-tooltip="HyCPA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
+           data-tooltip="HYCIA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
         <span class="val" style="color:var(--red)">0.9000</span>
         <span class="lbl">Prob</span>
       </div>
@@ -16858,7 +16858,7 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, Bl
         <span class="val">#209</span><span class="lbl">Rank</span>
       </div>
       <div class="metric-pill prob" style="color:var(--red)"
-           data-tooltip="HyCPA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
+           data-tooltip="HYCIA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
         <span class="val" style="color:var(--red)">0.8850</span>
         <span class="lbl">Prob</span>
       </div>
@@ -16938,7 +16938,7 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, Bl
         <span class="val">#210</span><span class="lbl">Rank</span>
       </div>
       <div class="metric-pill prob" style="color:var(--red)"
-           data-tooltip="HyCPA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
+           data-tooltip="HYCIA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
         <span class="val" style="color:var(--red)">0.8850</span>
         <span class="lbl">Prob</span>
       </div>
@@ -17018,7 +17018,7 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, Bl
         <span class="val">#211</span><span class="lbl">Rank</span>
       </div>
       <div class="metric-pill prob" style="color:var(--red)"
-           data-tooltip="HyCPA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
+           data-tooltip="HYCIA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
         <span class="val" style="color:var(--red)">0.8820</span>
         <span class="lbl">Prob</span>
       </div>
@@ -17098,7 +17098,7 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, Bl
         <span class="val">#212</span><span class="lbl">Rank</span>
       </div>
       <div class="metric-pill prob" style="color:var(--red)"
-           data-tooltip="HyCPA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
+           data-tooltip="HYCIA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
         <span class="val" style="color:var(--red)">0.8740</span>
         <span class="lbl">Prob</span>
       </div>
@@ -17178,7 +17178,7 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, Bl
         <span class="val">#213</span><span class="lbl">Rank</span>
       </div>
       <div class="metric-pill prob" style="color:var(--red)"
-           data-tooltip="HyCPA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
+           data-tooltip="HYCIA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
         <span class="val" style="color:var(--red)">0.8720</span>
         <span class="lbl">Prob</span>
       </div>
@@ -17258,7 +17258,7 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, Bl
         <span class="val">#214</span><span class="lbl">Rank</span>
       </div>
       <div class="metric-pill prob" style="color:var(--red)"
-           data-tooltip="HyCPA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
+           data-tooltip="HYCIA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
         <span class="val" style="color:var(--red)">0.8700</span>
         <span class="lbl">Prob</span>
       </div>
@@ -17338,7 +17338,7 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, Bl
         <span class="val">#215</span><span class="lbl">Rank</span>
       </div>
       <div class="metric-pill prob" style="color:var(--red)"
-           data-tooltip="HyCPA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
+           data-tooltip="HYCIA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
         <span class="val" style="color:var(--red)">0.8690</span>
         <span class="lbl">Prob</span>
       </div>
@@ -17418,7 +17418,7 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, Bl
         <span class="val">#216</span><span class="lbl">Rank</span>
       </div>
       <div class="metric-pill prob" style="color:var(--red)"
-           data-tooltip="HyCPA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
+           data-tooltip="HYCIA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
         <span class="val" style="color:var(--red)">0.8690</span>
         <span class="lbl">Prob</span>
       </div>
@@ -17498,7 +17498,7 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, Bl
         <span class="val">#217</span><span class="lbl">Rank</span>
       </div>
       <div class="metric-pill prob" style="color:var(--red)"
-           data-tooltip="HyCPA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
+           data-tooltip="HYCIA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
         <span class="val" style="color:var(--red)">0.8690</span>
         <span class="lbl">Prob</span>
       </div>
@@ -17578,7 +17578,7 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, Bl
         <span class="val">#218</span><span class="lbl">Rank</span>
       </div>
       <div class="metric-pill prob" style="color:var(--red)"
-           data-tooltip="HyCPA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
+           data-tooltip="HYCIA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
         <span class="val" style="color:var(--red)">0.8690</span>
         <span class="lbl">Prob</span>
       </div>
@@ -17658,7 +17658,7 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, Bl
         <span class="val">#219</span><span class="lbl">Rank</span>
       </div>
       <div class="metric-pill prob" style="color:var(--red)"
-           data-tooltip="HyCPA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
+           data-tooltip="HYCIA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
         <span class="val" style="color:var(--red)">0.8670</span>
         <span class="lbl">Prob</span>
       </div>
@@ -17738,7 +17738,7 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, Bl
         <span class="val">#220</span><span class="lbl">Rank</span>
       </div>
       <div class="metric-pill prob" style="color:var(--red)"
-           data-tooltip="HyCPA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
+           data-tooltip="HYCIA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
         <span class="val" style="color:var(--red)">0.8670</span>
         <span class="lbl">Prob</span>
       </div>
@@ -17818,7 +17818,7 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, Bl
         <span class="val">#221</span><span class="lbl">Rank</span>
       </div>
       <div class="metric-pill prob" style="color:var(--red)"
-           data-tooltip="HyCPA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
+           data-tooltip="HYCIA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
         <span class="val" style="color:var(--red)">0.8640</span>
         <span class="lbl">Prob</span>
       </div>
@@ -17898,7 +17898,7 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, Bl
         <span class="val">#222</span><span class="lbl">Rank</span>
       </div>
       <div class="metric-pill prob" style="color:var(--red)"
-           data-tooltip="HyCPA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
+           data-tooltip="HYCIA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
         <span class="val" style="color:var(--red)">0.8630</span>
         <span class="lbl">Prob</span>
       </div>
@@ -17978,7 +17978,7 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, Bl
         <span class="val">#223</span><span class="lbl">Rank</span>
       </div>
       <div class="metric-pill prob" style="color:var(--red)"
-           data-tooltip="HyCPA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
+           data-tooltip="HYCIA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
         <span class="val" style="color:var(--red)">0.8630</span>
         <span class="lbl">Prob</span>
       </div>
@@ -18058,7 +18058,7 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, Bl
         <span class="val">#224</span><span class="lbl">Rank</span>
       </div>
       <div class="metric-pill prob" style="color:var(--red)"
-           data-tooltip="HyCPA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
+           data-tooltip="HYCIA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
         <span class="val" style="color:var(--red)">0.8620</span>
         <span class="lbl">Prob</span>
       </div>
@@ -18138,7 +18138,7 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, Bl
         <span class="val">#225</span><span class="lbl">Rank</span>
       </div>
       <div class="metric-pill prob" style="color:var(--red)"
-           data-tooltip="HyCPA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
+           data-tooltip="HYCIA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
         <span class="val" style="color:var(--red)">0.8610</span>
         <span class="lbl">Prob</span>
       </div>
@@ -18218,7 +18218,7 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, Bl
         <span class="val">#226</span><span class="lbl">Rank</span>
       </div>
       <div class="metric-pill prob" style="color:var(--red)"
-           data-tooltip="HyCPA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
+           data-tooltip="HYCIA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
         <span class="val" style="color:var(--red)">0.8610</span>
         <span class="lbl">Prob</span>
       </div>
@@ -18298,7 +18298,7 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, Bl
         <span class="val">#227</span><span class="lbl">Rank</span>
       </div>
       <div class="metric-pill prob" style="color:var(--red)"
-           data-tooltip="HyCPA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
+           data-tooltip="HYCIA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
         <span class="val" style="color:var(--red)">0.8590</span>
         <span class="lbl">Prob</span>
       </div>
@@ -18378,7 +18378,7 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, Bl
         <span class="val">#228</span><span class="lbl">Rank</span>
       </div>
       <div class="metric-pill prob" style="color:var(--red)"
-           data-tooltip="HyCPA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
+           data-tooltip="HYCIA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
         <span class="val" style="color:var(--red)">0.8580</span>
         <span class="lbl">Prob</span>
       </div>
@@ -18458,7 +18458,7 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, Bl
         <span class="val">#229</span><span class="lbl">Rank</span>
       </div>
       <div class="metric-pill prob" style="color:var(--red)"
-           data-tooltip="HyCPA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
+           data-tooltip="HYCIA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
         <span class="val" style="color:var(--red)">0.8580</span>
         <span class="lbl">Prob</span>
       </div>
@@ -18538,7 +18538,7 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, Bl
         <span class="val">#230</span><span class="lbl">Rank</span>
       </div>
       <div class="metric-pill prob" style="color:var(--red)"
-           data-tooltip="HyCPA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
+           data-tooltip="HYCIA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
         <span class="val" style="color:var(--red)">0.8560</span>
         <span class="lbl">Prob</span>
       </div>
@@ -18618,7 +18618,7 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, Bl
         <span class="val">#231</span><span class="lbl">Rank</span>
       </div>
       <div class="metric-pill prob" style="color:var(--red)"
-           data-tooltip="HyCPA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
+           data-tooltip="HYCIA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
         <span class="val" style="color:var(--red)">0.8550</span>
         <span class="lbl">Prob</span>
       </div>
@@ -18698,7 +18698,7 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, Bl
         <span class="val">#232</span><span class="lbl">Rank</span>
       </div>
       <div class="metric-pill prob" style="color:var(--red)"
-           data-tooltip="HyCPA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
+           data-tooltip="HYCIA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
         <span class="val" style="color:var(--red)">0.8550</span>
         <span class="lbl">Prob</span>
       </div>
@@ -18778,7 +18778,7 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, Bl
         <span class="val">#233</span><span class="lbl">Rank</span>
       </div>
       <div class="metric-pill prob" style="color:var(--red)"
-           data-tooltip="HyCPA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
+           data-tooltip="HYCIA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
         <span class="val" style="color:var(--red)">0.8540</span>
         <span class="lbl">Prob</span>
       </div>
@@ -18858,7 +18858,7 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, Bl
         <span class="val">#234</span><span class="lbl">Rank</span>
       </div>
       <div class="metric-pill prob" style="color:var(--red)"
-           data-tooltip="HyCPA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
+           data-tooltip="HYCIA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
         <span class="val" style="color:var(--red)">0.8520</span>
         <span class="lbl">Prob</span>
       </div>
@@ -18938,7 +18938,7 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, Bl
         <span class="val">#235</span><span class="lbl">Rank</span>
       </div>
       <div class="metric-pill prob" style="color:var(--red)"
-           data-tooltip="HyCPA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
+           data-tooltip="HYCIA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
         <span class="val" style="color:var(--red)">0.8520</span>
         <span class="lbl">Prob</span>
       </div>
@@ -19018,7 +19018,7 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, Bl
         <span class="val">#236</span><span class="lbl">Rank</span>
       </div>
       <div class="metric-pill prob" style="color:var(--red)"
-           data-tooltip="HyCPA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
+           data-tooltip="HYCIA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
         <span class="val" style="color:var(--red)">0.8510</span>
         <span class="lbl">Prob</span>
       </div>
@@ -19098,7 +19098,7 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, Bl
         <span class="val">#237</span><span class="lbl">Rank</span>
       </div>
       <div class="metric-pill prob" style="color:var(--red)"
-           data-tooltip="HyCPA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
+           data-tooltip="HYCIA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
         <span class="val" style="color:var(--red)">0.8500</span>
         <span class="lbl">Prob</span>
       </div>
@@ -19178,7 +19178,7 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, Bl
         <span class="val">#238</span><span class="lbl">Rank</span>
       </div>
       <div class="metric-pill prob" style="color:var(--red)"
-           data-tooltip="HyCPA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
+           data-tooltip="HYCIA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
         <span class="val" style="color:var(--red)">0.8490</span>
         <span class="lbl">Prob</span>
       </div>
@@ -19258,7 +19258,7 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, Bl
         <span class="val">#239</span><span class="lbl">Rank</span>
       </div>
       <div class="metric-pill prob" style="color:var(--red)"
-           data-tooltip="HyCPA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
+           data-tooltip="HYCIA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
         <span class="val" style="color:var(--red)">0.8490</span>
         <span class="lbl">Prob</span>
       </div>
@@ -19338,7 +19338,7 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, Bl
         <span class="val">#240</span><span class="lbl">Rank</span>
       </div>
       <div class="metric-pill prob" style="color:var(--red)"
-           data-tooltip="HyCPA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
+           data-tooltip="HYCIA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
         <span class="val" style="color:var(--red)">0.8480</span>
         <span class="lbl">Prob</span>
       </div>
@@ -19418,7 +19418,7 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, Bl
         <span class="val">#241</span><span class="lbl">Rank</span>
       </div>
       <div class="metric-pill prob" style="color:var(--red)"
-           data-tooltip="HyCPA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
+           data-tooltip="HYCIA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
         <span class="val" style="color:var(--red)">0.8470</span>
         <span class="lbl">Prob</span>
       </div>
@@ -19498,7 +19498,7 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, Bl
         <span class="val">#242</span><span class="lbl">Rank</span>
       </div>
       <div class="metric-pill prob" style="color:var(--red)"
-           data-tooltip="HyCPA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
+           data-tooltip="HYCIA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
         <span class="val" style="color:var(--red)">0.8450</span>
         <span class="lbl">Prob</span>
       </div>
@@ -19578,7 +19578,7 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, Bl
         <span class="val">#243</span><span class="lbl">Rank</span>
       </div>
       <div class="metric-pill prob" style="color:var(--red)"
-           data-tooltip="HyCPA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
+           data-tooltip="HYCIA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
         <span class="val" style="color:var(--red)">0.8450</span>
         <span class="lbl">Prob</span>
       </div>
@@ -19658,7 +19658,7 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, Bl
         <span class="val">#244</span><span class="lbl">Rank</span>
       </div>
       <div class="metric-pill prob" style="color:var(--red)"
-           data-tooltip="HyCPA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
+           data-tooltip="HYCIA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
         <span class="val" style="color:var(--red)">0.8440</span>
         <span class="lbl">Prob</span>
       </div>
@@ -19738,7 +19738,7 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, Bl
         <span class="val">#245</span><span class="lbl">Rank</span>
       </div>
       <div class="metric-pill prob" style="color:var(--red)"
-           data-tooltip="HyCPA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
+           data-tooltip="HYCIA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
         <span class="val" style="color:var(--red)">0.8430</span>
         <span class="lbl">Prob</span>
       </div>
@@ -19818,7 +19818,7 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, Bl
         <span class="val">#246</span><span class="lbl">Rank</span>
       </div>
       <div class="metric-pill prob" style="color:var(--red)"
-           data-tooltip="HyCPA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
+           data-tooltip="HYCIA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
         <span class="val" style="color:var(--red)">0.8420</span>
         <span class="lbl">Prob</span>
       </div>
@@ -19898,7 +19898,7 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, Bl
         <span class="val">#247</span><span class="lbl">Rank</span>
       </div>
       <div class="metric-pill prob" style="color:var(--red)"
-           data-tooltip="HyCPA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
+           data-tooltip="HYCIA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
         <span class="val" style="color:var(--red)">0.8410</span>
         <span class="lbl">Prob</span>
       </div>
@@ -19978,7 +19978,7 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, Bl
         <span class="val">#248</span><span class="lbl">Rank</span>
       </div>
       <div class="metric-pill prob" style="color:var(--red)"
-           data-tooltip="HyCPA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
+           data-tooltip="HYCIA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
         <span class="val" style="color:var(--red)">0.8400</span>
         <span class="lbl">Prob</span>
       </div>
@@ -20058,7 +20058,7 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, Bl
         <span class="val">#249</span><span class="lbl">Rank</span>
       </div>
       <div class="metric-pill prob" style="color:var(--red)"
-           data-tooltip="HyCPA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
+           data-tooltip="HYCIA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
         <span class="val" style="color:var(--red)">0.8380</span>
         <span class="lbl">Prob</span>
       </div>
@@ -20138,7 +20138,7 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, Bl
         <span class="val">#250</span><span class="lbl">Rank</span>
       </div>
       <div class="metric-pill prob" style="color:var(--red)"
-           data-tooltip="HyCPA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
+           data-tooltip="HYCIA infection probability p(seed→target). Noisy-OR combination of structural coupling, co-change, and target fragility.">
         <span class="val" style="color:var(--red)">0.8340</span>
         <span class="lbl">Prob</span>
       </div>
@@ -20316,18 +20316,18 @@ async function submitVote(id) {
     });
     if (resp.ok) {
       statusEl.textContent = '\u2713 Submitted';
-      showHycpaToast('success', 'Email sent successfully',
+      showHYCIAToast('success', 'Email sent successfully',
         'Your vote on ' + source + ' \u2192 ' + target + ' was delivered to the research team. Thank you!');
     } else {
       statusEl.textContent = '\u26a0 Saved locally (server error)';
       statusEl.classList.add('error');
-      showHycpaToast('error', 'Email not sent',
+      showHYCIAToast('error', 'Email not sent',
         'The server returned error ' + resp.status + '. Your vote was saved locally in this browser \u2014 please try again later.');
     }
   } catch (e) {
     statusEl.textContent = '\u26a0 Saved locally (offline)';
     statusEl.classList.add('error');
-    showHycpaToast('error', 'Email not sent',
+    showHYCIAToast('error', 'Email not sent',
       'You appear to be offline. Your vote was saved locally in this browser \u2014 please try again when you reconnect.');
   }
   submitBtn.disabled = false;
@@ -20336,13 +20336,13 @@ async function submitVote(id) {
 // ------------------------------------------------------------------
 // Toast notification (shared visual feedback for submissions).
 // ------------------------------------------------------------------
-function showHycpaToast(kind, title, message) {
+function showHYCIAToast(kind, title, message) {
   // Remove any previous toast so only one is on screen at a time.
-  const existing = document.querySelector('.hycpa-toast');
+  const existing = document.querySelector('.HYCIA-toast');
   if (existing) existing.remove();
 
   const toast = document.createElement('div');
-  toast.className = 'hycpa-toast ' + (kind === 'error' ? 'error' : 'success');
+  toast.className = 'HYCIA-toast ' + (kind === 'error' ? 'error' : 'success');
   toast.setAttribute('role', 'status');
   toast.setAttribute('aria-live', 'polite');
   const icon = kind === 'error' ? '\u26a0\ufe0f' : '\u2705';
